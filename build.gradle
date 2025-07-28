@@ -29,13 +29,15 @@ dependencies {
     // OAuth2 클라이언트 기능 (소셜 로그인 등)
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     // OAuth2 리소스 서버 (Access Token 인증 처리)
-    implementation 'org.springframework.boot:spring-boot-starter-security'
     // Spring Security 기본 보안 설정
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 
     // 개발 편의성 롬복
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    implementation 'org.springframework.boot:spring-boot-starter'
 
     // 데이터베이스 드라이버
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -72,6 +74,10 @@ dependencies {
 
     // JSON 처리
     implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+    //pdf 처리
+    implementation 'com.itextpdf:itext7-core:7.1.17'
+
 }
 
 tasks.named('test') {

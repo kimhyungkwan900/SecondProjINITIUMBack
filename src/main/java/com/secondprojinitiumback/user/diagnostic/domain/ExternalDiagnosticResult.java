@@ -21,7 +21,7 @@ public class ExternalDiagnosticResult {
     private Long id;
 
     @Column(name = "USER_ID")
-    private Long userId;
+    private Long userId;// 외래키로 Student 참조 (필요시 @ManyToOne)
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "EX_DGNSTC_TST_ID")

@@ -58,8 +58,6 @@ public class ExternalDiagnosisService {
         return page.map(ExternalTestListDto::from);
     }
 
-
-
     /**
      * 1. 외부 진단 문항 조회 - 원본 응답 Map
      */
@@ -106,6 +104,11 @@ public class ExternalDiagnosisService {
         body.put("apikey", apiKey);
         body.put("qestrnSeq", dto.getQestrnSeq());
         body.put("trgetSe", dto.getTrgetSe());
+        body.put("gender", dto.getGender());   // 필수값 추가
+        if (dto.getSchool() != null) body.put("school", dto.getSchool());
+        if (dto.getGrade() != null) body.put("grade", dto.getGrade());
+        if (dto.getStartDtm() != null) body.put("startDtm", dto.getStartDtm());
+
         body.putAll(dto.getAnswers());
 
         ResponseEntity<Map> response = restTemplate.postForEntity(reportUrl, body, Map.class);

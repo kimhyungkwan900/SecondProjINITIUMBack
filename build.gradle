@@ -18,7 +18,7 @@ repositories {
 }
 
 ext {
-    querydslVersion = "5.0.0" // 또는 원하는 버전
+    querydslVersion = "5.0.0"
 }
 
 dependencies {
@@ -27,6 +27,7 @@ dependencies {
 
     // 개발 편의성
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
     // 테스트
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

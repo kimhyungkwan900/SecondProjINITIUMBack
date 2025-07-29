@@ -51,5 +51,6 @@ public class DiagnosticResult {
      * CascadeType.ALL: Result 저장/삭제 시 Detail도 함께 처리
      */
     @OneToMany(mappedBy = "result", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<DiagnosticResultDetail> details = new ArrayList<>();
 }

@@ -3,6 +3,7 @@ package com.secondprojinitiumback.user.student.domain;
 import com.secondprojinitiumback.common.bank.domain.BankAccount;
 import com.secondprojinitiumback.common.domain.CommonCode;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
+import com.secondprojinitiumback.common.domain.base.BaseEntity;
 import com.secondprojinitiumback.common.login.domain.LoginInfo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -24,7 +25,7 @@ import java.time.LocalDate;
         })
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Student {
+public class Student extends BaseEntity {
 
     @Id
     @Column(name = "STDNT_NO", length = 10)

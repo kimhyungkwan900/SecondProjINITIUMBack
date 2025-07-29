@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.common.domain; // 적절한 패키지 경로로 변경 권장
 
+import com.secondprojinitiumback.common.domain.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -11,7 +12,7 @@ import java.time.LocalDate;
 @Table(name = "SCSBJT")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SchoolSubject {
+public class SchoolSubject extends BaseEntity {
 
     @Id
     @Column(name = "SCSBJT_NO", length = 5)

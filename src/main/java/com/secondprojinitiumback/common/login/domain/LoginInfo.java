@@ -1,6 +1,5 @@
 package com.secondprojinitiumback.common.login.domain;
 
-import com.secondprojinitiumback.common.login.constatnt.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;

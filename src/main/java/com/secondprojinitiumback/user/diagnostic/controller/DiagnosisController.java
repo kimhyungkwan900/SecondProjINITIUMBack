@@ -90,6 +90,13 @@ public class DiagnosisController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/tests/{id}")
+    public ResponseEntity<Void> deleteTest(@PathVariable Long id) {
+        diagnosisService.deleteDiagnosticTest(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
     // 📄 PDF 결과 다운로드
     @GetMapping("/result/{resultId}/pdf")
     public ResponseEntity<byte[]> downloadDiagnosisPdf(@PathVariable Long resultId) throws IOException {

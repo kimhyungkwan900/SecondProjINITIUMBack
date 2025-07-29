@@ -19,11 +19,11 @@ public class DscsnKind {
 
     @Id
     @Column(name = "DSCSN_KND_ID", nullable = false, length = 4)
-    private String dscsn_knd_id; //상담항목 코드
+    private String dscsnKindId; //상담항목 코드
 
     @Column(name = "DSCSN_KND_NM", nullable = false, length = 10)
-    private String dscsn_knd_name;//상담 항목명
+    private String dscsnKindName;//상담 항목명
 
     @Column(name = "DSCSN_TYPE_NM", nullable = false, length = 10)
-    private String dscsn_type_name;//상담 유형
+    private String dscsnTypeName;//상담 유형
 }

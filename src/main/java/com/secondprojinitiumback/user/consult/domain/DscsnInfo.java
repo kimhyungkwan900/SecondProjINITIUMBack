@@ -16,13 +16,13 @@ public class DscsnInfo {
 
     @Id
     @Column(name = "DSCSN_INFO_ID", nullable = false, length = 5)
-    private String dscsn_info_id; //상담일정 ID
+    private String dscsnInfoId; //상담일정 ID
 
     @Column(name = "DSCSN_RSLT_CN", nullable = true)
-    private String dscsn_result_cn; //상담결과 내용
+    private String dscsnResultCn; //상담결과 내용
 
     @Column(name = "DSCSN_RLS_YN", nullable = false, length = 1)
-    private String dscsn_release_yn; //상담결과 공개여부
+    private String dscsnReleaseYn; //상담결과 공개여부
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DSCSN_APLY_ID", foreignKey = @ForeignKey(name = "FK_DSCSN_APLY_ID"))

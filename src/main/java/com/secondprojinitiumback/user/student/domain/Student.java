@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.user.student.domain;
 
+import com.secondprojinitiumback.common.bank.domain.BankAccount;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
 import com.secondprojinitiumback.common.login.domain.LoginInfo; // [추가] LoginInfo 임포트
 import jakarta.persistence.*;
@@ -27,11 +28,8 @@ public class Student {
     @Column(name = "STDNT_NO", length = 10)
     private String studentNo;
 
-    @Column(name = "LGN_ID", length = 20, nullable = false, unique = true)
-    private String loginId;
-
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "LGN_ID", referencedColumnName = "LGN_ID", insertable = false, updatable = false)
+    @JoinColumn(name = "LGN_ID", referencedColumnName = "LGN_ID", nullable = false, unique = true)
     private LoginInfo loginInfo;
 
     // 학과 참조
@@ -46,8 +44,9 @@ public class Student {
     @JoinColumn(name = "STDNT_STTS_CD")
     private StudentStatusInfo studentStatus;
 
-    @Column(name = "BANK_NO", length = 5)
-    private String bankCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ACTNO")
+    private BankAccount bankAccount;
 
     @Column(name = "STDNT_NM", length = 100, nullable = false)
     private String name;
@@ -76,38 +75,32 @@ public class Student {
     private String grade;
 
     @Builder
-    public Student(String studentNo, String loginId,
+    public Student(String studentNo,
                    LoginInfo loginInfo,
                    SchoolSubject schoolSubject,
-                   String clubCode, StudentStatusInfo studentStatus,
-                   String bankCode, String name, LocalDate admissionDate, LocalDate birthDate,
-                   String gender, String email, String advisorName, String grade) {
+                   String clubCode,
+                   StudentStatusInfo studentStatus,
+                   BankAccount bankAccount,
+                   String name,
+                   LocalDate admissionDate,
+                   LocalDate birthDate,
+                   String gender,
+                   String email,
+                   String advisorName,
+                   String grade) {
         this.studentNo = studentNo;
-        this.loginId = loginId;
         this.loginInfo = loginInfo;
         this.schoolSubject = schoolSubject;
         this.clubCode = clubCode;
         this.studentStatus = studentStatus;
-        this.bankCode = bankCode;
+        this.bankAccount = bankAccount;
         this.name = name;
         this.admissionDate = admissionDate;
         this.birthDate = birthDate;
-        this.gender = gender != null ? gender : "Unknown";
+        this.gender = gender == null ? "Unknown" : gender;
         this.email = email;
         this.advisorName = advisorName;
         this.grade = grade;
     }
 
-    public void changeSchoolSubject(SchoolSubject newSchoolSubject) {
-        this.schoolSubject = newSchoolSubject;
-    }
-
-    public void setLoginInfo(LoginInfo loginInfo) {
-        this.loginInfo = loginInfo;
-        if (loginInfo != null) {
-            this.loginId = loginInfo.getLoginId();
-        } else {
-            this.loginId = null;
-        }
-    }
 }

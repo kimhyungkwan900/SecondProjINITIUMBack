@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.user.diagnostic.domain;
 
+import com.secondprojinitiumback.user.student.domain.Student;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,8 +21,10 @@ public class DiagnosticResult {
     @Column(name = "DGNSTC_RSLT_ID")
     private Long id;
 
-    @Column(name = "USER_ID")
-    private Long userId; // 외래키로 Student 참조 (필요시 @ManyToOne)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "STDNT_NO", referencedColumnName = "STDNT_NO")
+    private Student student;
+
 
     /**
      * DiagnosticTest와 다대일(N:1) 관계

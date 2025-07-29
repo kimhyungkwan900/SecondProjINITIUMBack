@@ -5,7 +5,7 @@ import com.secondprojinitiumback.admin.extracurricular.domain.enums.*;
 import com.secondprojinitiumback.admin.extracurricular.domain.test.EmpInfo;
 import lombok.*;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -25,13 +25,17 @@ public class ExtracurricularProgramFormDTO {
     private int eduPtcpNope; // 모집 인원 수
     private String eduPrps; // 프로그램 목적
     private String eduDtlCn; // 프로그램 상세 설명
-    private Date eduAplyBgngDt; // 신청 시작일
-    private Date eduAplyEndDt; // 신청 마감일
-    private Date eduBgngYmd; // 교육 시작일
-    private Date eduEndYmd; // 교육 종료일
+    private LocalDateTime eduAplyBgngDt; // 신청 시작일
+    private LocalDateTime eduAplyEndDt; // 신청 마감일
+    private LocalDateTime eduBgngYmd; // 교육 시작일
+    private LocalDateTime eduEndYmd; // 교육 종료일
     private String eduPlcNm; // 교육 장소
-    private Date eduAplyDt; // 프로그램 개설 신청일
+    private LocalDateTime eduAplyDt; // 프로그램 개설 신청일
     private SttsNm sttsNm; // 프로그램 상태 (요청, 승인, 반려 등 ENUM)
 
+    // 프로그램 신청시 현재 시간 설정 메서드
+    public void applyDateTime(){
+        this.eduAplyDt = LocalDateTime.now();
+    }
 
 }

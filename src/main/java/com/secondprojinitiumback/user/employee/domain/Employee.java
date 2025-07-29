@@ -1,6 +1,8 @@
 package com.secondprojinitiumback.user.employee.domain;
 
+import com.secondprojinitiumback.common.bank.domain.BankAccount;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
+import com.secondprojinitiumback.common.login.domain.LoginInfo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.PastOrPresent;
@@ -14,7 +16,6 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "EMP_INFO",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = "LGN_ID"),
                 @UniqueConstraint(columnNames = "EMP_EMAIL"),
                 @UniqueConstraint(columnNames = "EMP_TEL")
         })
@@ -26,15 +27,17 @@ public class Employee {
     @Column(name = "EMP_NO", length = 10)
     private String empNo;
 
-    @Column(name = "LGN_ID", length = 20, nullable = false, unique = true)
-    private String loginId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "LGN_ID", referencedColumnName = "LGN_ID", nullable = false, unique = true)
+    private LoginInfo loginInfo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SCSBJT_NO", nullable = false)
     private SchoolSubject schoolSubject;
 
-    @Column(name = "BANK_NO", length = 5)
-    private String bankCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ACTNO")
+    private BankAccount bankAccount;
 
     @Column(name = "EMP_NM", length = 100, nullable = false)
     private String name;
@@ -55,33 +58,34 @@ public class Employee {
     @Pattern(regexp = "\\d{10,11}", message = "전화번호는 10~11자리 숫자여야 합니다.")
     private String tel;
 
+
     public static Employee create(String empNo,
-                                  String loginId,
+                                  LoginInfo loginInfo,
                                   SchoolSubject schoolSubject,
-                                  String bankCode,
+                                  BankAccount bankAccount,
                                   String name,
                                   String gender,
                                   LocalDate birthDate,
                                   String email,
                                   String tel) {
-        return new Employee(empNo, loginId, schoolSubject, bankCode, name, gender, birthDate, email, tel);
+        return new Employee(empNo, loginInfo, schoolSubject, bankAccount, name, gender, birthDate, email, tel);
     }
 
     private Employee(String empNo,
-                     String loginId,
+                     LoginInfo loginInfo,
                      SchoolSubject schoolSubject,
-                     String bankCode,
+                     BankAccount bankAccount,
                      String name,
                      String gender,
                      LocalDate birthDate,
                      String email,
                      String tel) {
         this.empNo = empNo;
-        this.loginId = loginId;
+        this.loginInfo = loginInfo;
         this.schoolSubject = schoolSubject;
-        this.bankCode = bankCode;
+        this.bankAccount = bankAccount;
         this.name = name;
-        this.gender = (gender == null) ? "Unknown" : gender;
+        this.gender = gender == null ? "Unknown" : gender;
         this.birthDate = birthDate;
         this.email = email;
         this.tel = tel;

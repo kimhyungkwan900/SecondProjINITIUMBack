@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.user.diagnostic.domain;
 
+import com.secondprojinitiumback.user.student.domain.Student;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,8 +21,13 @@ public class ExternalDiagnosticResult {
     @Column(name = "EX_DGNSTC_RSLT_ID")
     private Long id;
 
-    @Column(name = "USER_ID")
-    private Long userId;// 외래키로 Student 참조 (필요시 @ManyToOne)
+    /**
+     * Student와 다대일(N:1) 관계
+     * 하나의 학생(Student)에 대해 여러 외부 검사 결과가 저장될 수 있음
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "STDNT_NO", referencedColumnName = "STDNT_NO")
+    private Student student;
 
     /**
      * 외부 진단검사(ExternalDiagnosticTest)와 다대일(N:1) 관계
@@ -46,6 +52,9 @@ public class ExternalDiagnosticResult {
     @Column(name = "RSLT_URL")
     private String resultUrl;
 
+    /**
+     * 외부 검사 제출 일시
+     */
     @Column(name = "SBMSN_DT")
     private LocalDateTime submittedAt;
 }

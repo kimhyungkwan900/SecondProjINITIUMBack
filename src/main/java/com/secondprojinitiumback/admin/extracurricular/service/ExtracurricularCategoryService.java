@@ -20,9 +20,9 @@ public class ExtracurricularCategoryService {
 
     public void insertExtracurricularCategory(ExtracurricularCategoryFormDTO dto) {
         // 카테고리 사용 여부 기본 값 설정
-        dto.setCtgryUseYn("Y");
+        dto.ChanageCtrUseYn("Y");
         // 데이터 생성일자 기본 값 설정
-        dto.setDataCrtDt(java.sql.Date.valueOf(LocalDate.now()));
+        dto.createDataCrtDt();
         // dto를 ExtracurricularCategory로 변환
         ExtracurricularCategory extracurricularCategory = modelMapper.map(dto, ExtracurricularCategory.class);
         // ExtracurricularCategory 저장
@@ -34,7 +34,7 @@ public class ExtracurricularCategoryService {
         ExtracurricularCategory category = extracurricularCategoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다. id=" + id));
         // 상태 값 업데이트
-        category.setCtgryUseYn(ctgryUseYn);
+        category.updateCtryUseYn(ctgryUseYn);
         // 변경된 값 저장
         extracurricularCategoryRepository.save(category);
     }
@@ -47,7 +47,7 @@ public class ExtracurricularCategoryService {
         extracurricularCategoryRepository.delete(category);
     }
 
-   public List<ExtracurricularCategoryDTO> getExtracurricularCategoryList(Long stgrId) {
+    public List<ExtracurricularCategoryDTO> getExtracurricularCategoryList(Long stgrId) {
         // 상위 카테고리 번호를 받아와 ExtracurricularCategory 객체를 조회
         List<ExtracurricularCategory> categories = extracurricularCategoryRepository.findByStgrId(stgrId);
         // ExtracurricularCategory 객체들을 ExtracurricularCategoryDTO로 변환

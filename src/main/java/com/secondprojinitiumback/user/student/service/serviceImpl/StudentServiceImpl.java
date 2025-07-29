@@ -94,6 +94,7 @@ public class StudentServiceImpl implements StudentService {
         // 시퀀스 번호 계산
         int sequence = 1;
         if (lastStudentNo.isPresent()) {
+            // 마지막 학번에서 시퀀스 번호 추출
             String lastSeqStr = lastStudentNo.get().substring(lastStudentNo.get().length() - 3);
             sequence = Integer.parseInt(lastSeqStr) + 1;
         }

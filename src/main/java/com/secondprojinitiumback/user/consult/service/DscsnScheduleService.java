@@ -6,6 +6,7 @@ import com.secondprojinitiumback.user.consult.repository.DscsnScheduleRepository
 import com.secondprojinitiumback.user.consult.repository.SequenceGenerator;
 import com.secondprojinitiumback.user.consult.repository.TempEmployeeRepository;
 import com.secondprojinitiumback.user.employee.domain.Employee;
+import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,18 +26,20 @@ public class DscsnScheduleService {
 
     //상담사, 교수 일정 등록
     public void saveDscsnSchedule(DscsnScheduleDto dscsnScheduleDto, String dscsnType) {
-        //시퀀스 번호 생성
+        //상담일정 ID 생성
+        //1. 시퀀스 번호 생성
         long seqNum = sequenceGenerator.getNextScheduleSequence();
 
-        //상담일정 ID 생성을 위한 날짜정보 가져오기
+        //2. 날짜정보 가져오기
         String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd"));
 
-        //상담일정 ID 생성
-        //dscsnType: 지도교수 상담은 A, 진로취업 상담은 C, 심리상담은 P,  학습상담은 L
+        //3. ID 생성
+        //dscsnType: 지도교수 상담은 A, 진로취업 상담은 C, 심리상담은 P, 학습상담은 L
         String dscsnDtId = dscsnType + today + String.format("%03d", seqNum);
 
         //dscsnScheduleDto에서 empNo로 Employee 엔티티 조회(임시)
-        Employee employeeInfo = employeeRepository.getEmployeeByEmpNo(dscsnScheduleDto.getEmpNo());
+        Employee employeeInfo = employeeRepository.findById(dscsnScheduleDto.getEmpNo())
+                .orElseThrow(EntityExistsException::new);
 
         // DscsnScheduleDto를 DscsnDate 엔티티로 변환
         DscsnDate dscsnDate = DscsnDate.builder()
@@ -51,6 +54,7 @@ public class DscsnScheduleService {
     }
 
     //상담사, 교수 일정 조회
+
 
     //상담사, 교수 일정 삭제
     public void deleteDscsnSchedule(String dscsnDtId) {

@@ -44,8 +44,7 @@ public class LoginInfo {
 
     @Column(name = "ACNT_JOIN_DT", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime accountJoinDate;
-
-    // 생성자 메서드
+    
     public static LoginInfo create(String loginId,
                                    String password,
                                    String userType,

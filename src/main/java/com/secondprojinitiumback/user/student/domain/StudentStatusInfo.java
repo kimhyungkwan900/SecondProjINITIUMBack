@@ -19,8 +19,8 @@ public class StudentStatusInfo {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-        @JoinColumn(name = "UPPER_CD_SE", referencedColumnName = "CD_SE", nullable = false),
-        @JoinColumn(name = "UPPER_CD", referencedColumnName = "CD", nullable = false)
+        @JoinColumn(name = "CD_SE", referencedColumnName = "CD_SE", nullable = false),
+        @JoinColumn(name = "CD", referencedColumnName = "CD", nullable = false)
     })
     private CommonCode commonCode;
 

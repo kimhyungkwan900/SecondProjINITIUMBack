@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Dscsn_satisfaction {
+public class DscsnSatisfaction {
 
     @Id
     @Column(name = "DSCSN_DGSTFN_ID", nullable = false, length = 5)
@@ -26,5 +26,5 @@ public class Dscsn_satisfaction {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DSCSN_INFO_ID", foreignKey = @ForeignKey(name = "FK_DSCSN_INFO_ID"))
-    private Dscsn_info dscsnInfo;  //신청서 ID
+    private DscsnInfo dscsnInfo;  //신청서 ID
 }

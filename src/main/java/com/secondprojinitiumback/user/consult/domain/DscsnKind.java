@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Dscsn_knd {
+public class DscsnKind {
 
     @Id
     @Column(name = "DSCSN_KND_ID", nullable = false, length = 4)

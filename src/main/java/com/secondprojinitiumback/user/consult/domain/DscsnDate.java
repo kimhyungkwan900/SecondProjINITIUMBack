@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Dscsn_dt {
+public class DscsnDate {
 
     @Id
     @Column(name = "DSCSN_DT_ID", nullable = false, length = 5)

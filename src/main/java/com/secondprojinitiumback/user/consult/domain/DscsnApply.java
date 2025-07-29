@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Dscsn_apply {
+public class DscsnApply {
 
     @Id
     @Column(name = "DSCSN_APLY_ID", nullable = false, length = 10)
@@ -41,9 +41,9 @@ public class Dscsn_apply {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DSCSN_DT_ID", foreignKey = @ForeignKey(name = "FK_DSCSN_DT_ID"))
-    private Dscsn_dt dscsn_dt;
+    private DscsnDate dscsn_dt;
 
     @OneToOne
     @JoinColumn(name = "DSCSN_KND_ID",foreignKey = @ForeignKey(name = "FK_DSCSN_KND_ID"))
-    private Dscsn_knd dscsn_knd;
+    private DscsnKind dscsn_kind;
 }

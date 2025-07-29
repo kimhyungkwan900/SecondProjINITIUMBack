@@ -1,6 +1,5 @@
 package com.secondprojinitiumback.user.consult.domain;
 
-import com.secondprojinitiumback.user.employee.domain.Employee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Dscsn_info {
+public class DscsnInfo {
 
     @Id
     @Column(name = "DSCSN_INFO_ID", nullable = false, length = 5)
@@ -27,5 +26,5 @@ public class Dscsn_info {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DSCSN_APLY_ID", foreignKey = @ForeignKey(name = "FK_DSCSN_APLY_ID"))
-    private Dscsn_apply dscsnApply;  //신청서 ID
+    private DscsnApply dscsnApply;  //신청서 ID
 }

@@ -1,7 +1,7 @@
 package com.secondprojinitiumback.user.consult.dto;
 
-import com.secondprojinitiumback.user.consult.domain.Dscsn_dt;
-import com.secondprojinitiumback.user.consult.domain.Dscsn_knd;
+import com.secondprojinitiumback.user.consult.domain.DscsnDate;
+import com.secondprojinitiumback.user.consult.domain.DscsnKind;
 import com.secondprojinitiumback.user.student.domain.Student;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Dscsn_apply_dto {
+public class DscsnApplyDto {
 
     private String dscsn_apply_id;
 
@@ -24,7 +24,7 @@ public class Dscsn_apply_dto {
 
     private Student student;
 
-    private Dscsn_dt dscsn_dt;
+    private DscsnDate dscsn_dt;
 
-    private Dscsn_knd dscsn_knd;
+    private DscsnKind dscsn_kind;
 }

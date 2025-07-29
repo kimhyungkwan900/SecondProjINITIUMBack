@@ -73,7 +73,7 @@ public class ExternalDiagnosisService {
     /**
      * 1. 외부 진단 문항 조회 - 원본 응답 Map
      */
-    public Map<String, Object> fetchExternalQuestions(String qestrnSeq, String trgetSe) {
+    public Map<String, Object> fetchExternalQuestions(String qestrnSeq, String trgetSe, String apiKey) {
         UriComponents uri = UriComponentsBuilder
                 .fromHttpUrl(questionUrl)
                 .queryParam("apikey", apiKey)
@@ -86,8 +86,8 @@ public class ExternalDiagnosisService {
     /**
      * 2. 외부 진단 문항 조회 - 정제된 응답 DTO
      */
-    public ExternalQuestionResponseDto getParsedExternalQuestions(String qestrnSeq, String trgetSe) {
-        Map<String, Object> raw = fetchExternalQuestions(qestrnSeq, trgetSe);
+    public ExternalQuestionResponseDto getParsedExternalQuestions(String qestrnSeq, String trgetSe, String apiKey) {
+        Map<String, Object> raw = fetchExternalQuestions(qestrnSeq, trgetSe, apiKey);
 
         String title = (String) raw.getOrDefault("qestrnTitle", "제목 없음");
         String description = (String) raw.getOrDefault("qestrnDesc", "");
@@ -111,7 +111,7 @@ public class ExternalDiagnosisService {
     /**
      * 3. 외부 진단 검사 결과 제출 및 저장
      */
-    public ExternalDiagnosisResultDto submitExternalResult(ExternalDiagnosisRequestDto dto) {
+    public ExternalDiagnosisResultDto submitExternalResult(ExternalDiagnosisRequestDto dto, String apiKey) {
         Map<String, Object> body = new HashMap<>();
         body.put("apikey", apiKey);
         body.put("qestrnSeq", dto.getQestrnSeq());

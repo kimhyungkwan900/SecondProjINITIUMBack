@@ -1,6 +1,7 @@
 package com.secondprojinitiumback.user.employee.domain;
 
 import com.secondprojinitiumback.common.bank.domain.BankAccount;
+import com.secondprojinitiumback.common.domain.CommonCode;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
 import com.secondprojinitiumback.common.login.domain.LoginInfo;
 import jakarta.persistence.*;
@@ -42,9 +43,19 @@ public class Employee {
     @Column(name = "EMP_NM", length = 100, nullable = false)
     private String name;
 
-    @Column(name = "GNDR_NM", length = 300, nullable = false)
-    @Pattern(regexp = "Male|Female|Unknown", message = "성별은 Male, Female, Unknown 중 하나여야 합니다.")
-    private String gender;
+    // 복합 코드 값 직접 보관
+    @Column(name = "GNDR_CD_SE", length = 6, nullable = false)
+    private String genderCodeSe;
+
+    @Column(name = "GNDR_CD", length = 2, nullable = false)
+    private String genderCode;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+            @JoinColumn(name = "GNDR_CD_SE", referencedColumnName = "CD_SE", insertable = false, updatable = false),
+            @JoinColumn(name = "GNDR_CD", referencedColumnName = "CD", insertable = false, updatable = false)
+    })
+    private CommonCode gender;
 
     @Column(name = "EMP_BRDT", nullable = false)
     @PastOrPresent(message = "생년월일은 과거나 오늘이어야 합니다.")
@@ -58,13 +69,12 @@ public class Employee {
     @Pattern(regexp = "\\d{10,11}", message = "전화번호는 10~11자리 숫자여야 합니다.")
     private String tel;
 
-
     public static Employee create(String empNo,
                                   LoginInfo loginInfo,
                                   SchoolSubject schoolSubject,
                                   BankAccount bankAccount,
                                   String name,
-                                  String gender,
+                                  CommonCode gender,
                                   LocalDate birthDate,
                                   String email,
                                   String tel) {
@@ -76,7 +86,7 @@ public class Employee {
                      SchoolSubject schoolSubject,
                      BankAccount bankAccount,
                      String name,
-                     String gender,
+                     CommonCode gender,
                      LocalDate birthDate,
                      String email,
                      String tel) {
@@ -85,7 +95,16 @@ public class Employee {
         this.schoolSubject = schoolSubject;
         this.bankAccount = bankAccount;
         this.name = name;
-        this.gender = gender == null ? "Unknown" : gender;
+        this.gender = gender;
+
+        if (gender != null && gender.getId() != null) {
+            this.genderCodeSe = gender.getId().getCodeGroup();
+            this.genderCode = gender.getId().getCode();
+        } else {
+            this.genderCodeSe = null;
+            this.genderCode = null;
+        }
+
         this.birthDate = birthDate;
         this.email = email;
         this.tel = tel;

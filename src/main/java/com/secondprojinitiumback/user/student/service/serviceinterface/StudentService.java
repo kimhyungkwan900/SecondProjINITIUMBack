@@ -1,6 +1,8 @@
 package com.secondprojinitiumback.user.student.service.serviceinterface;
 
+import com.secondprojinitiumback.user.student.dto.addStudentDto;
+
 public interface StudentService {
 
-    String addStudent();
+    void addStudent(addStudentDto addStudentDto);
 }

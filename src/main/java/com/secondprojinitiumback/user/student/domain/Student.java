@@ -1,12 +1,14 @@
 package com.secondprojinitiumback.user.student.domain;
 
 import com.secondprojinitiumback.common.bank.domain.BankAccount;
+import com.secondprojinitiumback.common.domain.CommonCode;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
-import com.secondprojinitiumback.common.login.domain.LoginInfo; // [추가] LoginInfo 임포트
+import com.secondprojinitiumback.common.login.domain.LoginInfo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.PastOrPresent;
+import com.secondprojinitiumback.user.employee.domain.Employee;
 import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -59,16 +61,26 @@ public class Student {
     @Past(message = "생년월일은 과거 날짜여야 합니다.")
     private LocalDate birthDate;
 
-    @Column(name = "GNDR_NM", length = 300)
-    @Pattern(regexp = "Male|Female|Unknown", message = "성별은 Male, Female, Unknown 중 하나여야 합니다.")
-    private String gender;
+    @Column(name = "GNDR_CD_SE", length = 6, nullable = false)
+    private String genderCodeSe;
+
+    @Column(name = "GNDR_CD", length = 2, nullable = false)
+    private String genderCode;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+            @JoinColumn(name = "GNDR_CD_SE", referencedColumnName = "CD_SE", insertable = false, updatable = false),
+            @JoinColumn(name = "GNDR_CD", referencedColumnName = "CD", insertable = false, updatable = false)
+    })
+    private CommonCode gender;
 
     @Column(name = "STDNT_EMAIL", length = 320, unique = true)
     @Email(message = "이메일 형식이 올바르지 않습니다.")
     private String email;
 
-    @Column(name = "ACAVSR_NM", length = 100, nullable = false)
-    private String advisorName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ACAVSR_NO", nullable = false)
+    private Employee advisor;
 
     @Column(name = "GRADE", length = 5, nullable = false)
     @Pattern(regexp = "10|20|30|40", message = "학년은 10, 20, 30, 40 중 하나여야 합니다.")
@@ -84,9 +96,9 @@ public class Student {
                    String name,
                    LocalDate admissionDate,
                    LocalDate birthDate,
-                   String gender,
+                   CommonCode gender,
                    String email,
-                   String advisorName,
+                   Employee advisor,
                    String grade) {
         this.studentNo = studentNo;
         this.loginInfo = loginInfo;
@@ -97,9 +109,18 @@ public class Student {
         this.name = name;
         this.admissionDate = admissionDate;
         this.birthDate = birthDate;
-        this.gender = gender == null ? "Unknown" : gender;
+        this.gender = gender;
+
+        if (gender != null && gender.getId() != null) {
+            this.genderCodeSe = gender.getId().getCodeGroup();
+            this.genderCode = gender.getId().getCode();
+        } else {
+            this.genderCodeSe = null;
+            this.genderCode = null;
+        }
+
         this.email = email;
-        this.advisorName = advisorName;
+        this.advisor = advisor;
         this.grade = grade;
     }
 

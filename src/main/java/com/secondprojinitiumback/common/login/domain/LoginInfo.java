@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
+import lombok.Builder; // Builder import 추가
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -43,7 +44,9 @@ public class LoginInfo {
 
     @Column(name = "ACNT_JOIN_DT", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime accountJoinDate;
-    
+
+    // 기존 create 메서드는 유지하거나 제거할 수 있습니다.
+    // @Builder를 사용하면 이 메서드는 필요 없을 수 있습니다.
     public static LoginInfo create(String loginId,
                                    String password,
                                    String userType,
@@ -54,7 +57,8 @@ public class LoginInfo {
         return new LoginInfo(loginId, password, userType, accountStatusCode, passwordChangeYn, loginFailCount, accountJoinDate);
     }
 
-    // private 생성자
+    // private 생성자 위에 @Builder 추가
+    @Builder
     private LoginInfo(String loginId,
                       String password,
                       String userType,

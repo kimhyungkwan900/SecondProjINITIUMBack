@@ -17,10 +17,16 @@ public class StudentStatusInfo {
     @Column(name = "STDNT_STTS_CD", length = 10)
     private String statusCode;
 
+    @Column(name = "CD_SE", length = 20)
+    private String codeGroup = "CO0002";
+
+    @Column(name = "CD", length = 20)
+    private String code = "SL";
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-        @JoinColumn(name = "CD_SE", referencedColumnName = "CD_SE", nullable = false),
-        @JoinColumn(name = "CD", referencedColumnName = "CD", nullable = false)
+            @JoinColumn(name = "CD_SE", referencedColumnName = "CD_SE", insertable = false, updatable = false),
+            @JoinColumn(name = "CD", referencedColumnName = "CD", insertable = false, updatable = false)
     })
     private CommonCode commonCode;
 

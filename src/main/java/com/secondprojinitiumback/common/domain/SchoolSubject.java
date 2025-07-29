@@ -22,13 +22,13 @@ public class SchoolSubject {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-            @JoinColumn(name = "CD", referencedColumnName = "CD"),
-            @JoinColumn(name = "CD_SE", referencedColumnName = "CD_SE")
+            @JoinColumn(name = "CD", referencedColumnName = "CD", insertable = false, updatable = false),
+            @JoinColumn(name = "CD_SE", referencedColumnName = "CD_SE", insertable = false, updatable = false)
     })
     private CommonCode deptDivision;
 
     // 학과구분코드
-    @Column(name = "CD_SE", length = 20, insertable = false, updatable = false)
+    @Column(name = "CD_SE", length = 20)
     private String deptDivisionGroup = "CO0003";
 
     // 학과구분코드명

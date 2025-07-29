@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.common.domain;
 
+import com.secondprojinitiumback.common.domain.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -8,7 +9,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Table(name = "COMM_CODE")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CommonCode {
+public class CommonCode extends BaseEntity {
 
     @EmbeddedId
     private CommonCodeId id;

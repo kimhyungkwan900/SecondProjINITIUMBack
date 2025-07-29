@@ -8,7 +8,10 @@ import java.util.List;
 
 @Repository
 public interface DiagnosticResultRepository extends JpaRepository<DiagnosticResult, Long> {
-    List<DiagnosticResult> findByUserId(Long userId); // 사용자의 전체 검사 결과 조회
 
-    List<DiagnosticResult> findByTestIdAndUserId(Long testId, Long userId); // 특정 검사에 대한 결과
+    // 학생 번호로 모든 검사 결과 조회
+    List<DiagnosticResult> findByStudent_StudentNo(String studentNo);
+
+    // 특정 검사 + 특정 학생 번호로 결과 조회
+    List<DiagnosticResult> findByTest_IdAndStudent_StudentNo(Long testId, String studentNo);
 }

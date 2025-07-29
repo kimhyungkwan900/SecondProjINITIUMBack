@@ -47,7 +47,7 @@ public class DiagnosisController {
         return ResponseEntity.ok(diagnosisService.getQuestionsByTestId(testId));
     }
 
-    // ✅ 사용자 응답 제출
+    // ✅ 사용자 응답 제출 (StudentNo 반영)
     @PostMapping("/submit")
     public ResponseEntity<Map<String, Object>> submitDiagnosis(@RequestBody DiagnosisSubmitRequestDto dto) {
         Long resultId = diagnosisService.submitDiagnosis(dto);
@@ -63,12 +63,13 @@ public class DiagnosisController {
         return ResponseEntity.ok(diagnosisService.getResultSummary(resultId));
     }
 
-    // 진단검사명으로 검색
+    // 🔍 진단검사명 검색
     @GetMapping("/tests/search")
     public ResponseEntity<List<DiagnosticTestDto>> searchTests(@RequestParam String keyword) {
         return ResponseEntity.ok(diagnosisService.searchTestsByKeyword(keyword));
     }
 
+    // 📑 진단검사 페이징 조회
     @GetMapping("/tests/paged")
     public ResponseEntity<Page<DiagnosticTestDto>> getPagedTests(
             @RequestParam(defaultValue = "") String keyword,
@@ -79,6 +80,7 @@ public class DiagnosisController {
         return ResponseEntity.ok(diagnosisService.getPagedTests(keyword, pageable));
     }
 
+    // 🆕 진단검사 생성
     @PostMapping("/tests")
     public ResponseEntity<Map<String, Object>> createTest(@RequestBody DiagnosticTestDto dto) {
         Long createdId = diagnosisService.registerDiagnosticTest(dto);
@@ -88,8 +90,7 @@ public class DiagnosisController {
         return ResponseEntity.ok(response);
     }
 
-
-
+    // 📄 PDF 결과 다운로드
     @GetMapping("/result/{resultId}/pdf")
     public ResponseEntity<byte[]> downloadDiagnosisPdf(@PathVariable Long resultId) throws IOException {
         DiagnosticResult result = resultRepository.findById(resultId)
@@ -108,5 +109,4 @@ public class DiagnosisController {
 
         return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
     }
-
 }

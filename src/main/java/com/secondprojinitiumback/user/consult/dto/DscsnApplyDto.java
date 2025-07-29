@@ -23,9 +23,9 @@ public class DscsnApplyDto {
 
     private String dscsnStatus;
 
-    private Student student;
+    private String studentNo;
 
-    private DscsnDate dscsnDt;
+    private String dscsnDtId;
 
-    private DscsnKind dscsnKind;
+    private String dscsnKindId;
 }

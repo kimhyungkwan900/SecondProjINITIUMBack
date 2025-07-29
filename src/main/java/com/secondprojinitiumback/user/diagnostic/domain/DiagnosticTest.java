@@ -30,6 +30,7 @@ public class DiagnosticTest {
     private String useYn;
 
     @OneToMany(mappedBy = "test", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<DiagnosticQuestion> questions = new ArrayList<>();
 }
 

@@ -61,5 +61,6 @@ public class DiagnosticQuestion {
      * CascadeType.ALL: Question 저장/삭제 시 Answer도 함께 처리
      */
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<DiagnosticAnswer> answers = new ArrayList<>();
 }

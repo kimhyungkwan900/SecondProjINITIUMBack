@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.common.login.domain;
 
+import com.secondprojinitiumback.common.domain.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
         })
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LoginInfo {
+public class LoginInfo extends BaseEntity {
 
     @Id
     @Column(name = "LGN_ID", length = 20, nullable = false, unique = true)

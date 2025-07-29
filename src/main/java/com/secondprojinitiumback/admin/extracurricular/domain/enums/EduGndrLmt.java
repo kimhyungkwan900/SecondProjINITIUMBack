@@ -5,6 +5,7 @@ public enum EduGndrLmt {
     FEMALE("20");
 
     private String code;
+
     EduGndrLmt(String code) {
         this.code = code;
     }

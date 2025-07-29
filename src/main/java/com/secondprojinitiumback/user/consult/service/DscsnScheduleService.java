@@ -4,6 +4,8 @@ import com.secondprojinitiumback.user.consult.domain.DscsnDate;
 import com.secondprojinitiumback.user.consult.dto.DscsnScheduleDto;
 import com.secondprojinitiumback.user.consult.repository.DscsnScheduleRepository;
 import com.secondprojinitiumback.user.consult.repository.SequenceGenerator;
+import com.secondprojinitiumback.user.consult.repository.TempEmployeeRepository;
+import com.secondprojinitiumback.user.employee.domain.Employee;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,9 @@ public class DscsnScheduleService {
     private final DscsnScheduleRepository dscsnScheduleRepository;
     private final SequenceGenerator sequenceGenerator;
 
+    //<<<교원 정보 가져오는 임시 리포지토리>>>
+    private final TempEmployeeRepository employeeRepository;
+
     //상담사, 교수 일정 등록
     public void saveDscsnSchedule(DscsnScheduleDto dscsnScheduleDto, String dscsnType) {
         //시퀀스 번호 생성
@@ -30,15 +35,30 @@ public class DscsnScheduleService {
         //dscsnType: 지도교수 상담은 A, 진로취업 상담은 C, 심리상담은 P,  학습상담은 L
         String dscsnDtId = dscsnType + today + String.format("%03d", seqNum);
 
+        //dscsnScheduleDto에서 empNo로 Employee 엔티티 조회(임시)
+        Employee employeeInfo = employeeRepository.getEmployeeByEmpNo(dscsnScheduleDto.getEmpNo());
+
         // DscsnScheduleDto를 DscsnDate 엔티티로 변환
         DscsnDate dscsnDate = DscsnDate.builder()
                 .dscsnDtId(dscsnDtId)
                 .possibleDate(dscsnScheduleDto.getScheduleDate())
                 .possibleTime(dscsnScheduleDto.getStartTime())
-                .employee()
+                .employee(employeeInfo)
                 .build();
 
         //등록한 상담일정 저장
         dscsnScheduleRepository.save(dscsnDate);
+    }
+
+    //상담사, 교수 일정 조회
+
+    //상담사, 교수 일정 삭제
+    public void deleteDscsnSchedule(String dscsnDtId) {
+        //상담일정 ID로 해당 상담일정 조회
+        DscsnDate dscsnDate = dscsnScheduleRepository.findById(dscsnDtId)
+                .orElseThrow(() -> new IllegalArgumentException("상담일정이 존재하지 않습니다. ID: " + dscsnDtId));
+
+        //조회한 일정 삭제
+        dscsnScheduleRepository.delete(dscsnDate);
     }
 }

@@ -67,6 +67,15 @@ public class DiagnosisService {
         return testRepository.save(test).getId();
     }
 
+    @Transactional
+    public void deleteDiagnosticTest(Long id) {
+        if (!testRepository.existsById(id)) {
+            throw new IllegalArgumentException("삭제할 검사가 존재하지 않습니다.");
+        }
+        testRepository.deleteById(id);
+    }
+
+
     /**
      * ✅ 사용 가능한 검사 목록 조회
      */

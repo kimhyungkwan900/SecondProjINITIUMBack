@@ -1,4 +1,4 @@
-package com.secondprojinitiumback;
+package com.secondprojinitiumback.test;
 
 import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularCategory;
 import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularCategoryDTO;
@@ -58,7 +58,7 @@ public class CategoryTest {
         assertNotNull(result); // 결과가 null이 아닌지
         assertFalse(result.isEmpty(), "조회된 카테고리 리스트가 비어 있지 않아야 합니다.");
         // 첫 번째 결과 출력(확인용)
-        result.forEach(dto -> System.out.println("카테고리 ID: " + dto.getCategoryId() + ", 이름: " + dto.getCtgryNm()));
+        result.forEach(dto -> System.out.println("카테고리 ID: " + dto.getCtgryId() + ", 이름: " + dto.getCtgryNm()));
     }
 //    @Test
 //    @DisplayName("카테고리 삭제 테스트")

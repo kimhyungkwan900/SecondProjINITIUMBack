@@ -1,6 +1,5 @@
 package com.secondprojinitiumback.common.login.domain;
 
-import com.secondprojinitiumback.common.login.constatnt.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
@@ -44,8 +43,7 @@ public class LoginInfo {
 
     @Column(name = "ACNT_JOIN_DT", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime accountJoinDate;
-
-    // 생성자 메서드
+    
     public static LoginInfo create(String loginId,
                                    String password,
                                    String userType,

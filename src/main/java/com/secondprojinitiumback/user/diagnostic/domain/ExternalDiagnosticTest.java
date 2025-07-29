@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.user.diagnostic.domain;
 
+import com.secondprojinitiumback.common.domain.CommonCode;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,4 +55,12 @@ public class ExternalDiagnosticTest {
     @Lob
     @Column(name = "DGNSTC_TST_DC")
     private String description;
+
+    /** 🔹 공통코드(NC, CP 등 업무구분 코드) 참조 **/
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+            @JoinColumn(name = "CD_SE", referencedColumnName = "CD_SE"),
+            @JoinColumn(name = "CD", referencedColumnName = "CD")
+    })
+    private CommonCode categoryCode;
 }

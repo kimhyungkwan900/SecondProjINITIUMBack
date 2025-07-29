@@ -3,6 +3,7 @@ package com.secondprojinitiumback.admin.extracurricular.dto;
 import lombok.*;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -10,10 +11,10 @@ import java.sql.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExtracurricularCategoryDTO {
-    private Long categoryId;
+    private Long ctgryId;
     private Long stgrId;
     private String ctgryNm;
-    private Date dataCrtDt;
+    private LocalDateTime dataCrtDt;
     private String ctgrtUseYn;
 
 

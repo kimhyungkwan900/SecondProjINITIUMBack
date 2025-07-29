@@ -10,7 +10,6 @@ import lombok.*; // Lombok import 추가
 @AllArgsConstructor
 @Builder
 public class University {
-
     @Id
     @Column(name = "UNIV_CD", length = 8)
     private String universityCode;

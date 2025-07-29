@@ -1,10 +1,10 @@
 package com.secondprojinitiumback.admin.extracurricular.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -15,7 +15,7 @@ public class ExtracurricularCategory {
     @Id
     @Column(name = "ctgry_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ctgry_id;
+    private Long ctgryId;
 
     @Column(name = "stgr_id", nullable = false)
     private Long stgrId;
@@ -24,9 +24,12 @@ public class ExtracurricularCategory {
     private String ctgryNm;
 
     @Column(name = "data_crt_dt")
-    private Date dataCrtDt;
+    private LocalDateTime dataCrtDt;
 
     @Column(name = "Ctgry_Use_YN")
     private String ctgryUseYn;
 
+    public void updateCtryUseYn(String ctgryUseYn) {
+        this.ctgryUseYn = ctgryUseYn;
+    }
 }

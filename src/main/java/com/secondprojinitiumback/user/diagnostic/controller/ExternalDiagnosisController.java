@@ -27,11 +27,17 @@ public class ExternalDiagnosisController {
     @Value("${career.api.key}")
     private String apiKey;
 
+    /**
+     * 🔍 외부 진단검사 전체 목록
+     */
     @GetMapping("/tests")
     public ResponseEntity<List<ExternalTestListDto>> getExternalTestList() {
         return ResponseEntity.ok(externalDiagnosisService.getAvailableExternalTests());
     }
 
+    /**
+     * 🔍 외부 진단검사 검색
+     */
     @GetMapping("/tests/search")
     public ResponseEntity<List<ExternalTestListDto>> searchExternalTests(
             @RequestParam("keyword") String keyword
@@ -39,7 +45,9 @@ public class ExternalDiagnosisController {
         return ResponseEntity.ok(externalDiagnosisService.searchExternalTestsByName(keyword));
     }
 
-
+    /**
+     * 🔍 외부 진단검사 페이징 조회
+     */
     @GetMapping("/tests/paged")
     public ResponseEntity<Page<ExternalTestListDto>> getPagedExternalTests(
             @RequestParam(defaultValue = "") String keyword,
@@ -50,10 +58,8 @@ public class ExternalDiagnosisController {
         return ResponseEntity.ok(externalDiagnosisService.getPagedExternalTests(keyword, pageable));
     }
 
-
     /**
-     * 1. 외부 문항 조회 - 원본 응답 Map 그대로 반환
-     * 예: /api/external-diagnosis/questions?qestrnSeq=CT202407&trgetSe=student
+     * 📄 외부 문항 조회 - 원본 응답 (Map 그대로 반환)
      */
     @GetMapping("/questions")
     public ResponseEntity<Map<String, Object>> getExternalQuestionsRaw(
@@ -65,8 +71,7 @@ public class ExternalDiagnosisController {
     }
 
     /**
-     * 2. 외부 문항 조회 - 파싱된 응답 DTO 반환
-     * 예: /api/external-diagnosis/questions/parsed?qestrnSeq=CT202407&trgetSe=student
+     * 📄 외부 문항 조회 - 파싱된 응답 DTO 반환
      */
     @GetMapping("/questions/parsed")
     public ResponseEntity<ExternalQuestionResponseDto> getExternalQuestionsParsed(
@@ -79,8 +84,8 @@ public class ExternalDiagnosisController {
     }
 
     /**
-     * 3. 외부 검사 결과 제출
-     * 예: POST /api/external-diagnosis/submit
+     * ✅ 외부 검사 결과 제출
+     * studentNo를 dto에 포함시켜서 저장까지 연계
      */
     @PostMapping("/submit")
     public ResponseEntity<ExternalDiagnosisResultDto> submitExternalDiagnosis(

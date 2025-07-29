@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface Dscsn_apply_repoistory extends JpaRepository<Dscsn_apply,Integer> {
+public interface Dscsn_apply_repoistory extends JpaRepository<Dscsn_apply,String> {
 }

@@ -1,9 +1,7 @@
 package com.secondprojinitiumback.user.consult.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.secondprojinitiumback.user.student.domain.Student;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,24 +23,27 @@ import lombok.NoArgsConstructor;
 public class Dscsn_apply {
 
     @Id
-    @Column(name = "DSCSN_APPLY_ID", nullable = false, length = 5)
+    @Column(name = "DSCSN_APLY_ID", nullable = false, length = 10)
     private String dscsn_apply_id;
 
     @Column(name = "STDNT_TELNO", nullable = false, length = 11)
-    private String stdnt_telno;
+    private String student_telno;
 
     @Column(name = "DSCSN_APLY_CN", nullable = true)
-    private String dscsn_aply_cn;
+    private String dscsn_apply_cn;
 
     @Column(name = "DSCSN_STATUS", nullable = false)
     private String dscsn_status;
 
-    @Column(name = "STDNT_NO", nullable = false)
-    private Character stdnt_no;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "STDNT_NO", foreignKey = @ForeignKey(name = "FK_STDNT_NO"))
+    private Student student;
 
-    @Column(name = "DSCSN_DT_ID", nullable = false)
-    private Character dscsn_dt_id;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "DSCSN_DT_ID", foreignKey = @ForeignKey(name = "FK_DSCSN_DT_ID"))
+    private Dscsn_dt dscsn_dt;
 
-    @Column(name = "DSCSN_KND_ID", nullable = true)
-    private Character dscsn_knd_id;
+    @OneToOne
+    @JoinColumn(name = "DSCSN_KND_ID",foreignKey = @ForeignKey(name = "FK_DSCSN_KND_ID"))
+    private Dscsn_knd dscsn_knd;
 }

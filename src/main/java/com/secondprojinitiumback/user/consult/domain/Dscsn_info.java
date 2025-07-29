@@ -1,0 +1,31 @@
+package com.secondprojinitiumback.user.consult.domain;
+
+import com.secondprojinitiumback.user.employee.domain.Employee;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Getter
+@Table(name="DSCSN_INFO")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class Dscsn_info {
+
+    @Id
+    @Column(name = "DSCSN_INFO_ID", nullable = false, length = 5)
+    private String dscsn_info_id; //상담일정 ID
+
+    @Column(name = "DSCSN_RSLT_CN", nullable = true)
+    private String dscsn_result_cn; //상담결과 내용
+
+    @Column(name = "DSCSN_RLS_YN", nullable = false, length = 1)
+    private String dscsn_release_yn; //상담결과 공개여부
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "DSCSN_APLY_ID", foreignKey = @ForeignKey(name = "FK_DSCSN_APLY_ID"))
+    private Dscsn_apply dscsnApply;  //신청서 ID
+}

@@ -47,7 +47,7 @@ public class DiagnosisController {
         return ResponseEntity.ok(diagnosisService.getQuestionsByTestId(testId));
     }
 
-    // ✅ 사용자 응답 제출 (StudentNo 반영)
+    // ✅ 사용자 응답 제출
     @PostMapping("/submit")
     public ResponseEntity<Map<String, Object>> submitDiagnosis(@RequestBody DiagnosisSubmitRequestDto dto) {
         Long resultId = diagnosisService.submitDiagnosis(dto);
@@ -79,23 +79,6 @@ public class DiagnosisController {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
         return ResponseEntity.ok(diagnosisService.getPagedTests(keyword, pageable));
     }
-
-    // 🆕 진단검사 생성
-    @PostMapping("/tests")
-    public ResponseEntity<Map<String, Object>> createTest(@RequestBody DiagnosticTestDto dto) {
-        Long createdId = diagnosisService.registerDiagnosticTest(dto);
-        Map<String, Object> response = new HashMap<>();
-        response.put("testId", createdId);
-        response.put("message", "검사가 성공적으로 등록되었습니다.");
-        return ResponseEntity.ok(response);
-    }
-
-    @DeleteMapping("/tests/{id}")
-    public ResponseEntity<Void> deleteTest(@PathVariable Long id) {
-        diagnosisService.deleteDiagnosticTest(id);
-        return ResponseEntity.noContent().build();
-    }
-
 
     // 📄 PDF 결과 다운로드
     @GetMapping("/result/{resultId}/pdf")

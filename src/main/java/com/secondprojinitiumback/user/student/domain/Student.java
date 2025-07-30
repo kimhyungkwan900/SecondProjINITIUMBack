@@ -3,6 +3,7 @@ package com.secondprojinitiumback.user.student.domain;
 import com.secondprojinitiumback.common.bank.domain.BankAccount;
 import com.secondprojinitiumback.common.domain.CommonCode;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
+import com.secondprojinitiumback.common.domain.base.BaseEntity;
 import com.secondprojinitiumback.common.domain.University;
 import com.secondprojinitiumback.common.domain.base.BaseEntity;
 import com.secondprojinitiumback.common.login.domain.LoginInfo;

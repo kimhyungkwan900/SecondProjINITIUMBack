@@ -4,11 +4,11 @@ import com.secondprojinitiumback.admin.coreCompetency.dto.CoreCompetencyAssessme
 import com.secondprojinitiumback.admin.coreCompetency.entity.CoreCompetencyAssessment;
 import com.secondprojinitiumback.admin.coreCompetency.entity.CoreCompetencyCategory;
 import com.secondprojinitiumback.admin.coreCompetency.entity.SubCompetencyCategory;
-import com.secondprojinitiumback.admin.coreCompetency.repository.CommonCodeRepository;
 import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyAssessmentRepository;
 import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyCategoryRepository;
 import com.secondprojinitiumback.admin.coreCompetency.repository.SubCompetencyCategoryRepository;
 import com.secondprojinitiumback.common.domain.CommonCode;
+import com.secondprojinitiumback.common.repository.CommonCodeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

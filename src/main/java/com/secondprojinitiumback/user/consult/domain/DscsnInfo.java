@@ -1,10 +1,7 @@
 package com.secondprojinitiumback.user.consult.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -30,4 +27,19 @@ public class DscsnInfo {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DSCSN_APLY_ID", foreignKey = @ForeignKey(name = "FK_DSCSN_APLY_ID"))
     private DscsnApply dscsnApply;  //신청서 ID
+
+    //상담 상태 변경 메소드
+    public void updateDscsnStatus(String status) {
+        this.dscsnStatus = status;
+    }
+
+    //상담결과 업데이트
+    public void updateDscsnResultCn(String result) {
+        this.dscsnResultCn = result;
+    }
+
+    //상담결과 공개 여부 등록
+    public void updateDscsnReleaseYn(String releaseYn) {
+        this.dscsnReleaseYn = releaseYn;
+    }
 }

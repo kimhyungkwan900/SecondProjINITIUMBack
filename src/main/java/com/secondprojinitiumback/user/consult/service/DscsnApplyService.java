@@ -36,7 +36,7 @@ public class DscsnApplyService {
                 .orElseThrow(EntityExistsException::new);
 
         //선택한 날짜의 예약여부 변경
-        applyDate.setDscsnYn("Y");
+        applyDate.updateDscsnYn();
 
         //학생정보 가져오기
         Student student = studentRepository.findById(dscsnApplyDto.getStudentNo())
@@ -84,6 +84,6 @@ public class DscsnApplyService {
 
         //상담일정 예약여부 변경
         DscsnSchedule dscsnSchedule = dscsnApply.getDscsnDt();
-        dscsnSchedule.setDscsnYn("N");
+        dscsnSchedule.updateDscsnYn();
     }
 }

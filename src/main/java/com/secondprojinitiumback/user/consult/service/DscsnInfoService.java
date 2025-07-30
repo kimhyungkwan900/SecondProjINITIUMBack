@@ -5,6 +5,8 @@ import com.secondprojinitiumback.user.consult.domain.DscsnInfo;
 import com.secondprojinitiumback.user.consult.dto.DscsnInfoDto;
 import com.secondprojinitiumback.user.consult.repository.DscsnInfoRepository;
 import com.secondprojinitiumback.user.consult.repository.SequenceGenerator;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -60,16 +62,27 @@ public class DscsnInfoService {
     }
 
     //--- 상담상태 변경
-    public void updateDscsnStatus(Long dscsnId, String status) {
-        // 상담 ID로 상담 상태 변경 로직 구현
-        // 예: DscsnInfo dscsnInfo = dscsnInfoRepository.findById(dscsnId).or
+    public void updateDscsnStatus(String dscsnInfoId, String status) {
+
+        // 상담정보 가져오기
+        DscsnInfo dscsnInfo = dscsnInfoRepository.findById(dscsnInfoId)
+                .orElseThrow(EntityExistsException::new);
+
+        // 상담 상태 업데이트
+        dscsnInfo.updateDscsnStatus(status);
     }
 
     //--- 상담결과 등록
-    public void registerDscsnResult(Long dscsnId, String result) {
-        // 상담 ID로 상담 결과 등록 로직 구현
-        // 예: DscsnInfo dscsnInfo = dscsnInfoRepository.findById(dscsnId).orElseThrow(EntityNotFoundException::new);
-        // dscsnInfo.setResult(result);
-        // dscsnInfoRepository.save(dscsnInfo);
+    public void registerDscsnResult(String dscsnInfoId, String releaseYn, String result) {
+
+        // 상담정보 가져오기
+        DscsnInfo dscsnInfo = dscsnInfoRepository.findById(dscsnInfoId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        // 상담 결과 공개여부 등록
+        dscsnInfo.updateDscsnReleaseYn(releaseYn);
+
+        // 상담 결과 등록
+        dscsnInfo.updateDscsnResultCn(result);
     }
 }

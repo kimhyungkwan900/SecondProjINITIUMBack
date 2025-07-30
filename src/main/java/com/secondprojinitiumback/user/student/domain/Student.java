@@ -5,6 +5,7 @@ import com.secondprojinitiumback.common.domain.CommonCode;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
 import com.secondprojinitiumback.common.domain.University;
 import com.secondprojinitiumback.common.domain.base.BaseEntity;
+import com.secondprojinitiumback.common.domain.base.BaseEntity;
 import com.secondprojinitiumback.common.login.domain.LoginInfo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

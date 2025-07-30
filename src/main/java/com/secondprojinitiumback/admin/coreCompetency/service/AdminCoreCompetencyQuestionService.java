@@ -10,7 +10,6 @@ import com.secondprojinitiumback.admin.coreCompetency.repository.BehaviorIndicat
 import com.secondprojinitiumback.admin.coreCompetency.repository.BehaviorIndicatorRepository;
 import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyAssessmentRepository;
 import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyQuestionRepository;
-import com.secondprojinitiumback.common.domain.CommonCode;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
 import com.secondprojinitiumback.common.repository.CommonCodeRepository;
 import com.secondprojinitiumback.common.repository.SchoolSubjectRepository;

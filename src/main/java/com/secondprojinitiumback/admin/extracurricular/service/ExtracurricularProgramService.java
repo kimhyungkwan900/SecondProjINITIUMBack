@@ -23,6 +23,7 @@ public class ExtracurricularProgramService {
     private final ModelMapper modelMapper;
     private final EmpInfoRepository empInfoRepository;
 
+    // 비교과 프로그램 등록 신청
     public void insertExtracurricularProgram(ExtracurricularProgramFormDTO dto, String empId){
         EmpInfo empInfo = empInfoRepository.findById(empId)
                 .orElseThrow(() -> new IllegalArgumentException("직원이 존재하지 않습니다."));
@@ -50,6 +51,7 @@ public class ExtracurricularProgramService {
         extracurricularProgramRepository.save(program);
     }
 
+    //비교과 프로그램 등록 승인 및 반려 수정
     public void updateExtracurricularProgram(ExtracurricularProgramUpdateFormDTO dto) {
         ExtracurricularProgram program = extracurricularProgramRepository.findById(dto.getEduMngId()).orElseThrow();
 

@@ -16,13 +16,4 @@ public class ExtracurricularCategoryFormDTO {
    private String ctgryNm;
    private LocalDateTime dataCrtDt;
    private String ctgryUseYn;
-
-   public void ChanageCtrUseYn(String ctgryUseYn) {
-      this.ctgryUseYn = ctgryUseYn;
-   }
-   // 생성일시를 현재 시간으로 설정
-   public void createDataCrtDt() {
-      this.dataCrtDt = LocalDateTime.now();
-   }
-
 }

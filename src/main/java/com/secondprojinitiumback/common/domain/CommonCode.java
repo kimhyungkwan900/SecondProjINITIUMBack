@@ -11,19 +11,24 @@ import org.hibernate.annotations.ColumnDefault;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommonCode extends BaseEntity {
 
+    // 코드 그룹 ID
     @EmbeddedId
     private CommonCodeId id;
 
+    // 코드 그룹명
     @Column(name = "CD_NM", length = 100, nullable = false)
     private String codeName;
 
+    // 정렬 순서
     @Column(name = "SORT_ORDR")
     private Integer sortOrder;
 
+    // 사용 여부
     @Column(name = "USE_YN", length = 1, nullable = false)
     @ColumnDefault("'Y'")
     private String useYn;
 
+    // 비고
     @Column(name = "RMK", length = 200)
     private String remark;
 

@@ -11,10 +11,13 @@ import lombok.*; // Lombok import 추가
 @AllArgsConstructor
 @Builder
 public class University extends BaseEntity {
+
+    // 대학코드
     @Id
     @Column(name = "UNIV_CD", length = 8)
     private String universityCode;
 
+    // 대학명
     @Column(name = "UNIV_NM", length = 200, nullable = false)
     private String universityName;
 }

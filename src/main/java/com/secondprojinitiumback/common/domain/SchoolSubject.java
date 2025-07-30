@@ -14,13 +14,16 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SchoolSubject extends BaseEntity {
 
+    // 학과과목코드
     @Id
     @Column(name = "SCSBJT_NO", length = 5)
     private String subjectCode;
 
+    // 학과과목명
     @Column(name = "SCSBJT_NM", length = 20, nullable = false, unique = true)
     private String subjectName;
 
+    // 학과구분코드
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
             @JoinColumn(name = "CD", referencedColumnName = "id.code"),

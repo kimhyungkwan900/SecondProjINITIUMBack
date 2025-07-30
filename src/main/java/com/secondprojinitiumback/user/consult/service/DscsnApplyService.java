@@ -26,11 +26,11 @@ public class DscsnApplyService {
 
     private final SequenceGenerator sequenceGenerator;
 
-    //--- 지도교수 상담신청
-    public void applyAcademicConsultation(DscsnApplyDto dscsnApplyDto) {
+    //--- 학생 상담신청
+    public void applyConsultation(DscsnApplyDto dscsnApplyDto) {
 
         //선택한 날짜 정보 가져오기
-        DscsnDate applyDate = dscsnScheduleRepository.findById(dscsnApplyDto.getDscsnApplyId())
+        DscsnDate applyDate = dscsnScheduleRepository.findById(dscsnApplyDto.getDscsnDtId())
                 .orElseThrow(EntityExistsException::new);
 
         //학생정보 가져오기
@@ -47,13 +47,14 @@ public class DscsnApplyService {
 
         //2. ID 생성
         //지도교수 상담은 A, 진로취업 상담은 C, 심리상담은 P, 학습상담은 L
-        String dscsnApplyId = "A" + String.format("%04d", seqNum);
+        String keyword = dscsnApplyDto.getDscsnKindId().substring(0,1);
+
+        String dscsnApplyId = keyword + String.format("%04d", seqNum);
 
         DscsnApply dscsnApply = DscsnApply.builder()
                 .dscsnApplyId(dscsnApplyId)
                 .studentTelno(dscsnApplyDto.getStudentTelno())
                 .dscsnApplyCn(dscsnApplyDto.getDscsnApplyCn())
-                .dscsnStatus(dscsnApplyDto.getDscsnStatus())
                 .student(student)
                 .dscsnDt(applyDate)
                 .dscsnKind(dscsnKind)
@@ -61,10 +62,4 @@ public class DscsnApplyService {
 
         dscsnApplyRepoistory.save(dscsnApply);
     }
-
-    //--- 진로취업 상담신청
-
-    //--- 심리상담
-
-    //--- 학습상담
 }

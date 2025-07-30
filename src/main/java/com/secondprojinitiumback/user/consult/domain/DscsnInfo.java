@@ -18,6 +18,9 @@ public class DscsnInfo {
     @Column(name = "DSCSN_INFO_ID", nullable = false, length = 5)
     private String dscsnInfoId; //상담일정 ID
 
+    @Column(name = "DSCSN_STATUS", nullable = false)
+    private String dscsnStatus; //상담 상태
+
     @Column(name = "DSCSN_RSLT_CN", nullable = true)
     private String dscsnResultCn; //상담결과 내용
 

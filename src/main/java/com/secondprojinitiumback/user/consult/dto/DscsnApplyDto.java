@@ -21,7 +21,7 @@ public class DscsnApplyDto {
 
     private String dscsnApplyCn;
 
-    private String dscsnStatus;
+    private String dscsnOnlineYn;
 
     private String studentNo;
 

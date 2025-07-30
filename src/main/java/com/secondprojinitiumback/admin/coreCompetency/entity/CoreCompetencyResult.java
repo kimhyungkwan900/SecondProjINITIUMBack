@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.admin.coreCompetency.entity;
 
+import com.secondprojinitiumback.user.student.domain.Student;
 import jakarta.persistence.*;
 
 @Entity
@@ -14,10 +15,10 @@ public class CoreCompetencyResult {
     @JoinColumn(name = "ASMT_ID")
     private CoreCompetencyAssessment assessment; // 관련된 평가
 
-    // 추후 학생 엔티티와 연결 예정
-//    @ManyToOne
-//    @JoinColumn(name = "STDNT_NO")
-//    private Student student;
+    //학생 엔티티와 연결
+    @ManyToOne
+    @JoinColumn(name = "STDNT_NO")
+    private Student student;
 
     @ManyToOne
     @JoinColumn(name = "ASMT_RSPNS_ID")

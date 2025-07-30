@@ -18,12 +18,8 @@ public class StudentCompetencyScore {
     private CoreCompetencyResult result; // 진단 결과와 연관됨
 
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "CTGR_ID", referencedColumnName = "CTGR_ID", nullable = false),
-            @JoinColumn(name = "STGR_ID", referencedColumnName = "STGR_ID", nullable = false),
-            @JoinColumn(name = "MPNG_ID", referencedColumnName = "MPNG_ID", nullable = false)
-    })
-    private CategoryQuestionMapping categoryQuestionMapping; // 문항-역량 매핑 정보
+    @JoinColumn(name = "MPNG_ID", nullable = false)
+    private BehaviorIndicatorMajorQuestionMapping mapping; // 행동지표와 주요 질문 매핑
 
     @Column(name = "STD_CTGR_SCR")
     private BigDecimal standardScore; // 학생의 해당 역량 점수

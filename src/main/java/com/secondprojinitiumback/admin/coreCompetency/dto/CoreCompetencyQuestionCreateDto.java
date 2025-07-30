@@ -16,5 +16,7 @@ public class CoreCompetencyQuestionCreateDto {
     private String questionName;     // 문항 내용
     private Integer displayOrder;    // 화면 출력 순서
     private Integer answerAllowCount;// 허용 응답 개수
+    private String subjectCode; // SCSBJT_NO, 전공별 문항일 경우에만 사용
+    private Long indicatorId;       // 행동지표 ID (공통문항 아닐 경우 필수)
     private String isCommonCode;        // 공통문항 여부
 }

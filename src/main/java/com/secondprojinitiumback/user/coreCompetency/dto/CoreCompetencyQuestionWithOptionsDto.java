@@ -1,7 +1,13 @@
 package com.secondprojinitiumback.user.coreCompetency.dto;
 
-import java.util.List;
+import lombok.*;
 
+import java.util.List;
+@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 // 문항 + 보기 함께 조회하는 DTO
 public class CoreCompetencyQuestionWithOptionsDto {
     private Long id;                  // 문항 ID

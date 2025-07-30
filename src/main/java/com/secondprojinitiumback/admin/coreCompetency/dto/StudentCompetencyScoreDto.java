@@ -1,7 +1,13 @@
 package com.secondprojinitiumback.admin.coreCompetency.dto;
 
-import java.math.BigDecimal;
+import lombok.*;
 
+import java.math.BigDecimal;
+@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 // 학생의 역량 점수 조회용 DTO
 public class StudentCompetencyScoreDto {
     private Long id;                   // 점수 ID

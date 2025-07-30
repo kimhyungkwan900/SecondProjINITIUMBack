@@ -34,13 +34,8 @@ public class CoreCompetencyQuestion {
     @Column(name = "ANSR_ALOW_CNT")
     private Integer answerAllowCount; // 허용 응답 개수 (객관식 보기 중 선택 가능 개수)
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumns({
-            @JoinColumn(name = "IS_COMMON", referencedColumnName = "CD"),
-            @JoinColumn(name = "IS_COMMON_CD_SE", referencedColumnName = "CD_SE")
-    })
-    private CommonCode isCommonCode; // 공통 여부 (공통 문항인지 여부를 나타내는 코드)
+    @OneToOne
+    @JoinColumn(name = "INDCTR_ID", nullable = false)
+    private BehaviorIndicator behaviorIndicator; // 행동 지표 ID (외래 키, insertable=false, updatable=false)
 
-    @Column(name = "IS_COMMON_CD_SE", insertable = false, updatable = false)
-    private String isCommonCodeGroup = "COMMON_QUESTION"; // 공통 문항 코드 그룹 (고정값)
 }

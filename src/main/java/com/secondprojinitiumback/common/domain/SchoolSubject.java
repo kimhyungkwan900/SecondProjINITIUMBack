@@ -23,14 +23,10 @@ public class SchoolSubject extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-            @JoinColumn(name = "CD", referencedColumnName = "CD", insertable = false, updatable = false),
-            @JoinColumn(name = "CD_SE", referencedColumnName = "CD_SE", insertable = false, updatable = false)
+            @JoinColumn(name = "CD", referencedColumnName = "id.code"),
+            @JoinColumn(name = "CD_SE", referencedColumnName = "id.codeGroup")
     })
     private CommonCode deptDivision;
-
-    // 학과구분코드
-    @Column(name = "CD_SE", length = 20)
-    private String deptDivisionGroup = "CO0003";
 
     // 학과구분코드명
     public static SchoolSubject of(String code, String name, CommonCode division) {

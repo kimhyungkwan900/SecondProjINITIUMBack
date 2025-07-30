@@ -3,6 +3,7 @@ package com.secondprojinitiumback.user.student.domain;
 import com.secondprojinitiumback.common.bank.domain.BankAccount;
 import com.secondprojinitiumback.common.domain.CommonCode;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
+import com.secondprojinitiumback.common.domain.University;
 import com.secondprojinitiumback.common.domain.base.BaseEntity;
 import com.secondprojinitiumback.common.login.domain.LoginInfo;
 import jakarta.persistence.*;
@@ -35,6 +36,10 @@ public class Student extends BaseEntity {
     @JoinColumn(name = "LGN_ID", referencedColumnName = "LGN_ID", nullable = false, unique = true)
     private LoginInfo loginInfo;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "UNIV_CD", referencedColumnName = "UNIV_CD", nullable = false, unique = true)
+    private University school;
+
     // 학과 참조
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SCSBJT_NO", nullable = false)
@@ -62,16 +67,10 @@ public class Student extends BaseEntity {
     @Past(message = "생년월일은 과거 날짜여야 합니다.")
     private LocalDate birthDate;
 
-    @Column(name = "GNDR_CD_SE", length = 6, nullable = false)
-    private String genderCodeSe;
-
-    @Column(name = "GNDR_CD", length = 2, nullable = false)
-    private String genderCode;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-            @JoinColumn(name = "GNDR_CD_SE", referencedColumnName = "CD_SE", insertable = false, updatable = false),
-            @JoinColumn(name = "GNDR_CD", referencedColumnName = "CD", insertable = false, updatable = false)
+            @JoinColumn(name = "CD", referencedColumnName = "id.code"),
+            @JoinColumn(name = "CD_SE", referencedColumnName = "id.codeGroup")
     })
     private CommonCode gender;
 
@@ -90,6 +89,7 @@ public class Student extends BaseEntity {
     @Builder
     public Student(String studentNo,
                    LoginInfo loginInfo,
+                   University school,
                    SchoolSubject schoolSubject,
                    String clubCode,
                    StudentStatusInfo studentStatus,
@@ -103,6 +103,7 @@ public class Student extends BaseEntity {
                    String grade) {
         this.studentNo = studentNo;
         this.loginInfo = loginInfo;
+        this.school = school;
         this.schoolSubject = schoolSubject;
         this.clubCode = clubCode;
         this.studentStatus = studentStatus;
@@ -111,15 +112,6 @@ public class Student extends BaseEntity {
         this.admissionDate = admissionDate;
         this.birthDate = birthDate;
         this.gender = gender;
-
-        if (gender != null && gender.getId() != null) {
-            this.genderCodeSe = gender.getId().getCodeGroup();
-            this.genderCode = gender.getId().getCode();
-        } else {
-            this.genderCodeSe = null;
-            this.genderCode = null;
-        }
-
         this.email = email;
         this.advisor = advisor;
         this.grade = grade;

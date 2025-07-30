@@ -44,17 +44,10 @@ public class Employee extends BaseEntity {
     @Column(name = "EMP_NM", length = 100, nullable = false)
     private String name;
 
-    // 복합 코드 값 직접 보관
-    @Column(name = "GNDR_CD_SE", length = 6, nullable = false)
-    private String genderCodeSe;
-
-    @Column(name = "GNDR_CD", length = 2, nullable = false)
-    private String genderCode;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-            @JoinColumn(name = "GNDR_CD_SE", referencedColumnName = "CD_SE", insertable = false, updatable = false),
-            @JoinColumn(name = "GNDR_CD", referencedColumnName = "CD", insertable = false, updatable = false)
+            @JoinColumn(name = "CD", referencedColumnName = "id.code"),
+            @JoinColumn(name = "CD_SE", referencedColumnName = "id.codeGroup")
     })
     private CommonCode gender;
 
@@ -97,15 +90,6 @@ public class Employee extends BaseEntity {
         this.bankAccount = bankAccount;
         this.name = name;
         this.gender = gender;
-
-        if (gender != null && gender.getId() != null) {
-            this.genderCodeSe = gender.getId().getCodeGroup();
-            this.genderCode = gender.getId().getCode();
-        } else {
-            this.genderCodeSe = null;
-            this.genderCode = null;
-        }
-
         this.birthDate = birthDate;
         this.email = email;
         this.tel = tel;

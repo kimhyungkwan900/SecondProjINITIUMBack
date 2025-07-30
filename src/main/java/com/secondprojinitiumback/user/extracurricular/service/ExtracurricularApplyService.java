@@ -1,45 +1,90 @@
 package com.secondprojinitiumback.user.extracurricular.service;
 
 import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularProgram;
+import com.secondprojinitiumback.admin.extracurricular.domain.enums.EduSlctnType;
 import com.secondprojinitiumback.admin.extracurricular.domain.test.StdntInfo;
 import com.secondprojinitiumback.admin.extracurricular.domain.test.StdntInfoRepository;
 import com.secondprojinitiumback.admin.extracurricular.repository.ExtracurricularProgramRepository;
 import com.secondprojinitiumback.user.extracurricular.domain.ExtracurricularApply;
+import com.secondprojinitiumback.user.extracurricular.domain.enums.AprySttsNm;
+import com.secondprojinitiumback.user.extracurricular.dto.ExtracurricularApplyDTO;
 import com.secondprojinitiumback.user.extracurricular.dto.ExtracurricularApplyFormDTO;
 import com.secondprojinitiumback.user.extracurricular.repository.ExtracurricularApplyRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ExtracurricularApplyService {
 
     private final ExtracurricularApplyRepository extracurricularApplyRepository;
-
     private final ExtracurricularProgramRepository extracurricularProgramRepository;
-
     private final StdntInfoRepository stuntInfoRepository;
+    private final ModelMapper modelMapper;
 
     // 비교과 프로그램 신청
     public void applyExtracurricular(String stdntNo, ExtracurricularApplyFormDTO dto) {
         StdntInfo stdntInfo = stuntInfoRepository.findById(stdntNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 학생 없음: " + stdntNo));
+        dto.setEduAplyDt(LocalDateTime.now()); // 신청 일시 설정
+        ExtracurricularProgram program = extracurricularProgramRepository.findById(dto.getExtracurricularProgram().getEduMngId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 비교과 프로그램 없음: " + dto.getExtracurricularProgram().getEduMngId()));
+        // 중복 신청 방지
+        boolean exists = extracurricularApplyRepository.existsByStdntInfoAndExtracurricularProgram(stdntInfo, program);
+        if(exists){
+            throw new IllegalArgumentException("이미 신청한 프로그램입니다: " + program.getEduMngId());
+        }
+        // 신청 기간 확인
+        if (LocalDateTime.now().isBefore(dto.getExtracurricularProgram().getEduAplyBgngDt()) ||
+                LocalDateTime.now().isAfter(dto.getExtracurricularProgram().getEduAplyEndDt())) {
+            throw new IllegalStateException("현재는 신청 기간이 아닙니다.");
+        }
+        // 선착순 인원 제한
+        long acceptCount = extracurricularApplyRepository.countByExtracurricularProgramAndAprySttsNm(program, AprySttsNm.ACCEPT);
+        if (acceptCount >= program.getEduPtcpNope()) {
+            throw new IllegalStateException("신청 인원이 초과되었습니다.");
+        }
+        if(program.getEduSlctnType() == EduSlctnType.FIRSTCOME){
+            ExtracurricularApply apply = ExtracurricularApply.builder()
+                    .stdntInfo(stdntInfo)
+                    .extracurricularProgram(program)
+                    .eduAplyCn(dto.getEduAplyCn())
+                    .eduAplyDt(dto.getEduAplyDt())
+                    .aprySttsNm(AprySttsNm.ACCEPT) // 선착순 프로그램은 신청 시 바로 승인 처리
+                    .build();
+            extracurricularApplyRepository.save(apply);
+        }else{
+            ExtracurricularApply apply = ExtracurricularApply.builder()
+                    .stdntInfo(stdntInfo)
+                    .extracurricularProgram(program)
+                    .eduAplyCn(dto.getEduAplyCn())
+                    .eduAplyDt(dto.getEduAplyDt())
+                    .aprySttsNm(AprySttsNm.APPLY) // 일반 프로그램은 신청 시 승인 대기 상태로 저장
+                    .build();
+            extracurricularApplyRepository.save(apply);
+        }
+    }
 
-        dto.setEduAplyDt(LocalDateTime.now());
-
-        // ✅ 프로그램 ID는 따로 받아야 함
-        ExtracurricularProgram program = extracurricularProgramRepository.findById(dto.getEduMngId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 비교과 프로그램 없음: " + dto.getEduMngId()));
-
-        ExtracurricularApply apply = ExtracurricularApply.builder()
-                .stdntInfo(stdntInfo)
-                .extracurricularProgram(program)
-                .eduAplyCn(dto.getEduAplyCn())
-                .eduAplyDt(dto.getEduAplyDt())
-                .build();
-
+    // 신청 취소 상태로 만들기
+    public void cancelExtracurricularApply(Long eduAplyId) {
+        ExtracurricularApply apply = extracurricularApplyRepository.findById(eduAplyId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 신청이 존재하지 않습니다: " + eduAplyId));
+        apply.setAprySttsNm(AprySttsNm.DELETE);
         extracurricularApplyRepository.save(apply);
+    }
+
+    // 신청 목록 조회
+    public List<ExtracurricularApplyDTO> findExtracurricularApplylist(String stdntNo){
+        StdntInfo stdntInfo = stuntInfoRepository.findById(stdntNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 학생 없음: " + stdntNo));
+        List<ExtracurricularApply> applyList = extracurricularApplyRepository.findByStdntInfo_StdntNo(stdntNo);
+        return applyList.stream()
+                .map(apply -> modelMapper.map(apply, ExtracurricularApplyDTO.class))
+                .collect(Collectors.toList());
     }
 }

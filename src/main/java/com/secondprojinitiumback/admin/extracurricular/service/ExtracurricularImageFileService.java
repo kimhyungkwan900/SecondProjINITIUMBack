@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Service
 @Log4j2
-public class ExtracurricularFileService {
+public class ExtracurricularImageFileService {
 
     @Value("${extracurricularImage}")
     private String extracurricularImagePath;

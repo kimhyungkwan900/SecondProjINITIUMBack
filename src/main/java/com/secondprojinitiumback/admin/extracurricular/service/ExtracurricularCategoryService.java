@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -18,17 +19,19 @@ public class ExtracurricularCategoryService {
     private final ExtracurricularCategoryRepository extracurricularCategoryRepository;
     private final ModelMapper modelMapper;
 
+    // 비교과 카테고리 등록
     public void insertExtracurricularCategory(ExtracurricularCategoryFormDTO dto) {
         // 카테고리 사용 여부 기본 값 설정
-        dto.ChanageCtrUseYn("Y");
+        dto.setCtgryUseYn("Y");
         // 데이터 생성일자 기본 값 설정
-        dto.createDataCrtDt();
+        dto.setDataCrtDt(LocalDateTime.now());
         // dto를 ExtracurricularCategory로 변환
         ExtracurricularCategory extracurricularCategory = modelMapper.map(dto, ExtracurricularCategory.class);
         // ExtracurricularCategory 저장
         extracurricularCategoryRepository.save(extracurricularCategory);
     }
 
+    // 비교과 카테고리 사용 여부 수정
     public void updateExtracurricularCategory(Long id, String ctgryUseYn) {
         // 아이디를 받아와 수정할 ExtracurricularCategory 객체를 조회
         ExtracurricularCategory category = extracurricularCategoryRepository.findById(id)
@@ -39,6 +42,7 @@ public class ExtracurricularCategoryService {
         extracurricularCategoryRepository.save(category);
     }
 
+    // 비교과 카테고리 삭제
     public void deleteExtracurricularCategory(Long id) {
         // 아이디를 받아와 삭제할 ExtracurricularCategory 객체를 조회
         ExtracurricularCategory category = extracurricularCategoryRepository.findById(id)
@@ -47,6 +51,7 @@ public class ExtracurricularCategoryService {
         extracurricularCategoryRepository.delete(category);
     }
 
+    // 비교과 카테고리 목록 조회
     public List<ExtracurricularCategoryDTO> getExtracurricularCategoryList(Long stgrId) {
         // 상위 카테고리 번호를 받아와 ExtracurricularCategory 객체를 조회
         List<ExtracurricularCategory> categories = extracurricularCategoryRepository.findByStgrId(stgrId);

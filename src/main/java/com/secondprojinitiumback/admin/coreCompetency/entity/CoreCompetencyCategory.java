@@ -15,12 +15,17 @@ public class CoreCompetencyCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CTGR_ID")
-    private int id; // 핵심역량 카테고리 ID (PK)
+    private Long id; // 핵심역량 카테고리 ID (PK)
 
     @Column(name = "CTGR_NM")
     private String coreCategoryName; // 핵심역량 카테고리 이름
 
     @Column(name = "CTGR_CN")
     private String coreCategoryNote; // 핵심역량 카테고리 설명
+
+    @ManyToOne
+    @JoinColumn(name = "ITP_ID", nullable = false)
+    private IdealTalentProfile idealTalentProfile; // 인재상 프로필과 연관
+
 }
 

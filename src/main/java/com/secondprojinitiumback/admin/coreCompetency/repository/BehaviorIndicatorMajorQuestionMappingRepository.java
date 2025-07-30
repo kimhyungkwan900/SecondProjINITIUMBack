@@ -1,0 +1,12 @@
+package com.secondprojinitiumback.admin.coreCompetency.repository;
+
+import com.secondprojinitiumback.admin.coreCompetency.entity.BehaviorIndicator;
+import com.secondprojinitiumback.admin.coreCompetency.entity.BehaviorIndicatorMajorQuestionMapping;
+import com.secondprojinitiumback.admin.coreCompetency.entity.CoreCompetencyQuestion;
+import com.secondprojinitiumback.common.domain.SchoolSubject;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface BehaviorIndicatorMajorQuestionMappingRepository extends JpaRepository<BehaviorIndicatorMajorQuestionMapping, Long> {
+
+    BehaviorIndicatorMajorQuestionMapping findByQuestionAndBehaviorIndicatorAndSchoolSubject(CoreCompetencyQuestion savedQuestion, BehaviorIndicator behaviorIndicator, SchoolSubject schoolSubject);
+}

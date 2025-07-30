@@ -56,11 +56,23 @@ public class ExternalDiagnosticTest {
     @Column(name = "DGNSTC_TST_DC")
     private String description;
 
-    /** 🔹 공통코드(NC, CP 등 업무구분 코드) 참조 **/
+    /**
+     * 🔹 공통코드 참조 (업무구분: NC)
+     * CD_SE = 업무구분 그룹 (예: "C0002")
+     * CD = 코드 값 (예: "NC")
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-            @JoinColumn(name = "CD_SE", referencedColumnName = "CD_SE"),
-            @JoinColumn(name = "CD", referencedColumnName = "CD")
+            @JoinColumn(name = "CATEGORY_CD", referencedColumnName = "CD", insertable = false, updatable = false),
+            @JoinColumn(name = "CATEGORY_GRP", referencedColumnName = "CD_SE", insertable = false, updatable = false)
     })
     private CommonCode categoryCode;
+
+    @Column(name = "CATEGORY_GRP")
+    @Builder.Default
+    private String categoryGroup = "C0002";  // 업무구분 그룹 코드
+
+    @Column(name = "CATEGORY_CD")
+    @Builder.Default
+    private String categoryValue = "NC";     // 업무구분 코드 값
 }

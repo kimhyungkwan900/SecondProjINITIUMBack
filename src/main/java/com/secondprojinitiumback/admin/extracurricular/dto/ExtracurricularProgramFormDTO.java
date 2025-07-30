@@ -32,10 +32,4 @@ public class ExtracurricularProgramFormDTO {
     private String eduPlcNm; // 교육 장소
     private LocalDateTime eduAplyDt; // 프로그램 개설 신청일
     private SttsNm sttsNm; // 프로그램 상태 (요청, 승인, 반려 등 ENUM)
-
-    // 프로그램 신청시 현재 시간 설정 메서드
-    public void applyDateTime(){
-        this.eduAplyDt = LocalDateTime.now();
-    }
-
 }

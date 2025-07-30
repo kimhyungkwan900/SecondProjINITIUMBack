@@ -2,10 +2,7 @@ package com.secondprojinitiumback.user.consult.domain;
 
 import com.secondprojinitiumback.user.employee.domain.Employee;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -13,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DscsnDate {
+public class DscsnSchedule {
 
     @Id
     @Column(name = "DSCSN_DT_ID", nullable = false, length = 5)
@@ -24,6 +21,10 @@ public class DscsnDate {
 
     @Column(name = "DSCSN_PSBLTY_T", nullable = false, length = 4)
     private String possibleTime; //상담 가능 시간
+
+    @Setter
+    @Column(name = "DSCSN_YN", nullable = false, length = 1)
+    private String dscsnYn; //예약 여부
 
     @ManyToOne
     @JoinColumn(name = "EMP_NO", foreignKey = @ForeignKey(name = "FK_EMP_NO"))

@@ -17,6 +17,10 @@ public class SequenceGenerator {
     public Long getNextApplySequence() {
         return ((Number) em.createNativeQuery("SELECT NEXTVAL(apply_seq)").getSingleResult()).longValue();
     }
+
+    public Long getNextInfoSequence() {
+        return ((Number) em.createNativeQuery("SELECT NEXTVAL(info_seq)").getSingleResult()).longValue();
+    }
 }
 
 /*
@@ -29,4 +33,9 @@ CREATE SEQUENCE schedule_seq
 CREATE SEQUENCE apply_seq
     START WITH 1
     INCREMENT BY 1;
+
+CREATE SEQUENCE info_seq
+    START WITH 1
+    INCREMENT BY 1;
+
  */

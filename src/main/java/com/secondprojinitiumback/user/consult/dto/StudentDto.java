@@ -1,5 +1,7 @@
 package com.secondprojinitiumback.user.consult.dto;
 
+import com.secondprojinitiumback.common.domain.SchoolSubject;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,19 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DscsnApplyDto {
-
-    private String dscsnApplyId;
-
-    private String studentTelno;
-
-    private String dscsnApplyCn;
-
-    private String dscsnOnlineYn;
+public class StudentDto {
 
     private String studentNo;
 
-    private String dscsnDtId;
+    private SchoolSubject schoolSubject;
 
-    private String dscsnKindId;
+    private String name;
 }

@@ -1,6 +1,6 @@
 package com.secondprojinitiumback.user.consult.service;
 
-import com.secondprojinitiumback.user.consult.domain.DscsnDate;
+import com.secondprojinitiumback.user.consult.domain.DscsnSchedule;
 import com.secondprojinitiumback.user.consult.dto.DscsnScheduleDto;
 import com.secondprojinitiumback.user.consult.repository.DscsnScheduleRepository;
 import com.secondprojinitiumback.user.consult.repository.SequenceGenerator;
@@ -42,15 +42,16 @@ public class DscsnScheduleService {
                 .orElseThrow(EntityExistsException::new);
 
         // DscsnScheduleDto를 DscsnDate 엔티티로 변환
-        DscsnDate dscsnDate = DscsnDate.builder()
+        DscsnSchedule dscsnSchedule = DscsnSchedule.builder()
                 .dscsnDtId(dscsnDtId)
                 .possibleDate(dscsnScheduleDto.getScheduleDate())
                 .possibleTime(dscsnScheduleDto.getStartTime())
+                .dscsnYn("N")   // 예약 여부 초기값 N
                 .employee(employeeInfo)
                 .build();
 
         //등록한 상담일정 저장
-        dscsnScheduleRepository.save(dscsnDate);
+        dscsnScheduleRepository.save(dscsnSchedule);
     }
 
     //상담사, 교수 일정 조회
@@ -59,10 +60,10 @@ public class DscsnScheduleService {
     //상담사, 교수 일정 삭제
     public void deleteDscsnSchedule(String dscsnDtId) {
         //상담일정 ID로 해당 상담일정 조회
-        DscsnDate dscsnDate = dscsnScheduleRepository.findById(dscsnDtId)
+        DscsnSchedule dscsnSchedule = dscsnScheduleRepository.findById(dscsnDtId)
                 .orElseThrow(() -> new IllegalArgumentException("상담일정이 존재하지 않습니다. ID: " + dscsnDtId));
 
         //조회한 일정 삭제
-        dscsnScheduleRepository.delete(dscsnDate);
+        dscsnScheduleRepository.delete(dscsnSchedule);
     }
 }

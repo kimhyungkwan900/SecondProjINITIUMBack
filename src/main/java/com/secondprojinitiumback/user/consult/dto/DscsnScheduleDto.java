@@ -1,6 +1,5 @@
 package com.secondprojinitiumback.user.consult.dto;
 
-import com.secondprojinitiumback.user.consult.domain.DscsnDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,4 +16,6 @@ public class DscsnScheduleDto {
     private String scheduleDate; // 상담일정 날짜 (YYYYMMdd 형식)
 
     private String startTime; // 상담일정 시간 (HHMM 형식)
+
+    private String dscsnYn; // 예약 여부 (Y/N)
 }

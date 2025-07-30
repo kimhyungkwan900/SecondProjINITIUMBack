@@ -9,7 +9,7 @@ VALUES ('사회공포·회피 진단검사', '대인관계 상황에서의 불�
 INSERT INTO DGNSTC_TST (DGNSTC_TST_NM, DGNSTC_TST_DC, USE_YN)
 VALUES
     ('섭식장애 자가진단',
-     '섭식 태도 검사는 식사, 체중, 다이어트, 음식 섭취 습관 등에 관련된 문제를 파악하여 섭식 장애 여부를 선별하기 위한 검사입니다. 각 문항을 읽고 현재 자신의 상태를 가장 잘 나타내는 항목에 응답해 주시기 바랍니다.',
+     '섭식 태도 검사는 식사, 체중, 다이어트, 음식 섭취 습관 등에 관련된 문제를 파악하여 섭식 장애 여부를 선별하기 위한 검사입니다.',
      'Y');
 
 INSERT INTO DGNSTC_TST (DGNSTC_TST_NM, DGNSTC_TST_DC, USE_YN)

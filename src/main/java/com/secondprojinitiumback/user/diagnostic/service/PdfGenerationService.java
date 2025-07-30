@@ -1,7 +1,6 @@
 package com.secondprojinitiumback.user.diagnostic.service;
 
 import com.itextpdf.io.font.PdfEncodings;
-import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -13,8 +12,10 @@ import com.secondprojinitiumback.user.diagnostic.domain.DiagnosticResult;
 import com.secondprojinitiumback.user.diagnostic.domain.DiagnosticResultDetail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -30,18 +31,15 @@ public class PdfGenerationService {
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf);
 
-        // ✅ 한글 폰트 설정 (리소스 폴더/fonts에 위치해야 함)
-        String fontPath = "fonts/NotoSansKR-Regular.ttf";
-        PdfFont koreanFont = PdfFontFactory.createFont(
-                getClass().getClassLoader().getResource(fontPath).getPath(),
-                PdfEncodings.IDENTITY_H, true
-        );
+        // ✅ 한글 폰트 설정 (운영 환경 포함 안정적 로드)
+        File fontFile = ResourceUtils.getFile("classpath:fonts/NotoSansKR-Regular.ttf");
+        PdfFont koreanFont = PdfFontFactory.createFont(fontFile.getAbsolutePath(), PdfEncodings.IDENTITY_H, true);
         document.setFont(koreanFont);
 
         // ✅ 제목
         document.add(new Paragraph("진단검사 결과 요약")
-                .setFont(PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD))
                 .setFontSize(18)
+                .setBold()
                 .setTextAlignment(TextAlignment.CENTER)
                 .setMarginBottom(20));
 

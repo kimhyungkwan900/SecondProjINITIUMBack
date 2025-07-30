@@ -30,8 +30,8 @@ public class BankAccount {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-            @JoinColumn(name = "CD", referencedColumnName = "CD", nullable = false),
-            @JoinColumn(name = "CD_SE", referencedColumnName = "CD_SE", nullable = false)
+            @JoinColumn(name = "CD", referencedColumnName = "id.code"),
+            @JoinColumn(name = "CD_SE", referencedColumnName = "id.codeGroup")
     })
     private CommonCode bankCode;
 

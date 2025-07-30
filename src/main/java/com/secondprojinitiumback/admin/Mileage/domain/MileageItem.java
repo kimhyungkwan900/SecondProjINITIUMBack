@@ -25,18 +25,15 @@ public class MileageItem {
     private String itemCode; //마일리지 항목 코드
 
     @Column(name="CRNT_DT")
-    private LocalDateTime createAt; //생성일
+    private LocalDateTime createdAt; //생성일
 
     @Column(name="MDFCN_DT")
     private LocalDateTime modifiedAt; //수정일
 
-    @Column(name="EDU_MLG")
-    private Integer mileage; //마일리지 점수
-
     //비교과 프로그램 외래키로 연결 (조회만 가능하도록)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "EDU_MNG_ID", nullable = false)
-    private ExtracurricularProgram extracurricularProgram; //비교과 프로그램 ID
+    private ExtracurricularProgram program; //비교과 프로그램 ID
 
 
 }

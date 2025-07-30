@@ -32,7 +32,7 @@ public class ExternalDiagnosisService {
 
     private final ExternalDiagnosticTestRepository testRepository;
     private final ExternalDiagnosticResultRepository resultRepository;
-    private final StudentRepository studentRepository; // 추가
+    private final StudentRepository studentRepository;
     private final RestTemplate restTemplate;
 
     @Value("${career.api.key}")
@@ -112,40 +112,63 @@ public class ExternalDiagnosisService {
      * 3. 외부 진단 검사 결과 제출 및 저장
      */
     public ExternalDiagnosisResultDto submitExternalResult(ExternalDiagnosisRequestDto dto, String apiKey) {
+
+        // 🔹 Request Body 생성
         Map<String, Object> body = new HashMap<>();
         body.put("apikey", apiKey);
         body.put("qestrnSeq", dto.getQestrnSeq());
         body.put("trgetSe", dto.getTrgetSe());
         body.put("gender", dto.getGender());
+
+        // 🔹 학교 / 학년 (값이 있으면 세팅)
         if (dto.getSchool() != null) body.put("school", dto.getSchool());
         if (dto.getGrade() != null) body.put("grade", dto.getGrade());
-        if (dto.getStartDtm() != null) body.put("startDtm", dto.getStartDtm());
 
-        body.putAll(dto.getAnswers());
+        // 🔹 시작일시 (null이면 서버에서 자동 세팅)
+        String startTimestamp = dto.getStartDtm() != null
+                ? dto.getStartDtm()
+                : String.valueOf(System.currentTimeMillis());
+        body.put("startDtm", startTimestamp);
 
+        // 🔹 Answers 변환 ("1=2 2=4 3=1 ..." 형식)
+        String answerString = dto.getAnswers().entrySet().stream()
+                .map(entry -> entry.getKey() + "=" + entry.getValue())
+                .collect(Collectors.joining(" "));
+        body.put("answers", answerString);
+
+        // 🔹 API 요청
         ResponseEntity<Map> response = restTemplate.postForEntity(reportUrl, body, Map.class);
         Map<String, Object> result = response.getBody();
 
-        String inspectSeq = (String) result.get("inspectSeq");
-        String resultUrl = (String) result.get("url");
+        // 🔹 응답 성공 여부 체크
+        if (result == null || !"Y".equals(result.get("SUCC_YN"))) {
+            String errorReason = (String) result.getOrDefault("ERROR_REASON", "알 수 없는 오류");
+            throw new RuntimeException("외부 진단검사 실패: " + errorReason);
+        }
 
+        // 🔹 RESULT 추출
+        Map<String, Object> resultData = (Map<String, Object>) result.get("RESULT");
+        String inspectSeq = String.valueOf(resultData.get("inspectSeq"));
+        String resultUrl = String.valueOf(resultData.get("url"));
+
+        // 🔹 검사 정보 & 학생 조회
         ExternalDiagnosticTest test = testRepository.findByQuestionApiCode(dto.getQestrnSeq())
                 .orElseThrow(() -> new IllegalArgumentException("외부 심리검사 정보를 찾을 수 없습니다."));
 
-        // 🔹 Student 조회 (studentNo 사용)
         Student student = studentRepository.findById(dto.getStudentNo())
                 .orElseThrow(() -> new IllegalArgumentException("학생을 찾을 수 없습니다."));
 
+        // 🔹 결과 저장
         ExternalDiagnosticResult saved = ExternalDiagnosticResult.builder()
                 .test(test)
-                .student(student) // userId 대신 student 연계
+                .student(student)
                 .inspectCode(inspectSeq)
                 .resultUrl(resultUrl)
                 .submittedAt(LocalDateTime.now())
                 .build();
-
         resultRepository.save(saved);
 
+        // 🔹 DTO 반환
         return ExternalDiagnosisResultDto.builder()
                 .inspectSeq(inspectSeq)
                 .resultUrl(resultUrl)

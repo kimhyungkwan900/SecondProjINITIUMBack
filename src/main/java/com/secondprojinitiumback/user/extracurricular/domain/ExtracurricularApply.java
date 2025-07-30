@@ -2,6 +2,7 @@ package com.secondprojinitiumback.user.extracurricular.domain;
 
 import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularProgram;
 import com.secondprojinitiumback.admin.extracurricular.domain.test.StdntInfo;
+import com.secondprojinitiumback.user.extracurricular.domain.enums.AprySttsNm;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,7 +38,8 @@ public class ExtracurricularApply {
     @Column(name = "edu_aply_dt", nullable = false)
     private LocalDateTime eduAplyDt;
 
-    @Column(name = "aprv_yn")
-    private String aprvYn; // 승인 여부 (Y/N)
+    @Column(name = "aprv_stts_nm")
+    private AprySttsNm aprySttsNm; // 승인 여부 (Y/N)
 
 }
+

@@ -1,9 +1,9 @@
 package com.secondprojinitiumback.user.consult.repository;
 
-import com.secondprojinitiumback.user.consult.domain.DscsnDate;
+import com.secondprojinitiumback.user.consult.domain.DscsnSchedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface DscsnScheduleRepository extends JpaRepository<DscsnDate,String> {
+public interface DscsnScheduleRepository extends JpaRepository<DscsnSchedule,String> {
 }

@@ -80,7 +80,6 @@ public class StudentServiceImpl implements StudentService {
     }
 
     private String generateStudentNo(LocalDate admissionDate, String schoolSubjectCode) {
-        // 학번 생성 로직
         // 입학 연도 4자리
         String admissionYear = String.valueOf(admissionDate.getYear());
 
@@ -93,6 +92,7 @@ public class StudentServiceImpl implements StudentService {
 
         // 시퀀스 번호 계산
         int sequence = 1;
+        // 만약 마지막 학번이 존재한다면
         if (lastStudentNo.isPresent()) {
             // 마지막 학번에서 시퀀스 번호 추출
             String lastSeqStr = lastStudentNo.get().substring(lastStudentNo.get().length() - 3);

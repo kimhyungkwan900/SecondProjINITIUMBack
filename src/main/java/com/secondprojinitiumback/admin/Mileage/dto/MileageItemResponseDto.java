@@ -1,6 +1,7 @@
 package com.secondprojinitiumback.admin.Mileage.dto;
 
 
+import com.secondprojinitiumback.admin.Mileage.domain.MileageItem;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,10 +16,25 @@ import java.time.LocalDateTime;
 
 // 조회용 DTO
 public class MileageItemResponseDto {
+
     private Long id; //마일리지 항목 ID(FK)
     private String itemCode; //마일리지 항목 코드
-    private LocalDateTime createAt; //생성일
+    private LocalDateTime createdAt; //생성일
     private LocalDateTime modifiedAt; //수정일
+
     private Long eduMngId; //비교과 프로그램 ID
-    private String eduProgramName; // 프로그램명 (출력용)
+    private String eduNm; // 비교과 프로그램명
+    private Integer eduMlg; //마일리지
+
+    public static MileageItemResponseDto from(MileageItem item) {
+        return MileageItemResponseDto.builder()
+                .id(item.getId())
+                .itemCode(item.getItemCode())
+                .createdAt(item.getCreatedAt())
+                .modifiedAt(item.getModifiedAt())
+                .eduMngId(item.getProgram().getEduMngId())
+                .eduNm(item.getProgram().getEduNm())
+                .eduMlg(item.getProgram().getEduMlg())
+                .build();
+    }
 }

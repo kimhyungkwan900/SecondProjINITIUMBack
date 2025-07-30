@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.common.domain;
 
+import com.secondprojinitiumback.common.domain.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*; // Lombok import 추가
 
@@ -9,7 +10,7 @@ import lombok.*; // Lombok import 추가
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class University {
+public class University extends BaseEntity {
     @Id
     @Column(name = "UNIV_CD", length = 8)
     private String universityCode;

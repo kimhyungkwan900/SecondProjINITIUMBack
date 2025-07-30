@@ -1,5 +1,12 @@
 package com.secondprojinitiumback.admin.coreCompetency.dto;
 
+import lombok.*;
+
+@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 // 추천된 비교과 프로그램 정보 DTO
 public class RecommendedProgramDto {
     private String id;               // 추천 ID

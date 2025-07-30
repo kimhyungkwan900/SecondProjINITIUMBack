@@ -1,5 +1,12 @@
 package com.secondprojinitiumback.admin.coreCompetency.dto;
 
+import lombok.*;
+
+@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 // 문항과 하위/핵심역량 매핑 정보 조회용 DTO
 public class CategoryQuestionMappingDto {
     private Long mappingId;          // 매핑 고유 ID

@@ -32,8 +32,8 @@ public class DscsnApply {
     @Column(name = "DSCSN_APLY_CN", nullable = true)
     private String dscsnApplyCn;
 
-    @Column(name = "DSCSN_STATUS", nullable = false)
-    private String dscsnStatus;
+    @Column(name = "DSCSN_OLN_YN", nullable = true, length = 1)
+    private String dscsnOnlineYn;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "STDNT_NO", foreignKey = @ForeignKey(name = "FK_STDNT_NO"))
@@ -41,7 +41,7 @@ public class DscsnApply {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DSCSN_DT_ID", foreignKey = @ForeignKey(name = "FK_DSCSN_DT_ID"))
-    private DscsnDate dscsnDt;
+    private DscsnSchedule dscsnDt;
 
     @OneToOne
     @JoinColumn(name = "DSCSN_KND_ID",foreignKey = @ForeignKey(name = "FK_DSCSN_KND_ID"))

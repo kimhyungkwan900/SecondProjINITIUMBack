@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.user.consult.dto;
 
+import com.secondprojinitiumback.user.consult.domain.DscsnKind;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DscsnApplyDto {
+public class DscsnApplyResponseDto {
 
     private String dscsnApplyId;
 
@@ -19,9 +20,9 @@ public class DscsnApplyDto {
 
     private String dscsnOnlineYn;
 
-    private String studentNo;
+    private StudentDto studentDto;
 
-    private String dscsnDtId;
+    private DscsnScheduleDto dscsnScheduleDto;
 
-    private String dscsnKindId;
+    private DscsnKindDto dscsnKindDto;
 }

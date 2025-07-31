@@ -5,6 +5,7 @@ import com.secondprojinitiumback.user.diagnostic.dto.ExternalDiagnosisResultDto;
 import com.secondprojinitiumback.user.diagnostic.dto.ExternalQuestionResponseDto;
 import com.secondprojinitiumback.user.diagnostic.dto.ExternalTestListDto;
 import com.secondprojinitiumback.user.diagnostic.service.ExternalDiagnosisService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -95,11 +96,13 @@ public class ExternalDiagnosisController {
      * ✅ 외부 검사 결과 제출
      * studentNo를 dto에 포함시켜서 저장까지 연계
      */
+    // ExternalDiagnosisController.java
     @PostMapping("/submit")
     public ResponseEntity<ExternalDiagnosisResultDto> submitExternalDiagnosis(
-            @RequestBody ExternalDiagnosisRequestDto dto
+            @Valid @RequestBody ExternalDiagnosisRequestDto dto // 🔹 @Valid 추가
     ) {
         ExternalDiagnosisResultDto resultDto = externalDiagnosisService.submitExternalResult(dto, apiKey);
         return ResponseEntity.ok(resultDto);
     }
+
 }

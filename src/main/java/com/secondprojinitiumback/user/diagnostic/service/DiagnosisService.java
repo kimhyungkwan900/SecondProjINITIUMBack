@@ -92,13 +92,15 @@ public class DiagnosisService {
     /**
      * 키워드 기반 검색
      */
+    // DiagnosisService.java
     public List<DiagnosticTestDto> searchTestsByKeyword(String keyword) {
         List<DiagnosticTest> tests = testRepository
-                .findByNameContainingIgnoreCaseAndUseYnTrue(keyword);
+                .findByNameContainingIgnoreCaseAndUseYn(keyword, "Y"); // 🔹 "Y"로 명시
         return tests.stream()
                 .map(DiagnosticTestDto::from)
                 .collect(Collectors.toList());
     }
+
 
     /**
      * 특정 검사 문항 조회

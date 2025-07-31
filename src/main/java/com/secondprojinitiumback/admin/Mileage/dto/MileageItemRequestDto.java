@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-//등록, 수정용 DTO
 public class MileageItemRequestDto {
     private String itemCode; //마일리지 항목코드
     private Long eduMngId; // 비교과 프로그램 ID

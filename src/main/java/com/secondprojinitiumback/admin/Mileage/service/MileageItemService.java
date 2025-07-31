@@ -24,15 +24,12 @@ public class MileageItemService {
     private final MileageItemRepository mileageItemRepository;
     private final ExtracurricularProgramRepository programRepository;
 
-    //✅ 전체 목록 조회 (검색 + 페이징)
+    //1. 전체 목록 조회 (검색 + 페이징)
     public PageResponseDto<MileageItemResponseDto> getList(
-            PageRequestDto requestDto,
-            String itemCode,
-            String eduNm
-    ) {
+            PageRequestDto requestDto, String itemCode, String eduNm) {
           Pageable pageable = requestDto.toPageable();
 
-        Page<MileageItem> page = mileageItemRepository.searchWithPaging(itemCode, eduNm, pageable);
+        Page<MileageItem> page = mileageItemRepository.searchWithPagingAndPolicies(itemCode, eduNm, pageable);
 
         List<MileageItemResponseDto> dtoList = page.getContent().stream()
                 .map(MileageItemResponseDto::from)
@@ -45,7 +42,7 @@ public class MileageItemService {
                 .build();
     }
 
-    //✅ 마일리지 항목 등록
+    //2. 마일리지 항목 등록
     public MileageItemResponseDto register(MileageItemRequestDto dto){
 
         //비교과 프로그램 id로 객체 찾기
@@ -63,7 +60,7 @@ public class MileageItemService {
         return MileageItemResponseDto.from(mileageItemRepository.save(mileageItem));
     }
 
-    //✅ 마일리지 항목 상세 보기
+    // 3. 마일리지 항목 상세 보기
     public MileageItemResponseDto findById(Long id) {
         MileageItem item = mileageItemRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("마일리지 항목이 존재하지 않습니다."));
@@ -71,11 +68,10 @@ public class MileageItemService {
     }
 
 
-    // ✅ 항목 여러 개 삭제 (선택 삭제)
+    // 4. 항목 여러 개 삭제 (선택 삭제)
     public void deleteAll(List<Long> ids) {
         mileageItemRepository.deleteAllByIdInBatch(ids); // 한번에 일괄 삭제
     }
-
 
 
 }

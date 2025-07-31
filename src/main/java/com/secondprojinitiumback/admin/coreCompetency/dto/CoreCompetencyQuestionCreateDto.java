@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.admin.coreCompetency.dto;
 
+import com.secondprojinitiumback.admin.coreCompetency.entity.CoreCompetencyQuestion;
 import lombok.*;
 
 @Builder
@@ -19,4 +20,18 @@ public class CoreCompetencyQuestionCreateDto {
     private String subjectCode; // SCSBJT_NO, 전공별 문항일 경우에만 사용
     private Long indicatorId;       // 행동지표 ID (공통문항 아닐 경우 필수)
     private String isCommonCode;        // 공통문항 여부
+
+    //엔티티 -> dto 변환 메소드
+    public static CoreCompetencyQuestionCreateDto fromEntity(CoreCompetencyQuestion question) {
+        return CoreCompetencyQuestionCreateDto.builder()
+                .Id(question.getId())
+                .assessmentId(question.getAssessment().getId())
+                .questionNo(question.getQuestionNo())
+                .questionName(question.getName())
+                .displayOrder(question.getDisplayOrder())
+                .answerAllowCount(question.getAnswerAllowCount())
+                .indicatorId(question.getBehaviorIndicator() != null ? question.getBehaviorIndicator().getId() : null)
+                .isCommonCode(question.getBehaviorIndicator() != null ? "N" : "Y")
+                .build();
+    }
 }

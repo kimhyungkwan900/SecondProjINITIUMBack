@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "student_competency_score")
+@Table(name = "STUDENT_COMPETENCY_SCORE")
 public class StudentCompetencyScore {
 
     @Id

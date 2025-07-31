@@ -20,8 +20,8 @@ public class StudentStatusInfo extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-            @JoinColumn(name = "CD", referencedColumnName = "id.code", insertable = false, updatable = false),
-            @JoinColumn(name = "CD_SE", referencedColumnName = "id.codeGroup", insertable = false, updatable = false)
+            @JoinColumn(name = "CD", referencedColumnName = "CD", insertable = false, updatable = false),
+            @JoinColumn(name = "CD_SE", referencedColumnName = "CD_SE", insertable = false, updatable = false)
     })
     private CommonCode commonCode;
 

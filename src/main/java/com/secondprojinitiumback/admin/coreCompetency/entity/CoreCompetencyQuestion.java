@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.admin.coreCompetency.entity;
 
+import com.secondprojinitiumback.admin.coreCompetency.dto.CoreCompetencyQuestionCreateDto;
 import com.secondprojinitiumback.common.domain.CommonCode;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,7 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "core_competency_question")
+@Table(name = "CORE_COMPETENCY_QUESTION")
 public class CoreCompetencyQuestion {
 
     @Id

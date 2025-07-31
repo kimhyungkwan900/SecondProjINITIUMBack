@@ -4,7 +4,6 @@ import com.secondprojinitiumback.user.consult.domain.DscsnApply;
 import com.secondprojinitiumback.user.consult.domain.DscsnInfo;
 import com.secondprojinitiumback.user.consult.dto.DscsnInfoDto;
 import com.secondprojinitiumback.user.consult.repository.DscsnInfoRepository;
-import com.secondprojinitiumback.user.consult.repository.SequenceGenerator;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -17,20 +16,20 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class DscsnInfoService {
     private final DscsnInfoRepository dscsnInfoRepository;
-    private final SequenceGenerator sequenceGenerator;
+//    private final SequenceGenerator sequenceGenerator;
 
     //--- 상담정보 생성
     public void createDscsnInfo(DscsnApply dscsnApply) {
 
         //상담정보 ID 생성
-        //1. 시퀀스 번호 생성
-        long seqNum = sequenceGenerator.getNextInfoSequence();
+        //1. 상담종류 키워드 가져오기
+        String prefix = dscsnApply.getDscsnApplyId().substring(0,1) + "I";
 
-        //2. 상담종류 키워드 가져오기
-        String keyword = dscsnApply.getDscsnApplyId().substring(0,1);
+        //2. 시퀀스 번호 생성
+        String seqNum = getNextInfoSequence(prefix);
 
         //3. ID 생성
-        String dscsnInfoId = keyword + "I" + String.format("%04d", seqNum); // I는 상담정보를 나타내는 접두사
+        String dscsnInfoId = prefix + String.format("%04d", seqNum); // I는 상담정보를 나타내는 접두사
 
         //상담정보 엔티티 생성
         DscsnInfo dscsnInfo = DscsnInfo.builder()
@@ -48,13 +47,6 @@ public class DscsnInfoService {
     //--- 학생 상담내역 조회
     @Transactional(readOnly = true)
     public Page<DscsnInfoDto> getDscsnInfoByStudentId(Long studentId) {
-
-
-
-
-
-
-
 
         // 학생 ID로 상담내역 조회 로직 구현
         // 예: return dscsnInfoRepository.findByStudentId(studentId).getDscsnInfo();
@@ -84,5 +76,21 @@ public class DscsnInfoService {
 
         // 상담 결과 등록
         dscsnInfo.updateDscsnResultCn(result);
+    }
+
+    //시퀀스 번호 생성 메소드
+    public String getNextInfoSequence(String prefix) {
+        DscsnInfo lastDscsnInfo = dscsnInfoRepository.findTopByDscsnInfoIdStartingWithOrderByDscsnInfoIdDesc(prefix);
+
+        if(lastDscsnInfo == null) {
+            return String.format("%04d", 1);
+        }
+        else{
+            String lastId = lastDscsnInfo.getDscsnInfoId();
+            String seqPart = lastId.substring(prefix.length()); // 접두사 이후 부분 추출
+            int seqNum = Integer.parseInt(seqPart); // 문자열을 정수로 변환
+            seqNum++; // 시퀀스 번호 증가
+            return String.format("%04d", seqNum); // 4자리 문자열로 포맷팅
+        }
     }
 }

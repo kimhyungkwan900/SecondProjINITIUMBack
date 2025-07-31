@@ -7,7 +7,6 @@ import com.secondprojinitiumback.user.consult.dto.DscsnApplyDto;
 import com.secondprojinitiumback.user.consult.repository.DscsnApplyRepoistory;
 import com.secondprojinitiumback.user.consult.repository.DscsnKindRepository;
 import com.secondprojinitiumback.user.consult.repository.DscsnScheduleRepository;
-import com.secondprojinitiumback.user.consult.repository.SequenceGenerator;
 import com.secondprojinitiumback.user.student.domain.Student;
 import com.secondprojinitiumback.user.student.repository.StudentRepository;
 import jakarta.persistence.EntityExistsException;
@@ -23,8 +22,6 @@ public class DscsnApplyService {
     private final DscsnScheduleRepository dscsnScheduleRepository;
     private final StudentRepository studentRepository;
     private final DscsnKindRepository dscsnKindRepository;
-
-    private final SequenceGenerator sequenceGenerator;
 
     private final DscsnInfoService dscsnInfoService;
 
@@ -47,14 +44,14 @@ public class DscsnApplyService {
                 .orElseThrow(EntityExistsException::new);
 
         //상담신청 ID 생성
-        //1. 시퀀스 번호 생성
-        long seqNum = sequenceGenerator.getNextApplySequence();
-
-        //2. ID 생성
         //지도교수 상담은 A, 진로취업 상담은 C, 심리상담은 P, 학습상담은 L
         String keyword = dscsnApplyDto.getDscsnKindId().substring(0,1);
 
-        String dscsnApplyId = keyword + String.format("%04d", seqNum);
+        //1. 시퀀스 번호 생성
+        String seqNum = getNextApplySequence(keyword);
+
+        //2. ID 생성
+        String dscsnApplyId = keyword + seqNum;
 
         //엔티티 생성
         DscsnApply dscsnApply = DscsnApply.builder()
@@ -85,5 +82,21 @@ public class DscsnApplyService {
         //상담일정 예약여부 변경
         DscsnSchedule dscsnSchedule = dscsnApply.getDscsnDt();
         dscsnSchedule.updateDscsnYn();
+    }
+
+    //시퀀스 번호 생성 메소드
+    public String getNextApplySequence(String prefix) {
+        DscsnApply lastDscsnApply = dscsnApplyRepoistory.findTopByDscsnApplyIdStartingWithOrderByDscsnApplyIdDesc(prefix);
+
+        if(lastDscsnApply == null) {
+            return String.format("%04d", 1);
+        }
+        else{
+            String lastId = lastDscsnApply.getDscsnApplyId();
+            String seqPart = lastId.substring(prefix.length()); // 접두사 이후 부분 추출
+            int seqNum = Integer.parseInt(seqPart); // 문자열을 정수로 변환
+            seqNum++; // 시퀀스 번호 증가
+            return String.format("%04d", seqNum); // 4자리 문자열로 포맷팅
+        }
     }
 }

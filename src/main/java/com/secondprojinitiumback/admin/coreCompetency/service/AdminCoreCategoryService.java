@@ -2,12 +2,15 @@ package com.secondprojinitiumback.admin.coreCompetency.service;
 
 
 import com.secondprojinitiumback.admin.coreCompetency.entity.CoreCompetencyCategory;
+import com.secondprojinitiumback.admin.coreCompetency.entity.IdealTalentProfile;
 import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyCategoryRepository;
+import com.secondprojinitiumback.admin.coreCompetency.repository.IdealTalentProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,12 +18,21 @@ import java.util.List;
 public class AdminCoreCategoryService {
 
     private final CoreCompetencyCategoryRepository coreCompetencyCategoryRepository;
+    private final IdealTalentProfileRepository idealTalentProfileRepository;
 
     //1. 핵심역량 카테고리 등록
-    public CoreCompetencyCategory createCoreCategory(String name, String description) {
+    public CoreCompetencyCategory createCoreCategory(String name, String description, Long idealTalentProfileId) {
+
+        Optional<IdealTalentProfile> idealTalentProfile = idealTalentProfileRepository.findById(idealTalentProfileId);
+
+        if (idealTalentProfile.isEmpty()) {
+            throw new IllegalArgumentException("존재하지 않는 이상적인 인재 프로필입니다.");
+        }
+
         CoreCompetencyCategory coreCompetencyCategory = CoreCompetencyCategory.builder()
                 .coreCategoryName(name)
                 .coreCategoryNote(description)
+                .idealTalentProfile(idealTalentProfile.get())
                 .build();
 
         return  coreCompetencyCategoryRepository.save(coreCompetencyCategory);

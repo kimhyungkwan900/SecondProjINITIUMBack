@@ -5,9 +5,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
-import lombok.Builder; // Builder import 추가
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 
@@ -20,60 +22,64 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LoginInfo extends BaseEntity {
 
+    // 로그인 ID는 최대 20자로 제한되며, 유일해야 함
     @Id
     @Column(name = "LGN_ID", length = 20, nullable = false, unique = true)
     private String loginId;
 
+    // 비밀번호는 암호화되어 저장되며, 최대 길이는 100자로 제한 Bcrypt 대응
     @Column(name = "LGN_PW", length = 100, nullable = false)
     private String password;
 
+
+    // 사용자 유형 코드: S(학생), E(교직원), A(역량센터)
     @Column(name = "USER_TYPE", length = 1, nullable = false, columnDefinition = "CHAR(1) DEFAULT 'S'")
     @Pattern(regexp = "S|E|A", message = "USER_TYPE은 S(학생), E(교직원), A(역량센터) 중 하나여야 합니다.")
     private String userType = "S";
 
+    // 계정 상태 코드: N(정상), L(잠김), D(삭제)
     @Column(name = "ACNT_STTS_CD", length = 1, columnDefinition = "CHAR(1) DEFAULT 'N'")
     private String accountStatusCode = "N";
 
-    // Y: 비밀번호 변경 필요, N: 비밀번호 변경 불필요
-    @Column(name = "PSWD_CHG_YN", length = 1, columnDefinition = "CHAR(1) DEFAULT 'N'")
-    @Pattern(regexp = "Y|N")
-    private String passwordChangeYn = "N";
+    // true: 비밀번호 변경 필요, false: 비밀번호 변경 불필요
+    @Column(name = "PSWD_CHG_YN", length = 1)
+    @JdbcTypeCode(SqlTypes.CHAR)
+    private boolean passwordChangeRequired;
 
+    // 로그인 실패 횟수
     @Column(name = "LGN_FAIL_NMTM", columnDefinition = "INT DEFAULT 0")
     @Min(value = 0)
     private int loginFailCount = 0;
 
+    // 계정 가입 일시
     @Column(name = "ACNT_JOIN_DT", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime accountJoinDate;
 
-    // 기존 create 메서드는 유지하거나 제거할 수 있습니다.
-    // @Builder를 사용하면 이 메서드는 필요 없을 수 있습니다.
-    public static LoginInfo create(String loginId,
-                                   String password,
-                                   String userType,
-                                   String accountStatusCode,
-                                   String passwordChangeYn,
-                                   int loginFailCount,
-                                   LocalDateTime accountJoinDate) {
-        return new LoginInfo(loginId, password, userType, accountStatusCode, passwordChangeYn, loginFailCount, accountJoinDate);
-    }
+    // 마지막 비밀번호 변경 일시
+    @Column(name = "LAST_PSWD_CHG_DT")
+    private LocalDateTime lastPasswordChangeDateTime;
 
-    // private 생성자 위에 @Builder 추가
+    // 마지막 로그인 일시
+    @Column(name = "LAST_LOGIN_DT")
+    private LocalDateTime lastLoginDateTime;
+
     @Builder
     private LoginInfo(String loginId,
                       String password,
                       String userType,
                       String accountStatusCode,
-                      String passwordChangeYn,
+                      boolean passwordChangeRequired,
                       int loginFailCount,
-                      LocalDateTime accountJoinDate) {
+                      LocalDateTime accountJoinDate,
+                      LocalDateTime lastPasswordChangeDateTime) {
         this.loginId = loginId;
         this.password = password;
         this.userType = userType != null ? userType : "S";
         this.accountStatusCode = accountStatusCode != null ? accountStatusCode : "N";
-        this.passwordChangeYn = passwordChangeYn != null ? passwordChangeYn : "N";
+        this.passwordChangeRequired = passwordChangeRequired;
         this.loginFailCount = loginFailCount;
         this.accountJoinDate = accountJoinDate != null ? accountJoinDate : LocalDateTime.now();
+        this.lastPasswordChangeDateTime = lastPasswordChangeDateTime;
     }
 
     public void increaseLoginFailCount() {
@@ -84,8 +90,22 @@ public class LoginInfo extends BaseEntity {
         this.loginFailCount = 0;
     }
 
-    public void changePassword(String newPassword) {
-        this.password = newPassword;
-        this.passwordChangeYn = "Y";
+    public void changePassword(String encodedNewPassword) {
+        this.password = encodedNewPassword;
+        this.passwordChangeRequired = false;
+        this.lastPasswordChangeDateTime = LocalDateTime.now();
+        this.loginFailCount = 0;
     }
+
+    public void lockAccount() { this.accountStatusCode = "L"; }
+    public void unlockAccount() { this.accountStatusCode = "N"; }
+
+    public boolean isPasswordExpired() {
+        return lastPasswordChangeDateTime != null &&
+                lastPasswordChangeDateTime.isBefore(LocalDateTime.now().minusMonths(6));
+    }
+    public void updateLastLoginDateTime() {
+        this.lastLoginDateTime = LocalDateTime.now();
+    }
+
 }

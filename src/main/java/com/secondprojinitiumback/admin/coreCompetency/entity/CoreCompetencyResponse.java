@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.admin.coreCompetency.entity;
 
+import com.secondprojinitiumback.user.student.domain.Student;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,10 +11,10 @@ public class CoreCompetencyResponse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 응답 ID (PK)
 
-    // 추후 엔티티로 연결 예정
-//    @ManyToOne
-//    @JoinColumn(name = "STDNT_NO")
-//    private Student student;
+    // 학생 엔티티 연결
+    @ManyToOne
+    @JoinColumn(name = "STDNT_NO")
+    private Student student;
 
     @ManyToOne
     @JoinColumn(name = "QSTN_ID")

@@ -11,18 +11,25 @@ import com.secondprojinitiumback.common.repository.CommonCodeRepository;
 import com.secondprojinitiumback.common.repository.SchoolSubjectRepository;
 import com.secondprojinitiumback.user.employee.domain.Employee;
 import com.secondprojinitiumback.user.employee.repository.EmployeeRepository;
+import com.secondprojinitiumback.user.student.constant.StudentStatus;
 import com.secondprojinitiumback.user.student.domain.Student;
+import com.secondprojinitiumback.user.student.domain.StudentStatusInfo;
+import com.secondprojinitiumback.user.student.dto.*;
 import com.secondprojinitiumback.user.student.repository.StudentRepository;
+import com.secondprojinitiumback.user.student.repository.StudentStatusInfoRepository;
 import com.secondprojinitiumback.user.student.service.serviceinterface.StudentService;
-import com.secondprojinitiumback.user.student.dto.addStudentDto;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,32 +43,31 @@ public class StudentServiceImpl implements StudentService {
     private final EmployeeRepository employeeRepository;
     private final BankAccountRepository bankAccountRepository;
     private final PasswordEncoder passwordEncoder;
+    private final StudentStatusInfoRepository studentStatusInfoRepository;
 
+    // 학생 입학 (최초 등록)
     @Override
-    public void addStudent(addStudentDto addStudentDto) {
-        // 1. 학번 생성
+    public void enrollStudent(EnrollStudentDto addStudentDto) {
+        // 학번 생성
         String studentNo = generateStudentNo(addStudentDto.getAdmissionDate(), addStudentDto.getSchoolSubjectCode());
-
-        // 2. 로그인 정보 생성 및 저장
+        // 로그인 정보 생성 및 저장
         LoginInfo loginInfo = createAndSaveLoginInfo(studentNo, addStudentDto.getBirthDate());
-
-        // 3. 관련 엔티티 조회
+        // 학과 코드 조회
         SchoolSubject schoolSubject = schoolSubjectRepository.findByCode(addStudentDto.getSchoolSubjectCode())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid School Subject Code"));
-
+                .orElseThrow(() -> new IllegalArgumentException("유효하지않은 학과 코드"));
+        // 성별 코드 조회
         CommonCode gender = commonCodeRepository.findByCdAndCdSe("CO0002", addStudentDto.getGender())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid Gender Code"));
-
+                .orElseThrow(() -> new IllegalArgumentException("유효하지않은 성별 코드"));
+        // 지도교수 정보 조회
         Employee advisor = employeeRepository.findByEmployeeNo(addStudentDto.getAdvisorNo())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid Advisor Number"));
-
+                .orElseThrow(() -> new IllegalArgumentException("유효하지않은 지도교수 번호"));
+        // 계좌번호 조회
         BankAccount bankAccount = null;
         if (addStudentDto.getBankAccountNumber() != null && !addStudentDto.getBankAccountNumber().isEmpty()) {
             bankAccount = bankAccountRepository.findByAccountNumber(addStudentDto.getBankAccountNumber())
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid Bank Account Number"));
+                    .orElseThrow(() -> new IllegalArgumentException("유효하지않은 계좌번호"));
         }
-
-        // 4. Student 엔티티 생성 및 저장
+        // 학생Entity 생성
         Student student = Student.builder()
                 .studentNo(studentNo)
                 .loginInfo(loginInfo)
@@ -75,47 +81,155 @@ public class StudentServiceImpl implements StudentService {
                 .advisor(advisor)
                 .grade(addStudentDto.getGrade())
                 .build();
-
+        // Entity 저장
         studentRepository.save(student);
     }
 
+    // 학적상태 변경
+    @Override
+    public void changeStudentStatus(String studentNo, StudentStatus status) {
+        // 학번으로 학생 정보 조회
+        Student student = studentRepository.findById(studentNo)
+                .orElseThrow(() -> new EntityNotFoundException("학생정보 없음: " + studentNo));
+        // 학적상태 코드 조회
+        StudentStatusInfo statusInfo = studentStatusInfoRepository.findById(status.getCode())
+                .orElseThrow(() -> new EntityNotFoundException("학적상태코드 없음: " + status.getCode()));
+        // 학적 상태 변경
+        student.changeStatus(statusInfo);
+    }
+
+    // 학생 단건 조회
+    @Override
+    public StudentDto getStudent(String studentNo) {
+        // 학생 번호로 학생 정보 조회
+        Student student = studentRepository.findById(studentNo)
+                .orElseThrow(() -> new EntityNotFoundException("학생 정보 없음: " + studentNo));
+        // Student 엔티티를 StudentDto로 변환하여 반환
+        return toStudentDto(student);
+    }
+
+    // 학생 리스트 조회
+    @Override
+    public List<StudentDto> getStudentList(StudentSearchDto cond) {
+        // 검색 조건에 맞는 학생 리스트 조회
+        List<Student> students = studentRepository.search(cond);
+        // 각 학생 엔티티를 StudentDto로 변환하여 반환
+        return students.stream().map(this::toStudentDto).collect(Collectors.toList());
+    }
+
+    // 관리자 학생정보 수정
+    @Override
+    public void adminUpdateStudentInfo(String studentNo, AdminUpdateStudentDto adminUpdateStudentDto) {
+        // 학번 으로 학생 정보 조회
+        Student student = studentRepository.findById(studentNo)
+                .orElseThrow(() -> new EntityNotFoundException("학생정보 없음: " + studentNo));
+        // 학과 코드 조회
+        SchoolSubject schoolSubject = schoolSubjectRepository.findById(adminUpdateStudentDto.getSchoolSubjectCode())
+                .orElseThrow(() -> new EntityNotFoundException("학과 코드 없음: " + adminUpdateStudentDto.getSchoolSubjectCode()));
+        // 성별 코드 조회
+        Employee advisor = employeeRepository.findById(adminUpdateStudentDto.getAdvisorNo())
+                .orElseThrow(() -> new EntityNotFoundException("담당 교수 정보 없음: " + adminUpdateStudentDto.getAdvisorNo()));
+        // 지도교수 정보 조회
+        StudentStatusInfo statusInfo = studentStatusInfoRepository.findById(adminUpdateStudentDto.getStudentStatusCode())
+                .orElseThrow(() -> new EntityNotFoundException("학적 상태코드 없음: " + adminUpdateStudentDto.getStudentStatusCode()));
+        // 계좌번호 조회
+        BankAccount bankAccount = null;
+        String bankAccountNo = adminUpdateStudentDto.getBankAccountNo();
+        if (bankAccountNo != null && !bankAccountNo.isEmpty()) {
+            bankAccount = bankAccountRepository.findById(bankAccountNo)
+                    .orElseThrow(() -> new EntityNotFoundException("계좌번호 없음 : " + bankAccountNo));
+        }
+        // 학생 정보 업데이트
+        student.adminUpdate(adminUpdateStudentDto, schoolSubject, null, advisor, bankAccount, statusInfo, null);
+    }
+
+    // 내 정보 수정
+    @Override
+    public void updateMyInfo(String studentNo, UpdateStudentDto dto) {
+        // 학번으로 학생 정보 조회
+        Student student = studentRepository.findById(studentNo)
+                .orElseThrow(() -> new EntityNotFoundException("학생 정보가 없습니다: " + studentNo));
+        // 계좌번호 조회
+        BankAccount account = null;
+        if (dto.getBankAccountNo() != null) {
+            account = bankAccountRepository.findById(dto.getBankAccountNo())
+                    .orElseThrow(() -> new EntityNotFoundException("계좌정보 없음"));
+        }
+        // 학생 정보 업데이트
+        student.updateMyInfo(dto, account);
+    }
+
+    // 내 비밀번호 변경
+    @Override
+    public void changeMyPassword(String studentNo, ChangePasswordDto dto) {
+        // 학번으로 학생 정보 조회
+        Student student = studentRepository.findById(studentNo)
+                .orElseThrow(() -> new EntityNotFoundException("학생 정보가 없습니다: " + studentNo));
+        // 로그인 정보 조회
+        LoginInfo loginInfo = student.getLoginInfo();
+        // 기존 비밀번호 검증
+        if (!passwordEncoder.matches(dto.getCurrentPassword(), loginInfo.getPassword())) {
+            throw new IllegalArgumentException("기존 비밀번호가 일치하지 않습니다.");
+        }
+        // 새 비밀번호 암호화
+        String encodedNewPassword = passwordEncoder.encode(dto.getNewPassword());
+        // 암호화된 비밀번호로 변경
+        loginInfo.changePassword(encodedNewPassword);
+    }
+
+    // 학번 생성 로직
     private String generateStudentNo(LocalDate admissionDate, String schoolSubjectCode) {
-        // 입학 연도 4자리
+        // 입학 연도를 기준으로 학번 생성
         String admissionYear = String.valueOf(admissionDate.getYear());
-
-        // 학과 코드 3자리
-        String departmentCode = schoolSubjectCode;
-
-        // 학번 시퀀스 3자리
+        // 학과 코드가 3자리로 가정
         Optional<String> lastStudentNo = studentRepository.findTopByStudentNoStartingWithAndStudentNoContainingOrderByStudentNoDesc(
-                admissionYear, departmentCode);
-
-        // 시퀀스 번호 계산
+                admissionYear, schoolSubjectCode);
+        // 시퀀스 번호 생성
         int sequence = 1;
-        // 만약 마지막 학번이 존재한다면
         if (lastStudentNo.isPresent()) {
-            // 마지막 학번에서 시퀀스 번호 추출
             String lastSeqStr = lastStudentNo.get().substring(lastStudentNo.get().length() - 3);
             sequence = Integer.parseInt(lastSeqStr) + 1;
         }
-
-        // 시퀀스 번호를 3자리로 포맷팅
-        return String.format("%s%s%03d", admissionYear, departmentCode, sequence);
+        // 학번 형식: YYYY + 학과 코드 + 3자리 시퀀스
+        return String.format("%s%s%03d", admissionYear, schoolSubjectCode, sequence);
     }
 
+    // 로그인 정보 생성 및 저장
     private LoginInfo createAndSaveLoginInfo(String loginId, LocalDate birthDate) {
-        // 비밀번호는 생년월일을 YYYYMMDD 형식으로 사용
+        // 생년월일을 기반으로 비밀번호 생성
         String rawPassword = birthDate.toString().replace("-", "");
         // 비밀번호 인코딩
         String encodedPassword = passwordEncoder.encode(rawPassword);
-
         // 로그인 정보 생성
         LoginInfo loginInfo = LoginInfo.builder()
                 .loginId(loginId)
                 .password(encodedPassword)
-                .userType("S") // 학생 타입으로 설정
+                .userType("S")
                 .build();
-
+        // 로그인 정보 저장
         return loginInfoRepository.save(loginInfo);
+    }
+
+    // 학생 페이지 조회
+    public Page<StudentDto> getStudentPage(StudentSearchDto cond, Pageable pageable) {
+        // 검색 조건에 맞는 학생 페이지 조회
+        Page<Student> page = studentRepository.searchPage(cond, pageable);
+        // 페이지의 각 학생 엔티티를 StudentDto로 변환하여 반환
+        return page.map(this::toStudentDto);
+    }
+
+    // Student 엔티티를 StudentDto로 변환
+    private StudentDto toStudentDto(Student student) {
+        if (student == null) return null;
+        return StudentDto.builder()
+                .studentNo(student.getStudentNo())
+                .name(student.getName())
+                .email(student.getEmail())
+                .clubCode(student.getClubCode())
+                .grade(student.getGrade())
+                .advisorName(student.getAdvisor() != null ? student.getAdvisor().getName() : null)
+                .studentStatusName(student.getStudentStatus() != null ? student.getStudentStatus().getStatusName() : null)
+                .schoolSubjectName(student.getSchoolSubject() != null ? student.getSchoolSubject().getSubjectName() : null)
+                .build();
     }
 }

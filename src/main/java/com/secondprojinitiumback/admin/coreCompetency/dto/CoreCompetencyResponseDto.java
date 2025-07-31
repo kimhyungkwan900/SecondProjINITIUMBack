@@ -1,5 +1,12 @@
 package com.secondprojinitiumback.admin.coreCompetency.dto;
 
+import lombok.*;
+
+@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 // 사용자 응답 결과 조회용 DTO
 public class CoreCompetencyResponseDto {
     private Long id;                 // 응답 ID

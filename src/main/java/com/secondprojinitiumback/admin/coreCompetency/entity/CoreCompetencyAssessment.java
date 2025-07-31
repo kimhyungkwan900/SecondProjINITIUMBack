@@ -1,6 +1,7 @@
 package com.secondprojinitiumback.admin.coreCompetency.entity;
 
 import com.secondprojinitiumback.common.domain.CommonCode;
+import com.secondprojinitiumback.common.domain.SchoolSubject;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,10 +27,10 @@ public class CoreCompetencyAssessment {
     @JoinColumn(name = "STGR_ID")
     private SubCompetencyCategory subCategory; // 하위역량 카테고리 (FK)
 
-    // 추후 연결 예정: 학과 정보
-//    @ManyToOne
-//    @JoinColumn(name = "SCSBJT_NO")
-//    private Subject subject;
+    // 학과 정보 연결
+    @ManyToOne
+    @JoinColumn(name = "SCSBJT_NO")
+    private SchoolSubject schoolSubject;
 
     @Column(name = "ASMT_NO")
     private String assessmentNo; // 평가 코드
@@ -62,7 +63,7 @@ public class CoreCompetencyAssessment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-            @JoinColumn(name = "ONLNE_EXEC_YN", referencedColumnName = "CD"),
+            @JoinColumn(name = "ONLNE_EXEC_CD", referencedColumnName = "CD"),
             @JoinColumn(name = "ONLNE_EXEC_GRP", referencedColumnName = "CD_SE")
     })
     private CommonCode onlineExecCode;  // 온라인 실행 여부 (고정값: Y/N)

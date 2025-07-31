@@ -1,5 +1,12 @@
 package com.secondprojinitiumback.user.coreCompetency.dto;
 
+import lombok.*;
+
+@Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 // 하위역량 정보 조회 DTO
 public class SubCompetencyCategoryDto {
     private Long subCategoryId;     // 하위역량 ID

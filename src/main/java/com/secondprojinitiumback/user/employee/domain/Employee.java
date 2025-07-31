@@ -46,8 +46,8 @@ public class Employee extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-            @JoinColumn(name = "CD", referencedColumnName = "id.code"),
-            @JoinColumn(name = "CD_SE", referencedColumnName = "id.codeGroup")
+            @JoinColumn(name = "GNDR_CD", referencedColumnName = "CD"),
+            @JoinColumn(name = "GNDR_CD_SE", referencedColumnName = "CD_SE")
     })
     private CommonCode gender;
 

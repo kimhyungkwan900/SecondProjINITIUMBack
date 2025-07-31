@@ -9,8 +9,6 @@ import lombok.*;
 @ToString
 public class AdminUpdateStudentDto {
     private String email;               // 이메일
-    private String phone;               // 전화번호
-    private String address;             // 주소
     private String clubCode;            // 동아리 코드
     private String grade;               // 학년
     private String bankAccountNo;       // 계좌번호

@@ -47,24 +47,24 @@ public class StudentServiceImpl implements StudentService {
 
     // 학생 입학 (최초 등록)
     @Override
-    public void enrollStudent(EnrollStudentDto addStudentDto) {
+    public void enrollStudent(EnrollStudentDto enrollStudentDto) {
         // 학번 생성
-        String studentNo = generateStudentNo(addStudentDto.getAdmissionDate(), addStudentDto.getSchoolSubjectCode());
+        String studentNo = generateStudentNo(enrollStudentDto.getAdmissionDate(), enrollStudentDto.getSchoolSubjectCode());
         // 로그인 정보 생성 및 저장
-        LoginInfo loginInfo = createAndSaveLoginInfo(studentNo, addStudentDto.getBirthDate());
+        LoginInfo loginInfo = createAndSaveLoginInfo(studentNo, enrollStudentDto.getBirthDate());
         // 학과 코드 조회
-        SchoolSubject schoolSubject = schoolSubjectRepository.findByCode(addStudentDto.getSchoolSubjectCode())
+        SchoolSubject schoolSubject = schoolSubjectRepository.findByCode(enrollStudentDto.getSchoolSubjectCode())
                 .orElseThrow(() -> new IllegalArgumentException("유효하지않은 학과 코드"));
         // 성별 코드 조회
-        CommonCode gender = commonCodeRepository.findByCdAndCdSe("CO0002", addStudentDto.getGender())
+        CommonCode gender = commonCodeRepository.findByCdAndCdSe(enrollStudentDto.getGender(),"CO0002")
                 .orElseThrow(() -> new IllegalArgumentException("유효하지않은 성별 코드"));
         // 지도교수 정보 조회
-        Employee advisor = employeeRepository.findByEmployeeNo(addStudentDto.getAdvisorNo())
+        Employee advisor = employeeRepository.findByEmployeeNo(enrollStudentDto.getAdvisorNo())
                 .orElseThrow(() -> new IllegalArgumentException("유효하지않은 지도교수 번호"));
         // 계좌번호 조회
         BankAccount bankAccount = null;
-        if (addStudentDto.getBankAccountNumber() != null && !addStudentDto.getBankAccountNumber().isEmpty()) {
-            bankAccount = bankAccountRepository.findByAccountNumber(addStudentDto.getBankAccountNumber())
+        if (enrollStudentDto.getBankAccountNumber() != null && !enrollStudentDto.getBankAccountNumber().isEmpty()) {
+            bankAccount = bankAccountRepository.findByAccountNumber(enrollStudentDto.getBankAccountNumber())
                     .orElseThrow(() -> new IllegalArgumentException("유효하지않은 계좌번호"));
         }
         // 학생Entity 생성
@@ -73,13 +73,13 @@ public class StudentServiceImpl implements StudentService {
                 .loginInfo(loginInfo)
                 .schoolSubject(schoolSubject)
                 .bankAccount(bankAccount)
-                .name(addStudentDto.getName())
-                .admissionDate(addStudentDto.getAdmissionDate())
-                .birthDate(addStudentDto.getBirthDate())
+                .name(enrollStudentDto.getName())
+                .admissionDate(enrollStudentDto.getAdmissionDate())
+                .birthDate(enrollStudentDto.getBirthDate())
                 .gender(gender)
-                .email(addStudentDto.getEmail())
+                .email(enrollStudentDto.getEmail())
                 .advisor(advisor)
-                .grade(addStudentDto.getGrade())
+                .grade(enrollStudentDto.getGrade())
                 .build();
         // Entity 저장
         studentRepository.save(student);

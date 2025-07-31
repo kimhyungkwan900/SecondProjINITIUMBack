@@ -1,6 +1,7 @@
 package com.secondprojinitiumback.user.student.domain;
 
 import com.secondprojinitiumback.common.bank.domain.BankAccount;
+import com.secondprojinitiumback.common.converter.LocalDateToChar8Converter;
 import com.secondprojinitiumback.common.domain.CommonCode;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
 import com.secondprojinitiumback.common.domain.University;
@@ -39,7 +40,7 @@ public class Student extends BaseEntity {
     private LoginInfo loginInfo;
     // 학교 정보
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "UNIV_CD", referencedColumnName = "UNIV_CD", nullable = false, unique = true)
+    @JoinColumn(name = "UNIV_CD", referencedColumnName = "UNIV_CD", nullable = false)
     private University school;
     // 학과 정보
     @ManyToOne(fetch = FetchType.LAZY)
@@ -61,17 +62,19 @@ public class Student extends BaseEntity {
     private String name;
     // 입학일자
     @Column(name = "MTCLTN_YMD")
+    @Convert(converter = LocalDateToChar8Converter.class)
     @PastOrPresent(message = "입학일자는 오늘 이전이어야 합니다.")
     private LocalDate admissionDate;
     // 생년월일
     @Column(name = "STDNT_BRDT", nullable = false)
+    @Convert(converter = LocalDateToChar8Converter.class)
     @Past(message = "생년월일은 과거 날짜여야 합니다.")
     private LocalDate birthDate;
     // 성별 코드
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-            @JoinColumn(name = "CD", referencedColumnName = "id.code"),
-            @JoinColumn(name = "CD_SE", referencedColumnName = "id.codeGroup")
+            @JoinColumn(name = "GNDR_CD", referencedColumnName = "CD"),
+            @JoinColumn(name = "GNDR_CD_SE", referencedColumnName = "CD_SE")
     })
     private CommonCode gender;
     // 이메일 주소

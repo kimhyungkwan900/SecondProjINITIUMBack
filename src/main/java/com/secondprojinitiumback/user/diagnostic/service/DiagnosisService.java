@@ -193,4 +193,18 @@ public class DiagnosisService {
                 .interpretedMessage(interpreted)
                 .build();
     }
+
+    public List<DiagnosticResultDto> getAllResultsByStudent(String studentNo) {
+        return resultRepository.findByStudent_StudentNo(studentNo).stream()
+                .map(result -> DiagnosticResultDto.builder()
+                        .resultId(result.getId())
+                        .studentNo(result.getStudent().getStudentNo())
+                        .testId(result.getTest().getId())
+                        .totalScore(result.getTotalScore())
+                        .completionDate(result.getCompletionDate())
+                        .interpretedMessage(scoreService.interpretScore(result.getTest().getId(), result.getTotalScore()))
+                        .build())
+                .toList();
+    }
+
 }

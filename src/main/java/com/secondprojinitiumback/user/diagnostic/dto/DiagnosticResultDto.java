@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.user.diagnostic.dto;
 
+import com.secondprojinitiumback.user.diagnostic.domain.DiagnosticResult;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -12,19 +13,23 @@ import java.time.LocalDateTime;
 public class DiagnosticResultDto {
 
     private Long resultId;
-
-    /**
-     * 학생 학번 (STDNT_NO)
-     * 기존 userId(Long) → studentNo(String)으로 변경
-     */
     private String studentNo;
-
     private Long testId;
+    private String testName; // 🔹 추가
     private Integer totalScore;
     private LocalDateTime completionDate;
-
-    /**
-     * 점수 해석 메시지
-     */
     private String interpretedMessage;
+
+    public static DiagnosticResultDto from(DiagnosticResult result, String interpreted) {
+        return DiagnosticResultDto.builder()
+                .resultId(result.getId())
+                .studentNo(result.getStudent().getStudentNo())
+                .testId(result.getTest().getId())
+                .testName(result.getTest().getName()) // 🔹 이름 포함
+                .totalScore(result.getTotalScore())
+                .completionDate(result.getCompletionDate())
+                .interpretedMessage(interpreted)
+                .build();
+    }
 }
+

@@ -57,6 +57,14 @@ public class DiagnosisController {
         return ResponseEntity.ok(response);
     }
 
+    // 📜 특정 학생의 모든 내부 진단검사 결과 목록 조회
+    @GetMapping("/results/{studentNo}")
+    public ResponseEntity<List<DiagnosticResultDto>> getAllResultsByStudent(@PathVariable String studentNo) {
+        List<DiagnosticResultDto> results = diagnosisService.getAllResultsByStudent(studentNo);
+        return ResponseEntity.ok(results);
+    }
+
+
     // 📊 결과 요약 조회
     @GetMapping("/result/{resultId}")
     public ResponseEntity<DiagnosticResultDto> getResult(@PathVariable Long resultId) {

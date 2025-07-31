@@ -35,6 +35,14 @@ public class ExternalDiagnosisController {
         return ResponseEntity.ok(externalDiagnosisService.getAvailableExternalTests());
     }
 
+    // 📜 특정 학생의 모든 외부 진단검사 결과 목록 조회
+    @GetMapping("/results/{studentNo}")
+    public ResponseEntity<List<ExternalDiagnosisResultDto>> getAllExternalResultsByStudent(@PathVariable String studentNo) {
+        List<ExternalDiagnosisResultDto> results = externalDiagnosisService.getAllResultsByStudent(studentNo);
+        return ResponseEntity.ok(results);
+    }
+
+
     /**
      * 🔍 외부 진단검사 검색
      */

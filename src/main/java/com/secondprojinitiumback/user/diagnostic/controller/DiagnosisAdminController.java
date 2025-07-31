@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -15,6 +16,12 @@ import java.util.Map;
 public class DiagnosisAdminController {
 
     private final DiagnosisService diagnosisService;
+
+    @GetMapping("/tests")
+    public ResponseEntity<List<DiagnosticTestDto>> getAllTests() {
+        return ResponseEntity.ok(diagnosisService.getAvailableTests());
+    }
+
 
     // 진단검사 생성
     @PostMapping("/tests")

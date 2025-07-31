@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.common.login.domain;
 
+import com.secondprojinitiumback.common.converter.LocalDateTimeToChar12Converter;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -35,11 +36,13 @@ public class LoginAuthInfo {
     private String refreshToken;
 
     // 발급 일시
-    @Column(name = "ISSUED_AT", nullable = false)
+    @Column(name = "ISSUED_AT", nullable = false, length = 12)
+    @Convert(converter = LocalDateTimeToChar12Converter.class)
     private LocalDateTime issuedAt;
 
     // 만료 일시
-    @Column(name = "EXPIRES_AT", nullable = false)
+    @Column(name = "EXPIRES_AT", nullable = false, length = 12)
+    @Convert(converter = LocalDateTimeToChar12Converter.class)
     private LocalDateTime expiresAt;
 
     // 마지막 사용 일시

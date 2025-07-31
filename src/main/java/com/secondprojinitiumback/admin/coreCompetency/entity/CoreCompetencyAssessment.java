@@ -67,7 +67,6 @@ public class CoreCompetencyAssessment {
     @Column(name = "ONLNE_EXEC_GRP", insertable = false, updatable = false)
     private String onlineExecGroupCode = "ONLINE_YN";
 
-
     @Lob
     @Column(name = "GUID_CN")
     private String guideContent; // 평가 안내문

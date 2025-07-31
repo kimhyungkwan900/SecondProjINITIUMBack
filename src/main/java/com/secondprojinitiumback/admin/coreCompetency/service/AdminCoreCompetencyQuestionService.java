@@ -61,10 +61,11 @@ public class AdminCoreCompetencyQuestionService {
             BehaviorIndicator behaviorIndicator = behaviorIndicatorRepository.findById(coreCompetencyQuestionCreateDto.getIndicatorId())
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 행동지표입니다."));
 
-            // 기존 매핑이 없다면 새로 생성, 있다면 오류메세지 출력
+            // 기존 매핑이 있는지 확인
             BehaviorIndicatorMajorQuestionMapping existingMapping = behaviorIndicatorMajorQuestionMappingRepository.findByQuestionAndBehaviorIndicatorAndSchoolSubject(
                     savedQuestion, behaviorIndicator, schoolSubject);
 
+            // 기존 매핑이 없다면 새로 생성, 있다면 예외 처리
             if(existingMapping == null){
                 // 매핑이 없다면 새로 생성
                 BehaviorIndicatorMajorQuestionMapping newMapping = BehaviorIndicatorMajorQuestionMapping.builder()
@@ -99,6 +100,7 @@ public class AdminCoreCompetencyQuestionService {
         // 엔티티를 저장하고 반환
         CoreCompetencyQuestion savedQuestion = coreCompetencyQuestionRepository.save(question);
 
+        // 공통 문항이 아닌 경우, 행동지표랑 학과(전공) 매핑 추가
         if("N".equalsIgnoreCase(coreCompetencyQuestionCreateDto.getIsCommonCode()) && coreCompetencyQuestionCreateDto.getSubjectCode() != null){
             BehaviorIndicator behaviorIndicator = behaviorIndicatorRepository.findById(coreCompetencyQuestionCreateDto.getIndicatorId())
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 행동지표입니다."));

@@ -4,10 +4,11 @@ import com.secondprojinitiumback.user.student.domain.Student;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "core_competency_response")
+@Table(name = "CORE_COMPETENCY_RESPONSE")
 public class CoreCompetencyResponse {
 
     @Id
+    @Column(name = "ASMT_RSPNS_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 응답 ID (PK)
 

@@ -24,7 +24,6 @@ public class AdminSubCategoryService {
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 핵심역량 카테고리입니다."));
 
             SubCompetencyCategory subCompetencyCategory = SubCompetencyCategory.builder()
-                    .coreCategoryId(coreCategoryId)
                     .subCategoryName(subCategoryName)
                     .subCategoryNote(subCategoryDescription)
                     .build();

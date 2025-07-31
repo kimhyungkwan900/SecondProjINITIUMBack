@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "core_competency_question")
+@Table(name = "CORE_COMPETENCY_QUESTION")
 public class CoreCompetencyQuestion {
 
     @Id

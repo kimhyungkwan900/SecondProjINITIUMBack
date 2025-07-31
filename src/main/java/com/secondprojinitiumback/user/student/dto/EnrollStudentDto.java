@@ -20,5 +20,7 @@ public class EnrollStudentDto {
     private String advisorNo;           // 지도교수 ID
     private LocalDate birthDate;        // 생년월일
     private LocalDate admissionDate;    // 입학일자
-
+    private String universityCode;      // 대학 코드
+    private String studentStatusCode;   // 학적 상태 코드
+    private String clubCode;            // 동아리 코드
 }

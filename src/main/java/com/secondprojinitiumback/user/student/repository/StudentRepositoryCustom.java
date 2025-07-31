@@ -8,6 +8,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface StudentRepositoryCustom {
-    List<Student> search(StudentSearchDto cond);
-    Page<Student> searchPage(StudentSearchDto cond, Pageable pageable);
+    List<Student> search(StudentSearchDto studentSearchDto);
+    Page<Student> searchPage(StudentSearchDto studentSearchDto, Pageable pageable);
 }

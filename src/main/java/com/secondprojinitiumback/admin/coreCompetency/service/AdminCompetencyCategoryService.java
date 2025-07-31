@@ -2,9 +2,9 @@ package com.secondprojinitiumback.admin.coreCompetency.service;
 
 
 import com.secondprojinitiumback.admin.coreCompetency.dto.CompetencyCategoryDto;
-import com.secondprojinitiumback.admin.coreCompetency.entity.CoreCompetencyCategory;
-import com.secondprojinitiumback.admin.coreCompetency.entity.IdealTalentProfile;
-import com.secondprojinitiumback.admin.coreCompetency.entity.SubCompetencyCategory;
+import com.secondprojinitiumback.admin.coreCompetency.domain.CoreCompetencyCategory;
+import com.secondprojinitiumback.admin.coreCompetency.domain.IdealTalentProfile;
+import com.secondprojinitiumback.admin.coreCompetency.domain.SubCompetencyCategory;
 import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyCategoryRepository;
 import com.secondprojinitiumback.admin.coreCompetency.repository.IdealTalentProfileRepository;
 import com.secondprojinitiumback.admin.coreCompetency.repository.SubCompetencyCategoryRepository;
@@ -105,6 +105,17 @@ public class AdminCompetencyCategoryService {
     }
     public List<SubCompetencyCategory> getAllSubCompetencyCategories() {
         return subCompetencyCategoryRepository.findAll();
+    }
+
+    // 5. 상세 조회
+    public CoreCompetencyCategory getCoreCategory(Long id) {
+        return coreCompetencyCategoryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("핵심역량 없음"));
+    }
+
+    public SubCompetencyCategory getSubCategory(Long id) {
+        return subCompetencyCategoryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("하위역량 없음"));
     }
 
     // 6. 중복 체크

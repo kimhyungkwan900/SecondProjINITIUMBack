@@ -1,7 +1,7 @@
 package com.secondprojinitiumback.admin.coreCompetency.controller;
 
 import com.secondprojinitiumback.admin.coreCompetency.dto.CoreCompetencyQuestionCreateDto;
-import com.secondprojinitiumback.admin.coreCompetency.entity.CoreCompetencyQuestion;
+import com.secondprojinitiumback.admin.coreCompetency.domain.CoreCompetencyQuestion;
 import com.secondprojinitiumback.admin.coreCompetency.service.AdminCoreCompetencyQuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

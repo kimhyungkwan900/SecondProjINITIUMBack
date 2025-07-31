@@ -1,4 +1,4 @@
-package com.secondprojinitiumback.admin.coreCompetency.entity;
+package com.secondprojinitiumback.admin.coreCompetency.domain;
 
 import com.secondprojinitiumback.common.domain.SchoolSubject;
 import jakarta.persistence.*;

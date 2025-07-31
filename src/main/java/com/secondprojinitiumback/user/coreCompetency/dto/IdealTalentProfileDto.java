@@ -11,4 +11,5 @@ public class IdealTalentProfileDto {
     private Long id;
     private String name;
     private String description;
+
 }

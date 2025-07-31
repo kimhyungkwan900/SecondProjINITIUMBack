@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.admin.coreCompetency.entity;
 
+import com.secondprojinitiumback.admin.coreCompetency.dto.CoreCompetencyQuestionCreateDto;
 import com.secondprojinitiumback.common.domain.CommonCode;
 import jakarta.persistence.*;
 import lombok.*;

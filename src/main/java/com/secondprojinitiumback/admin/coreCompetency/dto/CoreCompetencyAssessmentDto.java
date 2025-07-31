@@ -9,8 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 //핵심역량진단목록 등록/수정/삭제/조회
 public class CoreCompetencyAssessmentDto {
-    private Long categoryId;       // 핵심역량 카테고리 ID
-    private Long subCategoryId;    // 하위역량 ID
     private String assessmentNo;   // 평가 코드
     private String assessmentName; // 평가명
     private String startDate;      // 시작일 (yyyymmdd)
@@ -20,5 +18,6 @@ public class CoreCompetencyAssessmentDto {
     private String semesterCode;   // 학기 코드
     private String onlineYn;       // 온라인 여부 ("Y" or "N")
     private String guideContent;   // 안내문
-    private String agreementContent; // 동의 문구
+    private String departmentName;  //학과에 연결된 부서 -> 조회시 사용
+
 }

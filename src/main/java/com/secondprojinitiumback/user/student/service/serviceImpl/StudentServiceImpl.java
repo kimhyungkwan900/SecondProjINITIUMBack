@@ -110,9 +110,9 @@ public class StudentServiceImpl implements StudentService {
 
     // 학생 리스트 조회
     @Override
-    public List<StudentDto> getStudentList(StudentSearchDto cond) {
+    public List<StudentDto> getStudentList(StudentSearchDto studentSearchDto) {
         // 검색 조건에 맞는 학생 리스트 조회
-        List<Student> students = studentRepository.search(cond);
+        List<Student> students = studentRepository.search(studentSearchDto);
         // 각 학생 엔티티를 StudentDto로 변환하여 반환
         return students.stream().map(this::toStudentDto).collect(Collectors.toList());
     }

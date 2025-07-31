@@ -79,7 +79,7 @@ public class AdminCoreCompetencyQuestionService {
                 throw new IllegalArgumentException("이미 해당 행동지표와 학과(전공)에 매핑된 문항이 존재합니다.");
             }
         }
-        return  coreCompetencyQuestionRepository.save(savedQuestion);
+        return savedQuestion;
     }
 
     //2. 문항 수정
@@ -97,7 +97,7 @@ public class AdminCoreCompetencyQuestionService {
         question.setAnswerAllowCount(coreCompetencyQuestionCreateDto.getAnswerAllowCount());
 
 
-        // 엔티티를 저장하고 반환
+        // 엔티티를 저장
         CoreCompetencyQuestion savedQuestion = coreCompetencyQuestionRepository.save(question);
 
         // 공통 문항이 아닌 경우, 행동지표랑 학과(전공) 매핑 추가

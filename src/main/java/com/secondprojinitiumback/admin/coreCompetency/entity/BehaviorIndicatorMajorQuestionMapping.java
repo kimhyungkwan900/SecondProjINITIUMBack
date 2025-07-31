@@ -18,7 +18,7 @@ public class BehaviorIndicatorMajorQuestionMapping {
     @Column(name = "MPNG_ID")
     private Long id; // 매핑 ID
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "QSTN_ID", nullable = false)
     private CoreCompetencyQuestion question; // 문항
 

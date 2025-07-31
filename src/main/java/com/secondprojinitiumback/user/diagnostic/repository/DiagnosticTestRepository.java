@@ -12,7 +12,8 @@ import java.util.List;
 public interface DiagnosticTestRepository extends JpaRepository<DiagnosticTest, Long> {
     List<DiagnosticTest> findByUseYn(String useYn); // 활성화된 검사만 조회
 
-    List<DiagnosticTest> findByNameContainingIgnoreCaseAndUseYnTrue(String keyword);
+    List<DiagnosticTest> findByNameContainingIgnoreCaseAndUseYn(String keyword, String useYn);
+
 
     Page<DiagnosticTest> findByNameContainingIgnoreCase(String keyword, Pageable pageable);
 

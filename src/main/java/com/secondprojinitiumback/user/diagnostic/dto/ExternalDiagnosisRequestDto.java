@@ -1,5 +1,7 @@
 package com.secondprojinitiumback.user.diagnostic.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.Map;
@@ -11,44 +13,26 @@ import java.util.Map;
 @Builder
 public class ExternalDiagnosisRequestDto {
 
-    /**
-     * 학생 번호 (STDNT_NO)
-     * 외부 진단검사 결과를 저장할 때 Student 엔티티와 연계
-     */
+    @NotBlank(message = "학생 번호는 필수입니다.")
     private String studentNo;
 
-    /**
-     * 외부 검사 API 코드 (커리어넷 qestrnSeq 값)
-     */
+    @NotBlank(message = "qestrnSeq는 필수입니다.")
     private String qestrnSeq;
 
-    /**
-     * 대상 코드 (trgetSe)
-     */
+    @NotBlank(message = "대상 코드(trgetSe)는 필수입니다.")
     private String trgetSe;
 
-    /**
-     * 문항별 응답 코드 (key: 문항번호, value: 선택값)
-     */
+    @NotNull(message = "문항별 응답은 필수입니다.")
     private Map<String, String> answers;
 
-    /**
-     * 성별
-     */
+    @NotBlank(message = "성별은 필수입니다.")
     private String gender;
 
-    /**
-     * 학교명
-     */
-    private String school;
+    private String school; // 선택
 
-    /**
-     * 학년
-     */
+    @NotBlank(message = "학년은 필수입니다.")
     private String grade;
 
-    /**
-     * 시작일시
-     */
+    @NotBlank(message = "시작일시는 필수입니다.")
     private String startDtm;
 }

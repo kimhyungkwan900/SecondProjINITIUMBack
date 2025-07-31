@@ -88,7 +88,9 @@ public class ExternalDiagnosisService {
                 .fromHttpUrl(questionUrl)
                 .queryParam("apikey", apiKey)
                 .queryParam("q", qestrnSeq)
+                .queryParam("trgetSe", trgetSe) // 🔹 대상 코드 추가
                 .build();
+
 
         return restTemplate.getForObject(uri.toUri(), Map.class);
     }

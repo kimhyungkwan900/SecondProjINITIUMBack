@@ -5,6 +5,7 @@ import com.secondprojinitiumback.admin.extracurricular.domain.test.EmpInfo;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -64,10 +65,10 @@ public class ExtracurricularProgram {
     private LocalDateTime eduAplyEndDt; // 신청 마감일
 
     @Column(name = "edu_bgng_ymd")
-    private LocalDateTime eduBgngYmd; // 교육 시작일
+    private LocalDate eduBgngYmd; // 교육 시작일
 
     @Column(name = "edu_end_ymd")
-    private LocalDateTime eduEndYmd; // 교육 종료일
+    private LocalDate eduEndYmd; // 교육 종료일
 
     @Column(name = "edu_plc_nm")
     private String eduPlcNm; // 교육 장소
@@ -84,6 +85,9 @@ public class ExtracurricularProgram {
 
     @Column(name = "stts_chg_dt" )
     private LocalDateTime sttsChgDt; // 상태 변경일
+
+    @Column(name = "cnd_cn")
+    private String cndCn;
 
     @Column(name = "field")
     private String field; // 예비 필드 (기타 정보 또는 내부 용도)

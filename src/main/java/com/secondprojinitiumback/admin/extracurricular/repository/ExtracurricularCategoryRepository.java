@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface ExtracurricularCategoryRepository extends JpaRepository<ExtracurricularCategory, Long> {
-    public List<ExtracurricularCategory> findByStgrId(Long stgrId);
+    // 상위 카테고리 번호로 비교과 카테고리 목록 조회
+    List<ExtracurricularCategory> findByStgrId(Long stgrId);
 }

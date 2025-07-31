@@ -23,6 +23,8 @@ public class ExtracurricularProgramService {
     private final ModelMapper modelMapper;
     private final EmpInfoRepository empInfoRepository;
 
+    private final ExtracurricularScheduleService extracurricularScheduleService;
+
     // 비교과 프로그램 등록 신청
     public void insertExtracurricularProgram(ExtracurricularProgramFormDTO dto, String empId){
         EmpInfo empInfo = empInfoRepository.findById(empId)
@@ -49,6 +51,15 @@ public class ExtracurricularProgramService {
                 .build();
 
         extracurricularProgramRepository.save(program);
+
+        extracurricularScheduleService.registerSchedulesAutomatically(
+                program,
+                dto.getEduBgngYmd(),             // 교육 시작일
+                dto.getEduEndYmd(),              // 교육 종료일
+                dto.getEduDays(),                // 반복 요일 리스트
+                dto.getEduStartTime(),           // 시작 시간
+                dto.getEduEndTime()              // 종료 시간
+        );
     }
 
     //비교과 프로그램 등록 승인 및 반려 수정
@@ -60,5 +71,12 @@ public class ExtracurricularProgramService {
         program.setSttsChgDt(LocalDateTime.now());
 
         extracurricularProgramRepository.save(program);
+    }
+
+    // 비교과 프로그램 삭제
+    public void deleteExtracurricularProgram(Long eduMngId) {
+        ExtracurricularProgram program = extracurricularProgramRepository.findById(eduMngId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 프로그램이 존재하지 않습니다. ID: " + eduMngId));
+        extracurricularProgramRepository.delete(program);
     }
 }

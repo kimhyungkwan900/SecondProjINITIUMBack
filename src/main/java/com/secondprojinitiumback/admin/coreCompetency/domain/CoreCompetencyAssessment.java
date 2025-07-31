@@ -1,4 +1,4 @@
-package com.secondprojinitiumback.admin.coreCompetency.entity;
+package com.secondprojinitiumback.admin.coreCompetency.domain;
 
 import com.secondprojinitiumback.common.domain.CommonCode;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
@@ -18,10 +18,6 @@ public class CoreCompetencyAssessment {
     @Column(name = "ASMT_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 평가 ID (PK)
-
-    @ManyToOne
-    @JoinColumn(name = "STGR_ID")
-    private SubCompetencyCategory subCategory; // 하위역량 카테고리 (FK)
 
     // 학과 정보 연결
     @ManyToOne
@@ -53,9 +49,9 @@ public class CoreCompetencyAssessment {
     })
     private CommonCode semesterCode; // 학기 정보 (FK)
 
+    @Builder.Default
     @Column(name = "STERM_GRP", insertable = false, updatable = false)
     private String semesterGroup = "SEMESTER"; // 학기 구분 코드 (고정값)
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
@@ -64,6 +60,7 @@ public class CoreCompetencyAssessment {
     })
     private CommonCode onlineExecCode;  // 온라인 실행 여부 (고정값: Y/N)
 
+    @Builder.Default
     @Column(name = "ONLNE_EXEC_GRP", insertable = false, updatable = false)
     private String onlineExecGroupCode = "ONLINE_YN";
 
@@ -71,9 +68,4 @@ public class CoreCompetencyAssessment {
     @Column(name = "GUID_CN")
     private String guideContent; // 평가 안내문
 
-    @Lob
-    @Column(name = "CORE_CMPT_AGRM_CN")
-    private String agreementContent; // 동의 문구
-
 }
-

@@ -1,4 +1,4 @@
-package com.secondprojinitiumback.admin.coreCompetency.entity;
+package com.secondprojinitiumback.admin.coreCompetency.domain;
 
 import com.secondprojinitiumback.common.domain.CommonCode;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
@@ -33,6 +33,11 @@ public class BehaviorIndicator {
     })
     private CommonCode isCommonCode; // 공통 여부 (공통 문항인지 여부를 나타내는 코드)
 
+    @Builder.Default
     @Column(name = "IS_COMMON_CD_SE", insertable = false, updatable = false)
     private String isCommonGroupCode = "ComYN";
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SCSBJT_NO", nullable = false)
+    private SchoolSubject schoolSubject; // 학과
 }

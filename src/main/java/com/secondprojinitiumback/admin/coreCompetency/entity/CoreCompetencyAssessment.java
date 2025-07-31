@@ -11,17 +11,13 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "core_competency_assessment")
+@Table(name = "CORE_COMPETENCY_ASSESSMENT")
 public class CoreCompetencyAssessment {
 
     @Id
     @Column(name = "ASMT_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 평가 ID (PK)
-
-    @ManyToOne
-    @JoinColumn(name = "CTGR_ID")
-    private CoreCompetencyCategory coreCategory; // 핵심역량 카테고리 (FK)
 
     @ManyToOne
     @JoinColumn(name = "STGR_ID")

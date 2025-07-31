@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class AdminDiagnosisService {
+public class AdminCoreDiagnosisService {
 
     private final CoreCompetencyCategoryRepository coreCompetencyCategoryRepository;
     private final SubCompetencyCategoryRepository SubCompetencyCategoryRepository;
@@ -115,4 +115,6 @@ public class AdminDiagnosisService {
     public List<CoreCompetencyAssessment> getAllCoreCompetencyAssessments() {
         return coreCompetencyAssessmentRepository.findAll();
     }
+
+    //페이징처리
 }

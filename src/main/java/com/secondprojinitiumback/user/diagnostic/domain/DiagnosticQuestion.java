@@ -60,7 +60,7 @@ public class DiagnosticQuestion {
      * mappedBy = "question": DiagnosticAnswer의 question 필드에 매핑됨
      * CascadeType.ALL: Question 저장/삭제 시 Answer도 함께 처리
      */
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<DiagnosticAnswer> answers = new ArrayList<>();
 }

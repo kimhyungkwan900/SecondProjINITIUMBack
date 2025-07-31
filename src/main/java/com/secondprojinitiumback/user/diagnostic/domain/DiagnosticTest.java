@@ -50,7 +50,7 @@ public class DiagnosticTest {
     @Builder.Default
     private String categoryValue = "NC";     // 업무구분 코드 값
 
-    @OneToMany(mappedBy = "test", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "test", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<DiagnosticQuestion> questions = new ArrayList<>();
 }

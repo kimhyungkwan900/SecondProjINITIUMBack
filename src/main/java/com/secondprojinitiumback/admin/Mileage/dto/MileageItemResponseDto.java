@@ -8,13 +8,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 
-// 조회용 DTO
+
 public class MileageItemResponseDto {
 
     private Long id; //마일리지 항목 ID(FK)
@@ -25,7 +26,9 @@ public class MileageItemResponseDto {
     private Long eduMngId; //비교과 프로그램 ID
     private String eduNm; // 비교과 프로그램명
     private Integer eduMlg; //마일리지
+    private List<ScorePolicyResponseDto> scorePolicies; //배점 정책 목록
 
+    //entity -> dto 변환
     public static MileageItemResponseDto from(MileageItem item) {
         return MileageItemResponseDto.builder()
                 .id(item.getId())
@@ -35,6 +38,9 @@ public class MileageItemResponseDto {
                 .eduMngId(item.getProgram().getEduMngId())
                 .eduNm(item.getProgram().getEduNm())
                 .eduMlg(item.getProgram().getEduMlg())
+                .scorePolicies(item.getScorePolicies() != null ? item.getScorePolicies().stream()
+                                .map(ScorePolicyResponseDto::from)
+                                .toList() : List.of())
                 .build();
     }
 }

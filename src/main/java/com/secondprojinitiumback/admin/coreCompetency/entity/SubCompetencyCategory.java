@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "sub_competency_category")
+@Table(name = "SUB_COMPETENCY_CATEGORY")
 public class SubCompetencyCategory {
 
     @Id
@@ -17,10 +17,10 @@ public class SubCompetencyCategory {
     @Column(name = "STGR_ID")
     private Long id; // 하위 역량 ID
 
-    @Column(name = "STGR_NM")
+    @Column(name = "STGR_NM", nullable = false)
     private String subCategoryName; // 하위 역량명
 
-    @Column(name = "STGR_CN")
+    @Column(name = "STGR_CN", nullable = false)
     private String subCategoryNote; // 하위 역량 설명
 
     @ManyToOne(fetch = FetchType.LAZY)

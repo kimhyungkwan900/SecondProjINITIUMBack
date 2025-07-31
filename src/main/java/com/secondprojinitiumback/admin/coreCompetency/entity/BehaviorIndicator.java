@@ -11,7 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "Behavior_Indicator")
+@Table(name = "BEHAVIOR_INDICATOR")
 public class BehaviorIndicator {
 
     @Id
@@ -26,15 +26,13 @@ public class BehaviorIndicator {
     @JoinColumn(name = "STGR_ID", nullable = false)
     private SubCompetencyCategory subCompetencyCategory; // 하위 역량 카테고리 (외래 키: 하위 역량 ID)
 
-    //학과 테이블과 연결
-    @ManyToOne
-    @JoinColumn(name = "SCSBJT_NO")
-    private SchoolSubject schoolSubject;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
             @JoinColumn(name = "IS_COMMON", referencedColumnName = "CD"),
             @JoinColumn(name = "IS_COMMON_CD_SE", referencedColumnName = "CD_SE")
     })
     private CommonCode isCommonCode; // 공통 여부 (공통 문항인지 여부를 나타내는 코드)
+
+    @Column(name = "IS_COMMON_CD_SE", insertable = false, updatable = false)
+    private String isCommonGroupCode = "ComYN";
 }

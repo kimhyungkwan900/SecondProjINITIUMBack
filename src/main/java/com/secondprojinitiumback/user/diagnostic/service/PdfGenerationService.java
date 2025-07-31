@@ -31,19 +31,19 @@ public class PdfGenerationService {
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf);
 
-        // ✅ 한글 폰트 설정 (운영 환경 포함 안정적 로드)
+        // 한글 폰트 설정 (운영 환경 포함 안정적 로드)
         File fontFile = ResourceUtils.getFile("classpath:fonts/NotoSansKR-Regular.ttf");
         PdfFont koreanFont = PdfFontFactory.createFont(fontFile.getAbsolutePath(), PdfEncodings.IDENTITY_H, true);
         document.setFont(koreanFont);
 
-        // ✅ 제목
+        // 제목
         document.add(new Paragraph("진단검사 결과 요약")
                 .setFontSize(18)
                 .setBold()
                 .setTextAlignment(TextAlignment.CENTER)
                 .setMarginBottom(20));
 
-        // ✅ 기본 정보 (Student 연동 적용)
+        // 기본 정보 (Student 연동 적용)
         document.add(new Paragraph("검사명: " + result.getTest().getName()));
         document.add(new Paragraph("학생번호: " + result.getStudent().getStudentNo()));
         document.add(new Paragraph("학생명: " + result.getStudent().getName()));
@@ -52,7 +52,7 @@ public class PdfGenerationService {
         document.add(new Paragraph("응답일: " + result.getCompletionDate()));
         document.add(new Paragraph(" "));
 
-        // ✅ 상세 문항별 결과
+        // 상세 문항별 결과
         document.add(new Paragraph("문항별 응답 결과")
                 .setBold()
                 .setFontSize(14)

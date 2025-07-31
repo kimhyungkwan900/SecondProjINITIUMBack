@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "core_competency_category")
+@Table(name = "CORE_COMPETENCY_CATEGORY")
 public class CoreCompetencyCategory {
 
     @Id
@@ -17,10 +17,10 @@ public class CoreCompetencyCategory {
     @Column(name = "CTGR_ID")
     private Long id; // 핵심역량 카테고리 ID (PK)
 
-    @Column(name = "CTGR_NM")
+    @Column(name = "CTGR_NM", nullable = false)
     private String coreCategoryName; // 핵심역량 카테고리 이름
 
-    @Column(name = "CTGR_CN")
+    @Column(name = "CTGR_CN", nullable = false)
     private String coreCategoryNote; // 핵심역량 카테고리 설명
 
     @ManyToOne

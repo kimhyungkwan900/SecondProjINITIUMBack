@@ -26,8 +26,8 @@ public class SchoolSubject extends BaseEntity {
     // 학과구분코드
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-            @JoinColumn(name = "CD", referencedColumnName = "id.code"),
-            @JoinColumn(name = "CD_SE", referencedColumnName = "id.codeGroup")
+            @JoinColumn(name = "CD", referencedColumnName = "CD"),
+            @JoinColumn(name = "CD_SE", referencedColumnName = "CD_SE")
     })
     private CommonCode deptDivision;
 

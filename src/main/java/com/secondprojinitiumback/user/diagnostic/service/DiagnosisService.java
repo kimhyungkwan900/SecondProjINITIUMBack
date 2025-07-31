@@ -28,10 +28,10 @@ public class DiagnosisService {
     private final DiagnosticResultRepository resultRepository;
     private final DiagnosticResultDetailRepository resultDetailRepository;
     private final DiagnosisScoreService scoreService;
-    private final StudentRepository studentRepository; // 🔹 학생 조회용
+    private final StudentRepository studentRepository;
 
     /**
-     * ✅ 진단검사 등록
+     * 진단검사 등록
      */
     public Long registerDiagnosticTest(DiagnosticTestDto dto) {
         DiagnosticTest test = DiagnosticTest.builder()
@@ -77,7 +77,7 @@ public class DiagnosisService {
 
 
     /**
-     * ✅ 사용 가능한 검사 목록 조회
+     * 사용 가능한 검사 목록 조회
      */
     public List<DiagnosticTestDto> getAvailableTests() {
         return testRepository.findByUseYn("Y").stream()
@@ -90,7 +90,7 @@ public class DiagnosisService {
     }
 
     /**
-     * ✅ 키워드 기반 검색
+     * 키워드 기반 검색
      */
     public List<DiagnosticTestDto> searchTestsByKeyword(String keyword) {
         List<DiagnosticTest> tests = testRepository
@@ -101,7 +101,7 @@ public class DiagnosisService {
     }
 
     /**
-     * ✅ 특정 검사 문항 조회
+     * 특정 검사 문항 조회
      */
     public List<DiagnosticQuestionDto> getQuestionsByTestId(Long testId) {
         return questionRepository.findByTestIdOrderByOrderAsc(testId).stream()
@@ -121,7 +121,7 @@ public class DiagnosisService {
     }
 
     /**
-     * ✅ 페이징 검색
+     * 페이징 검색
      */
     public Page<DiagnosticTestDto> getPagedTests(String keyword, Pageable pageable) {
         Page<DiagnosticTest> page = testRepository.findByNameContainingIgnoreCase(keyword, pageable);
@@ -133,7 +133,7 @@ public class DiagnosisService {
     }
 
     /**
-     * ✅ 검사 제출 (studentNo 기반 저장)
+     * 검사 제출 (studentNo 기반 저장)
      */
     public Long submitDiagnosis(DiagnosisSubmitRequestDto request) {
         DiagnosticTest test = testRepository.findById(request.getTestId())
@@ -176,7 +176,7 @@ public class DiagnosisService {
     }
 
     /**
-     * ✅ 결과 요약 조회 (studentNo 반환)
+     * 결과 요약 조회 (studentNo 반환)
      */
     public DiagnosticResultDto getResultSummary(Long resultId) {
         DiagnosticResult result = resultRepository.findById(resultId)

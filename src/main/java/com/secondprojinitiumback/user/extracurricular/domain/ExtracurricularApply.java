@@ -4,16 +4,14 @@ import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularPro
 import com.secondprojinitiumback.admin.extracurricular.domain.test.StdntInfo;
 import com.secondprojinitiumback.user.extracurricular.domain.enums.AprySttsNm;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "extracurricular_apply")
 @Setter
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -39,7 +37,9 @@ public class ExtracurricularApply {
     private LocalDateTime eduAplyDt;
 
     @Column(name = "aprv_stts_nm")
-    private AprySttsNm aprySttsNm; // 승인 여부 (Y/N)
+    private AprySttsNm aprySttsNm;
 
+    @Column(name = "del_yn")
+    private String delYn; // 삭제 여부 (Y/N) - 논리 삭제를 위한 필드
 }
 

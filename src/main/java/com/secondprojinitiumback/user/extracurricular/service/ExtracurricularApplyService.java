@@ -27,7 +27,7 @@ public class ExtracurricularApplyService {
     private final StdntInfoRepository stuntInfoRepository;
     private final ModelMapper modelMapper;
 
-    // 비교과 프로그램 신청
+    // 비교과 프로그램 참여 신청
     public void applyExtracurricular(String stdntNo, ExtracurricularApplyFormDTO dto) {
         StdntInfo stdntInfo = stuntInfoRepository.findById(stdntNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 학생 없음: " + stdntNo));
@@ -56,6 +56,7 @@ public class ExtracurricularApplyService {
                     .eduAplyCn(dto.getEduAplyCn())
                     .eduAplyDt(dto.getEduAplyDt())
                     .aprySttsNm(AprySttsNm.ACCEPT) // 선착순 프로그램은 신청 시 바로 승인 처리
+                    .delYn("N") // 논리 삭제 여부
                     .build();
             extracurricularApplyRepository.save(apply);
         }else{
@@ -65,26 +66,39 @@ public class ExtracurricularApplyService {
                     .eduAplyCn(dto.getEduAplyCn())
                     .eduAplyDt(dto.getEduAplyDt())
                     .aprySttsNm(AprySttsNm.APPLY) // 일반 프로그램은 신청 시 승인 대기 상태로 저장
+                    .delYn("N") // 논리 삭제 여부
                     .build();
             extracurricularApplyRepository.save(apply);
         }
     }
 
-    // 신청 취소 상태로 만들기
-    public void cancelExtracurricularApply(Long eduAplyId) {
+    // 신청 취소(삭제)
+    public void cancelApplyExtracurricular(Long eduAplyId) {
         ExtracurricularApply apply = extracurricularApplyRepository.findById(eduAplyId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 신청이 존재하지 않습니다: " + eduAplyId));
-        apply.setAprySttsNm(AprySttsNm.DELETE);
-        extracurricularApplyRepository.save(apply);
+        if (apply.getAprySttsNm() != AprySttsNm.APPLY) {
+            throw new IllegalStateException("이미 처리된 신청은 취소할 수 없습니다.");
+        }
+        extracurricularApplyRepository.delete(apply);
     }
 
     // 신청 목록 조회
     public List<ExtracurricularApplyDTO> findExtracurricularApplylist(String stdntNo){
         StdntInfo stdntInfo = stuntInfoRepository.findById(stdntNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 학생 없음: " + stdntNo));
-        List<ExtracurricularApply> applyList = extracurricularApplyRepository.findByStdntInfo_StdntNo(stdntNo);
+        List<ExtracurricularApply> applyList =
+                extracurricularApplyRepository.findByStdntInfo_StdntNoAndDelYn(stdntNo, "N");
+
         return applyList.stream()
                 .map(apply -> modelMapper.map(apply, ExtracurricularApplyDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    // 신청 삭제 처리
+    public void deleteApplyExtracurricular(Long eduAplyId) {
+        ExtracurricularApply apply = extracurricularApplyRepository.findById(eduAplyId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 신청이 존재하지 않습니다: " + eduAplyId));
+        apply.setDelYn("Y"); // 논리 삭제 처리
+        extracurricularApplyRepository.save(apply);
     }
 }

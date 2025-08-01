@@ -1,3 +1,4 @@
+
 package com.secondprojinitiumback.user.extracurricular.repository;
 
 import com.secondprojinitiumback.user.extracurricular.domain.ExtracurricularApply;

@@ -27,23 +27,30 @@ public class ExtracurricularScheduleService {
             LocalTime startTime,
             LocalTime endTime
     ) {
+        // 생성될 일정들을 담을 리스트
         List<ExtracurricularSchedule> schedules = new ArrayList<>();
 
+        // 시작 날짜부터 종료 날짜까지 하루씩 반복
         for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
+            // 지정된 요일에 해당하는 날짜인지 확인
             if (repeatDays.contains(date.getDayOfWeek())) {
                 ExtracurricularSchedule schedule = new ExtracurricularSchedule();
+
+                // 해당 프로그램과 연관 설정
                 schedule.setExtracurricularProgram(program);
 
-                // eduDt = 시작 날짜 + 시작 시간
+                // 교육 시작 일시: 날짜 + 시작 시간
                 schedule.setEduDt(LocalDateTime.of(date, startTime));
 
-                // eduEdnTm = 종료 시간만 저장
+                // 교육 종료 시간만 저장 (날짜는 eduDt 기준)
                 schedule.setEduEdnTm(endTime);
 
+                // 리스트에 추가
                 schedules.add(schedule);
             }
         }
-        // 저장
+
+        // 생성된 일정 전체를 DB에 저장
         extracurricularScheduleRepository.saveAll(schedules);
     }
 }

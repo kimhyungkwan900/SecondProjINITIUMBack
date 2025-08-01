@@ -1,10 +1,7 @@
 package com.secondprojinitiumback.user.employee.dto;
 
-import lombok.*;
 
+import lombok.Getter;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class ProfessorAppointDto extends EmployeeAppointDto { }

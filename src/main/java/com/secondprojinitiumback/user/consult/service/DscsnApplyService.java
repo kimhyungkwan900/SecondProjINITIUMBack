@@ -3,7 +3,7 @@ package com.secondprojinitiumback.user.consult.service;
 import com.secondprojinitiumback.user.consult.domain.DscsnApply;
 import com.secondprojinitiumback.user.consult.domain.DscsnSchedule;
 import com.secondprojinitiumback.user.consult.domain.DscsnKind;
-import com.secondprojinitiumback.user.consult.dto.DscsnApplyDto;
+import com.secondprojinitiumback.user.consult.dto.DscsnApplyRequestDto;
 import com.secondprojinitiumback.user.consult.repository.DscsnApplyRepoistory;
 import com.secondprojinitiumback.user.consult.repository.DscsnKindRepository;
 import com.secondprojinitiumback.user.consult.repository.DscsnScheduleRepository;
@@ -26,26 +26,26 @@ public class DscsnApplyService {
     private final DscsnInfoService dscsnInfoService;
 
     //--- 학생 상담신청
-    public void applyConsultation(DscsnApplyDto dscsnApplyDto) {
+    public void applyConsultation(DscsnApplyRequestDto dscsnApplyRequestDto) {
 
         //선택한 날짜 정보 가져오기
-        DscsnSchedule applyDate = dscsnScheduleRepository.findById(dscsnApplyDto.getDscsnDtId())
+        DscsnSchedule applyDate = dscsnScheduleRepository.findById(dscsnApplyRequestDto.getDscsnDtId())
                 .orElseThrow(EntityExistsException::new);
 
         //선택한 날짜의 예약여부 변경
         applyDate.updateDscsnYn();
 
         //학생정보 가져오기
-        Student student = studentRepository.findById(dscsnApplyDto.getStudentNo())
+        Student student = studentRepository.findById(dscsnApplyRequestDto.getStudentNo())
                 .orElseThrow(EntityExistsException::new);
 
         //상담항목 가져오기
-        DscsnKind dscsnKind = dscsnKindRepository.findById(dscsnApplyDto.getDscsnKindId())
+        DscsnKind dscsnKind = dscsnKindRepository.findById(dscsnApplyRequestDto.getDscsnKindId())
                 .orElseThrow(EntityExistsException::new);
 
         //상담신청 ID 생성
         //지도교수 상담은 A, 진로취업 상담은 C, 심리상담은 P, 학습상담은 L
-        String keyword = dscsnApplyDto.getDscsnKindId().substring(0,1);
+        String keyword = dscsnApplyRequestDto.getDscsnKindId().substring(0,1);
 
         //1. 시퀀스 번호 생성
         String seqNum = getNextApplySequence(keyword);
@@ -56,8 +56,8 @@ public class DscsnApplyService {
         //엔티티 생성
         DscsnApply dscsnApply = DscsnApply.builder()
                 .dscsnApplyId(dscsnApplyId)
-                .studentTelno(dscsnApplyDto.getStudentTelno())
-                .dscsnApplyCn(dscsnApplyDto.getDscsnApplyCn())
+                .studentTelno(dscsnApplyRequestDto.getStudentTelno())
+                .dscsnApplyCn(dscsnApplyRequestDto.getDscsnApplyCn())
                 .student(student)
                 .dscsnDt(applyDate)
                 .dscsnKind(dscsnKind)

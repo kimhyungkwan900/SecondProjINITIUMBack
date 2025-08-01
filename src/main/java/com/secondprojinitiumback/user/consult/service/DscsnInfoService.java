@@ -2,8 +2,7 @@ package com.secondprojinitiumback.user.consult.service;
 
 import com.secondprojinitiumback.user.consult.domain.DscsnApply;
 import com.secondprojinitiumback.user.consult.domain.DscsnInfo;
-import com.secondprojinitiumback.user.consult.dto.DscsnInfoDto;
-import com.secondprojinitiumback.user.consult.dto.DscsnInfoSearchDto;
+import com.secondprojinitiumback.user.consult.dto.*;
 import com.secondprojinitiumback.user.consult.repository.DscsnInfoRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -50,8 +49,51 @@ public class DscsnInfoService {
     @Transactional(readOnly = true)
     public Page<DscsnInfoDto> getDscsnInfo(DscsnInfoSearchDto dscsnInfoSearchDto, Pageable pageable) {
 
+        Page<DscsnInfo> dscsnInfoPage = dscsnInfoRepository.getDscsnInfoPageByCondition(dscsnInfoSearchDto, pageable);
 
-        return null;
+//        return dscsnInfoPage.map(dscsnInfo ->
+//                DscsnInfoDto.builder()
+//                        .dscsnInfoId(dscsnInfo.getDscsnInfoId())
+//                        .dscsnStatus(dscsnInfo.getDscsnStatus())
+//                        .dscsnResultCn(dscsnInfo.getDscsnResultCn())
+//                        .dscsnReleaseYn(dscsnInfo.getDscsnReleaseYn())
+//                        .dscsnApplyDto(dscsnInfo.getDscsnApply() != null ?
+//                            DscsnApplyResponseDto.builder()
+//                                    .dscsnApplyId(dscsnInfo.getDscsnApply().getDscsnApplyId())
+//                                    .studentTelno(dscsnInfo.getDscsnApply().getStudentTelno())
+//                                    .dscsnApplyCn(dscsnInfo.getDscsnApply().getDscsnApplyCn())
+//                                    .dscsnOnlineYn(dscsnInfo.getDscsnApply().getDscsnOnlineYn())
+//                                    .studentDto(dscsnInfo.getDscsnApply().getStudent() != null ?
+//                                            StudentDto.builder()
+//                                                    .studentNo(dscsnInfo.getDscsnApply().getStudent().getStudentNo())
+//                                                    .schoolSubject(dscsnInfo.getDscsnApply().getStudent().getSchoolSubject())
+//                                                    .name(dscsnInfo.getDscsnApply().getStudent().getName())
+//                                                    .build()
+//                                                    :null
+//                                    )
+//                                    .dscsnScheduleDto(dscsnInfo.getDscsnApply().getDscsnDt() != null ?
+//                                            DscsnScheduleResponseDto.builder()
+//                                                    .scheduleDate(dscsnInfo.getDscsnApply().getDscsnDt().getPossibleDate())
+//                                                    .startTime(dscsnInfo.getDscsnApply().getDscsnDt().getPossibleTime())
+//                                                    .empNo(dscsnInfo.getDscsnApply().getDscsnDt().getEmployee().getEmpNo())
+//                                                    .empName(dscsnInfo.getDscsnApply().getDscsnDt().getEmployee().getName())
+//                                                    .schoolSubject(dscsnInfo.getDscsnApply().getDscsnDt().getEmployee().getSchoolSubject().getSubjectName())
+//                                                    .build()
+//                                            :null
+//                                    )
+//                                    .dscsnKindDto(dscsnInfo.getDscsnApply().getDscsnKind() != null ?
+//                                            DscsnKindDto.builder()
+//                                                    .dscsnKindName(dscsnInfo.getDscsnApply().getDscsnKind().getDscsnKindName())
+//                                                    .dscsnTypeName(dscsnInfo.getDscsnApply().getDscsnKind().getDscsnTypeName())
+//                                                    .build()
+//                                            :null
+//                                    )
+//                                    .build()
+//                                    :null
+//                        )
+//                        .build()
+//        );
+            return null;
     }
 
     //--- 상담상태 변경

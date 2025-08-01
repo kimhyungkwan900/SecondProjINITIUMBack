@@ -2,12 +2,13 @@ package com.secondprojinitiumback.user.consult.service;
 
 import com.secondprojinitiumback.user.consult.domain.DscsnApply;
 import com.secondprojinitiumback.user.consult.domain.DscsnInfo;
-import com.secondprojinitiumback.user.consult.dto.DscsnInfoDto;
+import com.secondprojinitiumback.user.consult.dto.*;
 import com.secondprojinitiumback.user.consult.repository.DscsnInfoRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,11 +47,53 @@ public class DscsnInfoService {
 
     //--- 학생 상담내역 조회
     @Transactional(readOnly = true)
-    public Page<DscsnInfoDto> getDscsnInfoByStudentId(Long studentId) {
+    public Page<DscsnInfoDto> getDscsnInfo(DscsnInfoSearchDto dscsnInfoSearchDto, Pageable pageable) {
 
-        // 학생 ID로 상담내역 조회 로직 구현
-        // 예: return dscsnInfoRepository.findByStudentId(studentId).getDscsnInfo();
-        return null;
+        Page<DscsnInfo> dscsnInfoPage = dscsnInfoRepository.getDscsnInfoPageByCondition(dscsnInfoSearchDto, pageable);
+
+//        return dscsnInfoPage.map(dscsnInfo ->
+//                DscsnInfoDto.builder()
+//                        .dscsnInfoId(dscsnInfo.getDscsnInfoId())
+//                        .dscsnStatus(dscsnInfo.getDscsnStatus())
+//                        .dscsnResultCn(dscsnInfo.getDscsnResultCn())
+//                        .dscsnReleaseYn(dscsnInfo.getDscsnReleaseYn())
+//                        .dscsnApplyDto(dscsnInfo.getDscsnApply() != null ?
+//                            DscsnApplyResponseDto.builder()
+//                                    .dscsnApplyId(dscsnInfo.getDscsnApply().getDscsnApplyId())
+//                                    .studentTelno(dscsnInfo.getDscsnApply().getStudentTelno())
+//                                    .dscsnApplyCn(dscsnInfo.getDscsnApply().getDscsnApplyCn())
+//                                    .dscsnOnlineYn(dscsnInfo.getDscsnApply().getDscsnOnlineYn())
+//                                    .studentDto(dscsnInfo.getDscsnApply().getStudent() != null ?
+//                                            StudentDto.builder()
+//                                                    .studentNo(dscsnInfo.getDscsnApply().getStudent().getStudentNo())
+//                                                    .schoolSubject(dscsnInfo.getDscsnApply().getStudent().getSchoolSubject())
+//                                                    .name(dscsnInfo.getDscsnApply().getStudent().getName())
+//                                                    .build()
+//                                                    :null
+//                                    )
+//                                    .dscsnScheduleDto(dscsnInfo.getDscsnApply().getDscsnDt() != null ?
+//                                            DscsnScheduleResponseDto.builder()
+//                                                    .scheduleDate(dscsnInfo.getDscsnApply().getDscsnDt().getPossibleDate())
+//                                                    .startTime(dscsnInfo.getDscsnApply().getDscsnDt().getPossibleTime())
+//                                                    .empNo(dscsnInfo.getDscsnApply().getDscsnDt().getEmployee().getEmpNo())
+//                                                    .empName(dscsnInfo.getDscsnApply().getDscsnDt().getEmployee().getName())
+//                                                    .schoolSubject(dscsnInfo.getDscsnApply().getDscsnDt().getEmployee().getSchoolSubject().getSubjectName())
+//                                                    .build()
+//                                            :null
+//                                    )
+//                                    .dscsnKindDto(dscsnInfo.getDscsnApply().getDscsnKind() != null ?
+//                                            DscsnKindDto.builder()
+//                                                    .dscsnKindName(dscsnInfo.getDscsnApply().getDscsnKind().getDscsnKindName())
+//                                                    .dscsnTypeName(dscsnInfo.getDscsnApply().getDscsnKind().getDscsnTypeName())
+//                                                    .build()
+//                                            :null
+//                                    )
+//                                    .build()
+//                                    :null
+//                        )
+//                        .build()
+//        );
+            return null;
     }
 
     //--- 상담상태 변경
@@ -76,6 +119,9 @@ public class DscsnInfoService {
 
         // 상담 결과 등록
         dscsnInfo.updateDscsnResultCn(result);
+
+        // 상담 상태 업데이트
+        dscsnInfo.updateDscsnStatus("상담완료");
     }
 
     //시퀀스 번호 생성 메소드

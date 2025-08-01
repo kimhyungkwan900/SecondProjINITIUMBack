@@ -46,7 +46,7 @@ public class ScorePolicyService {
     // 2. 등록
     public ScorePolicyResponseDto register(ScorePolicyRequestDto dto) {
 
-        //비교과 프로그램 id로 실제 객체 가져오기
+        // 비교과 프로그램 id로 실제 객체 가져오기
         ExtracurricularProgram program = programRepository.findById(dto.getEduMngId())
                 .orElseThrow(() -> new RuntimeException("비교과 프로그램이 없습니다"));
 
@@ -65,7 +65,7 @@ public class ScorePolicyService {
                 .mileageItem(item)
                 .build();
 
-        //db에 저장하고 응답 DTO로 변환
+        // db에 저장하고 응답 DTO로 변환
         return ScorePolicyResponseDto.from(scorePolicyRepository.save(policy));
     }
 

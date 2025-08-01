@@ -23,9 +23,13 @@ public class LoginInfoServiceImpl implements LoginInfoService {
 
     @Override
     public LoginInfo createLoginInfo(CreateLoginDto createLoginDto) {
+        // 로그인 ID 중복 체크
         String rawPassWord = createLoginDto.getBirthDate().format(DateTimeFormatter.BASIC_ISO_DATE);
+
+        // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(rawPassWord);
 
+        // 로그인 정보 생성
         LoginInfo loginInfo = LoginInfo.builder()
                 .loginId(createLoginDto.getLoginId())
                 .password(encodedPassword)
@@ -33,6 +37,7 @@ public class LoginInfoServiceImpl implements LoginInfoService {
                 .passwordChangeRequired(true)
                 .build();
 
+        // 로그인 정보 저장
         return loginInfoRepository.save(loginInfo);
     }
 
@@ -42,11 +47,14 @@ public class LoginInfoServiceImpl implements LoginInfoService {
         LoginInfo loginInfo = loginInfoRepository.findById(loginId)
                 .orElseThrow(() -> new EntityNotFoundException("로그인 정보 없음: " + loginId));
 
+        // 현재 비밀번호 검증
         if (!passwordEncoder.matches(currentPassword, loginInfo.getPassword())) {
             throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
         }
 
+        // 새 비밀번호 암호화
         String newEncodedPassword = passwordEncoder.encode(newPassword);
+        // 비밀번호 변경
         loginInfo.changePassword(newEncodedPassword);
     }
 
@@ -57,8 +65,10 @@ public class LoginInfoServiceImpl implements LoginInfoService {
         loginInfoRepository.delete(loginInfo);
     }
 
-    // 비밀번호 검증
+    // 비밀번호 일치 여부 확인 (현재 미사용)
+    @Override
     public boolean matchesRawPassword(String rawPassword, String encodedPassword) {
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
+
 }

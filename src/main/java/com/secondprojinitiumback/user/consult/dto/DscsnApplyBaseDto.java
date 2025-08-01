@@ -4,12 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class DscsnApplyDto {
+@SuperBuilder
+public class DscsnApplyBaseDto {
 
     private String dscsnApplyId;
 
@@ -19,9 +20,4 @@ public class DscsnApplyDto {
 
     private String dscsnOnlineYn;
 
-    private String studentNo;
-
-    private String dscsnDtId;
-
-    private String dscsnKindId;
 }

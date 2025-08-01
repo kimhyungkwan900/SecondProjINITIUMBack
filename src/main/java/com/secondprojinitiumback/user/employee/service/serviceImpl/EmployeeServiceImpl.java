@@ -53,12 +53,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void appointEmployee(EmployeeAppointDto dto, String rolePrefix, String userType) {
-        SchoolSubject schoolSubject = findSchoolSubjectById(dto.getSchoolSubjectNo());
-        String employeeNo = generateEmployeeNo(rolePrefix, schoolSubject.getSubjectCode());
-        LoginInfo loginInfo = createLoginInfo(employeeNo, userType, dto.getBirthDate());
-        BankAccount bankAccount = findBankAccountByIdNullable(dto.getBankAccountNo());
-        CommonCode gender = findGenderByCode(dto.getGender());
-        EmployeeStatusInfo employeeStatus = findStatusByCode(dto.getEmployeeStatus());
+        SchoolSubject schoolSubject = findSchoolSubjectById(dto.getSchoolSubjectNo());      // 부서(학과) 코드 조회
+        String employeeNo = generateEmployeeNo(rolePrefix, schoolSubject.getSubjectCode()); // 교직원 번호 생성
+        LoginInfo loginInfo = createLoginInfo(employeeNo, userType, dto.getBirthDate());    // 로그인 정보 생성
+        BankAccount bankAccount = findBankAccountByIdNullable(dto.getBankAccountNo());      // 계좌 정보 조회 (null 허용)
+        CommonCode gender = findGenderByCode(dto.getGender());                              // 성별 코드 조회
+        EmployeeStatusInfo employeeStatus = findStatusByCode(dto.getEmployeeStatus());      // 재적상태 코드 조회
 
         Employee employee = Employee.create(
                 employeeNo,

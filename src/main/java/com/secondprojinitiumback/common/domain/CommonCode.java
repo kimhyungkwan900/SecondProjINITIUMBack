@@ -15,7 +15,7 @@ public class CommonCode extends BaseEntity {
     @EmbeddedId
     private CommonCodeId id;
 
-    // 코드 그룹명
+    // 코드명
     @Column(name = "CD_NM", length = 100, nullable = false)
     private String codeName;
 

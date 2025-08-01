@@ -8,39 +8,33 @@ import com.secondprojinitiumback.user.student.domain.QStudent;
 import com.secondprojinitiumback.user.student.domain.Student;
 import com.secondprojinitiumback.user.student.dto.StudentSearchDto;
 import com.secondprojinitiumback.user.student.repository.StudentRepositoryCustom;
-import jakarta.persistence.EntityManager;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+@AllArgsConstructor
 public class StudentRepositoryImpl implements StudentRepositoryCustom {
-    // JPAQueryFactory를 사용하기 위해 EntityManager를 주입받습니다.
+    // JPAQueryFactory를 사용하기 위한 EntityManager 주입.
     private final JPAQueryFactory queryFactory;
-
-    // 생성자 주입을 통해 EntityManager를 받아옵니다.
-    public StudentRepositoryImpl(EntityManager em) {
-        this.queryFactory = new JPAQueryFactory(em);
-    }
-
 
     // 검색 메서드 구현
     @Override
-    public List<Student> search(StudentSearchDto cond) {
-        // Q 클래스들을 사용하여 쿼리를 작성합니다.
+    public List<Student> search(StudentSearchDto studentSearchDto) {
+        // Q 클래스들을 사용하여 쿼리 작성.
         QStudent student = QStudent.student;
-        // QSchoolSubject는 SchoolSubject 엔티티에 대한 Q 클래스입니다.
         QSchoolSubject subject = QSchoolSubject.schoolSubject;
         // 쿼리 팩토리를 사용하여 학생 정보를 조회합니다.
         return queryFactory
                 .selectFrom(student)
                 .leftJoin(student.schoolSubject, subject).fetchJoin()
                 .where(
-                        eqStudentNo(cond.getStudentNo()),
-                        eqName(cond.getName()),
-                        eqDepartment(cond.getSchoolSubjectCode()),
-                        eqStatus(cond.getStudentStatusCode())
+                        eqStudentNo(studentSearchDto.getStudentNo()),
+                        eqName(studentSearchDto.getName()),
+                        eqSchoolSubject(studentSearchDto.getSchoolSubjectCode()),
+                        eqStatus(studentSearchDto.getStudentStatusCode())
                 )
                 .fetch();
     }
@@ -48,7 +42,7 @@ public class StudentRepositoryImpl implements StudentRepositoryCustom {
     // 페이지네이션을 적용한 검색 메서드 구현
     @Override
     // 검색 조건에 맞는 학생 정보를 페이지 단위로 조회합니다.
-    public Page<Student> searchPage(StudentSearchDto cond, Pageable pageable) {
+    public Page<Student> searchPage(StudentSearchDto studentSearchDto, Pageable pageable) {
         // Q 클래스들을 사용하여 쿼리를 작성합니다.
         QStudent student = QStudent.student;
         // QSchoolSubject는 SchoolSubject 엔티티에 대한 Q 클래스입니다.
@@ -58,10 +52,10 @@ public class StudentRepositoryImpl implements StudentRepositoryCustom {
                 .selectFrom(student)
                 .leftJoin(student.schoolSubject, subject).fetchJoin()
                 .where(
-                        eqStudentNo(cond.getStudentNo()),
-                        eqName(cond.getName()),
-                        eqDepartment(cond.getSchoolSubjectCode()),
-                        eqStatus(cond.getStudentStatusCode())
+                        eqStudentNo(studentSearchDto.getStudentNo()),
+                        eqName(studentSearchDto.getName()),
+                        eqSchoolSubject(studentSearchDto.getSchoolSubjectCode()),
+                        eqStatus(studentSearchDto.getStudentStatusCode())
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -71,10 +65,10 @@ public class StudentRepositoryImpl implements StudentRepositoryCustom {
                 .select(student.count())
                 .from(student)
                 .where(
-                        eqStudentNo(cond.getStudentNo()),
-                        eqName(cond.getName()),
-                        eqDepartment(cond.getSchoolSubjectCode()),
-                        eqStatus(cond.getStudentStatusCode())
+                        eqStudentNo(studentSearchDto.getStudentNo()),
+                        eqName(studentSearchDto.getName()),
+                        eqSchoolSubject(studentSearchDto.getSchoolSubjectCode()),
+                        eqStatus(studentSearchDto.getStudentStatusCode())
                 );
         // 카운트 쿼리를 실행하여 총 레코드 수를 가져옵니다.
         long total = countQuery.fetchOne();
@@ -92,7 +86,7 @@ public class StudentRepositoryImpl implements StudentRepositoryCustom {
         return (name == null || name.isBlank()) ? null : QStudent.student.name.containsIgnoreCase(name);
     }
     // 학과(부서) 코드
-    private BooleanExpression eqDepartment(String code) {
+    private BooleanExpression eqSchoolSubject(String code) {
         return (code == null || code.isBlank()) ? null : QStudent.student.schoolSubject.subjectCode.eq(code);
     }
     // 학생 상태 코드

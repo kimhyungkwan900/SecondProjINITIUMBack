@@ -34,42 +34,55 @@ public class Student extends BaseEntity {
     @Id
     @Column(name = "STDNT_NO", length = 10)
     private String studentNo;
+
     // 로그인 정보
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "LGN_ID", referencedColumnName = "LGN_ID", nullable = false, unique = true)
     private LoginInfo loginInfo;
+
     // 학교 정보
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "UNIV_CD", referencedColumnName = "UNIV_CD", nullable = false)
     private University school;
+
     // 학과 정보
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SCSBJT_NO", nullable = false)
     private SchoolSubject schoolSubject;
+
     // 동아리 코드
     @Column(name = "CLUB_NO", length = 5)
     private String clubCode;
+
     // 학적 상태 정보
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "STDNT_STTS_CD")
+    @JoinColumns({
+            @JoinColumn(name = "STDNT_STTS_CD", referencedColumnName = "STDNT_STTS_CD"),
+            @JoinColumn(name = "STDNT_STTS_CD_SE", referencedColumnName = "STDNT_STTS_CD_SE")
+    })
     private StudentStatusInfo studentStatus;
+
     // 계좌 정보
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ACTNO")
     private BankAccount bankAccount;
+
     // 학생 이름
     @Column(name = "STDNT_NM", length = 100, nullable = false)
     private String name;
+
     // 입학일자
     @Column(name = "MTCLTN_YMD")
     @Convert(converter = LocalDateToChar8Converter.class)
     @PastOrPresent(message = "입학일자는 오늘 이전이어야 합니다.")
     private LocalDate admissionDate;
+
     // 생년월일
     @Column(name = "STDNT_BRDT", nullable = false)
     @Convert(converter = LocalDateToChar8Converter.class)
     @Past(message = "생년월일은 과거 날짜여야 합니다.")
     private LocalDate birthDate;
+
     // 성별 코드
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
@@ -77,14 +90,17 @@ public class Student extends BaseEntity {
             @JoinColumn(name = "GNDR_CD_SE", referencedColumnName = "CD_SE")
     })
     private CommonCode gender;
+
     // 이메일 주소
     @Column(name = "STDNT_EMAIL", length = 320, unique = true)
     @Email(message = "이메일 형식이 올바르지 않습니다.")
     private String email;
+
     // 지도교수 정보
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ACAVSR_NO", nullable = false)
     private Employee advisor;
+
     // 학년: 10(1학년), 20(2학년), 30(3학년), 40(4학년)
     @Column(name = "GRADE", length = 5, nullable = false)
     @Pattern(regexp = "10|20|30|40", message = "학년은 10, 20, 30, 40 중 하나여야 합니다.")
@@ -92,27 +108,24 @@ public class Student extends BaseEntity {
 
     // 생성자
     @Builder
-    public Student(String studentNo,
-                   LoginInfo loginInfo,
-                   University school,
-                   SchoolSubject schoolSubject,
-                   String clubCode,
-                   StudentStatusInfo studentStatus,
-                   BankAccount bankAccount,
-                   String name,
-                   LocalDate admissionDate,
-                   LocalDate birthDate,
-                   CommonCode gender,
-                   String email,
-                   Employee advisor,
-                   String grade) {
+    private Student(String studentNo,
+                    LoginInfo loginInfo,
+                    University school,
+                    SchoolSubject schoolSubject,
+                    String name,
+                    LocalDate admissionDate,
+                    LocalDate birthDate,
+                    CommonCode gender,
+                    String email,
+                    Employee advisor,
+                    String grade,
+                    BankAccount bankAccount,
+                    String clubCode,
+                    StudentStatusInfo studentStatus) {
         this.studentNo = studentNo;
         this.loginInfo = loginInfo;
         this.school = school;
         this.schoolSubject = schoolSubject;
-        this.clubCode = clubCode;
-        this.studentStatus = studentStatus;
-        this.bankAccount = bankAccount;
         this.name = name;
         this.admissionDate = admissionDate;
         this.birthDate = birthDate;
@@ -120,10 +133,48 @@ public class Student extends BaseEntity {
         this.email = email;
         this.advisor = advisor;
         this.grade = grade;
+        this.bankAccount = bankAccount;
+        this.clubCode = clubCode;
+        this.studentStatus = studentStatus;
+    }
+
+    public static Student create(String studentNo,
+                                 LoginInfo loginInfo,
+                                 University school,
+                                 SchoolSubject schoolSubject,
+                                 String name,
+                                 LocalDate admissionDate,
+                                 LocalDate birthDate,
+                                 CommonCode gender,
+                                 String email,
+                                 Employee advisor,
+                                 String grade,
+                                 BankAccount bankAccount,
+                                 String clubCode,
+                                 StudentStatusInfo initialStatus) {
+        return Student.builder()
+                .studentNo(studentNo)
+                .loginInfo(loginInfo)
+                .school(school)
+                .schoolSubject(schoolSubject)
+                .name(name)
+                .admissionDate(admissionDate)
+                .birthDate(birthDate)
+                .gender(gender)
+                .email(email)
+                .advisor(advisor)
+                .grade(grade)
+                .bankAccount(bankAccount)
+                .clubCode(clubCode)
+                .studentStatus(initialStatus)
+                .build();
     }
 
     // 학적상태 변경
     public void changeStatus(StudentStatusInfo newStatus) {
+        if (newStatus == null) {
+            throw new IllegalArgumentException("변경할 학적 상태 정보가 없습니다.");
+        }
         this.studentStatus = newStatus;
     }
 

@@ -16,22 +16,25 @@ public class StudentStatusInfo extends BaseEntity {
 
     @Id
     @Column(name = "STDNT_STTS_CD", length = 10)
-    private String statusCode;
+    private String studentStatusCode;
+
+    @Column(name = "STDNT_STTS_CD_SE", length = 10)
+    private String studentStatusCodeSe;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-            @JoinColumn(name = "CD", referencedColumnName = "CD", insertable = false, updatable = false),
-            @JoinColumn(name = "CD_SE", referencedColumnName = "CD_SE", insertable = false, updatable = false)
+            @JoinColumn(name = "STDNT_STTS_CD", referencedColumnName = "CD", insertable = false, updatable = false),
+            @JoinColumn(name = "STDNT_STTS_CD_SE", referencedColumnName = "CD_SE", insertable = false, updatable = false)
     })
-    private CommonCode commonCode;
+    private CommonCode statusCode;
 
     @Column(name = "STDNT_STTS_NM", length = 50, nullable = false)
-    private String statusName;
+    private String studentStatusName;
 
     @Column(name = "RMK")
     private String remark;
 
     public StudentStatus getStatusEnum() {
-        return StudentStatus.fromCode(this.statusCode);
+        return StudentStatus.fromCode(this.studentStatusCode);
     }
 }

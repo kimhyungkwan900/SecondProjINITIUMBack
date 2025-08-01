@@ -23,10 +23,10 @@ public class StudentRepositoryImpl implements StudentRepositoryCustom {
     // 검색 메서드 구현
     @Override
     public List<Student> search(StudentSearchDto studentSearchDto) {
-        // Q 클래스들을 사용하여 쿼리 작성.
+        // Q 클래스들을 사용하여 쿼리 작성
         QStudent student = QStudent.student;
         QSchoolSubject subject = QSchoolSubject.schoolSubject;
-        // 쿼리 팩토리를 사용하여 학생 정보를 조회합니다.
+        // 쿼리 팩토리를 사용하여 학생 정보를 조회
         return queryFactory
                 .selectFrom(student)
                 .leftJoin(student.schoolSubject, subject).fetchJoin()
@@ -41,11 +41,11 @@ public class StudentRepositoryImpl implements StudentRepositoryCustom {
 
     // 페이지네이션을 적용한 검색 메서드 구현
     @Override
-    // 검색 조건에 맞는 학생 정보를 페이지 단위로 조회합니다.
+    // 검색 조건에 맞는 학생 정보를 페이지 단위로 조회
     public Page<Student> searchPage(StudentSearchDto studentSearchDto, Pageable pageable) {
-        // Q 클래스들을 사용하여 쿼리를 작성합니다.
+        // Q 클래스들을 사용하여 쿼리를 작성
         QStudent student = QStudent.student;
-        // QSchoolSubject는 SchoolSubject 엔티티에 대한 Q 클래스입니다.
+        // QSchoolSubject는 SchoolSubject 엔티티에 대한 Q 클래스
         QSchoolSubject subject = QSchoolSubject.schoolSubject;
         // 콘텐츠 조회 쿼리
         List<Student> content = queryFactory
@@ -70,9 +70,9 @@ public class StudentRepositoryImpl implements StudentRepositoryCustom {
                         eqSchoolSubject(studentSearchDto.getSchoolSubjectCode()),
                         eqStatus(studentSearchDto.getStudentStatusCode())
                 );
-        // 카운트 쿼리를 실행하여 총 레코드 수를 가져옵니다.
+        // 카운트 쿼리를 실행하여 총 레코드 수를 가져오기
         long total = countQuery.fetchOne();
-        // 페이지 정보를 포함한 Page 객체를 생성하여 반환합니다.
+        // 페이지 정보를 포함한 Page 객체를 생성하여 반환
         return new PageImpl<>(content, pageable, total);
     }
 

@@ -1,7 +1,7 @@
 package com.secondprojinitiumback.user.consult.service;
 
 import com.secondprojinitiumback.user.consult.domain.DscsnSchedule;
-import com.secondprojinitiumback.user.consult.dto.DscsnScheduleDto;
+import com.secondprojinitiumback.user.consult.dto.DscsnScheduleRequestDto;
 import com.secondprojinitiumback.user.consult.repository.DscsnScheduleRepository;
 import com.secondprojinitiumback.user.consult.repository.TempEmployeeRepository;
 import com.secondprojinitiumback.user.employee.domain.Employee;
@@ -23,7 +23,7 @@ public class DscsnScheduleService {
     private final TempEmployeeRepository employeeRepository;
 
     //--- 상담사, 교수 일정 등록
-    public void saveDscsnSchedule(DscsnScheduleDto dscsnScheduleDto, String dscsnType) {
+    public void saveDscsnSchedule(DscsnScheduleRequestDto dscsnScheduleRequestDto, String dscsnType) {
         //상담일정 ID 생성
 
         //1. 날짜정보 가져오기
@@ -37,14 +37,14 @@ public class DscsnScheduleService {
         String dscsnDtId = prefix + seqNum;
 
         //dscsnScheduleDto에서 empNo로 Employee 엔티티 조회(임시)
-        Employee employeeInfo = employeeRepository.findById(dscsnScheduleDto.getEmpNo())
+        Employee employeeInfo = employeeRepository.findById(dscsnScheduleRequestDto.getEmpNo())
                 .orElseThrow(EntityExistsException::new);
 
         // DscsnScheduleDto를 DscsnDate 엔티티로 변환
         DscsnSchedule dscsnSchedule = DscsnSchedule.builder()
                 .dscsnDtId(dscsnDtId)
-                .possibleDate(dscsnScheduleDto.getScheduleDate())
-                .possibleTime(dscsnScheduleDto.getStartTime())
+                .possibleDate(dscsnScheduleRequestDto.getScheduleDate())
+                .possibleTime(dscsnScheduleRequestDto.getStartTime())
                 .dscsnYn("N")   // 예약 여부 초기값 N
                 .employee(employeeInfo)
                 .build();
@@ -53,7 +53,7 @@ public class DscsnScheduleService {
         dscsnScheduleRepository.save(dscsnSchedule);
     }
 
-    //--- 상담사, 교수 일정 조회
+    //--- 상담사, 교수 상담일정 조회
 
 
     //--- 상담사, 교수 일정 삭제

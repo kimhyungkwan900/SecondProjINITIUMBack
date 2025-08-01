@@ -19,5 +19,5 @@ public class DscsnInfoDto {
 
     private String dscsnReleaseYn; //상담결과 공개여부
 
-    private DscsnApplyDto dscsnApply;  //신청서 ID
+    private DscsnApplyRequestDto dscsnApplyDto;  //신청서 ID
 }

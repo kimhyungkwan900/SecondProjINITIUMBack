@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.expression.spel.ast.NullLiteral;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "MLG_ALTCL")
@@ -29,6 +30,10 @@ public class MileageItem {
 
     @Column(name="MDFCN_DT")
     private LocalDateTime modifiedAt; //수정일
+
+
+    @OneToMany(mappedBy = "mileageItem", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ScorePolicy> scorePolicies; //배점 정책
 
     //비교과 프로그램 외래키로 연결 (조회만 가능하도록)
     @ManyToOne(fetch = FetchType.LAZY)

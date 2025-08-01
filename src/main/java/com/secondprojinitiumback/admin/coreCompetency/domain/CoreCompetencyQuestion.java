@@ -1,7 +1,5 @@
-package com.secondprojinitiumback.admin.coreCompetency.entity;
+package com.secondprojinitiumback.admin.coreCompetency.domain;
 
-import com.secondprojinitiumback.admin.coreCompetency.dto.CoreCompetencyQuestionCreateDto;
-import com.secondprojinitiumback.common.domain.CommonCode;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,6 +26,9 @@ public class CoreCompetencyQuestion {
 
     @Column(name = "QSTN_NM")
     private String name; // 문항 내용 (실제 질문 텍스트)
+
+    @Column(name = "QSTN_CN")
+    private String description;
 
     @Column(name = "DSPY_ORD_NO")
     private Integer displayOrder; // 문항 표시 순서

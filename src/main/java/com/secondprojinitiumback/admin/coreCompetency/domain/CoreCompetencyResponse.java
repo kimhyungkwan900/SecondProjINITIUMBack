@@ -1,4 +1,4 @@
-package com.secondprojinitiumback.admin.coreCompetency.entity;
+package com.secondprojinitiumback.admin.coreCompetency.domain;
 
 import com.secondprojinitiumback.user.student.domain.Student;
 import jakarta.persistence.*;
@@ -21,7 +21,7 @@ public class CoreCompetencyResponse {
     @JoinColumn(name = "QSTN_ID")
     private CoreCompetencyQuestion question; // 응답된 문항
 
-    @ManyToOne
+    @OneToOne
     @JoinColumns({
             @JoinColumn(name = "CHC_OPT_ID", referencedColumnName = "CHC_OPT_ID"),
             @JoinColumn(name = "QSTN_ID", referencedColumnName = "QSTN_ID", insertable = false, updatable = false)

@@ -1,4 +1,4 @@
-package com.secondprojinitiumback.admin.coreCompetency.entity;
+package com.secondprojinitiumback.admin.coreCompetency.domain;
 
 import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularProgram;
 import com.secondprojinitiumback.user.student.domain.Student;

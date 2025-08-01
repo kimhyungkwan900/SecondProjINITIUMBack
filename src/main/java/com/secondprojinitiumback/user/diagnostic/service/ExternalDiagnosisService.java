@@ -53,6 +53,16 @@ public class ExternalDiagnosisService {
                 .toList();
     }
 
+    public List<ExternalDiagnosisResultDto> getAllResultsByStudent(String studentNo) {
+        return resultRepository.findByStudent_StudentNo(studentNo).stream()
+                .map(result -> ExternalDiagnosisResultDto.builder()
+                        .inspectSeq(result.getInspectCode())
+                        .resultUrl(result.getResultUrl())
+                        .build())
+                .toList();
+    }
+
+
     /**
      * 외부 진단검사 이름 검색
      */
@@ -78,7 +88,9 @@ public class ExternalDiagnosisService {
                 .fromHttpUrl(questionUrl)
                 .queryParam("apikey", apiKey)
                 .queryParam("q", qestrnSeq)
+                .queryParam("trgetSe", trgetSe) // 🔹 대상 코드 추가
                 .build();
+
 
         return restTemplate.getForObject(uri.toUri(), Map.class);
     }

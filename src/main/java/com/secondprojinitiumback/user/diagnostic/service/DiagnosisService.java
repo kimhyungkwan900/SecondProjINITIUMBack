@@ -92,13 +92,15 @@ public class DiagnosisService {
     /**
      * 키워드 기반 검색
      */
+    // DiagnosisService.java
     public List<DiagnosticTestDto> searchTestsByKeyword(String keyword) {
         List<DiagnosticTest> tests = testRepository
-                .findByNameContainingIgnoreCaseAndUseYnTrue(keyword);
+                .findByNameContainingIgnoreCaseAndUseYn(keyword, "Y"); // 🔹 "Y"로 명시
         return tests.stream()
                 .map(DiagnosticTestDto::from)
                 .collect(Collectors.toList());
     }
+
 
     /**
      * 특정 검사 문항 조회
@@ -193,4 +195,18 @@ public class DiagnosisService {
                 .interpretedMessage(interpreted)
                 .build();
     }
+
+    public List<DiagnosticResultDto> getAllResultsByStudent(String studentNo) {
+        return resultRepository.findByStudent_StudentNo(studentNo).stream()
+                .map(result -> DiagnosticResultDto.builder()
+                        .resultId(result.getId())
+                        .studentNo(result.getStudent().getStudentNo())
+                        .testId(result.getTest().getId())
+                        .totalScore(result.getTotalScore())
+                        .completionDate(result.getCompletionDate())
+                        .interpretedMessage(scoreService.interpretScore(result.getTest().getId(), result.getTotalScore()))
+                        .build())
+                .toList();
+    }
+
 }

@@ -1,8 +1,8 @@
 package com.secondprojinitiumback.admin.coreCompetency.repository;
 
-import com.secondprojinitiumback.admin.coreCompetency.entity.BehaviorIndicator;
-import com.secondprojinitiumback.admin.coreCompetency.entity.BehaviorIndicatorMajorQuestionMapping;
-import com.secondprojinitiumback.admin.coreCompetency.entity.CoreCompetencyQuestion;
+import com.secondprojinitiumback.admin.coreCompetency.domain.BehaviorIndicator;
+import com.secondprojinitiumback.admin.coreCompetency.domain.BehaviorIndicatorMajorQuestionMapping;
+import com.secondprojinitiumback.admin.coreCompetency.domain.CoreCompetencyQuestion;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
 import org.springframework.data.jpa.repository.JpaRepository;
 

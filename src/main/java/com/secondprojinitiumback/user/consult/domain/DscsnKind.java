@@ -26,4 +26,12 @@ public class DscsnKind {
 
     @Column(name = "DSCSN_TYPE_NM", nullable = false, length = 10)
     private String dscsnTypeName;//상담 유형
+
+    public void updateDscsnKindName(String dscsnKindName) {
+        this.dscsnKindName = dscsnKindName;
+    }
+
+    public void updateDscsnTypeName(String dscsnTypeName) {
+        this.dscsnTypeName = dscsnTypeName;
+    }
 }

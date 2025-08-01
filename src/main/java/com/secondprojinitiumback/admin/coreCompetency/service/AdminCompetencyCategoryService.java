@@ -1,6 +1,7 @@
 package com.secondprojinitiumback.admin.coreCompetency.service;
 
 
+import com.secondprojinitiumback.admin.coreCompetency.domain.LevelTypeEnum;
 import com.secondprojinitiumback.admin.coreCompetency.dto.CompetencyCategoryDto;
 import com.secondprojinitiumback.admin.coreCompetency.domain.CoreCompetencyCategory;
 import com.secondprojinitiumback.admin.coreCompetency.domain.IdealTalentProfile;
@@ -27,18 +28,18 @@ public class AdminCompetencyCategoryService {
     public void createCategory(CompetencyCategoryDto competencyCategoryDto) {
 
         //핵심역량 등록 일 경우
-        if("핵심역량".equalsIgnoreCase(competencyCategoryDto.getLevelType())){
+        if(LevelTypeEnum.CORE_COMPETENCY.equalsIgnoreCase(competencyCategoryDto.getLevelType())){
 
             IdealTalentProfile idealTalentProfile = idealTalentProfileRepository.findById(competencyCategoryDto.getIdealTalentProfileId())
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 인재상입니다."));
 
-            CoreCompetencyCategory coreCompetencyCategory1 = CoreCompetencyCategory.builder()
+            CoreCompetencyCategory coreCompetencyCategory = CoreCompetencyCategory.builder()
                     .coreCategoryName(competencyCategoryDto.getName())
                     .coreCategoryNote(competencyCategoryDto.getDescription())
                     .idealTalentProfile(idealTalentProfile)
                     .build();
 
-            coreCompetencyCategoryRepository.save(coreCompetencyCategory1);
+            coreCompetencyCategoryRepository.save(coreCompetencyCategory);
         }
         //하위역량 등록 일 경우
         else {
@@ -60,7 +61,7 @@ public class AdminCompetencyCategoryService {
     public void updateCategory(Long id, CompetencyCategoryDto competencyCategoryDto) {
 
         //핵심역량 수정 일 경우
-        if("핵심역량".equalsIgnoreCase(competencyCategoryDto.getLevelType())){
+        if(LevelTypeEnum.CORE_COMPETENCY.equalsIgnoreCase(competencyCategoryDto.getLevelType())){
             CoreCompetencyCategory coreCompetencyCategory = coreCompetencyCategoryRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 핵심역량 카테고리입니다."));
 
@@ -88,7 +89,7 @@ public class AdminCompetencyCategoryService {
     //3. 역량 카테고리 삭제
     @Transactional
     public void deleteCategory(String levelType, Long id) {
-        if ("핵심역량".equals(levelType)) {
+        if (LevelTypeEnum.CORE_COMPETENCY.equalsIgnoreCase(levelType)) {
             CoreCompetencyCategory core = coreCompetencyCategoryRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("핵심역량 없음"));
             coreCompetencyCategoryRepository.delete(core);

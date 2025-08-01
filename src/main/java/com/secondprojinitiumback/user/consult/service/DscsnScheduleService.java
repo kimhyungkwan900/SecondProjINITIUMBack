@@ -1,7 +1,7 @@
 package com.secondprojinitiumback.user.consult.service;
 
 import com.secondprojinitiumback.user.consult.domain.DscsnSchedule;
-import com.secondprojinitiumback.user.consult.dto.DscsnScheduleRequestDto;
+import com.secondprojinitiumback.user.consult.dto.requestdto.DscsnScheduleRequestDto;
 import com.secondprojinitiumback.user.consult.repository.DscsnScheduleRepository;
 import com.secondprojinitiumback.user.consult.repository.TempEmployeeRepository;
 import com.secondprojinitiumback.user.employee.domain.Employee;

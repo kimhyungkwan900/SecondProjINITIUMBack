@@ -17,7 +17,8 @@ public class ScorePolicyResponseDto {
     private LocalDateTime createdAt; // 등록일
 
     private Long eduMngId; // 비교과 프로그램 ID
-    private String eduNm; // 비교과 프로그램 이름
+    private String eduNm; // 비교과 프로그램
+    private Integer eduMlg; //마일리지
 
     private Long mileageItemId; // 항목 ID
     private String mileageItemCode; // 항목 코드
@@ -33,6 +34,7 @@ public class ScorePolicyResponseDto {
                 .createdAt(policy.getCreatedAt())
                 .eduMngId(policy.getProgram().getEduMngId())
                 .eduNm(policy.getProgram().getEduNm())
+                .eduMlg(policy.getProgram().getEduMlg())
                 .mileageItemId(policy.getMileageItem().getId())
                 .mileageItemCode(policy.getMileageItem().getItemCode())
                 .build();

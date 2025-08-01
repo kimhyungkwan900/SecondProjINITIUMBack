@@ -53,7 +53,7 @@ public class DscsnScheduleService {
         dscsnScheduleRepository.save(dscsnSchedule);
     }
 
-    //--- 상담사, 교수 일정 조회
+    //--- 상담사, 교수 상담일정 조회
 
 
     //--- 상담사, 교수 일정 삭제

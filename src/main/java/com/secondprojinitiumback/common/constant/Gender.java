@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum Gender {
     MALE("M", "남성"),
     FEMALE("F", "여성"),
-    UNKNOWN("U", "알 수 없음"); // 또는 "기타" 등, CO0001의 세부 코드에 따라 정의
+    UNKNOWN("U", "알 수 없음"); // CO0001의 세부 코드에 따라 정의
 
     private final String code;
     private final String description;

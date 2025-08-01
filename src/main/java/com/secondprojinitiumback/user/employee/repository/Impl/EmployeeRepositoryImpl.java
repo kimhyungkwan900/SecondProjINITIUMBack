@@ -85,7 +85,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepositoryCustom {
     private BooleanExpression eqSchoolSubjectCode(String schoolSubjectCode) {
         return (schoolSubjectCode == null || schoolSubjectCode.isBlank()) ? null : QEmployee.employee.schoolSubject.subjectCode.eq(schoolSubjectCode);
     }
-    // 상태 코드
+    // 상태 코드    TODO: 재직 상태코드 가져오기
     private BooleanExpression eqStatusCode(String statusCode) {
         return null;
     }

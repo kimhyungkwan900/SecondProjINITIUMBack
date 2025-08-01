@@ -89,8 +89,8 @@ public class StudentRepositoryImpl implements StudentRepositoryCustom {
     private BooleanExpression eqSchoolSubject(String code) {
         return (code == null || code.isBlank()) ? null : QStudent.student.schoolSubject.subjectCode.eq(code);
     }
-    // 학생 상태 코드
+    // 학생 상태 코드 TODO: 학생상태코드 가져오기
     private BooleanExpression eqStatus(String code) {
-        return (code == null || code.isBlank()) ? null : QStudent.student.studentStatus.statusCode.eq(code);
+        return null;
     }
 }

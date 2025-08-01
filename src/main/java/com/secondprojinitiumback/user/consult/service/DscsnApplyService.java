@@ -3,7 +3,7 @@ package com.secondprojinitiumback.user.consult.service;
 import com.secondprojinitiumback.user.consult.domain.DscsnApply;
 import com.secondprojinitiumback.user.consult.domain.DscsnSchedule;
 import com.secondprojinitiumback.user.consult.domain.DscsnKind;
-import com.secondprojinitiumback.user.consult.dto.DscsnApplyRequestDto;
+import com.secondprojinitiumback.user.consult.dto.requestdto.DscsnApplyRequestDto;
 import com.secondprojinitiumback.user.consult.repository.DscsnApplyRepoistory;
 import com.secondprojinitiumback.user.consult.repository.DscsnKindRepository;
 import com.secondprojinitiumback.user.consult.repository.DscsnScheduleRepository;

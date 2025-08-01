@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CoreCompetencyCategoryRepository extends JpaRepository<CoreCompetencyCategory, Long> {
 
+    Object existsByCoreCategoryName(String categoryName);
 }

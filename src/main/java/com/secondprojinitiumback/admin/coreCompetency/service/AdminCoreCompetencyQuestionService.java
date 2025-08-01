@@ -100,6 +100,13 @@ public class AdminCoreCompetencyQuestionService {
         // 엔티티를 저장
         CoreCompetencyQuestion savedQuestion = coreCompetencyQuestionRepository.save(question);
 
+        // 공통 문항인 경우, 기존 매핑 삭제
+        if("Y".equalsIgnoreCase(coreCompetencyQuestionCreateDto.getIsCommonCode())){
+            behaviorIndicatorMajorQuestionMappingRepository.findByQuestion(savedQuestion)
+                    .ifPresent(behaviorIndicatorMajorQuestionMappingRepository::delete);
+            return savedQuestion;
+        }
+
         // 공통 문항이 아닌 경우, 행동지표랑 학과(전공) 매핑 추가
         if("N".equalsIgnoreCase(coreCompetencyQuestionCreateDto.getIsCommonCode()) && coreCompetencyQuestionCreateDto.getSubjectCode() != null){
             BehaviorIndicator behaviorIndicator = behaviorIndicatorRepository.findById(coreCompetencyQuestionCreateDto.getIndicatorId())
@@ -135,8 +142,10 @@ public class AdminCoreCompetencyQuestionService {
     public void deleteCoreCompetencyQuestion(Long questionId) {
         CoreCompetencyQuestion question = coreCompetencyQuestionRepository.findById(questionId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 문항입니다."));
+        // 문항 삭제 시, 관련된 매핑도 삭제
+        behaviorIndicatorMajorQuestionMappingRepository.findByQuestion(question).ifPresent(behaviorIndicatorMajorQuestionMappingRepository::delete);
+        // 문항 삭제
         coreCompetencyQuestionRepository.delete(question);
-        //관련된 매핑이나 응답 데이터 삭제는 포함 시킬 예정
     }
 
     //4. 문항 상세 조회

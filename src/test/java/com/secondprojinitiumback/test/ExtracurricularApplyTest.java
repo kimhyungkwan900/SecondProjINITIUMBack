@@ -30,7 +30,7 @@ public class ExtracurricularApplyTest {
         ExtracurricularApplyFormDTO dto = new ExtracurricularApplyFormDTO();
 
         dto.setEduAplyCn(stdntNo);
-        dto.setEduMngId(1L);
+        dto.getExtracurricularProgram().setEduMngId(extracurricularProgram.getEduMngId());
         extracurricularApplyService.applyExtracurricular(stdntNo, dto);
 
     }

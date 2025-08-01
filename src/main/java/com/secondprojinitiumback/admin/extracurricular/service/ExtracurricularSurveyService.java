@@ -2,6 +2,7 @@ package com.secondprojinitiumback.admin.extracurricular.service;
 
 import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularProgram;
 import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularSurvey;
+import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularSurveyDTO;
 import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularSurveyFormDTO;
 import com.secondprojinitiumback.admin.extracurricular.repository.ExtracurricularProgramRepository;
 import com.secondprojinitiumback.admin.extracurricular.repository.ExtracurricularSurveyRepository;
@@ -30,6 +31,18 @@ public class ExtracurricularSurveyService {
         // DTO를 ExtracurricularSurvey로 변환 후 저장
         extracurricularSurveyRepository.save(modelMapper.map(dto, ExtracurricularSurvey.class));
     }
+
+    public ExtracurricularSurveyDTO getSurvey(Long eduMngId) {
+        // 아이디를 통해 ExtracurricularSurvey 객체를 조회 (없을 경우 예외 발생)
+        ExtracurricularSurvey survey = extracurricularSurveyRepository
+                .findByExtracurricularProgram_EduMngId(eduMngId);
+        if (survey == null) {
+            throw new IllegalArgumentException("해당 프로그램의 설문이 존재하지 않습니다. eduMngId = " + eduMngId);
+        }
+        // ExtracurricularSurvey를 DTO로 변환하여 반환
+        return modelMapper.map(survey, ExtracurricularSurveyDTO.class);
+    }
+
     // 비교과 프로그램 설문 조사 삭제
     public void deleteSurvey(Long srvyRspnsId) {
         // 아이디를 통해 ExtracurricularSurvey 객체를 조회

@@ -20,9 +20,9 @@ public class ExtracurricularApplyAdminService {
     private final ModelMapper modelMapper;
 
     // 비교과 프로그램 신청 목록 조회
-    public List<ExtracurricularApplyUpdateDTO> findExtracurricularApplyList(AprySttsNm aprySttsNm) {
-        // 신청 상태에 따라 비교과 프로그램 신청 목록을 조회
-        List<ExtracurricularApply> applyList = extracurricularApplyRepository.findByAprySttsNm(aprySttsNm);
+    public List<ExtracurricularApplyUpdateDTO> findExtracurricularApplyList(Long eduMngId,AprySttsNm aprySttsNm) {
+        // eduMngId와 aprySttsNm에 해당하는 비교과 프로그램 신청 목록을 조회
+        List<ExtracurricularApply> applyList = extracurricularApplyRepository.findByExtracurricularProgram_EduMngIdAndAprySttsNm(eduMngId, aprySttsNm);
         // 신청 목록을 ExtracurricularApplyUpdateDTO로 변환하여 반환
         return applyList.stream()
                 .map(apply -> modelMapper.map(apply, ExtracurricularApplyUpdateDTO.class))

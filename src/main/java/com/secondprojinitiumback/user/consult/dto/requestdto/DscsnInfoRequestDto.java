@@ -1,6 +1,5 @@
 package com.secondprojinitiumback.user.consult.dto.requestdto;
 
-import com.secondprojinitiumback.user.consult.dto.requestdto.DscsnApplyRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

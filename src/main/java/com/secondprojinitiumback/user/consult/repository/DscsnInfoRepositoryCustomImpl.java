@@ -53,7 +53,7 @@ public class DscsnInfoRepositoryCustomImpl implements  DscsnInfoRepositoryCustom
         }
         //연도,학기
         if(StringUtils.hasText(dscsnInfoSearchDto.getDscsnType())){
-            String semesterStart = dscsnInfoSearchDto.getYear() + dscsnInfoSearchDto.getStartMonth()
+            String semesterStart = dscsnInfoSearchDto.getYear() + dscsnInfoSearchDto.getStartMonth();
             String semesterEnd = dscsnInfoSearchDto.getYear() + dscsnInfoSearchDto.getEndMonth();
 
             builder.and(dscsnInfo.dscsnApply.dscsnDt.possibleDate.between(semesterStart, semesterEnd));

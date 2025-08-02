@@ -1,5 +1,11 @@
 package com.secondprojinitiumback.user.extracurricular.dto;
 
+import com.secondprojinitiumback.admin.extracurricular.domain.enums.EduGndrLmt;
+import com.secondprojinitiumback.admin.extracurricular.domain.enums.EduSlctnType;
+import com.secondprojinitiumback.admin.extracurricular.domain.enums.EduTrgtLmt;
+import com.secondprojinitiumback.admin.extracurricular.domain.enums.EduType;
+import com.secondprojinitiumback.admin.extracurricular.domain.test.EmpInfo;
+import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularCategoryDTO;
 import lombok.*;
 
 @Getter
@@ -8,12 +14,14 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExtracurricularProgramDTO {
-    private Long eduMngId; // 프로그램 ID
-    private String eduMngNm; // 프로그램 이름
-    private String eduMngCn; // 프로그램 설명
-    private String eduMngStts; // 프로그램 상태
-    private int eduMlg; // 프로그램 최대 인원
-    private int eduAplyCnt; // 신청 인원 수
+    private Long eduMngId;
+    private EmpInfo empInfo;
+    private ExtracurricularCategoryDTO extracurricularCategoryDTO;
+    private String eduNm;
+    private EduType eduType;
+    private EduTrgtLmt eduTrgtLmt;
+    private EduGndrLmt eduGndrLmt;
+    private EduSlctnType eduSlctnType;
 
 
 }

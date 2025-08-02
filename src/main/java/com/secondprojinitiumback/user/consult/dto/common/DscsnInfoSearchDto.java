@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DscsnInfoSearchDto {
 
-    String userType; //사용자 유형
+    String userType; //사용자 유형(S(학생), E(교직원), A(역량센터))
 
     String serialNo; //학번 아니면 사번
 
@@ -25,7 +25,8 @@ public class DscsnInfoSearchDto {
 
     String year; //연도
 
-    String semester;//학기
+    String startMonth; //학기
+    String endMonth;
 
     String dscsnKindId; //상담항목
 

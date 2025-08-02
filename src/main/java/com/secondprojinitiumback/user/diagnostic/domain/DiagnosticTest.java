@@ -53,5 +53,10 @@ public class DiagnosticTest {
     @OneToMany(mappedBy = "test", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<DiagnosticQuestion> questions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "test", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<DiagnosticScoreLevel> scoreLevels = new ArrayList<>();
+
 }
 

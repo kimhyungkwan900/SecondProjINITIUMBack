@@ -12,13 +12,13 @@ import java.util.List;
 @Builder
 public class DiagnosticTestDto {
 
-    private Long id;                       // 조회 시 사용
-    private String name;                  // 공통
-    private String description;           // 공통
-    private Boolean useYn;                // 공통 (등록/조회 둘 다 필요)
+    private Long id;
+    private String name;
+    private String description;
+    private Boolean useYn;
 
-    // 문항 포함
-    private List<DiagnosticQuestionDto> questions;
+    private List<DiagnosticQuestionDto> questions; // 기존 문항 리스트
+    private List<ScoreLevelDto> scoreLevels;       // 🔹 점수 구간 해석 리스트 추가
 
     public static DiagnosticTestDto from(DiagnosticTest entity) {
         List<DiagnosticQuestionDto> questionDtos = entity.getQuestions().stream()
@@ -36,14 +36,22 @@ public class DiagnosticTestDto {
                         .build())
                 .toList();
 
+        List<ScoreLevelDto> scoreLevelDtos = entity.getScoreLevels().stream()
+                .map(s -> ScoreLevelDto.builder()
+                        .levelName(s.getLevelName())
+                        .description(s.getDescription())
+                        .build())
+                .toList();
+
         return DiagnosticTestDto.builder()
                 .id(entity.getId())
                 .name(entity.getName())
                 .description(entity.getDescription())
                 .useYn("Y".equalsIgnoreCase(entity.getUseYn()))
-                .questions(questionDtos) // ✔ 문항까지 포함
+                .questions(questionDtos)
+                .scoreLevels(scoreLevelDtos) // 🔹 점수 해석 포함
                 .build();
     }
-
 }
+
 

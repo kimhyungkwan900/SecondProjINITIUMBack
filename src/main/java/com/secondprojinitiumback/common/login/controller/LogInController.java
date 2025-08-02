@@ -56,6 +56,7 @@ public class LogInController {
         // UserDetails에서 로그인 ID를 가져와서 LoginInfo 조회
         LoginInfo loginInfo = loginInfoService.getLoginInfoByLoginId(userDetails.getUsername());
         UserDetailDto userDetailDto = loginInfoService.loadUserDetail(loginInfo);
+
         return ResponseEntity.ok(userDetailDto);
     }
 }

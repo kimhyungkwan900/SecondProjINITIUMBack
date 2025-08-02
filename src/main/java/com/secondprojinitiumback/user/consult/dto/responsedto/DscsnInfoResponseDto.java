@@ -1,6 +1,5 @@
-package com.secondprojinitiumback.user.consult.dto;
+package com.secondprojinitiumback.user.consult.dto.responsedto;
 
-import com.secondprojinitiumback.user.consult.dto.requestdto.DscsnApplyRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DscsnInfoDto {
+public class DscsnInfoResponseDto {
 
     private String dscsnInfoId; //상담일정 ID
 
@@ -20,5 +19,5 @@ public class DscsnInfoDto {
 
     private String dscsnReleaseYn; //상담결과 공개여부
 
-    private DscsnApplyRequestDto dscsnApplyDto;  //신청서 ID
+    private DscsnApplyResponseDto dscsnApplyDto;  //신청서 ID
 }

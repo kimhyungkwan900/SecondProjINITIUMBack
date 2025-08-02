@@ -42,9 +42,9 @@ public class MileagePerf {
     @JoinColumn(name = "MLG_SCOR_PLCY_ID", nullable = false)
     private ScorePolicy scorePolicy; // 배점 정책
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SCHLR_APLY_ID")
-    private ScholarshipApply scholarshipApply; // 장학금 신청 ID
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "SCHLR_APLY_ID")
+//    private ScholarshipApply scholarshipApply; // 장학금 신청 ID
 
 
 

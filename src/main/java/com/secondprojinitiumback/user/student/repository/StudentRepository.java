@@ -12,4 +12,5 @@ public interface StudentRepository extends JpaRepository<Student, String>, Stude
 
     Optional<String> findTopByStudentNoStartingWithAndStudentNoContainingOrderByStudentNoDesc(String admissionYear, String departmentCode);
 
+    Optional<Student> findByLoginInfoLoginId(String loginId);
 }

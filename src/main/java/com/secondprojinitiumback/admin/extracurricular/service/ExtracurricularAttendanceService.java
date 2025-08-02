@@ -4,6 +4,7 @@ import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularAtt
 import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularSchedule;
 import com.secondprojinitiumback.admin.extracurricular.domain.test.StdntInfo;
 import com.secondprojinitiumback.admin.extracurricular.domain.test.StdntInfoRepository;
+import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularAttendanceDTO;
 import com.secondprojinitiumback.admin.extracurricular.repository.ExtracurricularAttendanceRepository;
 import com.secondprojinitiumback.admin.extracurricular.repository.ExtracurricularScheduleRepository;
 import com.secondprojinitiumback.user.extracurricular.domain.ExtracurricularApply;
@@ -64,21 +65,24 @@ public class ExtracurricularAttendanceService {
     }
 
     // 특정 비교과 프로그램 Id로 출석 조회
-    public List<StdntInfo> getStudentsForAttendance(Long eduShdlId) {
+    public List<ExtracurricularAttendanceDTO> getStudentsForAttendance(Long eduShdlId) {
         // 일정 조회
         ExtracurricularSchedule schedule = extracurricularScheduleRepository
                 .findById(eduShdlId)
                 .orElseThrow(() -> new IllegalArgumentException("일정이 존재하지 않습니다."));
 
         Long eduMngId = schedule.getExtracurricularProgram().getEduMngId();
-
         // 해당 프로그램에 승인 상태로 신청한 학생 리스트 조회
         List<ExtracurricularApply> approvedApplications =
                 extracurricularApplyRepository.findExtracurricularAppliesByExtracurricularProgram_EduMngIdAndAprySttsNm(eduMngId, AprySttsNm.ACCEPT);
-
         // 학생 정보 리스트 추출
         return approvedApplications.stream()
-                .map(ExtracurricularApply::getStdntInfo)
+                .map(apply -> {
+                    ExtracurricularAttendanceDTO dto = new ExtracurricularAttendanceDTO();
+                    dto.setStdntInfo(apply.getStdntInfo());
+                    // 필요 시 추가 매핑
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 }

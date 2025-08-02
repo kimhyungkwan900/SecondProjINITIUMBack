@@ -1,7 +1,7 @@
 package com.secondprojinitiumback.user.consult.service;
 
 import com.secondprojinitiumback.user.consult.domain.DscsnKind;
-import com.secondprojinitiumback.user.consult.dto.DscsnKindDto;
+import com.secondprojinitiumback.user.consult.dto.common.DscsnKindDto;
 import com.secondprojinitiumback.user.consult.repository.DscsnKindRepository;
 import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;

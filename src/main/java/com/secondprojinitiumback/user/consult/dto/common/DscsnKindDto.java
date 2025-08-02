@@ -1,7 +1,5 @@
-package com.secondprojinitiumback.user.consult.dto;
+package com.secondprojinitiumback.user.consult.dto.common;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,7 +1,6 @@
-package com.secondprojinitiumback.user.consult.dto;
+package com.secondprojinitiumback.user.consult.dto.common;
 
 import com.secondprojinitiumback.common.domain.SchoolSubject;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

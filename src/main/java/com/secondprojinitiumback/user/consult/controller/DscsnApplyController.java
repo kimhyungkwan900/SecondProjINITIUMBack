@@ -5,14 +5,11 @@ import com.secondprojinitiumback.user.consult.service.DscsnApplyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/consult")
+@RequestMapping("/api/consult/apply")
 public class DscsnApplyController {
     private final DscsnApplyService dscsnApplyService;
 
@@ -21,9 +18,20 @@ public class DscsnApplyController {
     public ResponseEntity<?> dscsnApply(@ModelAttribute DscsnApplyRequestDto dscsnApplyRequestDto) {
         try{
             dscsnApplyService.applyConsultation(dscsnApplyRequestDto);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok("상담 신청 완료");
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("신청 중 문제가 발생했습니다.");
+        }
+    }
+
+    //--- 상담신청 취소
+    @PostMapping("/cancel/{dscsnApplyId}")
+    public ResponseEntity<?> dscsnCancel(@PathVariable(name = "dscsnApplyId") String dscsnApplyId) {
+        try{
+            dscsnApplyService.cancelConsultation(dscsnApplyId);
+            return ResponseEntity.ok("상담 취소 완료");
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("신청 취소 중 문제가 발생했습니다.");
         }
     }
 }

@@ -72,16 +72,17 @@ public class DscsnApplyService {
 
     //--- 학생 상담신청 취소
     public void cancelConsultation(String dscsnApplyId) {
+
         //상담신청 ID로 상담신청 정보 조회
         DscsnApply dscsnApply = dscsnApplyRepoistory.findById(dscsnApplyId)
                 .orElseThrow(EntityExistsException::new);
 
-        //상담신청 정보 삭제
-        dscsnApplyRepoistory.delete(dscsnApply);
-
         //상담일정 예약여부 변경
         DscsnSchedule dscsnSchedule = dscsnApply.getDscsnDt();
         dscsnSchedule.updateDscsnYn();
+
+        //상담신청 ID로 신청정보 삭제
+        dscsnApplyRepoistory.deleteById(dscsnApplyId);
     }
 
     //시퀀스 번호 생성 메소드

@@ -4,6 +4,7 @@ import com.secondprojinitiumback.user.consult.domain.DscsnApply;
 import com.secondprojinitiumback.user.consult.domain.DscsnInfo;
 import com.secondprojinitiumback.user.consult.dto.common.DscsnInfoSearchDto;
 import com.secondprojinitiumback.user.consult.dto.common.DscsnKindDto;
+import com.secondprojinitiumback.user.consult.dto.common.DscsnResultDto;
 import com.secondprojinitiumback.user.consult.dto.common.StudentDto;
 import com.secondprojinitiumback.user.consult.dto.requestdto.DscsnInfoRequestDto;
 import com.secondprojinitiumback.user.consult.dto.responsedto.DscsnApplyResponseDto;
@@ -113,17 +114,17 @@ public class DscsnInfoService {
     }
 
     //--- 상담결과 등록
-    public void registerDscsnResult(String dscsnInfoId, String releaseYn, String result) {
+    public void registerDscsnResult(DscsnResultDto dscsnResultDto) {
 
         // 상담정보 가져오기
-        DscsnInfo dscsnInfo = dscsnInfoRepository.findById(dscsnInfoId)
+        DscsnInfo dscsnInfo = dscsnInfoRepository.findById(dscsnResultDto.getDscsnInfoId())
                 .orElseThrow(EntityNotFoundException::new);
 
         // 상담 결과 공개여부 등록
-        dscsnInfo.updateDscsnReleaseYn(releaseYn);
+        dscsnInfo.updateDscsnReleaseYn(dscsnResultDto.getReleaseYn());
 
         // 상담 결과 등록
-        dscsnInfo.updateDscsnResultCn(result);
+        dscsnInfo.updateDscsnResultCn(dscsnResultDto.getResult());
 
         // 상담 상태 업데이트
         dscsnInfo.updateDscsnStatus("상담완료");

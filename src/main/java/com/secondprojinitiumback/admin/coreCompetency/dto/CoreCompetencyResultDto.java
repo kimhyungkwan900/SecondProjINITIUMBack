@@ -15,4 +15,3 @@ public class CoreCompetencyResultDto {
     private Long responseId;         // 응답 ID
     private String classificationCode; // 결과 분류 코드
 }
-

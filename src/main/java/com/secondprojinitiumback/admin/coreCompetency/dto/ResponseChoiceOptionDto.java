@@ -14,4 +14,3 @@ public class ResponseChoiceOptionDto {
     private String label;            // 보기 내용
     private Integer score;           // 배점
 }
-

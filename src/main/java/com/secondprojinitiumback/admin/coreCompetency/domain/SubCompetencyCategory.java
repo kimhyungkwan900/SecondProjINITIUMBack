@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "SUB_COMPETENCY_CATEGORY")
+@Table(name = "sub_competency_category")
 public class SubCompetencyCategory {
 
     @Id

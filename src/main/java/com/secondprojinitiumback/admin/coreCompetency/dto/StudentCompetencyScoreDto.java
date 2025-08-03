@@ -17,4 +17,3 @@ public class StudentCompetencyScoreDto {
     private BigDecimal standardScore;  // 개인 점수
     private BigDecimal totalAverageScore; // 전체 평균 점수
 }
-

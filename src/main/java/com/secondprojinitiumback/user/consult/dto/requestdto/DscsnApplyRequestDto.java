@@ -1,7 +1,7 @@
-package com.secondprojinitiumback.user.consult.dto;
+package com.secondprojinitiumback.user.consult.dto.requestdto;
 
+import com.secondprojinitiumback.user.consult.dto.basedto.DscsnApplyBaseDto;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;

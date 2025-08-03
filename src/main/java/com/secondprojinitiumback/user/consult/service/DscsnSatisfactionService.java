@@ -2,7 +2,7 @@ package com.secondprojinitiumback.user.consult.service;
 
 import com.secondprojinitiumback.user.consult.domain.DscsnInfo;
 import com.secondprojinitiumback.user.consult.domain.DscsnSatisfaction;
-import com.secondprojinitiumback.user.consult.dto.DscsnSatisfactionDto;
+import com.secondprojinitiumback.user.consult.dto.common.DscsnSatisfactionDto;
 import com.secondprojinitiumback.user.consult.repository.DscsnInfoRepository;
 import com.secondprojinitiumback.user.consult.repository.DscsnSatisfactionRepository;
 import jakarta.persistence.EntityExistsException;

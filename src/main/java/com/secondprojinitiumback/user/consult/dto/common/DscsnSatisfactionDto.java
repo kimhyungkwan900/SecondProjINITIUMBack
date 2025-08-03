@@ -1,4 +1,4 @@
-package com.secondprojinitiumback.user.consult.dto;
+package com.secondprojinitiumback.user.consult.dto.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

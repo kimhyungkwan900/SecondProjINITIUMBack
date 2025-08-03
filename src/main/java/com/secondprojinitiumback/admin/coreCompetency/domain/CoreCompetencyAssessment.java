@@ -11,7 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "CORE_COMPETENCY_ASSESSMENT")
+@Table(name = "core_competency_assessment")
 public class CoreCompetencyAssessment {
 
     @Id
@@ -25,7 +25,7 @@ public class CoreCompetencyAssessment {
     private SchoolSubject schoolSubject;
 
     @Column(name = "ASMT_NO")
-    private String assessmentNo; // 평가 코드
+    private String assessmentNo; // 진단번호
 
     @Column(name = "ASMT_NM")
     private String assessmentName; // 평가명
@@ -50,7 +50,7 @@ public class CoreCompetencyAssessment {
     private CommonCode semesterCode; // 학기 정보 (FK)
 
     @Builder.Default
-    @Column(name = "STERM_GRP", insertable = false, updatable = false)
+    @Column(name = "STERM_GRP")
     private String semesterGroup = "SEMESTER"; // 학기 구분 코드 (고정값)
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -61,7 +61,7 @@ public class CoreCompetencyAssessment {
     private CommonCode onlineExecCode;  // 온라인 실행 여부 (고정값: Y/N)
 
     @Builder.Default
-    @Column(name = "ONLNE_EXEC_GRP", insertable = false, updatable = false)
+    @Column(name = "ONLNE_EXEC_GRP")
     private String onlineExecGroupCode = "ONLINE_YN";
 
     @Lob

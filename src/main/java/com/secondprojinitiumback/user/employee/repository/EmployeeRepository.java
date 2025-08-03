@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface EmployeeRepository extends JpaRepository<Employee, String>, EmployeeRepositoryCustom {
     Optional<Employee> findByEmployeeNo(String employeeNo);
     Optional<String> findTopByEmpNoStartingWithOrderByEmpNoDesc(String empNoPrefix);
+
+    Optional<Employee> findByLoginInfoLoginId(String loginId);
 }

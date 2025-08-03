@@ -40,8 +40,8 @@ public class DiagnosisService {
                 .useYn(Boolean.TRUE.equals(dto.getUseYn()) ? "Y" : "N")
                 .build();
 
+        // 🔹 문항 추가
         List<DiagnosticQuestion> questions = new ArrayList<>();
-
         for (DiagnosticQuestionDto questionDto : dto.getQuestions()) {
             DiagnosticQuestion question = DiagnosticQuestion.builder()
                     .test(test)
@@ -63,9 +63,23 @@ public class DiagnosisService {
             questions.add(question);
         }
 
+        // 🔹 점수 해석 추가
+        List<DiagnosticScoreLevel> scoreLevels = dto.getScoreLevels().stream()
+                .map(levelDto -> DiagnosticScoreLevel.builder()
+                        .test(test)
+                        .minScore(levelDto.getMinScore())
+                        .maxScore(levelDto.getMaxScore())
+                        .levelName(levelDto.getLevelName())
+                        .description(levelDto.getDescription())
+                        .build())
+                .toList();
+
         test.setQuestions(questions);
+        test.setScoreLevels(scoreLevels);
+
         return testRepository.save(test).getId();
     }
+
 
     @Transactional
     public void deleteDiagnosticTest(Long id) {

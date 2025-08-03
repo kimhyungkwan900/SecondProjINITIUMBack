@@ -1,15 +1,22 @@
 package com.secondprojinitiumback.common.security.config.jwt;
 
 import com.secondprojinitiumback.common.login.constatnt.Role;
+import com.secondprojinitiumback.common.login.dto.TokenInfoDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.Date;
 
 @Service
@@ -30,18 +37,21 @@ public class TokenProvider {
         secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtProperties.getJwtSecret()));
     }
 
-    // 엑세스토큰 생성
-    public String generateAccessToken(Long userId, Role role){
-        return generateToken(userId, role, ACCESS_TOKEN_DURATION);
-    }
+    public TokenInfoDto generateTokens(String userId, String role) {
+        String accessToken = generateToken(userId, role, ACCESS_TOKEN_DURATION);
+        String refreshToken = generateToken(null, null, REFRESH_TOKEN_DURATION); // Refresh Token에는 사용자 정보 불필요
 
-    // 리프래쉬토큰 생성
-    public String generateRefreshToken(){
-        return generateToken(null,null,REFRESH_TOKEN_DURATION);
+        return TokenInfoDto.builder()
+                .grantType("Bearer")
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .accessTokenExpiresIn(ACCESS_TOKEN_DURATION.getSeconds())
+                .refreshTokenExpiresIn(REFRESH_TOKEN_DURATION.getSeconds())
+                .build();
     }
 
     // 토큰생성
-    private String generateToken(Long userId, Role role, Duration duration){
+    private String generateToken(String userId, String role, Duration duration){
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + duration.toMillis());
@@ -69,6 +79,18 @@ public class TokenProvider {
                 .setExpiration(expiryDate);
     }
 
+    public Authentication getAuthentication(String token) {
+        Claims claims = getClaims(token);
+        String userId = claims.getSubject();
+        String role = claims.get(KEY_ROLE, String.class);
+
+        // 권한 정보 생성
+        UserDetails userDetails = new User(userId, "", Collections.singleton(new SimpleGrantedAuthority(role)));
+
+        // Authentication 객체 생성
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
+
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
@@ -88,29 +110,19 @@ public class TokenProvider {
     }
 
     // 토큰에서 사용자 ID 반환
-    public Long getUserId(String token){
+    public String getUserId(String token){
         Claims claims = getClaims(token);
         if (claims == null) return null;
         Object idObj = claims.get(KEY_ID);
-        if (idObj == null) return null;
-        try {
-            return Long.valueOf(idObj.toString());
-        } catch (NumberFormatException e) {
-            return null;
-        }
+        return idObj != null ? idObj.toString() : null;
     }
 
     // 토큰에서 사용자 Role 반환
-    public Role getUserRole(String token){
+    public String getUserRole(String token){
         Claims claims = getClaims(token);
         if (claims == null) return null;
         Object roleObj = claims.get(KEY_ROLE);
-        if (roleObj == null) return null;
-        try {
-            return Role.valueOf(roleObj.toString());
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
+        return roleObj != null ? roleObj.toString() : null;
     }
 
     // 토큰에서 Claims 반환

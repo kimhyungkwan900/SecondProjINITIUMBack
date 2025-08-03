@@ -29,6 +29,5 @@ public interface BehaviorIndicatorRepository extends JpaRepository<BehaviorIndic
      * @param subject  전공 엔티티
      * @return 해당 조건의 행동지표 리스트
      */
-    @Query("SELECT b FROM BehaviorIndicator b WHERE b.isCommonCode.id.code = :isCommon AND b.schoolSubject = :subject")
-    List<BehaviorIndicator> findByIsCommonAndSchoolSubject(@Param("isCommon") String isCommon, @Param("subject") SchoolSubject subject);
+    List<BehaviorIndicator> findByIsCommonAndSchoolSubject(String isCommon, SchoolSubject subject);
 }

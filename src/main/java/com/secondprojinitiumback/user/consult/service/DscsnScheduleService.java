@@ -1,12 +1,15 @@
 package com.secondprojinitiumback.user.consult.service;
 
 import com.secondprojinitiumback.user.consult.domain.DscsnSchedule;
-import com.secondprojinitiumback.user.consult.dto.DscsnScheduleRequestDto;
+import com.secondprojinitiumback.user.consult.dto.requestdto.DscsnScheduleRequestDto;
+import com.secondprojinitiumback.user.consult.dto.responsedto.DscsnScheduleResponseDto;
 import com.secondprojinitiumback.user.consult.repository.DscsnScheduleRepository;
 import com.secondprojinitiumback.user.consult.repository.TempEmployeeRepository;
 import com.secondprojinitiumback.user.employee.domain.Employee;
 import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,7 +57,21 @@ public class DscsnScheduleService {
     }
 
     //--- 상담사, 교수 상담일정 조회
+    @Transactional(readOnly = true)
+    public Page<DscsnScheduleResponseDto> getDscsnSchedule(String empNo, Pageable pageable) {
 
+        Page<DscsnSchedule> dscsnSchedules = dscsnScheduleRepository.findByEmployee_EmpNo(empNo, pageable);
+
+        return dscsnSchedules.map(dscsnSchedule ->
+                DscsnScheduleResponseDto.builder()
+                        .empNo(dscsnSchedule.getEmployee().getEmpNo())
+                        .empName(dscsnSchedule.getEmployee().getName())
+                        .schoolSubject(dscsnSchedule.getEmployee().getSchoolSubject().getSubjectName())
+                        .scheduleDate(dscsnSchedule.getPossibleDate())
+                        .scheduleDate(dscsnSchedule.getPossibleTime())
+                        .build()
+                );
+    }
 
     //--- 상담사, 교수 일정 삭제
     public void deleteDscsnSchedule(String dscsnDtId) {

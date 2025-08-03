@@ -5,14 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+
 @Getter
 @AllArgsConstructor
 @Builder
 public class ExternalTestListDto {
     private Long id;
-    private String name;              // ← testName → name
-    private String provider;
-    private String questionApiCode;
+    private String name;           // 검사명
+    private String provider;       // 제공 기관
+    private String questionApiCode; // API 코드
+    private String targetCode;     // 🔹 대상 코드 추가
 
     public static ExternalTestListDto from(ExternalDiagnosticTest test) {
         return ExternalTestListDto.builder()
@@ -20,6 +22,7 @@ public class ExternalTestListDto {
                 .name(test.getName())
                 .provider(test.getProvider())
                 .questionApiCode(test.getQuestionApiCode())
+                .targetCode(test.getTargetCode()) // 🔹 대상 코드 세팅
                 .build();
     }
 }

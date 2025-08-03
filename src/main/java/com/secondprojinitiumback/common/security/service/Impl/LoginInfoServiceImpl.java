@@ -1,15 +1,15 @@
-package com.secondprojinitiumback.common.login.service.serviceImpl;
+package com.secondprojinitiumback.common.security.service.Impl;
 
-import com.secondprojinitiumback.common.login.domain.LoginAuthInfo;
-import com.secondprojinitiumback.common.login.domain.LoginHistory;
-import com.secondprojinitiumback.common.login.domain.LoginInfo;
-import com.secondprojinitiumback.common.login.dto.CreateLoginDto;
-import com.secondprojinitiumback.common.login.dto.TokenInfoDto;
-import com.secondprojinitiumback.common.login.dto.UserDetailDto;
-import com.secondprojinitiumback.common.login.repository.LoginAuthInfoRepository;
-import com.secondprojinitiumback.common.login.repository.LoginHistoryRepository;
-import com.secondprojinitiumback.common.login.repository.LoginInfoRepository;
-import com.secondprojinitiumback.common.login.service.serviceInterface.LoginInfoService;
+import com.secondprojinitiumback.common.security.domain.LoginAuthInfo;
+import com.secondprojinitiumback.common.security.domain.LoginHistory;
+import com.secondprojinitiumback.common.security.domain.LoginInfo;
+import com.secondprojinitiumback.common.security.dto.CreateLoginDto;
+import com.secondprojinitiumback.common.security.dto.TokenInfoDto;
+import com.secondprojinitiumback.common.security.dto.UserDetailDto;
+import com.secondprojinitiumback.common.security.Repository.LoginAuthInfoRepository;
+import com.secondprojinitiumback.common.security.Repository.LoginHistoryRepository;
+import com.secondprojinitiumback.common.security.Repository.LoginInfoRepository;
+import com.secondprojinitiumback.common.security.service.LoginInfoService;
 import com.secondprojinitiumback.user.employee.domain.Employee;
 import com.secondprojinitiumback.user.employee.repository.EmployeeRepository;
 import com.secondprojinitiumback.user.student.domain.Student;

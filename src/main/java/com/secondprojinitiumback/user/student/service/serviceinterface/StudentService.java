@@ -1,6 +1,5 @@
 package com.secondprojinitiumback.user.student.service.serviceinterface;
 
-import com.secondprojinitiumback.user.student.constant.StudentStatus;
 import com.secondprojinitiumback.user.student.dto.*;
 
 import java.util.List;

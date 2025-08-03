@@ -1,4 +1,4 @@
-package com.secondprojinitiumback.common.login.domain;
+package com.secondprojinitiumback.common.security.domain;
 
 import com.secondprojinitiumback.common.domain.base.BaseEntity;
 import jakarta.persistence.*;
@@ -93,6 +93,13 @@ public class LoginInfo extends BaseEntity {
     public void changePassword(String encodedNewPassword) {
         this.password = encodedNewPassword;
         this.passwordChangeRequired = false;
+        this.lastPasswordChangeDateTime = LocalDateTime.now();
+        this.loginFailCount = 0;
+    }
+
+    public void issueTemporaryPassword(String encodedTemporaryPassword) {
+        this.password = encodedTemporaryPassword;
+        this.passwordChangeRequired = true;
         this.lastPasswordChangeDateTime = LocalDateTime.now();
         this.loginFailCount = 0;
     }

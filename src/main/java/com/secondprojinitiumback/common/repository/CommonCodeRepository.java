@@ -9,7 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface CommonCodeRepository extends JpaRepository<CommonCode, CommonCodeId> {
-    Optional<CommonCode> findByCdAndCdSe(String cd, String cdSe);
-
     Optional<CommonCode> findByCodeAndGroup(String semesterCode, String semester);
 }

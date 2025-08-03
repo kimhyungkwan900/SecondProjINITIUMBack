@@ -1,4 +1,4 @@
-package com.secondprojinitiumback.common.login.domain;
+package com.secondprojinitiumback.common.security.domain;
 
 import com.secondprojinitiumback.common.converter.LocalDateTimeToChar12Converter;
 import jakarta.persistence.*;

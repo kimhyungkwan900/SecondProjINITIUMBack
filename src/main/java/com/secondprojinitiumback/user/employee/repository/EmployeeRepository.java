@@ -12,4 +12,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, String>, Emp
     Optional<String> findTopByEmpNoStartingWithOrderByEmpNoDesc(String empNoPrefix);
 
     Optional<Employee> findByLoginInfoLoginId(String loginId);
+
+    Optional<Employee> findByEmail(String email);
 }

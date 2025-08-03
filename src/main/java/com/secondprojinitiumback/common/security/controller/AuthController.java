@@ -1,11 +1,11 @@
-package com.secondprojinitiumback.common.login.controller;
+package com.secondprojinitiumback.common.security.controller;
 
-import com.secondprojinitiumback.common.login.domain.LoginInfo;
-import com.secondprojinitiumback.common.login.dto.LoginRequestDto;
-import com.secondprojinitiumback.common.login.dto.LoginResponseDto;
-import com.secondprojinitiumback.common.login.dto.TokenInfoDto;
-import com.secondprojinitiumback.common.login.dto.UserDetailDto;
-import com.secondprojinitiumback.common.login.service.serviceInterface.LoginInfoService;
+import com.secondprojinitiumback.common.security.domain.LoginInfo;
+import com.secondprojinitiumback.common.security.dto.LoginRequestDto;
+import com.secondprojinitiumback.common.security.dto.LoginResponseDto;
+import com.secondprojinitiumback.common.security.dto.TokenInfoDto;
+import com.secondprojinitiumback.common.security.dto.UserDetailDto;
+import com.secondprojinitiumback.common.security.service.LoginInfoService;
 import com.secondprojinitiumback.common.security.config.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.security.auth.login.AccountLockedException;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
-public class LogInController {
+public class AuthController {
 
     private final LoginInfoService loginInfoService;
     private final TokenProvider tokenProvider;
@@ -47,12 +47,13 @@ public class LogInController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/auth/me")
+    @GetMapping("/me")
     public ResponseEntity<UserDetailDto> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
         // 현재 로그인한 사용자 정보 조회
         if (userDetails == null) {
             return ResponseEntity.notFound().build();
         }
+        
         // UserDetails에서 로그인 ID를 가져와서 LoginInfo 조회
         LoginInfo loginInfo = loginInfoService.getLoginInfoByLoginId(userDetails.getUsername());
         UserDetailDto userDetailDto = loginInfoService.loadUserDetail(loginInfo);

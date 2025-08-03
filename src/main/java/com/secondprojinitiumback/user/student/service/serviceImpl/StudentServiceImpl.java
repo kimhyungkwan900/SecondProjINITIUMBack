@@ -6,9 +6,9 @@ import com.secondprojinitiumback.common.bank.domain.BankAccount;
 import com.secondprojinitiumback.common.domain.CommonCode;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
 import com.secondprojinitiumback.common.domain.University;
-import com.secondprojinitiumback.common.login.domain.LoginInfo;
-import com.secondprojinitiumback.common.login.dto.CreateLoginDto;
-import com.secondprojinitiumback.common.login.service.serviceInterface.LoginInfoService;
+import com.secondprojinitiumback.common.security.domain.LoginInfo;
+import com.secondprojinitiumback.common.security.dto.CreateLoginDto;
+import com.secondprojinitiumback.common.security.service.LoginInfoService;
 import com.secondprojinitiumback.common.repository.CommonCodeRepository;
 import com.secondprojinitiumback.common.repository.SchoolSubjectRepository;
 import com.secondprojinitiumback.common.repository.UniversityRepository;
@@ -149,7 +149,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     private CommonCode findCommonCode(String code, String groupCode) {
-        return commonCodeRepository.findByCdAndCdSe(code, groupCode)
+        return commonCodeRepository.findByCodeAndGroup(code, groupCode)
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 공통 코드: " + code));
     }
 

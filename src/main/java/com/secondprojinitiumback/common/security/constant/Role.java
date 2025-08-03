@@ -1,4 +1,4 @@
-package com.secondprojinitiumback.common.login.constatnt;
+package com.secondprojinitiumback.common.security.constant;
 
 import lombok.Getter;
 

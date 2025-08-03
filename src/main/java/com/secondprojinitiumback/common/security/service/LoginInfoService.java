@@ -1,9 +1,9 @@
-package com.secondprojinitiumback.common.login.service.serviceInterface;
+package com.secondprojinitiumback.common.security.service;
 
-import com.secondprojinitiumback.common.login.domain.LoginInfo;
-import com.secondprojinitiumback.common.login.dto.CreateLoginDto;
-import com.secondprojinitiumback.common.login.dto.TokenInfoDto;
-import com.secondprojinitiumback.common.login.dto.UserDetailDto;
+import com.secondprojinitiumback.common.security.domain.LoginInfo;
+import com.secondprojinitiumback.common.security.dto.CreateLoginDto;
+import com.secondprojinitiumback.common.security.dto.TokenInfoDto;
+import com.secondprojinitiumback.common.security.dto.UserDetailDto;
 
 public interface LoginInfoService {
 

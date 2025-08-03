@@ -6,7 +6,7 @@ import com.secondprojinitiumback.common.domain.CommonCode;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
 import com.secondprojinitiumback.common.domain.University;
 import com.secondprojinitiumback.common.domain.base.BaseEntity;
-import com.secondprojinitiumback.common.login.domain.LoginInfo;
+import com.secondprojinitiumback.common.security.domain.LoginInfo;
 import com.secondprojinitiumback.user.student.dto.AdminUpdateStudentDto;
 import com.secondprojinitiumback.user.student.dto.UpdateStudentDto;
 import jakarta.persistence.*;

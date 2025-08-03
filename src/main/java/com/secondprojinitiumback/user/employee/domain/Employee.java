@@ -4,7 +4,7 @@ import com.secondprojinitiumback.common.bank.domain.BankAccount;
 import com.secondprojinitiumback.common.domain.CommonCode;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
 import com.secondprojinitiumback.common.domain.base.BaseEntity;
-import com.secondprojinitiumback.common.login.domain.LoginInfo;
+import com.secondprojinitiumback.common.security.domain.LoginInfo;
 import com.secondprojinitiumback.user.employee.dto.AdminUpdateEmployeeDto;
 import com.secondprojinitiumback.user.employee.dto.EmployeeUpdateMyInfoDto;
 import jakarta.persistence.*;

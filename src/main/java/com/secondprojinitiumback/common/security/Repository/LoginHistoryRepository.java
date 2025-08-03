@@ -1,6 +1,6 @@
-package com.secondprojinitiumback.common.login.repository;
+package com.secondprojinitiumback.common.security.Repository;
 
-import com.secondprojinitiumback.common.login.domain.LoginHistory;
+import com.secondprojinitiumback.common.security.domain.LoginHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LoginHistoryRepository extends JpaRepository<LoginHistory, Long> {

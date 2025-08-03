@@ -1,4 +1,4 @@
-package com.secondprojinitiumback.common.login.dto;
+package com.secondprojinitiumback.common.security.dto;
 
 import lombok.Builder;
 import lombok.Getter;

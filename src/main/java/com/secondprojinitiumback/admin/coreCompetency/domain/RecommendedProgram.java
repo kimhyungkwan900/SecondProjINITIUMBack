@@ -23,10 +23,6 @@ public class RecommendedProgram {
     private CoreCompetencyResult result; // 핵심역량 결과와 연관
 
     @ManyToOne
-    @JoinColumn(name = "ITP_ID")
-    private IdealTalentProfile idealTalentProfile; // 인재상 프로필과 연관
-
-    @ManyToOne
     @JoinColumn(name = "EDU_MNG_ID")
     private ExtracurricularProgram program;
 

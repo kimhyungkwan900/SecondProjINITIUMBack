@@ -30,16 +30,8 @@ public class BehaviorIndicator {
     @Column(name = "IS_COMMON")
     private String isCommon;
 
-    // 복합키 조인용 그룹 코드
     @Column(name = "IS_COMMON_CD_SE")
     private String isCommonGroupCode;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumns({
-            @JoinColumn(name = "IS_COMMON", referencedColumnName = "CD"),
-            @JoinColumn(name = "IS_COMMON_CD_SE", referencedColumnName = "CD_SE")
-    })
-    private CommonCode isCommonCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SCSBJT_NO")

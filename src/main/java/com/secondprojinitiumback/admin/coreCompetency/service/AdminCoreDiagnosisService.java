@@ -20,8 +20,6 @@ import java.util.List;
 @Transactional
 public class AdminCoreDiagnosisService {
 
-    private final CoreCompetencyCategoryRepository coreCompetencyCategoryRepository;
-    private final SubCompetencyCategoryRepository SubCompetencyCategoryRepository;
     private final CommonCodeRepository commonCodeRepository;
     private final CoreCompetencyAssessmentRepository coreCompetencyAssessmentRepository;
     private final SchoolSubjectRepository schoolSubjectRepository;

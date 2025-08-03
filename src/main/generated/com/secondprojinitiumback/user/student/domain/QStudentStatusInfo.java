@@ -1,0 +1,83 @@
+package com.secondprojinitiumback.user.student.domain;
+
+import static com.querydsl.core.types.PathMetadataFactory.*;
+
+import com.querydsl.core.types.dsl.*;
+
+import com.querydsl.core.types.PathMetadata;
+import javax.annotation.processing.Generated;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
+
+
+/**
+ * QStudentStatusInfo is a Querydsl query type for StudentStatusInfo
+ */
+@Generated("com.querydsl.codegen.DefaultEntitySerializer")
+public class QStudentStatusInfo extends EntityPathBase<StudentStatusInfo> {
+
+    private static final long serialVersionUID = 1112378291L;
+
+    private static final PathInits INITS = PathInits.DIRECT2;
+
+    public static final QStudentStatusInfo studentStatusInfo = new QStudentStatusInfo("studentStatusInfo");
+
+    public final com.secondprojinitiumback.common.domain.base.QBaseEntity _super = new com.secondprojinitiumback.common.domain.base.QBaseEntity(this);
+
+    //inherited
+    public final StringPath createdBy = _super.createdBy;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
+
+    //inherited
+    public final StringPath createdIp = _super.createdIp;
+
+    //inherited
+    public final NumberPath<Long> createdProgramId = _super.createdProgramId;
+
+    //inherited
+    public final StringPath modifiedBy = _super.modifiedBy;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
+
+    //inherited
+    public final StringPath modifiedIp = _super.modifiedIp;
+
+    //inherited
+    public final NumberPath<Long> modifiedProgramId = _super.modifiedProgramId;
+
+    public final StringPath remark = createString("remark");
+
+    public final com.secondprojinitiumback.common.domain.QCommonCode statusCode;
+
+    public final StringPath studentStatusCode = createString("studentStatusCode");
+
+    public final StringPath studentStatusCodeSe = createString("studentStatusCodeSe");
+
+    public final StringPath studentStatusName = createString("studentStatusName");
+
+    public QStudentStatusInfo(String variable) {
+        this(StudentStatusInfo.class, forVariable(variable), INITS);
+    }
+
+    public QStudentStatusInfo(Path<? extends StudentStatusInfo> path) {
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
+    }
+
+    public QStudentStatusInfo(PathMetadata metadata) {
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QStudentStatusInfo(PathMetadata metadata, PathInits inits) {
+        this(StudentStatusInfo.class, metadata, inits);
+    }
+
+    public QStudentStatusInfo(Class<? extends StudentStatusInfo> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.statusCode = inits.isInitialized("statusCode") ? new com.secondprojinitiumback.common.domain.QCommonCode(forProperty("statusCode"), inits.get("statusCode")) : null;
+    }
+
+}
+

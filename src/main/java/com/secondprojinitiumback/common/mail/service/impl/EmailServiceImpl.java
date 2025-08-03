@@ -14,9 +14,13 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendSimpleMessage(String to, String subject, String text) {
+        // 간단 메세지 오브젝트 생성
         SimpleMailMessage message = new SimpleMailMessage();
+        // 받는사람
         message.setTo(to);
+        // 제목
         message.setSubject(subject);
+        // 내용
         message.setText(text);
         emailSender.send(message);
     }

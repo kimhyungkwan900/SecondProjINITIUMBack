@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.user.employee.service.serviceinterface;
 
+import com.secondprojinitiumback.user.employee.domain.Employee;
 import com.secondprojinitiumback.user.employee.dto.*;
 
 import java.util.List;

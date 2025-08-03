@@ -20,4 +20,10 @@ public class CoreCompetencyAssessmentDto {
     private String guideContent;   // 안내문
     private String departmentName;  //학과에 연결된 부서 -> 조회시 사용
 
+    @Builder.Default
+    private String semesterGroup = "SEMESTER";
+
+    @Builder.Default
+    private String onlineExecGroup = "ONLINE_YN";
+
 }

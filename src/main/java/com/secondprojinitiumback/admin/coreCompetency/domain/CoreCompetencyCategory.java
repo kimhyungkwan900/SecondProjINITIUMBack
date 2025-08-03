@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "CORE_COMPETENCY_CATEGORY")
+@Table(name = "core_competency_category")
 public class CoreCompetencyCategory {
 
     @Id

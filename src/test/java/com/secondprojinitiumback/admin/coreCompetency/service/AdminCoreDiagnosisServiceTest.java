@@ -67,6 +67,9 @@ class AdminCoreDiagnosisServiceTest {
         dto.setRegisterDate("2025-07-01");
         dto.setAcademicYear("2025");
         dto.setGuideContent("진단 안내");
+        dto.setSemesterGroup("SEMESTER");
+        dto.setOnlineExecGroup("ONLINE_YN");
+
 
         CommonCode semesterCode = mock(CommonCode.class);
         CommonCode onlineCode = mock(CommonCode.class);
@@ -84,6 +87,9 @@ class AdminCoreDiagnosisServiceTest {
 
         assertThat(result.getAssessmentNo()).isEqualTo("1");
         assertThat(result.getAssessmentName()).isEqualTo("진단명");
+        assertThat(result.getSemesterGroup()).isEqualTo("SEMESTER");
+        assertThat(result.getOnlineExecGroupCode()).isEqualTo("ONLINE_YN");
+
         verify(assessmentRepository).save(any());
     }
 
@@ -121,6 +127,9 @@ class AdminCoreDiagnosisServiceTest {
         dto.setRegisterDate("2025-08-01");
         dto.setAcademicYear("2025");
         dto.setGuideContent("수정 안내");
+        dto.setSemesterGroup("SEMESTER");
+        dto.setOnlineExecGroup("ONLINE_YN");
+
 
         CommonCode semesterCode = mock(CommonCode.class);
         CommonCode onlineCode = mock(CommonCode.class);
@@ -143,6 +152,9 @@ class AdminCoreDiagnosisServiceTest {
 
         assertThat(result.getAssessmentNo()).isEqualTo("2");
         assertThat(result.getAssessmentName()).isEqualTo("수정명");
+        assertThat(result.getSemesterGroup()).isEqualTo("SEMESTER");
+        assertThat(result.getOnlineExecGroupCode()).isEqualTo("ONLINE_YN");
+
         verify(assessmentRepository).save(any());
     }
 

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Collections;
@@ -52,16 +53,17 @@ class BehaviorIndicatorServiceTest {
         BehaviorIndicatorDto dto = mock(BehaviorIndicatorDto.class);
         when(behaviorIndicatorRepository.findByIsCommon("Y"))
                 .thenReturn(Collections.singletonList(mock(com.secondprojinitiumback.admin.coreCompetency.domain.BehaviorIndicator.class)));
+
         // fromEntity 메서드 Mock (static 메서드라면 PowerMockito 등 필요)
-        mockStatic(BehaviorIndicatorDto.class);
-        when(BehaviorIndicatorDto.fromEntity(any())).thenReturn(dto);
+        try (MockedStatic<BehaviorIndicatorDto> mockedStatic = mockStatic(BehaviorIndicatorDto.class)) {
+            when(BehaviorIndicatorDto.fromEntity(any())).thenReturn(dto);
 
-        // 서비스 호출 및 결과 검증
-        List<BehaviorIndicatorDto> result = service.getIndicatorsBySubject(null, true);
+            List<BehaviorIndicatorDto> result = service.getIndicatorsBySubject(null, true);
 
-        assertThat(result).hasSize(1);
-        // 공통 코드로 조회 메서드가 호출되었는지 검증
-        verify(behaviorIndicatorRepository).findByIsCommon("Y");
+            assertThat(result).hasSize(1);
+            verify(behaviorIndicatorRepository).findByIsCommon("Y");
+        }
+
     }
 
     /**

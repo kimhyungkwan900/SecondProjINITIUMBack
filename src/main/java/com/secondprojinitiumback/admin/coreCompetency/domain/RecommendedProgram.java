@@ -5,11 +5,12 @@ import com.secondprojinitiumback.user.student.domain.Student;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "RECOMMENDED_PROGRAM")
+@Table(name = "recommended_program")
 public class RecommendedProgram {
 
     @Id
     @Column(name = "KeRCMD_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id; // 추천 ID (PK)
 
     // 학생 및 비교과 프로그램과 연관

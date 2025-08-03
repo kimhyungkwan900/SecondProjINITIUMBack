@@ -4,7 +4,7 @@ import com.secondprojinitiumback.user.student.domain.Student;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "CORE_COMPETENCY_RESPONSE")
+@Table(name = "core_competency_response")
 public class CoreCompetencyResponse {
 
     @Id
@@ -24,7 +24,7 @@ public class CoreCompetencyResponse {
     @OneToOne
     @JoinColumns({
             @JoinColumn(name = "CHC_OPT_ID", referencedColumnName = "CHC_OPT_ID"),
-            @JoinColumn(name = "QSTN_ID", referencedColumnName = "QSTN_ID", insertable = false, updatable = false)
+            @JoinColumn(name = "QSTN_ID", referencedColumnName = "QSTN_ID")
     })
     private ResponseChoiceOption selectedOption; // 선택한 객관식 보기 (복합키 기반)
 

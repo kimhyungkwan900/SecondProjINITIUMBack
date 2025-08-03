@@ -3,7 +3,7 @@ package com.secondprojinitiumback.admin.coreCompetency.domain;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "RESPONSE_CHOICE_OPTION")
+@Table(name = "response_choice_option")
 public class ResponseChoiceOption {
 
     @Id
@@ -12,8 +12,8 @@ public class ResponseChoiceOption {
     private Long id; // 보기 ID
 
     @ManyToOne
-    @JoinColumn(name = "QSTN_ID", insertable = false, updatable = false)
-    private CoreCompetencyQuestion question; // 해당 문항과의 관계 (읽기 전용)
+    @JoinColumn(name = "QSTN_ID", referencedColumnName = "QSTN_ID", nullable = false)
+    private CoreCompetencyQuestion question;
 
     @Column(name = "CHC_OPT_LBL")
     private String label; // 보기 라벨

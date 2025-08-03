@@ -4,7 +4,7 @@ import com.secondprojinitiumback.user.student.domain.Student;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "CORE_COMPETENCY_RESULT")
+@Table(name = "core_competency_result")
 public class CoreCompetencyResult {
 
     @Id

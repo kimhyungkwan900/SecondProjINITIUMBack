@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "BI_Q_MAJOR_MAP")
+@Table(name = "bi_q_major_map")
 @Getter
 @Setter
 @NoArgsConstructor

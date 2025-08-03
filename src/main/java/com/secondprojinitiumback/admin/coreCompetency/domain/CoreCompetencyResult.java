@@ -2,9 +2,15 @@ package com.secondprojinitiumback.admin.coreCompetency.domain;
 
 import com.secondprojinitiumback.user.student.domain.Student;
 import jakarta.persistence.*;
+import lombok.*;
 
+@Builder
+@Getter
+@Setter
 @Entity
 @Table(name = "core_competency_result")
+@NoArgsConstructor
+@AllArgsConstructor
 public class CoreCompetencyResult {
 
     @Id
@@ -24,7 +30,5 @@ public class CoreCompetencyResult {
     @JoinColumn(name = "ASMT_RSPNS_ID")
     private CoreCompetencyResponse response; // 해당 평가에서 학생의 응답
 
-    @Column(name = "CLSF_RSULT_CD")
-    private String classificationCode; // 결과 분류 코드
 }
 

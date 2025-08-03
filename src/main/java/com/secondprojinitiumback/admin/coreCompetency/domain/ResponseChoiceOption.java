@@ -1,9 +1,15 @@
 package com.secondprojinitiumback.admin.coreCompetency.domain;
 
 import jakarta.persistence.*;
+import lombok.*;
 
+@Builder
+@Getter
+@Setter
 @Entity
 @Table(name = "response_choice_option")
+@NoArgsConstructor
+@AllArgsConstructor
 public class ResponseChoiceOption {
 
     @Id
@@ -12,7 +18,7 @@ public class ResponseChoiceOption {
     private Long id; // 보기 ID
 
     @ManyToOne
-    @JoinColumn(name = "QSTN_ID", referencedColumnName = "QSTN_ID", nullable = false)
+    @JoinColumn(name = "QSTN_ID", referencedColumnName = "QSTN_ID")
     private CoreCompetencyQuestion question;
 
     @Column(name = "CHC_OPT_LBL")

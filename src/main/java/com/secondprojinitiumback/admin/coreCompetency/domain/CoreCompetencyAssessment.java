@@ -25,7 +25,7 @@ public class CoreCompetencyAssessment {
     private SchoolSubject schoolSubject;
 
     @Column(name = "ASMT_NO")
-    private String assessmentNo; // 평가 코드
+    private String assessmentNo; // 진단번호
 
     @Column(name = "ASMT_NM")
     private String assessmentName; // 평가명

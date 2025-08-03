@@ -1,7 +1,10 @@
 package com.secondprojinitiumback.admin.coreCompetency.dto;
 
 import com.secondprojinitiumback.admin.coreCompetency.domain.CoreCompetencyQuestion;
+import com.secondprojinitiumback.admin.coreCompetency.domain.ResponseChoiceOption;
 import lombok.*;
+
+import java.util.List;
 
 @Builder
 @Getter
@@ -21,6 +24,9 @@ public class CoreCompetencyQuestionCreateDto {
     private String subjectCode; // SCSBJT_NO, 전공별 문항일 경우에만 사용
     private Long indicatorId;       // 행동지표 ID (공통문항 아닐 경우 필수)
     private String isCommonCode;        // 공통문항 여부
+
+    //함께 등록될 보기 리스트
+    List<ResponseChoiceOptionDto> responseChoiceOptions;
 
     //엔티티 -> dto 변환 메소드
     public static CoreCompetencyQuestionCreateDto fromEntity(CoreCompetencyQuestion question) {

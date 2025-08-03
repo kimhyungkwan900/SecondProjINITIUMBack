@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.admin.Mileage.domain;
 
+import com.secondprojinitiumback.user.student.domain.Student;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,14 +20,11 @@ public class MileagePerf {
     @Column(name = "MLG_PERF_ID")
     private Long id; //마일리지 실적 ID
 
-    @Column(name = "STDNT_NO", length = 10, nullable = false)
-    private String studentNo; // 학번
-
     @Column(name = "ACC_MLG", nullable = false)
     private Integer accMlg; //적립된 마일리지
 
     @Column(name = "CRTN_DT", nullable = false)
-    private LocalDateTime createdAt; // 실적 등록일시
+    private LocalDateTime createdAt; // 등록일시
 
     @Column(name = "CNCL_DT")
     private LocalDateTime canceledAt; // 취소일시
@@ -44,11 +42,14 @@ public class MileagePerf {
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "SCHLR_APLY_ID")
-//    private ScholarshipApply scholarshipApply; // 장학금 신청 ID
+//    private ScholarshipApply scholarshipApply; // 장학금 신청
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "STDNT_NO", referencedColumnName = "STDNT_NO", nullable = false)
+    private Student student; // 학생 정보
 
-
-
-
-
+    // 실적이 취소된 상태인지 확인하는 메서드
+    public boolean isCanceled() {
+        return canceledAt != null;
+    }
 }

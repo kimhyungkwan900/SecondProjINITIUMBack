@@ -47,7 +47,7 @@ public class AccountRecoverController {
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequestDto requestDto) {
         // 임시 비밀번호 발급
-        String temporaryPassword = accountRecoverService.issueTemporaryPassword(requestDto.getLoginId());
-        return ResponseEntity.ok(Collections.singletonMap("temporaryPassword", temporaryPassword));
+        accountRecoverService.issueTemporaryPassword(requestDto.getLoginId());
+        return ResponseEntity.ok(Collections.singletonMap("message", "임시 비밀번호가 이메일로 발송되었습니다."));
     }
 }

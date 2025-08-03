@@ -1,15 +1,10 @@
 package com.secondprojinitiumback.admin.coreCompetency.service;
 
 
+import com.secondprojinitiumback.admin.coreCompetency.domain.*;
 import com.secondprojinitiumback.admin.coreCompetency.dto.CoreCompetencyQuestionCreateDto;
-import com.secondprojinitiumback.admin.coreCompetency.domain.BehaviorIndicator;
-import com.secondprojinitiumback.admin.coreCompetency.domain.BehaviorIndicatorMajorQuestionMapping;
-import com.secondprojinitiumback.admin.coreCompetency.domain.CoreCompetencyAssessment;
-import com.secondprojinitiumback.admin.coreCompetency.domain.CoreCompetencyQuestion;
-import com.secondprojinitiumback.admin.coreCompetency.repository.BehaviorIndicatorMajorQuestionMappingRepository;
-import com.secondprojinitiumback.admin.coreCompetency.repository.BehaviorIndicatorRepository;
-import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyAssessmentRepository;
-import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyQuestionRepository;
+import com.secondprojinitiumback.admin.coreCompetency.dto.ResponseChoiceOptionDto;
+import com.secondprojinitiumback.admin.coreCompetency.repository.*;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
 import com.secondprojinitiumback.common.repository.SchoolSubjectRepository;
 import jakarta.transaction.Transactional;
@@ -28,6 +23,8 @@ public class AdminCoreCompetencyQuestionService {
     private final SchoolSubjectRepository schoolSubjectRepository;
     private final BehaviorIndicatorRepository behaviorIndicatorRepository;
     private final BehaviorIndicatorMajorQuestionMappingRepository behaviorIndicatorMajorQuestionMappingRepository;
+    private final ResponseChoiceOptionRepository responseChoiceOptionRepository;
+
 
     //1. 문항 등록
     @Transactional

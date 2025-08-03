@@ -9,11 +9,11 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "CORE_COMPETENCY_QUESTION")
+@Table(name = "core_competency_question")
 public class CoreCompetencyQuestion {
 
     @Id
-    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "QSTN_ID")
     private Long id; // 문항 ID (기본 키)
 

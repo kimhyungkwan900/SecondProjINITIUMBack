@@ -20,22 +20,18 @@ import java.util.List;
 @Transactional
 public class AdminCoreDiagnosisService {
 
-    private final CoreCompetencyCategoryRepository coreCompetencyCategoryRepository;
-    private final SubCompetencyCategoryRepository SubCompetencyCategoryRepository;
     private final CommonCodeRepository commonCodeRepository;
     private final CoreCompetencyAssessmentRepository coreCompetencyAssessmentRepository;
     private final SchoolSubjectRepository schoolSubjectRepository;
 
     // 1. 핵심 역량 진단 등록
     public CoreCompetencyAssessment createCoreCompetencyAssessment(CoreCompetencyAssessmentDto assessmentDto) {
-
         CommonCode semesterCode = commonCodeRepository.findByCodeAndGroup(assessmentDto.getSemesterCode(), "SEMESTER")
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 학기 코드입니다."));
 
         CommonCode onlineExecCode = commonCodeRepository.findByCodeAndGroup(assessmentDto.getOnlineYn(), "ONLINE_YN")
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 온라인 여부 코드입니다."));
 
-        // 학과 코드로 SchoolSubject 조회
         SchoolSubject schoolSubject = schoolSubjectRepository.findByDeptDivisionCode(assessmentDto.getDepartmentName())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부서 코드입니다."));
 
@@ -47,13 +43,16 @@ public class AdminCoreDiagnosisService {
                 .registerDate(assessmentDto.getRegisterDate())
                 .academicYear(assessmentDto.getAcademicYear())
                 .semesterCode(semesterCode)
+                .semesterGroup(assessmentDto.getSemesterGroup()) // 중요
                 .onlineExecCode(onlineExecCode)
+                .onlineExecGroupCode(assessmentDto.getOnlineExecGroup()) // 중요
                 .guideContent(assessmentDto.getGuideContent())
                 .schoolSubject(schoolSubject)
                 .build();
 
         return coreCompetencyAssessmentRepository.save(assessment);
     }
+
 
     // 2. 핵심 역량 진단 수정
     public CoreCompetencyAssessment updateCoreCompetencyAssessment(Long assessmentId, CoreCompetencyAssessmentDto assessmentDto) {
@@ -77,12 +76,15 @@ public class AdminCoreDiagnosisService {
         existingAssessment.setRegisterDate(assessmentDto.getRegisterDate());
         existingAssessment.setAcademicYear(assessmentDto.getAcademicYear());
         existingAssessment.setSemesterCode(semesterCode);
+        existingAssessment.setSemesterGroup(assessmentDto.getSemesterGroup());
         existingAssessment.setOnlineExecCode(onlineExecCode);
+        existingAssessment.setOnlineExecGroupCode(assessmentDto.getOnlineExecGroup());
         existingAssessment.setGuideContent(assessmentDto.getGuideContent());
         existingAssessment.setSchoolSubject(schoolSubject);
 
         return coreCompetencyAssessmentRepository.save(existingAssessment);
     }
+
 
     // 3. 핵심 역량 진단 삭제
     public void deleteCoreCompetencyAssessment(Long assessmentId) {

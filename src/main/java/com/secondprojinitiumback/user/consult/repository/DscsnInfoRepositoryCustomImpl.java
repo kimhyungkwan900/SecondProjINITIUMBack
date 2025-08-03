@@ -14,7 +14,7 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class DscsnInfoRepositoryCustomImpl implements  DscsnInfoRepositoryCustom {
+public class DscsnInfoRepositoryCustomImpl implements DscsnInfoRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     //상담분야, 상담 시작일, 상담 종료일, 상담상태, 연도, 학기, 상담항목, 학번, 성명, 학적상태, 소속(학과)

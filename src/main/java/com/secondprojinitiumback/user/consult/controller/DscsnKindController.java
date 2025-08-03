@@ -1,7 +1,84 @@
 package com.secondprojinitiumback.user.consult.controller;
 
-import org.springframework.web.bind.annotation.RestController;
+import com.secondprojinitiumback.user.consult.domain.DscsnKind;
+import com.secondprojinitiumback.user.consult.dto.common.DscsnInfoListDto;
+import com.secondprojinitiumback.user.consult.dto.common.DscsnKindDto;
+import com.secondprojinitiumback.user.consult.dto.common.DscsnKindListDto;
+import com.secondprojinitiumback.user.consult.repository.DscsnKindRepository;
+import com.secondprojinitiumback.user.consult.service.DscsnKindService;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/admin/consult/dscsnkind")
 public class DscsnKindController {
+    private final DscsnKindService dscsnKindService;
+
+    //--- 상담항목 추가
+    @PostMapping("/new")
+    public ResponseEntity<?> newDscsnKind(@ModelAttribute DscsnKindDto dscsnKindDto) {
+        try{
+            dscsnKindService.saveDscsnKind(dscsnKindDto);
+            return ResponseEntity.ok().build();
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("항목 등록 중 에러 발생");
+        }
+    }
+
+    //--- 상담항목 조회
+    @GetMapping({"/", "/{page}"})
+    public ResponseEntity<?> getDscsnKind(@ModelAttribute DscsnKindDto dscsnKindDto, @PathVariable int page) {
+
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<DscsnKindDto> dscsnKinds = dscsnKindService.getDscsnKind(dscsnKindDto, pageable);
+
+        DscsnKindListDto dscsnKindListDto = DscsnKindListDto.builder()
+                .dscsnKinds(dscsnKinds)
+                .maxPage(dscsnKinds.getTotalPages())
+                .totalPage(dscsnKinds.getTotalPages())
+                .build();
+
+        return ResponseEntity.ok(dscsnKindListDto);
+    }
+
+    //--- 상담항목 수정
+    @PutMapping("/update")
+    public ResponseEntity<?> updateDscsnKind(@ModelAttribute DscsnKindDto dscsnKindDto) {
+        try {
+            dscsnKindService.updateDscsnKind(dscsnKindDto);
+            return ResponseEntity.ok().build();
+        }
+        catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("입력값 오류");
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("수정 중 오류가 발생하였습니다.");
+        }
+    }
+
+    //--- 상담항목 삭제
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteDscsnKind(@RequestBody List<String> dscsnKindIds) {
+        try {
+            dscsnKindService.deleteDscsnKind(dscsnKindIds);
+            return ResponseEntity.ok("항목 삭제 완료");
+        }
+        catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("선택한 항목을 찾을 수 없습니다.");
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 중 오류가 발생했습니다.");
+        }
+    }
 }

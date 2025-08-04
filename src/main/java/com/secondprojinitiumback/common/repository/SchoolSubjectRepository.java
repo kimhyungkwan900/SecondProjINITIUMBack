@@ -8,8 +8,8 @@ import java.util.Optional;
 
 @Repository
 public interface SchoolSubjectRepository extends JpaRepository<SchoolSubject, String> {
-    Optional<SchoolSubject> findByCode(String code);
+    Optional<SchoolSubject> findBySubjectCode(String subjectCode);
 
-    Optional<SchoolSubject> findByDeptDivisionCode(String departmentName);
+    Optional<SchoolSubject> findBySubjectName(String subjectName);
 
 }

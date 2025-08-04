@@ -21,12 +21,12 @@ public class AdminResultStatisticsController {
     /**
      * 학생의 평가 응답 보기(문항 번호 → 선택지 라벨) 조회
      */
-    @GetMapping("/student/{studentNo}/assessment/{assessmentId}/labels")
+    @GetMapping("/student/{studentNo}/assessment/{questionId}/labels")
     public Map<Integer, String> getStudentLabels(
             @PathVariable Student studentNo,
-            @PathVariable Long assessmentId
+            @PathVariable Long questionId
     ) {
-        return resultService.getStudentResponseLabels(studentNo, assessmentId);
+        return resultService.getStudentResponseLabels(studentNo, questionId);
     }
 
     /**

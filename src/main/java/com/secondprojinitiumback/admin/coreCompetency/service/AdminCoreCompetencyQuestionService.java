@@ -23,7 +23,6 @@ public class AdminCoreCompetencyQuestionService {
     private final SchoolSubjectRepository schoolSubjectRepository;
     private final BehaviorIndicatorRepository behaviorIndicatorRepository;
     private final BehaviorIndicatorMajorQuestionMappingRepository behaviorIndicatorMajorQuestionMappingRepository;
-    private final ResponseChoiceOptionRepository responseChoiceOptionRepository;
 
 
     //1. 문항 등록

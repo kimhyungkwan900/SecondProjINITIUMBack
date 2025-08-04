@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class DscsnInfoService {
     private final DscsnInfoRepository dscsnInfoRepository;
-//    private final SequenceGenerator sequenceGenerator;
 
     //--- 상담정보 생성
     public void createDscsnInfo(DscsnApply dscsnApply) {
@@ -37,7 +36,7 @@ public class DscsnInfoService {
         String seqNum = getNextInfoSequence(prefix);
 
         //3. ID 생성
-        String dscsnInfoId = prefix + String.format("%04d", seqNum); // I는 상담정보를 나타내는 접두사
+        String dscsnInfoId = prefix + seqNum; // I는 상담정보를 나타내는 접두사
 
         //상담정보 엔티티 생성
         DscsnInfo dscsnInfo = DscsnInfo.builder()

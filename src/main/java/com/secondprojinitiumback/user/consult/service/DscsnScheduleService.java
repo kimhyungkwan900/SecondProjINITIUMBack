@@ -75,12 +75,9 @@ public class DscsnScheduleService {
 
     //--- 상담사, 교수 일정 삭제
     public void deleteDscsnSchedule(String dscsnDtId) {
-        //상담일정 ID로 해당 상담일정 조회
-        DscsnSchedule dscsnSchedule = dscsnScheduleRepository.findById(dscsnDtId)
-                .orElseThrow(EntityExistsException::new);
 
-        //조회한 일정 삭제
-        dscsnScheduleRepository.delete(dscsnSchedule);
+        //상담일정 ID로 해당 상담일정 삭제
+        dscsnScheduleRepository.deleteById(dscsnDtId);
     }
 
     //시퀀스 번호 생성 메소드

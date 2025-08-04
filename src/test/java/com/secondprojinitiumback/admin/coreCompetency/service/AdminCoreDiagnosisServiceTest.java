@@ -78,7 +78,7 @@ class AdminCoreDiagnosisServiceTest {
         // 코드 및 학과 조회 Mock 설정
         when(commonCodeRepository.findByCodeAndGroup("2", "SEMESTER")).thenReturn(Optional.of(semesterCode));
         when(commonCodeRepository.findByCodeAndGroup("Y", "ONLINE_YN")).thenReturn(Optional.of(onlineCode));
-        when(schoolSubjectRepository.findByDeptDivisionCode("ENG")).thenReturn(Optional.of(subject));
+        when(schoolSubjectRepository.findBySubjectName("ENG")).thenReturn(Optional.of(subject));
         // 진단 저장 Mock 설정
         when(assessmentRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -143,7 +143,7 @@ class AdminCoreDiagnosisServiceTest {
         // 코드, 학과, 진단 조회 Mock 설정
         when(commonCodeRepository.findByCodeAndGroup("2", "SEMESTER")).thenReturn(Optional.of(semesterCode));
         when(commonCodeRepository.findByCodeAndGroup("Y", "ONLINE_YN")).thenReturn(Optional.of(onlineCode));
-        when(schoolSubjectRepository.findByDeptDivisionCode("ENG")).thenReturn(Optional.of(subject));
+        when(schoolSubjectRepository.findBySubjectName("ENG")).thenReturn(Optional.of(subject));
         when(assessmentRepository.findById(1L)).thenReturn(Optional.of(assessment));
         when(assessmentRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 

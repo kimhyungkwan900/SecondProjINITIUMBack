@@ -129,7 +129,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     private SchoolSubject findSchoolSubjectByCode(String code) {
-        return schoolSubjectRepository.findByCode(code)
+        return schoolSubjectRepository.findBySubjectCode(code)
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 학과 코드: " + code));
     }
 

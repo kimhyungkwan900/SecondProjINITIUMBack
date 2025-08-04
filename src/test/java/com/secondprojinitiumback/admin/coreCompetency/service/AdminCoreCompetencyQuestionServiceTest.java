@@ -117,7 +117,7 @@ class AdminCoreCompetencyQuestionServiceTest {
         when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
         when(questionRepository.save(any())).thenReturn(question);
         when(behaviorIndicatorRepository.findById(1L)).thenReturn(Optional.of(behaviorIndicator));
-        when(schoolSubjectRepository.findByCode("CS101")).thenReturn(Optional.of(schoolSubject));
+        when(schoolSubjectRepository.findBySubjectCode("CS101")).thenReturn(Optional.of(schoolSubject));
         when(mappingRepository.findByQuestionAndBehaviorIndicatorAndSchoolSubject(question, behaviorIndicator, schoolSubject))
                 .thenReturn(null);
 

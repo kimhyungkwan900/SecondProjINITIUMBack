@@ -129,22 +129,27 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeePage.map(this::toEmployeeDto);
     }
 
-    // ... (private helper methods: findById, generateEmployeeNo, toEmployeeDto, etc. are kept as they are) ...
+    // Entity 조회 메소드들
+
+    // 교번/사번으로 직원 조회
     private Employee findEmployeeById(String employeeNo) {
         return employeeRepository.findById(employeeNo)
                 .orElseThrow(() -> new EntityNotFoundException("직원 정보 없음: " + employeeNo));
     }
 
+    // 학과 코드로 학과 조회
     private SchoolSubject findSchoolSubjectById(String subjectNo) {
         return schoolSubjectRepository.findById(subjectNo)
                 .orElseThrow(() -> new EntityNotFoundException("부서(학과) 코드 없음: " + subjectNo));
     }
 
+    // 계좌 번호로 은행 계좌 조회
     private BankAccount findBankAccountById(String accountNo) {
         return bankAccountRepository.findById(accountNo)
                 .orElseThrow(() -> new EntityNotFoundException("계좌 정보가 없습니다: " + accountNo));
     }
 
+    // 계좌 번호가 null이거나 비어있을 경우 null 반환
     private BankAccount findBankAccountByIdNullable(String accountNo) {
         if (accountNo == null || accountNo.isBlank()) {
             return null;
@@ -152,17 +157,20 @@ public class EmployeeServiceImpl implements EmployeeService {
         return findBankAccountById(accountNo);
     }
 
+    // 성별 코드로 CommonCode 조회
     private CommonCode findGenderByCode(String genderCode) {
         return commonCodeRepository.findById_CodeAndId_CodeGroup(genderCode, "CO0001")
                 .orElseThrow(() -> new EntityNotFoundException("유효하지 않은 성별 코드: " + genderCode));
     }
 
+    // 직원 상태 코드로 상태 정보 조회
     private EmployeeStatusInfo findStatusByCode(String statusCode) {
         return employeeStatusInfoRepository
                 .findByEmployeeStatusCodeAndEmployeeStatusCodeSe(statusCode, "AM0120")
                 .orElseThrow(() -> new EntityNotFoundException("상태 없음: " + statusCode));
     }
 
+    // 로그인 정보 생성
     private LoginInfo createLoginInfo(String loginId, String userType, LocalDate birthDate) {
         CreateLoginDto createLoginDto = CreateLoginDto.builder()
                 .loginId(loginId)
@@ -172,6 +180,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return loginInfoService.createLoginInfo(createLoginDto);
     }
 
+    // 교번/사번 생성 로직
     private String generateEmployeeNo(String role, String deptCode) {
         String prefix = role;
         String dept = String.format("%03d", Integer.parseInt(deptCode));
@@ -185,6 +194,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return prefix + dept + seqStr;
     }
 
+    // Employee 객체를 EmployeeDto로 변환
     private EmployeeDto toEmployeeDto(Employee employee) {
         if (employee == null) {
             return null;

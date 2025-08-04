@@ -33,7 +33,7 @@ public class StudentRepositoryImpl implements StudentRepositoryCustom {
 
     @Override
     public Page<Student> searchPage(StudentSearchDto searchDto, Pageable pageable) {
-        // 콘텐츠 조회 쿼리 (재사용)
+        // 콘텐츠 조회 쿼리
         JPAQuery<Student> baseQuery = createBaseQuery(searchDto);
 
         List<Student> content = baseQuery
@@ -41,13 +41,14 @@ public class StudentRepositoryImpl implements StudentRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        // 카운트 조회 쿼리 (재사용)
+        // 카운트 조회 쿼리
         JPAQuery<Long> countQuery = createCountQuery(searchDto);
         long total = countQuery.fetchOne();
 
         return new PageImpl<>(content, pageable, total);
     }
 
+    // 기본 쿼리 생성 메서드
     private JPAQuery<Student> createBaseQuery(StudentSearchDto searchDto) {
         QStudent student = QStudent.student;
         QSchoolSubject schoolSubject = QSchoolSubject.schoolSubject;
@@ -78,6 +79,7 @@ public class StudentRepositoryImpl implements StudentRepositoryCustom {
                 );
     }
 
+    // 전체 개수 조회 쿼리
     private JPAQuery<Long> createCountQuery(StudentSearchDto searchDto) {
         QStudent student = QStudent.student;
 
@@ -101,46 +103,57 @@ public class StudentRepositoryImpl implements StudentRepositoryCustom {
 
     // === 검색 조건 메서드들 (BooleanExpression) ===
 
+    // 학생번호 검색
     private BooleanExpression eqStudentNo(String studentNo) {
         return StringUtils.hasText(studentNo) ? QStudent.student.studentNo.eq(studentNo) : null;
     }
 
+    // 이름 검색
     private BooleanExpression containsName(String name) {
         return StringUtils.hasText(name) ? QStudent.student.name.containsIgnoreCase(name) : null;
     }
 
+    // 대학 코드 검색
     private BooleanExpression eqUniversity(String universityCode) {
         return StringUtils.hasText(universityCode) ? QStudent.student.school.universityCode.eq(universityCode) : null;
     }
 
+    // 담당 학과 코드 검색
     private BooleanExpression eqSchoolSubject(String schoolSubjectCode) {
         return StringUtils.hasText(schoolSubjectCode) ? QStudent.student.schoolSubject.subjectCode.eq(schoolSubjectCode) : null;
     }
 
+    // 동아리 코드 검색
     private BooleanExpression eqClub(String clubCode) {
         return StringUtils.hasText(clubCode) ? QStudent.student.clubCode.eq(clubCode) : null;
     }
 
+    // 학적 상태 코드 검색
     private BooleanExpression eqStatus(String statusCode) {
         return StringUtils.hasText(statusCode) ? QStudent.student.studentStatus.studentStatusCode.eq(statusCode) : null;
     }
 
+    // 학년 검색
     private BooleanExpression eqGrade(String grade) {
         return StringUtils.hasText(grade) ? QStudent.student.grade.eq(grade) : null;
     }
 
+    // 성별 코드 검색
     private BooleanExpression eqGender(String genderCode) {
         return StringUtils.hasText(genderCode) ? QStudent.student.gender.id.code.eq(genderCode) : null;
     }
 
+    // 지도교수 ID 검색
     private BooleanExpression eqAdvisor(String advisorId) {
         return StringUtils.hasText(advisorId) ? QStudent.student.advisor.empNo.eq(advisorId) : null;
     }
 
+    // 이메일 검색
     private BooleanExpression containsEmail(String email) {
         return StringUtils.hasText(email) ? QStudent.student.email.containsIgnoreCase(email) : null;
     }
 
+    // 입학일자 범위 검색
     private BooleanExpression betweenAdmissionDate(LocalDate from, LocalDate to) {
         if (from == null && to == null) {
             return null;

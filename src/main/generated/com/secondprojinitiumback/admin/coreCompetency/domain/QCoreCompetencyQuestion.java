@@ -34,6 +34,8 @@ public class QCoreCompetencyQuestion extends EntityPathBase<CoreCompetencyQuesti
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final EnumPath<LevelTypeEnum> levelType = createEnum("levelType", LevelTypeEnum.class);
+
     public final StringPath name = createString("name");
 
     public final NumberPath<Integer> questionNo = createNumber("questionNo", Integer.class);

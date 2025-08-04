@@ -29,7 +29,7 @@ public class AdminCompetencyCategoryService {
 
 
         //핵심역량 등록 일 경우
-        if(LevelTypeEnum.CORE_COMPETENCY.equalsIgnoreCase(competencyCategoryDto.getLevelType())){
+        if(LevelTypeEnum.valueOf(competencyCategoryDto.getLevelType()) == LevelTypeEnum.CORE_COMPETENCY){
 
             IdealTalentProfile idealTalentProfile = idealTalentProfileRepository.findById(competencyCategoryDto.getIdealTalentProfileId())
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 인재상입니다."));
@@ -62,7 +62,7 @@ public class AdminCompetencyCategoryService {
     public void updateCategory(Long id, CompetencyCategoryDto competencyCategoryDto) {
 
         //핵심역량 수정 일 경우
-        if(LevelTypeEnum.CORE_COMPETENCY.equalsIgnoreCase(competencyCategoryDto.getLevelType())){
+        if(LevelTypeEnum.valueOf(competencyCategoryDto.getLevelType()) == LevelTypeEnum.CORE_COMPETENCY){
             CoreCompetencyCategory coreCompetencyCategory = coreCompetencyCategoryRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 핵심역량 카테고리입니다."));
 
@@ -90,7 +90,7 @@ public class AdminCompetencyCategoryService {
     //3. 역량 카테고리 삭제
     @Transactional
     public void deleteCategory(String levelType, Long id) {
-        if (LevelTypeEnum.CORE_COMPETENCY.equalsIgnoreCase(levelType)) {
+        if (LevelTypeEnum.valueOf(levelType) == LevelTypeEnum.CORE_COMPETENCY) {
             CoreCompetencyCategory core = coreCompetencyCategoryRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("핵심역량 없음"));
             coreCompetencyCategoryRepository.delete(core);
@@ -122,8 +122,7 @@ public class AdminCompetencyCategoryService {
 
     // 6. 중복 체크
     public boolean isCoreCategoryNameDuplicate(String name) {
-        return coreCompetencyCategoryRepository.findAll().stream()
-                .anyMatch(c -> c.getCoreCategoryName().equals(name));
+        return (boolean) coreCompetencyCategoryRepository.existsByCoreCategoryName(name);
     }
 
     public boolean isSubCategoryNameDuplicate(Long coreCategoryId, String name) {

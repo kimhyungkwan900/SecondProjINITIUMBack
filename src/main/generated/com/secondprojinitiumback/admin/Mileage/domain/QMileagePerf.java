@@ -36,7 +36,7 @@ public class QMileagePerf extends EntityPathBase<MileagePerf> {
 
     public final QScorePolicy scorePolicy;
 
-    public final StringPath studentNo = createString("studentNo");
+    public final com.secondprojinitiumback.user.student.domain.QStudent student;
 
     public QMileagePerf(String variable) {
         this(MileagePerf.class, forVariable(variable), INITS);
@@ -58,6 +58,7 @@ public class QMileagePerf extends EntityPathBase<MileagePerf> {
         super(type, metadata, inits);
         this.mileageItem = inits.isInitialized("mileageItem") ? new QMileageItem(forProperty("mileageItem"), inits.get("mileageItem")) : null;
         this.scorePolicy = inits.isInitialized("scorePolicy") ? new QScorePolicy(forProperty("scorePolicy"), inits.get("scorePolicy")) : null;
+        this.student = inits.isInitialized("student") ? new com.secondprojinitiumback.user.student.domain.QStudent(forProperty("student"), inits.get("student")) : null;
     }
 
 }

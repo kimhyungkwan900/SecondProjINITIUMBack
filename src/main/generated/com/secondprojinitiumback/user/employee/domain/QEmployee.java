@@ -48,7 +48,7 @@ public class QEmployee extends EntityPathBase<Employee> {
 
     public final com.secondprojinitiumback.common.domain.QCommonCode gender;
 
-    public final com.secondprojinitiumback.common.login.domain.QLoginInfo loginInfo;
+    public final com.secondprojinitiumback.common.security.domain.QLoginInfo loginInfo;
 
     //inherited
     public final StringPath modifiedBy = _super.modifiedBy;
@@ -89,7 +89,7 @@ public class QEmployee extends EntityPathBase<Employee> {
         this.bankAccount = inits.isInitialized("bankAccount") ? new com.secondprojinitiumback.common.bank.domain.QBankAccount(forProperty("bankAccount"), inits.get("bankAccount")) : null;
         this.employeeStatus = inits.isInitialized("employeeStatus") ? new QEmployeeStatusInfo(forProperty("employeeStatus"), inits.get("employeeStatus")) : null;
         this.gender = inits.isInitialized("gender") ? new com.secondprojinitiumback.common.domain.QCommonCode(forProperty("gender"), inits.get("gender")) : null;
-        this.loginInfo = inits.isInitialized("loginInfo") ? new com.secondprojinitiumback.common.login.domain.QLoginInfo(forProperty("loginInfo")) : null;
+        this.loginInfo = inits.isInitialized("loginInfo") ? new com.secondprojinitiumback.common.security.domain.QLoginInfo(forProperty("loginInfo")) : null;
         this.schoolSubject = inits.isInitialized("schoolSubject") ? new com.secondprojinitiumback.common.domain.QSchoolSubject(forProperty("schoolSubject"), inits.get("schoolSubject")) : null;
     }
 

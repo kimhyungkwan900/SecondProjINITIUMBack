@@ -21,6 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+// CoreCompetencyQuestion 관련 서비스 기능 단위 테스트 클래스
 class AdminCoreCompetencyQuestionServiceTest {
 
     @InjectMocks
@@ -32,11 +33,11 @@ class AdminCoreCompetencyQuestionServiceTest {
     @Mock private BehaviorIndicatorRepository behaviorIndicatorRepository;
     @Mock private BehaviorIndicatorMajorQuestionMappingRepository mappingRepository;
 
-    // 공통 문항 생성 테스트
+    // [1] 공통 문항 생성 테스트
     @Test
     @DisplayName("공통 문항 생성 테스트")
     void createCommonQuestion_success() {
-        // given
+        // Given
         Long assessmentId = 1L;
         CoreCompetencyAssessment assessment = CoreCompetencyAssessment.builder().id(assessmentId).build();
         when(assessmentRepository.findById(assessmentId)).thenReturn(Optional.of(assessment));
@@ -47,109 +48,109 @@ class AdminCoreCompetencyQuestionServiceTest {
                 .questionContent("내용")
                 .displayOrder(1)
                 .answerAllowCount(1)
-                .isCommonCode("Y")
+                .isCommonCode("Y") // 공통 문항
                 .build();
 
         when(questionRepository.save(any(CoreCompetencyQuestion.class)))
                 .thenReturn(CoreCompetencyQuestion.builder().id(1L).build());
 
-        // when
+        // When
         CoreCompetencyQuestion result = service.createCoreCompetencyQuestion(assessmentId, dto);
 
-        // then
+        // Then
         assertNotNull(result);
         assertEquals(1L, result.getId());
         verify(questionRepository, times(1)).save(any(CoreCompetencyQuestion.class));
-        verify(mappingRepository, never()).save(any());
+        verify(mappingRepository, never()).save(any()); // 공통 문항은 매핑 없음
     }
 
-    // 비공통 -> 공통으로 수정될 때 기존 매핑 삭제 테스트
+    // [2] 비공통 → 공통 수정 시 기존 매핑 삭제되는지 확인
     @Test
-    @DisplayName("비공통 -> 공통 수정 테스트")
+    @DisplayName("비공통 → 공통 수정 테스트")
     void updateQuestion_fromNotCommonToCommon_shouldDeleteMapping() {
-        // given
+        // Given
         Long questionId = 1L;
         CoreCompetencyQuestion question = CoreCompetencyQuestion.builder().id(1L).build();
+        BehaviorIndicatorMajorQuestionMapping mapping = BehaviorIndicatorMajorQuestionMapping.builder().id(1L).build();
+
         CoreCompetencyQuestionCreateDto dto = CoreCompetencyQuestionCreateDto.builder()
                 .questionNo(1)
                 .questionName("수정된 질문")
                 .questionContent("수정된 내용")
                 .displayOrder(1)
                 .answerAllowCount(1)
-                .isCommonCode("Y")
+                .isCommonCode("Y") // 공통으로 변경됨
                 .build();
-
-        BehaviorIndicatorMajorQuestionMapping mapping = BehaviorIndicatorMajorQuestionMapping.builder().id(1L).build();
 
         when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
         when(mappingRepository.findByQuestion(question)).thenReturn(Optional.of(mapping));
         when(questionRepository.save(any())).thenReturn(question);
 
-        // when
+        // When
         CoreCompetencyQuestion result = service.updateCoreCompetencyQuestion(questionId, dto);
 
-        // then
+        // Then
         assertEquals(1L, result.getId());
-        verify(mappingRepository).delete(mapping);
+        verify(mappingRepository).delete(mapping); // 기존 매핑 삭제되어야 함
     }
 
-    // 공통 -> 비공통으로 수정될 때 매핑 생성 테스트
+    // [3] 공통 → 비공통으로 수정될 때 새로운 매핑 생성 테스트
     @Test
-    @DisplayName("공통 -> 비공통 수정 테스트")
+    @DisplayName("공통 → 비공통 수정 테스트")
     void updateQuestion_fromCommonToNotCommon_shouldCreateMapping() {
-        // given
+        // Given
         Long questionId = 2L;
         CoreCompetencyQuestion question = CoreCompetencyQuestion.builder().id(2L).build();
+        BehaviorIndicator indicator = new BehaviorIndicator();
+        SchoolSubject subject = mock(SchoolSubject.class);
+
         CoreCompetencyQuestionCreateDto dto = CoreCompetencyQuestionCreateDto.builder()
                 .questionNo(2)
                 .questionName("수정된 질문")
                 .questionContent("수정된 내용")
                 .displayOrder(1)
                 .answerAllowCount(1)
-                .isCommonCode("N")
+                .isCommonCode("N") // 비공통으로 변경됨
                 .subjectCode("CS101")
                 .indicatorId(1L)
                 .build();
 
-        BehaviorIndicator behaviorIndicator = new BehaviorIndicator();
-        SchoolSubject schoolSubject = mock(SchoolSubject.class);
-
         when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
         when(questionRepository.save(any())).thenReturn(question);
-        when(behaviorIndicatorRepository.findById(1L)).thenReturn(Optional.of(behaviorIndicator));
-        when(schoolSubjectRepository.findBySubjectCode("CS101")).thenReturn(Optional.of(schoolSubject));
-        when(mappingRepository.findByQuestionAndBehaviorIndicatorAndSchoolSubject(question, behaviorIndicator, schoolSubject))
-                .thenReturn(null);
+        when(behaviorIndicatorRepository.findById(1L)).thenReturn(Optional.of(indicator));
+        when(schoolSubjectRepository.findBySubjectCode("CS101")).thenReturn(Optional.of(subject));
+        when(mappingRepository.findByQuestionAndBehaviorIndicatorAndSchoolSubject(question, indicator, subject))
+                .thenReturn(null); // 기존 매핑 없음
 
-        // when
+        // When
         CoreCompetencyQuestion result = service.updateCoreCompetencyQuestion(questionId, dto);
 
-        // then
+        // Then
         assertEquals(2L, result.getId());
-        verify(mappingRepository).save(any());
+        verify(mappingRepository).save(any()); // 새로운 매핑 저장
     }
 
-    // 문항 삭제만 수행되는 경우 테스트
+    // [4] 문항 단순 삭제 테스트 (매핑 없음)
     @Test
     @DisplayName("문항 삭제 테스트")
     void deleteQuestion_success() {
-        // given
+        // Given
         Long questionId = 11L;
         CoreCompetencyQuestion question = CoreCompetencyQuestion.builder().id(questionId).build();
         when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
 
-        // when
+        // When
         service.deleteCoreCompetencyQuestion(questionId);
 
-        // then
+        // Then
         verify(questionRepository).delete(question);
     }
 
-    // 문항 삭제 시 매핑도 함께 삭제되는 경우 테스트
+    // [5] 문항 삭제 시 매핑도 함께 삭제되는 경우 테스트
     @Test
     @DisplayName("문항 삭제 시 매핑도 함께 삭제되는 테스트")
     void deleteCoreCompetencyQuestion_shouldDeleteMappingAndQuestion() {
-        // given
+        // Given
         Long questionId = 1L;
         CoreCompetencyQuestion question = CoreCompetencyQuestion.builder().id(questionId).build();
         BehaviorIndicatorMajorQuestionMapping mapping = BehaviorIndicatorMajorQuestionMapping.builder().build();
@@ -157,55 +158,56 @@ class AdminCoreCompetencyQuestionServiceTest {
         when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
         when(mappingRepository.findByQuestion(question)).thenReturn(Optional.of(mapping));
 
-        // when
+        // When
         service.deleteCoreCompetencyQuestion(questionId);
 
-        // then
+        // Then
         verify(mappingRepository).delete(mapping);
         verify(questionRepository).delete(question);
     }
 
-    // 문항 상세 조회 실패 (예외 발생) 테스트
+    // [6] 존재하지 않는 문항 조회 시 예외 발생
     @Test
     @DisplayName("존재하지 않는 문항 조회 시 예외")
     void getQuestion_notFound() {
-        // given
+        // Given
         when(questionRepository.findById(99L)).thenReturn(Optional.empty());
 
-        // expect
+        // Then + When
         assertThrows(IllegalArgumentException.class, () -> service.getCoreCompetencyQuestion(99L));
     }
 
-    // 문항 상세 조회 성공 테스트
+    // [7] 문항 상세 조회 테스트
     @Test
     @DisplayName("문항 상세 조회 테스트")
     void getQuestion() {
-        // given
+        // Given
         Long questionId = 1L;
         CoreCompetencyQuestion question = CoreCompetencyQuestion.builder().id(questionId).build();
         when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
 
-        // when
+        // When
         CoreCompetencyQuestion result = service.getCoreCompetencyQuestion(questionId);
 
-        // then
+        // Then
         assertNotNull(result);
         assertEquals(questionId, result.getId());
         verify(questionRepository).findById(questionId);
     }
 
-    // 전체 문항 조회 테스트
+    // [8] 전체 문항 리스트 조회 테스트
     @Test
     @DisplayName("전체 문항 조회 테스트")
     void getAllQuestions() {
-        // given
+        // Given
         when(questionRepository.findAll()).thenReturn(Collections.emptyList());
 
-        // when
+        // When
         List<CoreCompetencyQuestion> result = service.getAllCoreCompetencyQuestions();
 
-        // then
+        // Then
         assertTrue(result.isEmpty());
         verify(questionRepository).findAll();
     }
 }
+

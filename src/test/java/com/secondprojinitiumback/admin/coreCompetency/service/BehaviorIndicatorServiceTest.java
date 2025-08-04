@@ -74,7 +74,7 @@ class BehaviorIndicatorServiceTest {
     void getIndicatorsBySubject_major_success() {
         // 전공 학과 엔티티 및 행동지표 DTO 리스트 Mock 반환 설정
         SchoolSubject subject = mock(SchoolSubject.class);
-        when(schoolSubjectRepository.findByCode("ENG")).thenReturn(Optional.of(subject));
+        when(schoolSubjectRepository.findBySubjectCode("ENG")).thenReturn(Optional.of(subject));
         when(behaviorIndicatorRepository.findByIsCommonAndSchoolSubject("N", subject))
                 .thenReturn(Collections.singletonList(mock(com.secondprojinitiumback.admin.coreCompetency.domain.BehaviorIndicator.class)));
         mockStatic(BehaviorIndicatorDto.class);
@@ -86,7 +86,7 @@ class BehaviorIndicatorServiceTest {
 
         assertThat(result).hasSize(1);
         // 전공 코드로 학과 조회 및 행동지표 조회 메서드가 호출되었는지 검증
-        verify(schoolSubjectRepository).findByCode("ENG");
+        verify(schoolSubjectRepository).findBySubjectCode("ENG");
         verify(behaviorIndicatorRepository).findByIsCommonAndSchoolSubject("N", subject);
     }
 
@@ -96,7 +96,7 @@ class BehaviorIndicatorServiceTest {
     @Test
     void getIndicatorsBySubject_major_subjectNotFound() {
         // 학과 조회 시 빈 값 반환 Mock 설정
-        when(schoolSubjectRepository.findByCode("BUS")).thenReturn(Optional.empty());
+        when(schoolSubjectRepository.findBySubjectName("BUS")).thenReturn(Optional.empty());
 
         // 예외 발생 검증 (존재하지 않는 학과 코드)
         assertThrows(IllegalArgumentException.class, () -> service.getIndicatorsBySubject("BUS", false));

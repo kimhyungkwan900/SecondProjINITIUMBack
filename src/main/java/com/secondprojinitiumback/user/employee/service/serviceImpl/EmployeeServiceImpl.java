@@ -156,7 +156,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private CommonCode findGenderByCode(String genderCode) {
-        return commonCodeRepository.findByCodeAndGroup(genderCode, "CO0001")
+        return commonCodeRepository.findById_CodeAndId_CodeGroup(genderCode, "CO0001")
                 .orElseThrow(() -> new EntityNotFoundException("유효하지 않은 성별 코드: " + genderCode));
     }
 

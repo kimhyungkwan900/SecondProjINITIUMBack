@@ -34,7 +34,7 @@ public class BehaviorIndicatorService {
                     .stream().map(BehaviorIndicatorDto::fromEntity).collect(Collectors.toList());
         } else {
             // 전공 문항인 경우 전공 코드로 SchoolSubject 엔티티 조회 후, 해당 전공 + 공통 여부 "N" 조건으로 조회
-            SchoolSubject subject = schoolSubjectRepository.findByCode(subjectCode)
+            SchoolSubject subject = schoolSubjectRepository.findBySubjectCode(subjectCode)
                     .orElseThrow(() -> new IllegalArgumentException("해당 학과 코드가 존재하지 않습니다."));
             return behaviorIndicatorRepository.findByIsCommonAndSchoolSubject("N", subject)
                     .stream().map(BehaviorIndicatorDto::fromEntity).collect(Collectors.toList());

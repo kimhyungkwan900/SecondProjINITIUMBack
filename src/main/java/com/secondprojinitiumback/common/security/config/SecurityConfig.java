@@ -45,7 +45,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // 로그인, 회원가입 API는 인증 없이 접근 허용
-                        .requestMatchers("/api/login", "/api/register").permitAll()
+                        .requestMatchers("/api/auth/login").permitAll()
                         // OPTIONS 요청은 항상 허용
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // /admin/** 경로는 ADMIN 권한이 있는 사용자만 접근 가능

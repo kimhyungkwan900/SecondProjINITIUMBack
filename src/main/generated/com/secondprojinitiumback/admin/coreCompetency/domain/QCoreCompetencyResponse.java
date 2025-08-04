@@ -30,8 +30,6 @@ public class QCoreCompetencyResponse extends EntityPathBase<CoreCompetencyRespon
 
     public final QCoreCompetencyQuestion question;
 
-    public final StringPath resultContent = createString("resultContent");
-
     public final NumberPath<Integer> resultScore = createNumber("resultScore", Integer.class);
 
     public final NumberPath<Integer> selectCount = createNumber("selectCount", Integer.class);

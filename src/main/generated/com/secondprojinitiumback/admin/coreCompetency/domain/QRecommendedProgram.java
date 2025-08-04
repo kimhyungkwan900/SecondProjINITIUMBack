@@ -24,8 +24,6 @@ public class QRecommendedProgram extends EntityPathBase<RecommendedProgram> {
 
     public final StringPath id = createString("id");
 
-    public final QIdealTalentProfile idealTalentProfile;
-
     public final com.secondprojinitiumback.admin.extracurricular.domain.QExtracurricularProgram program;
 
     public final StringPath reasonContent = createString("reasonContent");
@@ -52,7 +50,6 @@ public class QRecommendedProgram extends EntityPathBase<RecommendedProgram> {
 
     public QRecommendedProgram(Class<? extends RecommendedProgram> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.idealTalentProfile = inits.isInitialized("idealTalentProfile") ? new QIdealTalentProfile(forProperty("idealTalentProfile")) : null;
         this.program = inits.isInitialized("program") ? new com.secondprojinitiumback.admin.extracurricular.domain.QExtracurricularProgram(forProperty("program"), inits.get("program")) : null;
         this.result = inits.isInitialized("result") ? new QCoreCompetencyResult(forProperty("result"), inits.get("result")) : null;
         this.student = inits.isInitialized("student") ? new com.secondprojinitiumback.user.student.domain.QStudent(forProperty("student"), inits.get("student")) : null;

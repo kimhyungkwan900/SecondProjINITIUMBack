@@ -23,6 +23,7 @@ import static org.mockito.Mockito.*;
 /**
  * BehaviorIndicatorService의 행동지표 조회 기능 단위 테스트 클래스
  */
+
 class BehaviorIndicatorServiceTest {
 
     // 행동지표 및 학과 Repository를 Mock 객체로 선언

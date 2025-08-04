@@ -9,4 +9,5 @@ public interface SubCompetencyCategoryRepository extends JpaRepository<SubCompet
 
 
     List<SubCompetencyCategory> findByCoreCompetencyCategory_Id(Long coreCategoryId);
+
 }

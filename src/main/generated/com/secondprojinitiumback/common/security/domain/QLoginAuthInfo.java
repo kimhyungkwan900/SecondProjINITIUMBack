@@ -1,4 +1,4 @@
-package com.secondprojinitiumback.common.login.domain;
+package com.secondprojinitiumback.common.security.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QLoginAuthInfo extends EntityPathBase<LoginAuthInfo> {
 
-    private static final long serialVersionUID = -1662311799L;
+    private static final long serialVersionUID = -563833644L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 

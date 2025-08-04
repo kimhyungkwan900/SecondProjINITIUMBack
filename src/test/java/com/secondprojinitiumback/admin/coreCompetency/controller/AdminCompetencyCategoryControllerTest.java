@@ -1,37 +1,65 @@
 package com.secondprojinitiumback.admin.coreCompetency.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.secondprojinitiumback.admin.coreCompetency.domain.CoreCompetencyCategory;
+import com.secondprojinitiumback.admin.coreCompetency.domain.SubCompetencyCategory;
 import com.secondprojinitiumback.admin.coreCompetency.dto.CompetencyCategoryDto;
+import com.secondprojinitiumback.admin.coreCompetency.service.AdminCompetencyCategoryService;
+import com.secondprojinitiumback.common.security.config.jwt.TokenAuthenticationFilter;
+import com.secondprojinitiumback.common.security.config.jwt.TokenProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import java.util.ArrayList;
+
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+/**
+ * AdminCompetencyCategoryController에 대한 단위 테스트
+ * 핵심역량/하위역량 등록, 수정, 삭제, 조회, 중복체크 API의 동작을 검증
+ */
+@WebMvcTest(controllers = AdminCompetencyCategoryController.class)
+@AutoConfigureMockMvc(addFilters = false) // Spring Security 필터 비활성화
 class AdminCompetencyCategoryControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @MockBean
+    private TokenProvider tokenProvider; // JWT 인증 모의 객체
+
+    @MockBean
+    private TokenAuthenticationFilter tokenAuthenticationFilter; // 시큐리티 필터 비활성화를 위한 모의 객체
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private MockMvc mockMvc; // HTTP 요청을 모의로 수행할 수 있는 객체
+
+    @Autowired
+    private ObjectMapper objectMapper; // 객체 <-> JSON 변환용
+
+    @MockBean
+    private AdminCompetencyCategoryService categoryService; // 서비스 계층을 모의(mock) 처리
 
     @Test
     @DisplayName("핵심역량 등록 테스트")
     void createCoreCategory() throws Exception {
+        // given
         CompetencyCategoryDto dto = new CompetencyCategoryDto();
         dto.setName("창의역량");
         dto.setDescription("창의적 문제해결 능력");
         dto.setLevelType("CORE_COMPETENCY");
         dto.setIdealTalentProfileId(1L);
 
+        // when
+        doNothing().when(categoryService).createCategory(dto);
+
+        // then
         mockMvc.perform(post("/api/admin/competencyCategory/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
@@ -47,6 +75,8 @@ class AdminCompetencyCategoryControllerTest {
         dto.setDescription("창의적 문제 해결 능력 향상");
         dto.setLevelType("SUB_COMPETENCY");
         dto.setParentId(1L);
+
+        doNothing().when(categoryService).createCategory(dto);
 
         mockMvc.perform(post("/api/admin/competencyCategory/create")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -65,7 +95,9 @@ class AdminCompetencyCategoryControllerTest {
         dto.setLevelType("CORE_COMPETENCY");
         dto.setIdealTalentProfileId(1L);
 
-        mockMvc.perform(post("/api/admin/competencyCategory/update/1")
+        doNothing().when(categoryService).updateCategory(1L, dto);
+
+        mockMvc.perform(put("/api/admin/competencyCategory/update/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
@@ -82,7 +114,9 @@ class AdminCompetencyCategoryControllerTest {
         dto.setLevelType("SUB_COMPETENCY");
         dto.setParentId(1L);
 
-        mockMvc.perform(post("/api/admin/competencyCategory/update/1")
+        doNothing().when(categoryService).updateCategory(1L, dto);
+
+        mockMvc.perform(put("/api/admin/competencyCategory/update/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
@@ -92,7 +126,9 @@ class AdminCompetencyCategoryControllerTest {
     @Test
     @DisplayName("핵심역량 삭제 테스트")
     void deleteCoreCategory() throws Exception {
-        mockMvc.perform(post("/api/admin/competencyCategory/delete/CORE_COMPETENCY/1"))
+        doNothing().when(categoryService).deleteCategory("CORE_COMPETENCY", 1L);
+
+        mockMvc.perform(delete("/api/admin/competencyCategory/delete/CORE_COMPETENCY/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("삭제 완료"));
     }
@@ -100,7 +136,9 @@ class AdminCompetencyCategoryControllerTest {
     @Test
     @DisplayName("하위역량 삭제 테스트")
     void deleteSubCategory() throws Exception {
-        mockMvc.perform(post("/api/admin/competencyCategory/delete/SUB_COMPETENCY/1"))
+        doNothing().when(categoryService).deleteCategory("SUB_COMPETENCY", 1L);
+
+        mockMvc.perform(delete("/api/admin/competencyCategory/delete/SUB_COMPETENCY/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("삭제 완료"));
     }
@@ -108,7 +146,9 @@ class AdminCompetencyCategoryControllerTest {
     @Test
     @DisplayName("핵심역량 전체 조회 테스트")
     void getAllCore() throws Exception {
-        mockMvc.perform(post("/api/admin/competencyCategory/core"))
+        when(categoryService.getAllCoreCompetencyCategories()).thenReturn(new ArrayList<>());
+
+        mockMvc.perform(get("/api/admin/competencyCategory/core"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
@@ -116,7 +156,9 @@ class AdminCompetencyCategoryControllerTest {
     @Test
     @DisplayName("하위역량 전체 조회 테스트")
     void getAllSub() throws Exception {
-        mockMvc.perform(post("/api/admin/competencyCategory/sub"))
+        when(categoryService.getAllSubCompetencyCategories()).thenReturn(new ArrayList<>());
+
+        mockMvc.perform(get("/api/admin/competencyCategory/sub"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
@@ -124,7 +166,9 @@ class AdminCompetencyCategoryControllerTest {
     @Test
     @DisplayName("핵심역량 단건 조회 테스트")
     void getCore() throws Exception {
-        mockMvc.perform(post("/api/admin/competencyCategory/core/1"))
+        when(categoryService.getCoreCategory(1L)).thenReturn(new CoreCompetencyCategory());
+
+        mockMvc.perform(get("/api/admin/competencyCategory/core/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
@@ -132,7 +176,9 @@ class AdminCompetencyCategoryControllerTest {
     @Test
     @DisplayName("하위역량 단건 조회 테스트")
     void getSub() throws Exception {
-        mockMvc.perform(post("/api/admin/competencyCategory/sub/1"))
+        when(categoryService.getSubCategory(1L)).thenReturn(new SubCompetencyCategory());
+
+        mockMvc.perform(get("/api/admin/competencyCategory/sub/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
@@ -140,7 +186,9 @@ class AdminCompetencyCategoryControllerTest {
     @Test
     @DisplayName("핵심역량 중복 체크 테스트")
     void checkCoreDuplicate() throws Exception {
-        mockMvc.perform(post("/api/admin/competencyCategory/check/core")
+        when(categoryService.isCoreCategoryNameDuplicate("창의역량")).thenReturn(true);
+
+        mockMvc.perform(get("/api/admin/competencyCategory/check/core")
                         .param("name", "창의역량"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
@@ -149,9 +197,11 @@ class AdminCompetencyCategoryControllerTest {
     @Test
     @DisplayName("하위역량 중복 체크 테스트")
     void checkSubDuplicate() throws Exception {
-        mockMvc.perform(post("/api/admin/competencyCategory/check/sub")
+        when(categoryService.isSubCategoryNameDuplicate(1L, "창의적 사고")).thenReturn(true);
+
+        mockMvc.perform(get("/api/admin/competencyCategory/check/sub")
                         .param("name", "창의적 사고")
-                        .param("parentId", "1"))
+                        .param("coreId", "1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }

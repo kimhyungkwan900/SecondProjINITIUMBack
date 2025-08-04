@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class DscsnSatisfactionController {
     private final DscsnSatisfactionService dscsnSatisfactionService;
 
+    //--- 상담 만족도 등록
     @PostMapping("/api/consult/satisfaction")
     public ResponseEntity<?> newSatisfaction(@ModelAttribute DscsnSatisfactionDto dscsnSatisfactionDto) {
         try{

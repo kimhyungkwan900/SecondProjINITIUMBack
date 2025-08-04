@@ -85,7 +85,7 @@ public class DscsnScheduleService {
 
     //시퀀스 번호 생성 메소드
     public String getNextScheduleSequence(String prefix) {
-        DscsnSchedule lastDscsnDt = dscsnScheduleRepository.findTopByDscsnDtIdStartingWithOrderByDscsnIdDesc(prefix);
+        DscsnSchedule lastDscsnDt = dscsnScheduleRepository.findTopByDscsnDtIdStartingWithOrderByDscsnDtIdDesc(prefix);
 
         if(lastDscsnDt == null) {
             return String.format("%03d", 1);

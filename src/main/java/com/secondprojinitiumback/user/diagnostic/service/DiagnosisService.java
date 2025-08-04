@@ -94,14 +94,11 @@ public class DiagnosisService {
      * 사용 가능한 검사 목록 조회
      */
     public List<DiagnosticTestDto> getAvailableTests() {
-        return testRepository.findByUseYn("Y").stream()
-                .map(test -> DiagnosticTestDto.builder()
-                        .id(test.getId())
-                        .name(test.getName())
-                        .description(test.getDescription())
-                        .build())
+        return testRepository.findAll().stream()
+                .map(DiagnosticTestDto::from)
                 .toList();
     }
+
 
     /**
      * 키워드 기반 검색

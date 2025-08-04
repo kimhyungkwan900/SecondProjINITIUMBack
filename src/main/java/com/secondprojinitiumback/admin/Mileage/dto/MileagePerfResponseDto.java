@@ -10,9 +10,9 @@ import java.time.LocalDateTime;
 @Builder
 public class MileagePerfResponseDto {
 
-    private Long id;                  // 실적 ID
+    private Long id; // 실적 ID
 
-    private String studentNo;        // 학번
+    private String studentNo;  // 학번
     private String name;      // 이름
     private String schoolSubjectName;   // 학과명
 
@@ -51,7 +51,7 @@ public class MileagePerfResponseDto {
                 .scorePolicyId(perf.getScorePolicy().getId())
                 .scoreCriteria(perf.getScorePolicy().getScoreCriteria())
 
-                //.scholarshipApplyId(perf.getScholarshipApply() != null ? perf.getScholarshipApply().getId() : null)
+                .scholarshipApplyId(perf.getScholarshipApply() != null ? perf.getScholarshipApply().getId() : null)
                 .build();
     }
 }

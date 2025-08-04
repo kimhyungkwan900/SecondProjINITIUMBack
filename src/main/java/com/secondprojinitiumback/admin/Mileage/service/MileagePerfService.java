@@ -2,10 +2,12 @@ package com.secondprojinitiumback.admin.Mileage.service;
 
 import com.secondprojinitiumback.admin.Mileage.domain.MileageItem;
 import com.secondprojinitiumback.admin.Mileage.domain.MileagePerf;
+import com.secondprojinitiumback.admin.Mileage.domain.MileageTotal;
 import com.secondprojinitiumback.admin.Mileage.domain.ScorePolicy;
 import com.secondprojinitiumback.admin.Mileage.dto.*;
 import com.secondprojinitiumback.admin.Mileage.repository.MileageItemRepository;
 import com.secondprojinitiumback.admin.Mileage.repository.MileagePerfRepository;
+import com.secondprojinitiumback.admin.Mileage.repository.MileageTotalRepository;
 import com.secondprojinitiumback.admin.Mileage.repository.ScorePolicyRepository;
 import com.secondprojinitiumback.user.student.domain.Student;
 import com.secondprojinitiumback.user.student.repository.StudentRepository;
@@ -27,6 +29,7 @@ public class MileagePerfService {
     private final StudentRepository studentRepository;
     private final MileageItemRepository mileageItemRepository;
     private final ScorePolicyRepository scorePolicyRepository;
+    private final MileageTotalRepository mileageTotalRepository;
 
     // 1. 실적 목록 조회 (검색 + 페이징)
     public PageResponseDto<MileagePerfResponseDto> getList(
@@ -75,7 +78,25 @@ public class MileagePerfService {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        return MileagePerfResponseDto.from(mileagePerfRepository.save(perf));
+        // 실적 저장
+        mileagePerfRepository.save(perf);
+
+        // 마일리지 누계 업데이트
+        MileageTotal total = mileageTotalRepository.findById(student.getStudentNo())
+                .orElseGet(() -> MileageTotal.builder()
+                        .student(student)
+                        .totalScore(0.0) // 없으면 0점으로 시작
+                        .build()
+                );
+
+        // 기존 점수에 계산된 마일리지 추가
+        total.add(calculatedMileage);
+
+        // 누계 저장
+        mileageTotalRepository.save(total);
+
+        // 응답 DTO로 변환하여 반환
+        return MileagePerfResponseDto.from(perf);
     }
 
     // 3. 실적 상세 조회
@@ -85,12 +106,26 @@ public class MileagePerfService {
         return MileagePerfResponseDto.from(perf);
     }
 
-    // 4. 실적 삭제 (단건 / 다건)
+    // 4. 실적 삭제
     public void deleteAll(List<Long> ids) {
-        if (ids.size() == 1) {
-            mileagePerfRepository.deleteById(ids.get(0));
-        } else {
-            mileagePerfRepository.deleteAllByIdInBatch(ids);
+        for (Long id : ids) {
+            // 실적 조회
+            MileagePerf perf = mileagePerfRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("해당 실적이 존재하지 않습니다."));
+
+            Student student = perf.getStudent();         // 실적 주인 : 학생
+            int score = perf.getAccMlg();                // 적립된 마일리지
+
+            // 누계 점수 가져오기 (없으면 새로 생성, but 실제로는 존재해야 함)
+            MileageTotal total = mileageTotalRepository.findById(student.getStudentNo())
+                    .orElseThrow(() -> new EntityNotFoundException("누계 정보가 없습니다."));
+
+            // 점수 차감
+            total.subtract(score);
+            mileageTotalRepository.save(total);
+
+            // 실적 삭제
+            mileagePerfRepository.deleteById(id);
         }
     }
 }

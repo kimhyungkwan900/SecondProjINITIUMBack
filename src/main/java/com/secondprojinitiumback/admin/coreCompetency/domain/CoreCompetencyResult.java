@@ -14,6 +14,7 @@ import lombok.*;
 public class CoreCompetencyResult {
 
     @Id
+    @Column(name = "RSULT_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 결과 ID (PK)
 

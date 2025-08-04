@@ -40,4 +40,10 @@ public class CoreCompetencyQuestion {
     @JoinColumn(name = "INDCTR_ID", nullable = false)
     private BehaviorIndicator behaviorIndicator; // 행동 지표 ID (외래 키, insertable=false, updatable=false)
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "level_type")
+    private LevelTypeEnum levelType;
+
+
+
 }

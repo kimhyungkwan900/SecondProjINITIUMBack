@@ -5,7 +5,7 @@ import com.secondprojinitiumback.user.student.domain.Student;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "recommended_program")
+@Table(name = "CORE_RECOMMENDED_PROGRAM")
 public class RecommendedProgram {
 
     @Id

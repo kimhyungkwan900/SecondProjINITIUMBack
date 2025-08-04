@@ -27,6 +27,7 @@ public class AdminCompetencyCategoryService {
     @Transactional
     public void createCategory(CompetencyCategoryDto competencyCategoryDto) {
 
+
         //핵심역량 등록 일 경우
         if(LevelTypeEnum.CORE_COMPETENCY.equalsIgnoreCase(competencyCategoryDto.getLevelType())){
 
@@ -126,7 +127,7 @@ public class AdminCompetencyCategoryService {
     }
 
     public boolean isSubCategoryNameDuplicate(Long coreCategoryId, String name) {
-        return subCompetencyCategoryRepository.findByCoreCategoryId(coreCategoryId).stream()
+        return subCompetencyCategoryRepository.findByCoreCompetencyCategory_Id(coreCategoryId).stream()
                 .anyMatch(sub -> sub.getSubCategoryName().equalsIgnoreCase(name));
     }
 }

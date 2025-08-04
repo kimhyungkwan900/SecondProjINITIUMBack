@@ -149,7 +149,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     private CommonCode findCommonCode(String code, String groupCode) {
-        return commonCodeRepository.findByCodeAndGroup(code, groupCode)
+        return commonCodeRepository.findById_CodeAndId_CodeGroup(code, groupCode)
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 공통 코드: " + code));
     }
 

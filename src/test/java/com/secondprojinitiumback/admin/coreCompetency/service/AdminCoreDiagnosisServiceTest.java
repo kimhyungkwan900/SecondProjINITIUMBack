@@ -76,8 +76,8 @@ class AdminCoreDiagnosisServiceTest {
         SchoolSubject subject = mock(SchoolSubject.class);
 
         // 코드 및 학과 조회 Mock 설정
-        when(commonCodeRepository.findByCodeAndGroup("2", "SEMESTER")).thenReturn(Optional.of(semesterCode));
-        when(commonCodeRepository.findByCodeAndGroup("Y", "ONLINE_YN")).thenReturn(Optional.of(onlineCode));
+        when(commonCodeRepository.findById_CodeAndId_CodeGroup("2", "SEMESTER")).thenReturn(Optional.of(semesterCode));
+        when(commonCodeRepository.findById_CodeAndId_CodeGroup("Y", "ONLINE_YN")).thenReturn(Optional.of(onlineCode));
         when(schoolSubjectRepository.findBySubjectName("ENG")).thenReturn(Optional.of(subject));
         // 진단 저장 Mock 설정
         when(assessmentRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
@@ -104,7 +104,7 @@ class AdminCoreDiagnosisServiceTest {
         dto.setDepartmentName("ENG");
 
         // 학기 코드 조회 실패 Mock 설정
-        when(commonCodeRepository.findByCodeAndGroup("X", "SEMESTER")).thenReturn(Optional.empty());
+        when(commonCodeRepository.findById_CodeAndId_CodeGroup("X", "SEMESTER")).thenReturn(Optional.empty());
 
         // 예외 발생 검증
         assertThrows(IllegalArgumentException.class, () -> service.createCoreCompetencyAssessment(dto));
@@ -141,8 +141,8 @@ class AdminCoreDiagnosisServiceTest {
                 .build();
 
         // 코드, 학과, 진단 조회 Mock 설정
-        when(commonCodeRepository.findByCodeAndGroup("2", "SEMESTER")).thenReturn(Optional.of(semesterCode));
-        when(commonCodeRepository.findByCodeAndGroup("Y", "ONLINE_YN")).thenReturn(Optional.of(onlineCode));
+        when(commonCodeRepository.findById_CodeAndId_CodeGroup("2", "SEMESTER")).thenReturn(Optional.of(semesterCode));
+        when(commonCodeRepository.findById_CodeAndId_CodeGroup(("Y"), "ONLINE_YN")).thenReturn(Optional.of(onlineCode));
         when(schoolSubjectRepository.findBySubjectName("ENG")).thenReturn(Optional.of(subject));
         when(assessmentRepository.findById(1L)).thenReturn(Optional.of(assessment));
         when(assessmentRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));

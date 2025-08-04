@@ -1,7 +1,7 @@
 package com.secondprojinitiumback.admin.extracurricular.domain;
 
 import com.secondprojinitiumback.admin.extracurricular.domain.enums.*;
-import com.secondprojinitiumback.admin.extracurricular.domain.test.EmpInfo;
+import com.secondprojinitiumback.user.employee.domain.Employee;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,7 +24,7 @@ public class ExtracurricularProgram {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "emp_no", nullable = false)
-    private EmpInfo empInfo; // 담당 교직원 (운영자)
+    private Employee employee; // 담당 교직원 (운영자)
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ctgry_id")

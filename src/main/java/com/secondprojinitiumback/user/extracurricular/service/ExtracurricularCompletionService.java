@@ -20,17 +20,17 @@ public class ExtracurricularCompletionService {
     private final ExtracurricularApplyRepository extracurricularApplyRepository;
     private final ExtracurricularAttendanceRepository extracurricularAttendanceRepository;
     private final ExtracurricularSurveyResponseRepository extracurricularSurveyResponseRepository;
-    private final ExtracurricularCompletionRepository extracurricularCompletionRepository; // ✅ 추가
+    private final ExtracurricularCompletionRepository extracurricularCompletionRepository;
 
     private final ExtracurricularProgramRepository extracurricularProgramRepository;
 
     // 비교과 프로그램 자동 완료 수료 처리
-    public void autoCompleteExtracurricularProgram(Long eduMngId, String stdntNo) {
+    public void autoCompleteExtracurricularProgram(Long eduMngId, String studentNo) {
         // 출석률 계산 (0.0 ~ 1.0 사이 실수)
-        double attendanceRate = extracurricularAttendanceRepository.calculateAttendanceRate(eduMngId, stdntNo);
+        double attendanceRate = extracurricularAttendanceRepository.calculateAttendanceRate(eduMngId, studentNo);
 
         // 설문 응답 여부 확인
-        boolean hasSurvey = extracurricularSurveyResponseRepository.existsByEduMngIdAndStdntNo(eduMngId, stdntNo);
+        boolean hasSurvey = extracurricularSurveyResponseRepository.existsByEduMngIdAndStudent(eduMngId, studentNo);
 
         // 비교과 프로그램 정보 조회
         ExtracurricularProgram program = extracurricularProgramRepository.findById(eduMngId).orElseThrow();
@@ -50,7 +50,7 @@ public class ExtracurricularCompletionService {
         if (attendanceRate >= attendanceThreshold && hasSurvey) {
             // 신청 정보 조회
             ExtracurricularApply apply = extracurricularApplyRepository
-                    .findExtracurricularAppliesByExtracurricularProgram_EduMngIdAndStdntInfo_StdntNo(eduMngId, stdntNo)
+                    .findExtracurricularAppliesByExtracurricularProgram_EduMngIdAndStudent_studentNo(eduMngId, studentNo)
                     .orElseThrow(() -> new IllegalArgumentException("해당 학생의 신청 정보가 없습니다."));
 
             // 이미 수료 처리되었는지 확인
@@ -69,7 +69,7 @@ public class ExtracurricularCompletionService {
         } else {
             // 수료 조건을 만족하지 못한 경우 (미수료 처리)
             ExtracurricularApply apply = extracurricularApplyRepository
-                    .findExtracurricularAppliesByExtracurricularProgram_EduMngIdAndStdntInfo_StdntNo(eduMngId, stdntNo)
+                    .findExtracurricularAppliesByExtracurricularProgram_EduMngIdAndStudent_studentNo(eduMngId, studentNo)
                     .orElseThrow(() -> new IllegalArgumentException("해당 학생의 신청 정보가 없습니다."));
 
             // 이미 수료 처리되었는지 확인

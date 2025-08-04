@@ -33,19 +33,6 @@ public class CategoryTest {
         extracurricularCategoryService.insertExtracurricularCategory(dto);
     }
 
-    @Test
-    @DisplayName("카테고리 사용 상태 변경 테스트")
-    public void testCategoryUpdate(){
-        extracurricularCategoryService.updateExtracurricularCategory(4L, "N");
-
-        ExtracurricularCategory category = extracurricularCategoryRepository.findById(4L).orElseThrow();
-
-        if ("N".equals(category.getCtgryUseYn())) {
-            System.out.println("카테고리 사용 상태가 N으로 변경되었습니다.");
-        } else {
-            System.out.println("카테고리 사용 상태 변경 실패");
-        }
-    }
 
     @Test
     @DisplayName("카테고리 조회 테스트")

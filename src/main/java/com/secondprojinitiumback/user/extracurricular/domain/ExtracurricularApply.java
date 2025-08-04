@@ -1,8 +1,8 @@
 package com.secondprojinitiumback.user.extracurricular.domain;
 
 import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularProgram;
-import com.secondprojinitiumback.admin.extracurricular.domain.test.StdntInfo;
 import com.secondprojinitiumback.user.extracurricular.domain.enums.AprySttsNm;
+import com.secondprojinitiumback.user.student.domain.Student;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,7 +24,7 @@ public class ExtracurricularApply {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stdnt_no", nullable = false)
-    private StdntInfo stdntInfo; // 학생 정보
+    private Student student; // 학생 정보
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "edu_mng_id", nullable = false)

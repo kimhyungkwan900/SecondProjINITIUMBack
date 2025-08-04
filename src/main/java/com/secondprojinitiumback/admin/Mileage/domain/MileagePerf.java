@@ -50,6 +50,7 @@ public class MileagePerf {
 
     // 실적이 취소된 상태인지 확인하는 메서드
     public boolean isCanceled() {
+
         return canceledAt != null;
     }
 }

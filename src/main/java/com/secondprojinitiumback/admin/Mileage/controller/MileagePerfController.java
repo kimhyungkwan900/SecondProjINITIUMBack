@@ -43,7 +43,7 @@ public class MileagePerfController {
 
     // 4. 실적 삭제
     @PostMapping("/delete")
-    public ResponseEntity<Void> delete(@RequestBody List<Long> ids) {
+    public ResponseEntity<Void> deletePerformances(@RequestBody List<Long> ids) {
         mileagePerfService.deleteAll(ids);
         return ResponseEntity.noContent().build();
     }

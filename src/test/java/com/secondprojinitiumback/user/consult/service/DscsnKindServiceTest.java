@@ -3,9 +3,11 @@ package com.secondprojinitiumback.user.consult.service;
 import com.secondprojinitiumback.user.consult.domain.DscsnKind;
 import com.secondprojinitiumback.user.consult.dto.common.DscsnKindDto;
 import com.secondprojinitiumback.user.consult.repository.DscsnKindRepository;
+import jakarta.persistence.EntityExistsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.data.domain.Page;
@@ -15,11 +17,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
+import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.tuple;
+import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 class DscsnKindServiceTest {
@@ -32,14 +35,22 @@ class DscsnKindServiceTest {
 
     private DscsnKindDto dscsnKindDto;
 
+    private DscsnKindDto searchDto;
+
     private DscsnKind dscsnKind;
 
     @BeforeEach
     void setUp() {
-        dscsnKindDto = DscsnKindDto.builder()
+        searchDto = DscsnKindDto.builder()
                 .dscsnKindId(null)
                 .dscsnKindName(null)
                 .dscsnTypeName("진로취업상담")
+                .build();
+
+        dscsnKindDto = DscsnKindDto.builder()
+                .dscsnKindId("A002")
+                .dscsnKindName("대학원 진학")
+                .dscsnTypeName("지도교수상담")
                 .build();
 
         dscsnKind = DscsnKind.builder()
@@ -72,7 +83,7 @@ class DscsnKindServiceTest {
         when(dscsnKindRepository.getDscsnKindPageByCondition(dscsnKindDto, pageReq))
                 .thenReturn(domainPage);
 
-        Page<DscsnKindDto> result = dscsnKindService.getDscsnKind(dscsnKindDto, pageReq);
+        Page<DscsnKindDto> result = dscsnKindService.getDscsnKind(searchDto, pageReq);
 
         assertThat(result.getTotalElements()).isEqualTo(2);
         assertThat(result.getContent())
@@ -85,59 +96,56 @@ class DscsnKindServiceTest {
                 );
     }
 
-//    //--- saveDscsnKind: 저장 인자 검증
-//    @Test
-//    void saveDscsnKind_callsSaveWithEntity() {
-//        service.saveDscsnKind(inputDto);
-//
-//        ArgumentCaptor<DscsnKind> captor = ArgumentCaptor.forClass(DscsnKind.class);
-//        verify(kindRepository).save(captor.capture());
-//
-//        DscsnKind saved = captor.getValue();
-//        assertThat(saved.getDscsnKindId()).isEqualTo("K100");
-//        assertThat(saved.getDscsnKindName()).isEqualTo("심리상담");
-//        assertThat(saved.getDscsnTypeName()).isEqualTo("P");
-//    }
-//
-//    //--- updateDscsnKind: 성공 경로
-//    @Test
-//    void updateDscsnKind_success() {
-//        when(kindRepository.findById("K100"))
-//                .thenReturn(Optional.of(domain));
-//
-//        DscsnKindDto updateDto = DscsnKindDto.builder()
-//                .dscsnKindId("K100")
-//                .dscsnKindName("변경된이름")
-//                .dscsnTypeName("NewType")
-//                .build();
-//
-//        service.updateDscsnKind(updateDto);
-//
-//        // 도메인 객체 자체가 변경되었는지 검증
-//        assertThat(domain.getDscsnKindName()).isEqualTo("변경된이름");
-//        assertThat(domain.getDscsnTypeName()).isEqualTo("NewType");
-//
-//        // save() 호출 없이 Dirty Checking 으로 처리됨
-//        verify(kindRepository, never()).save(any());
-//    }
-//
-//    //--- updateDscsnKind: 없는 ID 예외
-//    @Test
-//    void updateDscsnKind_notFound_throws() {
-//        when(kindRepository.findById("K100")).thenReturn(Optional.empty());
-//
-//        assertThatThrownBy(() ->
-//                service.updateDscsnKind(inputDto)
-//        ).isInstanceOf(EntityExistsException.class);
-//
-//        verify(kindRepository).findById("K100");
-//    }
-//
-//    //--- deleteDscsnKind: 삭제 호출 검증
-//    @Test
-//    void deleteDscsnKind_callsDeleteAllById() {
-//        List<String> ids = List.of("K1", "K2", "K3");
-//        service.deleteDscsnKind(ids);
-//        verify(kindRepository).deleteAllById(ids);
-//    }
+    //--- saveDscsnKind: 저장 인자 검증
+    @Test
+    void saveDscsnKind_callsSaveWithEntity() {
+        dscsnKindService.saveDscsnKind(dscsnKindDto);
+
+        ArgumentCaptor<DscsnKind> captor = ArgumentCaptor.forClass(DscsnKind.class);
+        verify(dscsnKindRepository).save(captor.capture());
+
+        DscsnKind saved = captor.getValue();
+        assertThat(saved.getDscsnKindId()).isEqualTo("A002");
+        assertThat(saved.getDscsnKindName()).isEqualTo("대학원 진학");
+        assertThat(saved.getDscsnTypeName()).isEqualTo("지도교수상담");
+    }
+
+    //--- updateDscsnKind: 성공 경로
+    @Test
+    void updateDscsnKind_success() {
+        when(dscsnKindRepository.findById("A002"))
+                .thenReturn(Optional.of(dscsnKind));
+
+        DscsnKindDto updateDto = DscsnKindDto.builder()
+                .dscsnKindId("A002")
+                .dscsnKindName("비교과 활동")
+                .dscsnTypeName("지도교수상담")
+                .build();
+
+        dscsnKindService.updateDscsnKind(updateDto);
+
+        // 도메인 객체 자체가 변경되었는지 검증
+        assertThat(dscsnKind.getDscsnKindName()).isEqualTo("비교과 활동");
+        assertThat(dscsnKind.getDscsnTypeName()).isEqualTo("지도교수상담");
+    }
+
+    //--- updateDscsnKind: 없는 ID 예외
+    @Test
+    void updateDscsnKind_notFound_throws() {
+        when(dscsnKindRepository.findById("A002")).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() ->
+                dscsnKindService.updateDscsnKind(dscsnKindDto)
+        ).isInstanceOf(EntityExistsException.class);
+
+        verify(dscsnKindRepository).findById("A002");
+    }
+
+    //--- deleteDscsnKind: 삭제 호출 검증
+    @Test
+    void deleteDscsnKind_callsDeleteAllById() {
+        List<String> ids = List.of("L001", "L002", "L003");
+        dscsnKindService.deleteDscsnKind(ids);
+        verify(dscsnKindRepository).deleteAllById(ids);
+    }
 }

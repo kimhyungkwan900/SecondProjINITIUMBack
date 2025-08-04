@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DscsnScheduleRepository extends JpaRepository<DscsnSchedule,String> {
-    DscsnSchedule findTopByDscsnDtIdStartingWithOrderByDscsnIdDesc(String prefix);
+    DscsnSchedule findTopByDscsnDtIdStartingWithOrderByDscsnDtIdDesc(String prefix);
 
     Page<DscsnSchedule> findByEmployee_EmpNo(String empNo, Pageable pageable);
 }

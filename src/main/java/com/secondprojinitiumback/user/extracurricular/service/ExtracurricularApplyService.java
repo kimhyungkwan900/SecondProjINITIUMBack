@@ -2,14 +2,14 @@ package com.secondprojinitiumback.user.extracurricular.service;
 
 import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularProgram;
 import com.secondprojinitiumback.admin.extracurricular.domain.enums.EduSlctnType;
-import com.secondprojinitiumback.admin.extracurricular.domain.test.StdntInfo;
-import com.secondprojinitiumback.admin.extracurricular.domain.test.StdntInfoRepository;
 import com.secondprojinitiumback.admin.extracurricular.repository.ExtracurricularProgramRepository;
 import com.secondprojinitiumback.user.extracurricular.domain.ExtracurricularApply;
 import com.secondprojinitiumback.user.extracurricular.domain.enums.AprySttsNm;
 import com.secondprojinitiumback.user.extracurricular.dto.ExtracurricularApplyDTO;
 import com.secondprojinitiumback.user.extracurricular.dto.ExtracurricularApplyFormDTO;
 import com.secondprojinitiumback.user.extracurricular.repository.ExtracurricularApplyRepository;
+import com.secondprojinitiumback.user.student.domain.Student;
+import com.secondprojinitiumback.user.student.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -24,18 +24,18 @@ public class ExtracurricularApplyService {
 
     private final ExtracurricularApplyRepository extracurricularApplyRepository;
     private final ExtracurricularProgramRepository extracurricularProgramRepository;
-    private final StdntInfoRepository stuntInfoRepository;
+    private final StudentRepository studentRepository;
     private final ModelMapper modelMapper;
 
     // 비교과 프로그램 참여 신청
     public void applyExtracurricular(String stdntNo, ExtracurricularApplyFormDTO dto) {
-        StdntInfo stdntInfo = stuntInfoRepository.findById(stdntNo)
+        Student student = studentRepository.findById(stdntNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 학생 없음: " + stdntNo));
         dto.setEduAplyDt(LocalDateTime.now()); // 신청 일시 설정
         ExtracurricularProgram program = extracurricularProgramRepository.findById(dto.getExtracurricularProgram().getEduMngId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 비교과 프로그램 없음: " + dto.getExtracurricularProgram().getEduMngId()));
         // 중복 신청 방지
-        boolean exists = extracurricularApplyRepository.existsByStdntInfoAndExtracurricularProgram(stdntInfo, program);
+        boolean exists = extracurricularApplyRepository.existsBystudentAndExtracurricularProgram(student, program);
         if(exists){
             throw new IllegalArgumentException("이미 신청한 프로그램입니다: " + program.getEduMngId());
         }
@@ -51,7 +51,7 @@ public class ExtracurricularApplyService {
         }
         if(program.getEduSlctnType() == EduSlctnType.FIRSTCOME){
             ExtracurricularApply apply = ExtracurricularApply.builder()
-                    .stdntInfo(stdntInfo)
+                    .student(student)
                     .extracurricularProgram(program)
                     .eduAplyCn(dto.getEduAplyCn())
                     .eduAplyDt(dto.getEduAplyDt())
@@ -61,7 +61,7 @@ public class ExtracurricularApplyService {
             extracurricularApplyRepository.save(apply);
         }else{
             ExtracurricularApply apply = ExtracurricularApply.builder()
-                    .stdntInfo(stdntInfo)
+                    .student(student)
                     .extracurricularProgram(program)
                     .eduAplyCn(dto.getEduAplyCn())
                     .eduAplyDt(dto.getEduAplyDt())
@@ -84,10 +84,10 @@ public class ExtracurricularApplyService {
 
     // 신청 목록 조회
     public List<ExtracurricularApplyDTO> findExtracurricularApplylist(String stdntNo){
-        StdntInfo stdntInfo = stuntInfoRepository.findById(stdntNo)
+        Student student = studentRepository.findById(stdntNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 학생 없음: " + stdntNo));
         List<ExtracurricularApply> applyList =
-                extracurricularApplyRepository.findByStdntInfo_StdntNoAndDelYn(stdntNo, "N");
+                extracurricularApplyRepository.findByStudent_StudentNoAndDelYn(stdntNo, "N");
 
         return applyList.stream()
                 .map(apply -> modelMapper.map(apply, ExtracurricularApplyDTO.class))

@@ -19,9 +19,9 @@ public interface ExtracurricularSurveyResponseRepository extends JpaRepository<E
     select case when count(r) > 0 then true else false end
     from ExtracurricularSurveyResponse r
     join r.extracurricularSurvey s
-    where s.extracurricularProgram.eduMngId = :eduMngId and r.stdntInfo.stdntNo = :stdntNo
+    where s.extracurricularProgram.eduMngId = :eduMngId and r.student.studentNo = :stdntNo
     """)
-    // 특정 학생이 특정 비교과 프로그램에 대한 설문 응답을 이미 제출했는지 여부를 확인
-    boolean existsByEduMngIdAndStdntNo(@Param("eduMngId") Long eduMngId, @Param("stdntNo") String stdntNo);
+        // 특정 학생이 특정 비교과 프로그램에 대한 설문 응답을 이미 제출했는지 여부를 확인
+    boolean existsByEduMngIdAndStudent(@Param("eduMngId") Long eduMngId, @Param("studentNo") String studentNo);
 
 }

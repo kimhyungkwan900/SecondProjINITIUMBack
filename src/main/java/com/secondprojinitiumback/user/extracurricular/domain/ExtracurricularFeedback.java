@@ -1,7 +1,7 @@
 package com.secondprojinitiumback.user.extracurricular.domain;
 
 import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularProgram;
-import com.secondprojinitiumback.admin.extracurricular.domain.test.StdntInfo;
+import com.secondprojinitiumback.user.student.domain.Student;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -20,7 +20,7 @@ public class ExtracurricularFeedback {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stdnt_no")
-    private StdntInfo stdntInfo; // 학생 정보
+    private Student student; // 학생 정보
 
     @Column(name = "edu_feedback_ttl")
     private String eduFeedbackTtl; // 피드백 제목

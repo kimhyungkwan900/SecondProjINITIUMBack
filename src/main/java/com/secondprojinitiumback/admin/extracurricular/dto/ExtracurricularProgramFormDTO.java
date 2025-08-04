@@ -2,7 +2,7 @@ package com.secondprojinitiumback.admin.extracurricular.dto;
 
 import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularCategory;
 import com.secondprojinitiumback.admin.extracurricular.domain.enums.*;
-import com.secondprojinitiumback.admin.extracurricular.domain.test.EmpInfo;
+import com.secondprojinitiumback.user.employee.domain.Employee;
 import lombok.*;
 
 import java.time.DayOfWeek;
@@ -19,7 +19,7 @@ import java.util.List;
 public class ExtracurricularProgramFormDTO {
 
     private Long eduMngId; // 비교과 프로그램 ID (PK)
-    private EmpInfo empInfo; // 담당 교직원 (운영자)
+    private Employee Employee; // 담당 교직원 (운영자)
     private ExtracurricularCategory extracurricularCategory; // 비교과 카테고리 (분류체계)
     private String eduNm; // 프로그램 이름
     private EduType eduType; // 프로그램 유형 (TEAM/INDIVIDUAL)

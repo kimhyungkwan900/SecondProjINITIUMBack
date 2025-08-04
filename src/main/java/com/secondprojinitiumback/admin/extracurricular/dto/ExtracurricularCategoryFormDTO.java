@@ -14,6 +14,11 @@ public class ExtracurricularCategoryFormDTO {
    private Long ctgryId;
    private Long stgrId;
    private String ctgryNm;
+
+   private String ctgryDtl;
+
    private LocalDateTime dataCrtDt;
+
    private String ctgryUseYn;
+   private String subjectCode;
 }

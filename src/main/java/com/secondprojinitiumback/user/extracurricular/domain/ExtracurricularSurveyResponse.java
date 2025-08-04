@@ -1,7 +1,7 @@
 package com.secondprojinitiumback.user.extracurricular.domain;
 
 import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularSurvey;
-import com.secondprojinitiumback.admin.extracurricular.domain.test.StdntInfo;
+import com.secondprojinitiumback.user.student.domain.Student;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +23,7 @@ public class ExtracurricularSurveyResponse {
 
     @ManyToOne
     @JoinColumn(name = "stdnt_no")
-    private StdntInfo stdntInfo; // 학생 번호
+    private Student student; // 학생 번호
 
     @Column(name = "srvy_rspns_cn")
     private String surveyResponseContent; // 설문 응답 내용

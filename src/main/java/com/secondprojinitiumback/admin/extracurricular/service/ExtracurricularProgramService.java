@@ -2,12 +2,12 @@ package com.secondprojinitiumback.admin.extracurricular.service;
 
 import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularProgram;
 import com.secondprojinitiumback.admin.extracurricular.domain.enums.*;
-import com.secondprojinitiumback.admin.extracurricular.domain.test.EmpInfo;
-import com.secondprojinitiumback.admin.extracurricular.domain.test.EmpInfoRepository;
 import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularProgramFormDTO;
 import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularProgramUpdateFormDTO;
 import com.secondprojinitiumback.admin.extracurricular.repository.ExtracurricularCategoryRepository;
 import com.secondprojinitiumback.admin.extracurricular.repository.ExtracurricularProgramRepository;
+import com.secondprojinitiumback.user.employee.domain.Employee;
+import com.secondprojinitiumback.user.employee.repository.EmployeeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -25,17 +25,16 @@ public class ExtracurricularProgramService {
     private final ExtracurricularProgramRepository extracurricularProgramRepository;
     private final ExtracurricularCategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
-    private final EmpInfoRepository empInfoRepository;
-
+    private final EmployeeRepository employeeRepository;
     private final ExtracurricularScheduleService extracurricularScheduleService;
 
     // 비교과 프로그램 등록 신청
     public void insertExtracurricularProgram(ExtracurricularProgramFormDTO dto, String empId){
-        EmpInfo empInfo = empInfoRepository.findById(empId)
+        Employee employee = employeeRepository.findById(empId)
                 .orElseThrow(() -> new IllegalArgumentException("직원이 존재하지 않습니다."));
 
         ExtracurricularProgram program = ExtracurricularProgram.builder()
-                .empInfo(empInfo) // 사원 ID 필요
+                .employee(employee) // 사원 ID 필요
                 .extracurricularCategory(dto.getExtracurricularCategory()) // 마찬가지로 필요
                 .eduNm(dto.getEduNm())
                 .eduType(dto.getEduType())

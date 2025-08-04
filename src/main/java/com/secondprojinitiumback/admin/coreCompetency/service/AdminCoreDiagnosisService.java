@@ -26,13 +26,13 @@ public class AdminCoreDiagnosisService {
 
     // 1. 핵심 역량 진단 등록
     public CoreCompetencyAssessment createCoreCompetencyAssessment(CoreCompetencyAssessmentDto assessmentDto) {
-        CommonCode semesterCode = commonCodeRepository.findByCodeAndGroup(assessmentDto.getSemesterCode(), "SEMESTER")
+        CommonCode semesterCode = commonCodeRepository.findById_CodeAndId_CodeGroup(assessmentDto.getSemesterCode(), "SEMESTER")
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 학기 코드입니다."));
 
-        CommonCode onlineExecCode = commonCodeRepository.findByCodeAndGroup(assessmentDto.getOnlineYn(), "ONLINE_YN")
+        CommonCode onlineExecCode = commonCodeRepository.findById_CodeAndId_CodeGroup(assessmentDto.getOnlineYn(), "ONLINE_YN")
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 온라인 여부 코드입니다."));
 
-        SchoolSubject schoolSubject = schoolSubjectRepository.findByDeptDivisionCode(assessmentDto.getDepartmentName())
+        SchoolSubject schoolSubject = schoolSubjectRepository.findBySubjectName(assessmentDto.getDepartmentName())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부서 코드입니다."));
 
         CoreCompetencyAssessment assessment = CoreCompetencyAssessment.builder()
@@ -57,13 +57,13 @@ public class AdminCoreDiagnosisService {
     // 2. 핵심 역량 진단 수정
     public CoreCompetencyAssessment updateCoreCompetencyAssessment(Long assessmentId, CoreCompetencyAssessmentDto assessmentDto) {
 
-        CommonCode semesterCode = commonCodeRepository.findByCodeAndGroup(assessmentDto.getSemesterCode(), "SEMESTER")
+        CommonCode semesterCode = commonCodeRepository.findById_CodeAndId_CodeGroup(assessmentDto.getSemesterCode(), "SEMESTER")
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 학기 코드입니다."));
 
-        CommonCode onlineExecCode = commonCodeRepository.findByCodeAndGroup(assessmentDto.getOnlineYn(), "ONLINE_YN")
+        CommonCode onlineExecCode = commonCodeRepository.findById_CodeAndId_CodeGroup(assessmentDto.getOnlineYn(), "ONLINE_YN")
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 온라인 여부 코드입니다."));
 
-        SchoolSubject schoolSubject = schoolSubjectRepository.findByDeptDivisionCode(assessmentDto.getDepartmentName())
+        SchoolSubject schoolSubject = schoolSubjectRepository.findBySubjectName(assessmentDto.getDepartmentName())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부서 코드입니다."));
 
         CoreCompetencyAssessment existingAssessment = coreCompetencyAssessmentRepository.findById(assessmentId)

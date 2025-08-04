@@ -8,5 +8,5 @@ import java.util.List;
 public interface SubCompetencyCategoryRepository extends JpaRepository<SubCompetencyCategory, Long> {
 
 
-    List<SubCompetencyCategory> findByCoreCategoryId(Long coreCategoryId);
+    List<SubCompetencyCategory> findByCoreCompetencyCategory_Id(Long coreCategoryId);
 }

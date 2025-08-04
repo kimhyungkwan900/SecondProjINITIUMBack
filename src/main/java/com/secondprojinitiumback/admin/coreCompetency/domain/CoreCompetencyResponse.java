@@ -27,6 +27,10 @@ public class CoreCompetencyResponse {
     @JoinColumn(name = "QSTN_ID")
     private CoreCompetencyQuestion question; // 응답된 문항
 
+    @ManyToOne
+    @JoinColumn(name = "ASMT_ID", nullable = false) // ✅ 추가된 필드
+    private CoreCompetencyAssessment assessment;
+
     @OneToOne
     @JoinColumn(name = "CHC_OPT_ID", referencedColumnName = "CHC_OPT_ID")
     private ResponseChoiceOption selectedOption;

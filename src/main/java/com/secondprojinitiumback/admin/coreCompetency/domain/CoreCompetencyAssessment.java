@@ -50,7 +50,7 @@ public class CoreCompetencyAssessment {
     private CommonCode semesterCode; // 학기 정보 (FK)
 
     @Builder.Default
-    @Column(name = "STERM_GRP")
+    @Column(name = "STERM_GRP", insertable = false, updatable = false)
     private String semesterGroup = "SEMESTER"; // 학기 구분 코드 (고정값)
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -61,7 +61,7 @@ public class CoreCompetencyAssessment {
     private CommonCode onlineExecCode;  // 온라인 실행 여부 (고정값: Y/N)
 
     @Builder.Default
-    @Column(name = "ONLNE_EXEC_GRP")
+    @Column(name = "ONLNE_EXEC_GRP", insertable = false, updatable = false)
     private String onlineExecGroupCode = "ONLINE_YN";
 
     @Lob

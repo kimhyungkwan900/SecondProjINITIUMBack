@@ -13,10 +13,5 @@ import java.util.List;
 public interface CoreCompetencyResponseRepository extends JpaRepository<CoreCompetencyResponse,Long> {
     List<CoreCompetencyResponse> findByStudentAndAssessment(Student student, CoreCompetencyAssessment assessment);
 
-    @Query("SELECT DISTINCT r.student FROM CoreCompetencyResponse r WHERE r.assessment = :assessment")
-    List<Student> findDistinctStudentByAssessment(@Param("assessment") CoreCompetencyAssessment assessment);
-
-    List<CoreCompetencyResponse> findByAssessment(CoreCompetencyAssessment assessment);
-
     List<CoreCompetencyResponse> findByAssessmentId(Long assessmentId);
 }

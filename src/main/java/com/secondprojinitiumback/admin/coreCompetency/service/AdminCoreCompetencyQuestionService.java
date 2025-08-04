@@ -23,7 +23,6 @@ public class AdminCoreCompetencyQuestionService {
     private final SchoolSubjectRepository schoolSubjectRepository;
     private final BehaviorIndicatorRepository behaviorIndicatorRepository;
     private final BehaviorIndicatorMajorQuestionMappingRepository behaviorIndicatorMajorQuestionMappingRepository;
-    private final ResponseChoiceOptionRepository responseChoiceOptionRepository;
 
 
     //1. 문항 등록
@@ -51,7 +50,7 @@ public class AdminCoreCompetencyQuestionService {
         //공통 문항이 아닌 경우, 행동지표랑 학과(전공) 매핑 추가
         if("N".equalsIgnoreCase(coreCompetencyQuestionCreateDto.getIsCommonCode()) && coreCompetencyQuestionCreateDto.getSubjectCode() != null){
 
-            SchoolSubject schoolSubject = schoolSubjectRepository.findByCode(coreCompetencyQuestionCreateDto.getSubjectCode())
+            SchoolSubject schoolSubject = schoolSubjectRepository.findBySubjectCode(coreCompetencyQuestionCreateDto.getSubjectCode())
                     .orElseThrow(() -> new IllegalArgumentException("해당 학과코드가 존재하지 않습니다."));
 
             BehaviorIndicator behaviorIndicator = behaviorIndicatorRepository.findById(coreCompetencyQuestionCreateDto.getIndicatorId())
@@ -108,7 +107,7 @@ public class AdminCoreCompetencyQuestionService {
         if("N".equalsIgnoreCase(coreCompetencyQuestionCreateDto.getIsCommonCode()) && coreCompetencyQuestionCreateDto.getSubjectCode() != null){
             BehaviorIndicator behaviorIndicator = behaviorIndicatorRepository.findById(coreCompetencyQuestionCreateDto.getIndicatorId())
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 행동지표입니다."));
-            SchoolSubject schoolSubject = schoolSubjectRepository.findByCode(coreCompetencyQuestionCreateDto.getSubjectCode())
+            SchoolSubject schoolSubject = schoolSubjectRepository.findBySubjectCode(coreCompetencyQuestionCreateDto.getSubjectCode())
                     .orElseThrow(() -> new IllegalArgumentException("해당 학과코드가 존재하지 않습니다."));
 
             // 기존 매핑이 있다면 업데이트, 없다면 새로 생성

@@ -25,24 +25,21 @@ public class ExternalDiagnosisController {
 
     private final ExternalDiagnosisService externalDiagnosisService;
 
-    @Value("${career.api.key}")
-    private String apiKey;
-
     /**
-     * 🔍 외부 진단검사 전체 목록
+     * 🔍 외부 진단검사 전체 목록 조회
      */
     @GetMapping("/tests")
     public ResponseEntity<List<ExternalTestListDto>> getExternalTestList() {
         return ResponseEntity.ok(externalDiagnosisService.getAvailableExternalTests());
     }
 
-    // 📜 특정 학생의 모든 외부 진단검사 결과 목록 조회
+    /**
+     * 📜 특정 학생의 모든 외부 진단검사 결과 목록 조회
+     */
     @GetMapping("/results/{studentNo}")
     public ResponseEntity<List<ExternalDiagnosisResultDto>> getAllExternalResultsByStudent(@PathVariable String studentNo) {
-        List<ExternalDiagnosisResultDto> results = externalDiagnosisService.getAllResultsByStudent(studentNo);
-        return ResponseEntity.ok(results);
+        return ResponseEntity.ok(externalDiagnosisService.getAllResultsByStudent(studentNo));
     }
-
 
     /**
      * 🔍 외부 진단검사 검색
@@ -69,40 +66,34 @@ public class ExternalDiagnosisController {
 
     /**
      * 📄 외부 문항 조회 - 원본 응답 (Map 그대로 반환)
+     * 🔹 V1은 trgetSe 불필요
      */
     @GetMapping("/questions")
     public ResponseEntity<Map<String, Object>> getExternalQuestionsRaw(
-            @RequestParam("qestrnSeq") String qestrnSeq,
-            @RequestParam("trgetSe") String trgetSe
+            @RequestParam("qestrnSeq") String qestrnSeq
     ) {
-        Map<String, Object> questions = externalDiagnosisService.fetchExternalQuestions(qestrnSeq, trgetSe, apiKey);
-        return ResponseEntity.ok(questions);
+        return ResponseEntity.ok(externalDiagnosisService.fetchExternalQuestions(qestrnSeq));
     }
 
     /**
      * 📄 외부 문항 조회 - 파싱된 응답 DTO 반환
+     * 🔹 V1은 trgetSe 불필요
      */
     @GetMapping("/questions/parsed")
     public ResponseEntity<ExternalQuestionResponseDto> getExternalQuestionsParsed(
-            @RequestParam("qestrnSeq") String qestrnSeq,
-            @RequestParam("trgetSe") String trgetSe
+            @RequestParam("qestrnSeq") String qestrnSeq
     ) {
-        ExternalQuestionResponseDto dto =
-                externalDiagnosisService.getParsedExternalQuestions(qestrnSeq, trgetSe, apiKey);
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(externalDiagnosisService.getParsedExternalQuestions(qestrnSeq));
     }
 
     /**
      * ✅ 외부 검사 결과 제출
-     * studentNo를 dto에 포함시켜서 저장까지 연계
+     * 🔹 studentNo, answers 등 DTO에 포함
      */
-    // ExternalDiagnosisController.java
     @PostMapping("/submit")
     public ResponseEntity<ExternalDiagnosisResultDto> submitExternalDiagnosis(
-            @Valid @RequestBody ExternalDiagnosisRequestDto dto // 🔹 @Valid 추가
+            @Valid @RequestBody ExternalDiagnosisRequestDto dto
     ) {
-        ExternalDiagnosisResultDto resultDto = externalDiagnosisService.submitExternalResult(dto, apiKey);
-        return ResponseEntity.ok(resultDto);
+        return ResponseEntity.ok(externalDiagnosisService.submitExternalResult(dto));
     }
-
 }

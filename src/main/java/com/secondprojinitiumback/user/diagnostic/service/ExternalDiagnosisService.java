@@ -16,11 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -192,64 +191,100 @@ public class ExternalDiagnosisService {
 
 
     /**
-     * ✅ 외부 진단 검사 결과 제출 및 저장 (V1 전용)
+     * ✅ 외부 진단 검사 결과 제출 및 저장 (CareerNet V1 기준, 응답 상세 로깅 추가)
      */
     public ExternalDiagnosisResultDto submitExternalResult(ExternalDiagnosisRequestDto dto) {
 
-        // 학생 정보 조회
+        // 🔍 학생 정보 조회
         Student student = studentRepository.findById(dto.getStudentNo())
                 .orElseThrow(() -> new IllegalArgumentException("학생을 찾을 수 없습니다."));
 
-        // Request Body 생성 (V1 형식)
-        Map<String, Object> body = new HashMap<>();
-        body.put("apikey", apiKey.trim());
-        body.put("qestrnSeq", dto.getQestrnSeq());
-        body.put("trgetSe", dto.getTrgetSe());
-        body.put("name", student.getName());
-        body.put("gender", dto.getGender());
-        body.put("school", dto.getSchool() != null ? dto.getSchool() : "");
-        body.put("grade", dto.getGrade());
-        body.put("startDtm", dto.getStartDtm() != null ? dto.getStartDtm() : String.valueOf(System.currentTimeMillis()));
-        body.put("answers", dto.getAnswers()); // 🔹 V1은 String 형식 "1=5 2=3 ..."
+        // 📌 CareerNet V1 API는 application/x-www-form-urlencoded 방식으로 전송
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.set("Accept", "application/json");
+        headers.set("User-Agent", "Mozilla/5.0");
 
-        log.info("CareerNet Report API Request: {}", body); // 🔍 요청 바디 로그
+        // 📌 Form Data 생성
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        formData.add("apikey", apiKey.trim());
+        formData.add("qestrnSeq", dto.getQestrnSeq());
+        formData.add("trgetSe", dto.getTrgetSe());
+        formData.add("name", student.getName());
+        formData.add("gender", dto.getGender());
+        formData.add("school", dto.getSchool() != null ? dto.getSchool() : "");
+        formData.add("grade", dto.getGrade());
+        formData.add("startDtm", dto.getStartDtm() != null ? dto.getStartDtm() : String.valueOf(System.currentTimeMillis()));
+        formData.add("answers", dto.getAnswers()); // 🔹 "1=5 2=3 ..." 형식 그대로
 
-        // API 요청
-        ResponseEntity<Map> response = restTemplate.postForEntity(reportUrl, body, Map.class);
-        Map<String, Object> result = response.getBody();
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(formData, headers);
 
-        log.info("CareerNet Report API Response: {}", result); // 🔍 응답 로그
+        log.info("CareerNet Report API Request Body: {}", formData);
 
-        // 응답 성공 여부 체크
-        if (result == null || !"Y".equals(result.get("SUCC_YN"))) {
-            String errorReason = result != null ? (String) result.getOrDefault("ERROR_REASON", "알 수 없는 오류") : "응답 없음";
-            throw new RuntimeException("외부 진단검사 실패: " + errorReason);
+        try {
+            // 📌 API 요청
+            ResponseEntity<String> response = restTemplate.exchange(
+                    reportUrl,
+                    HttpMethod.POST,
+                    requestEntity,
+                    String.class
+            );
+
+            // 🔍 응답 전체 로깅 (Body + Status + Header)
+            log.info("CareerNet Report API Status: {}", response.getStatusCode());
+            log.info("CareerNet Report API Headers: {}", response.getHeaders());
+            log.info("CareerNet Report API Raw Body: {}", response.getBody());
+
+            // 📌 상태 코드 체크
+            if (!response.getStatusCode().is2xxSuccessful()) {
+                throw new RuntimeException("CareerNet API 호출 실패 - 상태코드: " + response.getStatusCode());
+            }
+
+            // 📌 응답 Body JSON → Map 변환
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> result = mapper.readValue(response.getBody(), Map.class);
+
+            // 📌 성공 여부 체크
+            if (result == null || !"Y".equalsIgnoreCase((String) result.get("SUCC_YN"))) {
+                throw new RuntimeException("외부 진단검사 실패: " +
+                        (result != null ? result.getOrDefault("ERROR_REASON", "알 수 없는 오류") : "응답 없음"));
+            }
+
+            // 📌 RESULT 데이터 파싱
+            Map<String, Object> resultData = (Map<String, Object>) result.get("RESULT");
+            if (resultData == null) {
+                throw new RuntimeException("CareerNet API 응답에 RESULT 데이터가 없습니다.");
+            }
+
+            // inspctSeq / url 값 추출 (Key 이름 변동 가능성 대비)
+            String inspectSeq = String.valueOf(resultData.getOrDefault("inspctSeq", resultData.get("inspect_seq")));
+            String resultUrl = String.valueOf(resultData.get("url"));
+
+            // 📌 DB에 저장할 검사 정보 조회
+            ExternalDiagnosticTest test = testRepository.findByQuestionApiCode(dto.getQestrnSeq())
+                    .orElseThrow(() -> new IllegalArgumentException("외부 심리검사 정보를 찾을 수 없습니다."));
+
+            // 📌 결과 저장
+            ExternalDiagnosticResult saved = ExternalDiagnosticResult.builder()
+                    .test(test)
+                    .student(student)
+                    .inspectCode(inspectSeq)
+                    .resultUrl(resultUrl)
+                    .submittedAt(LocalDateTime.now())
+                    .build();
+            resultRepository.save(saved);
+
+            // 📌 결과 DTO 반환
+            return ExternalDiagnosisResultDto.builder()
+                    .inspectSeq(inspectSeq)
+                    .resultUrl(resultUrl)
+                    .testName(test.getName())
+                    .build();
+
+        } catch (Exception e) {
+            log.error("외부 진단검사 요청 중 오류 발생", e);
+            throw new RuntimeException("외부 진단검사 요청 실패: " + e.getMessage(), e);
         }
-
-        // RESULT 추출
-        Map<String, Object> resultData = (Map<String, Object>) result.get("RESULT");
-        String inspectSeq = String.valueOf(resultData.get("inspctSeq"));
-        String resultUrl = String.valueOf(resultData.get("url"));
-
-        // 검사 정보 조회
-        ExternalDiagnosticTest test = testRepository.findByQuestionApiCode(dto.getQestrnSeq())
-                .orElseThrow(() -> new IllegalArgumentException("외부 심리검사 정보를 찾을 수 없습니다."));
-
-        // 결과 저장
-        ExternalDiagnosticResult saved = ExternalDiagnosticResult.builder()
-                .test(test)
-                .student(student)
-                .inspectCode(inspectSeq)
-                .resultUrl(resultUrl)
-                .submittedAt(LocalDateTime.now())
-                .build();
-        resultRepository.save(saved);
-
-        // DTO 반환
-        return ExternalDiagnosisResultDto.builder()
-                .inspectSeq(inspectSeq)
-                .resultUrl(resultUrl)
-                .testName(test.getName())
-                .build();
     }
+
 }

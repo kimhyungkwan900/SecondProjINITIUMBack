@@ -24,6 +24,8 @@ public class QMileageTotal extends EntityPathBase<MileageTotal> {
 
     public final com.secondprojinitiumback.user.student.domain.QStudent student;
 
+    public final StringPath studentNo = createString("studentNo");
+
     public final NumberPath<Double> totalScore = createNumber("totalScore", Double.class);
 
     public QMileageTotal(String variable) {

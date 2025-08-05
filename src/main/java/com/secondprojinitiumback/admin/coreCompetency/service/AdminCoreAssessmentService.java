@@ -3,8 +3,6 @@ package com.secondprojinitiumback.admin.coreCompetency.service;
 import com.secondprojinitiumback.admin.coreCompetency.dto.CoreCompetencyAssessmentDto;
 import com.secondprojinitiumback.admin.coreCompetency.domain.CoreCompetencyAssessment;
 import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyAssessmentRepository;
-import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyCategoryRepository;
-import com.secondprojinitiumback.admin.coreCompetency.repository.SubCompetencyCategoryRepository;
 import com.secondprojinitiumback.common.domain.CommonCode;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
 import com.secondprojinitiumback.common.repository.CommonCodeRepository;
@@ -18,7 +16,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class AdminCoreDiagnosisService {
+public class AdminCoreAssessmentService {
 
     private final CommonCodeRepository commonCodeRepository;
     private final CoreCompetencyAssessmentRepository coreCompetencyAssessmentRepository;

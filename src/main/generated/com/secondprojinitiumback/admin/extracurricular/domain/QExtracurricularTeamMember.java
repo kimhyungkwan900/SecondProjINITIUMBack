@@ -24,7 +24,7 @@ public class QExtracurricularTeamMember extends EntityPathBase<ExtracurricularTe
 
     public final QExtracurricularTeam extracurricularTeam;
 
-    public final com.secondprojinitiumback.admin.extracurricular.domain.test.QStdntInfo stdntInfo;
+    public final com.secondprojinitiumback.user.student.domain.QStudent student;
 
     public final NumberPath<Long> teamMngId = createNumber("teamMngId", Long.class);
 
@@ -49,7 +49,7 @@ public class QExtracurricularTeamMember extends EntityPathBase<ExtracurricularTe
     public QExtracurricularTeamMember(Class<? extends ExtracurricularTeamMember> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.extracurricularTeam = inits.isInitialized("extracurricularTeam") ? new QExtracurricularTeam(forProperty("extracurricularTeam"), inits.get("extracurricularTeam")) : null;
-        this.stdntInfo = inits.isInitialized("stdntInfo") ? new com.secondprojinitiumback.admin.extracurricular.domain.test.QStdntInfo(forProperty("stdntInfo")) : null;
+        this.student = inits.isInitialized("student") ? new com.secondprojinitiumback.user.student.domain.QStudent(forProperty("student"), inits.get("student")) : null;
     }
 
 }

@@ -22,6 +22,8 @@ public class QSubCompetencyCategory extends EntityPathBase<SubCompetencyCategory
 
     public static final QSubCompetencyCategory subCompetencyCategory = new QSubCompetencyCategory("subCompetencyCategory");
 
+    public final ListPath<BehaviorIndicator, QBehaviorIndicator> behaviorIndicators = this.<BehaviorIndicator, QBehaviorIndicator>createList("behaviorIndicators", BehaviorIndicator.class, QBehaviorIndicator.class, PathInits.DIRECT2);
+
     public final QCoreCompetencyCategory coreCompetencyCategory;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);

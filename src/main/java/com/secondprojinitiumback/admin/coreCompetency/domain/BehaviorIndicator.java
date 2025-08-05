@@ -5,6 +5,9 @@ import com.secondprojinitiumback.common.domain.SchoolSubject;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -36,4 +39,8 @@ public class BehaviorIndicator {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SCSBJT_NO")
     private SchoolSubject schoolSubject; // 학과
+
+    //양방향 설정
+    @OneToOne(mappedBy = "behaviorIndicator", fetch = FetchType.LAZY)
+    private CoreCompetencyQuestion questions;
 }

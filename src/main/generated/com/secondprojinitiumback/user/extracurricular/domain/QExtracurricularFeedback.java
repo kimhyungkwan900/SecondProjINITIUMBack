@@ -32,7 +32,7 @@ public class QExtracurricularFeedback extends EntityPathBase<ExtracurricularFeed
 
     public final StringPath infoRlsYn = createString("infoRlsYn");
 
-    public final com.secondprojinitiumback.admin.extracurricular.domain.test.QStdntInfo stdntInfo;
+    public final com.secondprojinitiumback.user.student.domain.QStudent student;
 
     public final DateTimePath<java.time.LocalDateTime> updateDt = createDateTime("updateDt", java.time.LocalDateTime.class);
 
@@ -57,7 +57,7 @@ public class QExtracurricularFeedback extends EntityPathBase<ExtracurricularFeed
     public QExtracurricularFeedback(Class<? extends ExtracurricularFeedback> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.extracurricularProgram = inits.isInitialized("extracurricularProgram") ? new com.secondprojinitiumback.admin.extracurricular.domain.QExtracurricularProgram(forProperty("extracurricularProgram"), inits.get("extracurricularProgram")) : null;
-        this.stdntInfo = inits.isInitialized("stdntInfo") ? new com.secondprojinitiumback.admin.extracurricular.domain.test.QStdntInfo(forProperty("stdntInfo")) : null;
+        this.student = inits.isInitialized("student") ? new com.secondprojinitiumback.user.student.domain.QStudent(forProperty("student"), inits.get("student")) : null;
     }
 
 }

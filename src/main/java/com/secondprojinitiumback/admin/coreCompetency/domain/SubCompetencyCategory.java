@@ -3,6 +3,9 @@ package com.secondprojinitiumback.admin.coreCompetency.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,5 +29,10 @@ public class SubCompetencyCategory {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CTGR_ID", nullable = false)
     private CoreCompetencyCategory coreCompetencyCategory;
+
+    //양방향 설정
+    @OneToMany(mappedBy = "subCompetencyCategory", fetch = FetchType.LAZY)
+    private List<BehaviorIndicator> behaviorIndicators = new ArrayList<>();
+
 
 }

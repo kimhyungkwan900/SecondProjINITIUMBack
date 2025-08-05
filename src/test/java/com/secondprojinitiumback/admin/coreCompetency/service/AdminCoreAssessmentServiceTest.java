@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
  * - 진단 등록, 수정, 삭제, 조회 기능이 올바르게 동작하는지 검증
  * - 공통코드 및 학과 코드가 존재하지 않는 경우 예외 발생도 함께 테스트
  */
-class AdminCoreDiagnosisServiceTest {
+class AdminCoreAssessmentServiceTest {
 
     // 진단, 코드, 학과 Repository를 Mock 객체로 선언
     @Mock
@@ -42,7 +42,7 @@ class AdminCoreDiagnosisServiceTest {
 
     // 테스트 대상 서비스에 Mock 객체 주입
     @InjectMocks
-    private AdminCoreDiagnosisService service;
+    private AdminCoreAssessmentService service;
 
     /**
      * 각 테스트 실행 전 Mockito의 Mock 객체 초기화

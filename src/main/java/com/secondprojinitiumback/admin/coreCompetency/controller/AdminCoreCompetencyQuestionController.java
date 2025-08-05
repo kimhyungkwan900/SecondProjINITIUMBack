@@ -1,6 +1,6 @@
 package com.secondprojinitiumback.admin.coreCompetency.controller;
 
-import com.secondprojinitiumback.admin.coreCompetency.dto.CoreCompetencyQuestionCreateDto;
+import com.secondprojinitiumback.admin.coreCompetency.dto.CoreCompetencyQuestionDto;
 import com.secondprojinitiumback.admin.coreCompetency.domain.CoreCompetencyQuestion;
 import com.secondprojinitiumback.admin.coreCompetency.service.AdminCoreCompetencyQuestionService;
 import lombok.RequiredArgsConstructor;
@@ -18,14 +18,14 @@ public class AdminCoreCompetencyQuestionController {
 
     //1. 문항 등록
     @PostMapping("/create/{assessmentId}")
-    public ResponseEntity<CoreCompetencyQuestion> createCoreCompetencyQuestion(@PathVariable Long assessmentId, @RequestBody CoreCompetencyQuestionCreateDto coreCompetencyQuestionCreateDto) {
-        return ResponseEntity.ok(adminCoreCompetencyQuestionService.createCoreCompetencyQuestion(assessmentId, coreCompetencyQuestionCreateDto));
+    public ResponseEntity<CoreCompetencyQuestion> createCoreCompetencyQuestion(@PathVariable Long assessmentId, @RequestBody CoreCompetencyQuestionDto coreCompetencyQuestionDto) {
+        return ResponseEntity.ok(adminCoreCompetencyQuestionService.createCoreCompetencyQuestion(assessmentId, coreCompetencyQuestionDto));
     }
 
     //2. 문항 수정
     @PutMapping("/update/{questionId}")
-    public ResponseEntity<CoreCompetencyQuestion> updateCoreCompetencyQuestion(@PathVariable Long questionId, @RequestBody CoreCompetencyQuestionCreateDto coreCompetencyQuestionCreateDto) {
-        return ResponseEntity.ok(adminCoreCompetencyQuestionService.updateCoreCompetencyQuestion(questionId, coreCompetencyQuestionCreateDto));
+    public ResponseEntity<CoreCompetencyQuestion> updateCoreCompetencyQuestion(@PathVariable Long questionId, @RequestBody CoreCompetencyQuestionDto coreCompetencyQuestionDto) {
+        return ResponseEntity.ok(adminCoreCompetencyQuestionService.updateCoreCompetencyQuestion(questionId, coreCompetencyQuestionDto));
     }
 
     //3. 문항 삭제

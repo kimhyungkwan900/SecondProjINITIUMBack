@@ -2,8 +2,7 @@ package com.secondprojinitiumback.admin.coreCompetency.service;
 
 
 import com.secondprojinitiumback.admin.coreCompetency.domain.*;
-import com.secondprojinitiumback.admin.coreCompetency.dto.CoreCompetencyQuestionCreateDto;
-import com.secondprojinitiumback.admin.coreCompetency.dto.ResponseChoiceOptionDto;
+import com.secondprojinitiumback.admin.coreCompetency.dto.CoreCompetencyQuestionDto;
 import com.secondprojinitiumback.admin.coreCompetency.repository.*;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
 import com.secondprojinitiumback.common.repository.SchoolSubjectRepository;
@@ -27,7 +26,7 @@ public class AdminCoreCompetencyQuestionService {
 
     //1. 문항 등록
     @Transactional
-    public CoreCompetencyQuestion createCoreCompetencyQuestion(Long assessmentId, CoreCompetencyQuestionCreateDto coreCompetencyQuestionCreateDto) {
+    public CoreCompetencyQuestion createCoreCompetencyQuestion(Long assessmentId, CoreCompetencyQuestionDto coreCompetencyQuestionDto) {
 
         // 필수 필드 검증
         CoreCompetencyAssessment assessment = coreCompetencyAssessmentRepository.findById(assessmentId)
@@ -37,23 +36,23 @@ public class AdminCoreCompetencyQuestionService {
         // DTO를 엔티티로 변환
         CoreCompetencyQuestion question = CoreCompetencyQuestion.builder()
                 .assessment(assessment)
-                .questionNo(coreCompetencyQuestionCreateDto.getQuestionNo())
-                .name(coreCompetencyQuestionCreateDto.getQuestionName())
-                .description(coreCompetencyQuestionCreateDto.getQuestionContent())
-                .displayOrder(coreCompetencyQuestionCreateDto.getDisplayOrder())
-                .answerAllowCount(coreCompetencyQuestionCreateDto.getAnswerAllowCount())
+                .questionNo(coreCompetencyQuestionDto.getQuestionNo())
+                .name(coreCompetencyQuestionDto.getQuestionName())
+                .description(coreCompetencyQuestionDto.getQuestionContent())
+                .displayOrder(coreCompetencyQuestionDto.getDisplayOrder())
+                .answerAllowCount(coreCompetencyQuestionDto.getAnswerAllowCount())
                 .build();
 
         // 엔티티를 저장
         CoreCompetencyQuestion savedQuestion = coreCompetencyQuestionRepository.save(question);
 
         //공통 문항이 아닌 경우, 행동지표랑 학과(전공) 매핑 추가
-        if("N".equalsIgnoreCase(coreCompetencyQuestionCreateDto.getIsCommonCode()) && coreCompetencyQuestionCreateDto.getSubjectCode() != null){
+        if("N".equalsIgnoreCase(coreCompetencyQuestionDto.getIsCommonCode()) && coreCompetencyQuestionDto.getSubjectCode() != null){
 
-            SchoolSubject schoolSubject = schoolSubjectRepository.findBySubjectCode(coreCompetencyQuestionCreateDto.getSubjectCode())
+            SchoolSubject schoolSubject = schoolSubjectRepository.findBySubjectCode(coreCompetencyQuestionDto.getSubjectCode())
                     .orElseThrow(() -> new IllegalArgumentException("해당 학과코드가 존재하지 않습니다."));
 
-            BehaviorIndicator behaviorIndicator = behaviorIndicatorRepository.findById(coreCompetencyQuestionCreateDto.getIndicatorId())
+            BehaviorIndicator behaviorIndicator = behaviorIndicatorRepository.findById(coreCompetencyQuestionDto.getIndicatorId())
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 행동지표입니다."));
 
             // 기존 매핑이 있는지 확인
@@ -79,35 +78,35 @@ public class AdminCoreCompetencyQuestionService {
 
     //2. 문항 수정
     @Transactional
-    public CoreCompetencyQuestion updateCoreCompetencyQuestion(Long questionId, CoreCompetencyQuestionCreateDto coreCompetencyQuestionCreateDto) {
+    public CoreCompetencyQuestion updateCoreCompetencyQuestion(Long questionId, CoreCompetencyQuestionDto coreCompetencyQuestionDto) {
 
         CoreCompetencyQuestion question = coreCompetencyQuestionRepository.findById(questionId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 문항입니다."));
 
 
         // 엔티티 업데이트
-        question.setQuestionNo(coreCompetencyQuestionCreateDto.getQuestionNo());
-        question.setName(coreCompetencyQuestionCreateDto.getQuestionName());
-        question.setDescription(coreCompetencyQuestionCreateDto.getQuestionContent());
-        question.setDisplayOrder(coreCompetencyQuestionCreateDto.getDisplayOrder());
-        question.setAnswerAllowCount(coreCompetencyQuestionCreateDto.getAnswerAllowCount());
+        question.setQuestionNo(coreCompetencyQuestionDto.getQuestionNo());
+        question.setName(coreCompetencyQuestionDto.getQuestionName());
+        question.setDescription(coreCompetencyQuestionDto.getQuestionContent());
+        question.setDisplayOrder(coreCompetencyQuestionDto.getDisplayOrder());
+        question.setAnswerAllowCount(coreCompetencyQuestionDto.getAnswerAllowCount());
 
 
         // 엔티티를 저장
         CoreCompetencyQuestion savedQuestion = coreCompetencyQuestionRepository.save(question);
 
         // 공통 문항인 경우, 기존 매핑 삭제
-        if("Y".equalsIgnoreCase(coreCompetencyQuestionCreateDto.getIsCommonCode())){
+        if("Y".equalsIgnoreCase(coreCompetencyQuestionDto.getIsCommonCode())){
             behaviorIndicatorMajorQuestionMappingRepository.findByQuestion(savedQuestion)
                     .ifPresent(behaviorIndicatorMajorQuestionMappingRepository::delete);
             return savedQuestion;
         }
 
         // 공통 문항이 아닌 경우, 행동지표랑 학과(전공) 매핑 추가
-        if("N".equalsIgnoreCase(coreCompetencyQuestionCreateDto.getIsCommonCode()) && coreCompetencyQuestionCreateDto.getSubjectCode() != null){
-            BehaviorIndicator behaviorIndicator = behaviorIndicatorRepository.findById(coreCompetencyQuestionCreateDto.getIndicatorId())
+        if("N".equalsIgnoreCase(coreCompetencyQuestionDto.getIsCommonCode()) && coreCompetencyQuestionDto.getSubjectCode() != null){
+            BehaviorIndicator behaviorIndicator = behaviorIndicatorRepository.findById(coreCompetencyQuestionDto.getIndicatorId())
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 행동지표입니다."));
-            SchoolSubject schoolSubject = schoolSubjectRepository.findBySubjectCode(coreCompetencyQuestionCreateDto.getSubjectCode())
+            SchoolSubject schoolSubject = schoolSubjectRepository.findBySubjectCode(coreCompetencyQuestionDto.getSubjectCode())
                     .orElseThrow(() -> new IllegalArgumentException("해당 학과코드가 존재하지 않습니다."));
 
             // 기존 매핑이 있다면 업데이트, 없다면 새로 생성

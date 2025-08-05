@@ -25,11 +25,5 @@ public class IdealTalentProfileDto {
         private String subDefinition;
         private List<BehaviorIndicatorDto> behaviorIndicators;
     }
-
-    @Getter @Setter @Builder
-    public static class BehaviorIndicatorDto {
-        private String indicatorName;
-        private String indicatorNote;
-    }
 }
 

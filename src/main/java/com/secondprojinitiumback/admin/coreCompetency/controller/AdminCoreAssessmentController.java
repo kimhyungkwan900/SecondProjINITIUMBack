@@ -2,7 +2,7 @@ package com.secondprojinitiumback.admin.coreCompetency.controller;
 
 import com.secondprojinitiumback.admin.coreCompetency.dto.CoreCompetencyAssessmentDto;
 import com.secondprojinitiumback.admin.coreCompetency.domain.CoreCompetencyAssessment;
-import com.secondprojinitiumback.admin.coreCompetency.service.AdminCoreDiagnosisService;
+import com.secondprojinitiumback.admin.coreCompetency.service.AdminCoreAssessmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/diagnosis")
-@RequiredArgsConstructor
-public class AdminCoreDiagnosisController {
 
-    private final AdminCoreDiagnosisService diagnosisService;
+@RequestMapping("/api/admin/assessment")
+@RequiredArgsConstructor
+public class AdminCoreAssessmentController {
+
+    private final AdminCoreAssessmentService diagnosisService;
 
     // 진단 등록
     @PostMapping("/create")

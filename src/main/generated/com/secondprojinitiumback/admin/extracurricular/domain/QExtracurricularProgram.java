@@ -56,7 +56,7 @@ public class QExtracurricularProgram extends EntityPathBase<ExtracurricularProgr
 
     public final EnumPath<com.secondprojinitiumback.admin.extracurricular.domain.enums.EduType> eduType = createEnum("eduType", com.secondprojinitiumback.admin.extracurricular.domain.enums.EduType.class);
 
-    public final com.secondprojinitiumback.admin.extracurricular.domain.test.QEmpInfo empInfo;
+    public final com.secondprojinitiumback.user.employee.domain.QEmployee employee;
 
     public final QExtracurricularCategory extracurricularCategory;
 
@@ -86,8 +86,8 @@ public class QExtracurricularProgram extends EntityPathBase<ExtracurricularProgr
 
     public QExtracurricularProgram(Class<? extends ExtracurricularProgram> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.empInfo = inits.isInitialized("empInfo") ? new com.secondprojinitiumback.admin.extracurricular.domain.test.QEmpInfo(forProperty("empInfo")) : null;
-        this.extracurricularCategory = inits.isInitialized("extracurricularCategory") ? new QExtracurricularCategory(forProperty("extracurricularCategory")) : null;
+        this.employee = inits.isInitialized("employee") ? new com.secondprojinitiumback.user.employee.domain.QEmployee(forProperty("employee"), inits.get("employee")) : null;
+        this.extracurricularCategory = inits.isInitialized("extracurricularCategory") ? new QExtracurricularCategory(forProperty("extracurricularCategory"), inits.get("extracurricularCategory")) : null;
     }
 
 }

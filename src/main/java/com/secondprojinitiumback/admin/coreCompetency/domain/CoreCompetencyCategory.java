@@ -3,6 +3,9 @@ package com.secondprojinitiumback.admin.coreCompetency.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,9 +26,13 @@ public class CoreCompetencyCategory {
     @Column(name = "CTGR_CN", nullable = false)
     private String coreCategoryNote; // 핵심역량 카테고리 설명
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "ITP_ID", nullable = false)
     private IdealTalentProfile idealTalentProfile; // 인재상 프로필과 연관
+
+    //양방향 설정
+    @OneToMany(mappedBy = "coreCompetencyCategory", fetch = FetchType.LAZY)
+    private List<SubCompetencyCategory> subCompetencyCategories = new ArrayList<>();
 
 }
 

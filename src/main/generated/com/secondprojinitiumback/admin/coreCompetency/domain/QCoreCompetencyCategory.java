@@ -30,6 +30,8 @@ public class QCoreCompetencyCategory extends EntityPathBase<CoreCompetencyCatego
 
     public final QIdealTalentProfile idealTalentProfile;
 
+    public final ListPath<SubCompetencyCategory, QSubCompetencyCategory> subCompetencyCategories = this.<SubCompetencyCategory, QSubCompetencyCategory>createList("subCompetencyCategories", SubCompetencyCategory.class, QSubCompetencyCategory.class, PathInits.DIRECT2);
+
     public QCoreCompetencyCategory(String variable) {
         this(CoreCompetencyCategory.class, forVariable(variable), INITS);
     }
@@ -48,7 +50,7 @@ public class QCoreCompetencyCategory extends EntityPathBase<CoreCompetencyCatego
 
     public QCoreCompetencyCategory(Class<? extends CoreCompetencyCategory> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.idealTalentProfile = inits.isInitialized("idealTalentProfile") ? new QIdealTalentProfile(forProperty("idealTalentProfile")) : null;
+        this.idealTalentProfile = inits.isInitialized("idealTalentProfile") ? new QIdealTalentProfile(forProperty("idealTalentProfile"), inits.get("idealTalentProfile")) : null;
     }
 
 }

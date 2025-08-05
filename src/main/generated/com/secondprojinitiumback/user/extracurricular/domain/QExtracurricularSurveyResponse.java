@@ -28,7 +28,7 @@ public class QExtracurricularSurveyResponse extends EntityPathBase<Extracurricul
 
     public final NumberPath<Long> srvyRspnsId = createNumber("srvyRspnsId", Long.class);
 
-    public final com.secondprojinitiumback.admin.extracurricular.domain.test.QStdntInfo stdntInfo;
+    public final com.secondprojinitiumback.user.student.domain.QStudent student;
 
     public final StringPath surveyResponseContent = createString("surveyResponseContent");
 
@@ -53,7 +53,7 @@ public class QExtracurricularSurveyResponse extends EntityPathBase<Extracurricul
     public QExtracurricularSurveyResponse(Class<? extends ExtracurricularSurveyResponse> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.extracurricularSurvey = inits.isInitialized("extracurricularSurvey") ? new com.secondprojinitiumback.admin.extracurricular.domain.QExtracurricularSurvey(forProperty("extracurricularSurvey"), inits.get("extracurricularSurvey")) : null;
-        this.stdntInfo = inits.isInitialized("stdntInfo") ? new com.secondprojinitiumback.admin.extracurricular.domain.test.QStdntInfo(forProperty("stdntInfo")) : null;
+        this.student = inits.isInitialized("student") ? new com.secondprojinitiumback.user.student.domain.QStudent(forProperty("student"), inits.get("student")) : null;
     }
 
 }

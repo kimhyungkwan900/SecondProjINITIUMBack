@@ -30,7 +30,7 @@ public class QExtracurricularAttendance extends EntityPathBase<ExtracurricularAt
 
     public final QExtracurricularSchedule extracurricularSchedule;
 
-    public final com.secondprojinitiumback.admin.extracurricular.domain.test.QStdntInfo stdntInfo;
+    public final com.secondprojinitiumback.user.student.domain.QStudent student;
 
     public QExtracurricularAttendance(String variable) {
         this(ExtracurricularAttendance.class, forVariable(variable), INITS);
@@ -51,7 +51,7 @@ public class QExtracurricularAttendance extends EntityPathBase<ExtracurricularAt
     public QExtracurricularAttendance(Class<? extends ExtracurricularAttendance> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.extracurricularSchedule = inits.isInitialized("extracurricularSchedule") ? new QExtracurricularSchedule(forProperty("extracurricularSchedule"), inits.get("extracurricularSchedule")) : null;
-        this.stdntInfo = inits.isInitialized("stdntInfo") ? new com.secondprojinitiumback.admin.extracurricular.domain.test.QStdntInfo(forProperty("stdntInfo")) : null;
+        this.student = inits.isInitialized("student") ? new com.secondprojinitiumback.user.student.domain.QStudent(forProperty("student"), inits.get("student")) : null;
     }
 
 }

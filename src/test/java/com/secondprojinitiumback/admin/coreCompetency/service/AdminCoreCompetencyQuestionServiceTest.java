@@ -1,7 +1,7 @@
 package com.secondprojinitiumback.admin.coreCompetency.service;
 
 import com.secondprojinitiumback.admin.coreCompetency.domain.*;
-import com.secondprojinitiumback.admin.coreCompetency.dto.CoreCompetencyQuestionCreateDto;
+import com.secondprojinitiumback.admin.coreCompetency.dto.CoreCompetencyQuestionDto;
 import com.secondprojinitiumback.admin.coreCompetency.repository.*;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
 import com.secondprojinitiumback.common.repository.SchoolSubjectRepository;
@@ -42,7 +42,7 @@ class AdminCoreCompetencyQuestionServiceTest {
         CoreCompetencyAssessment assessment = CoreCompetencyAssessment.builder().id(assessmentId).build();
         when(assessmentRepository.findById(assessmentId)).thenReturn(Optional.of(assessment));
 
-        CoreCompetencyQuestionCreateDto dto = CoreCompetencyQuestionCreateDto.builder()
+        CoreCompetencyQuestionDto dto = CoreCompetencyQuestionDto.builder()
                 .questionNo(1)
                 .questionName("질문")
                 .questionContent("내용")
@@ -73,7 +73,7 @@ class AdminCoreCompetencyQuestionServiceTest {
         CoreCompetencyQuestion question = CoreCompetencyQuestion.builder().id(1L).build();
         BehaviorIndicatorMajorQuestionMapping mapping = BehaviorIndicatorMajorQuestionMapping.builder().id(1L).build();
 
-        CoreCompetencyQuestionCreateDto dto = CoreCompetencyQuestionCreateDto.builder()
+        CoreCompetencyQuestionDto dto = CoreCompetencyQuestionDto.builder()
                 .questionNo(1)
                 .questionName("수정된 질문")
                 .questionContent("수정된 내용")
@@ -104,7 +104,7 @@ class AdminCoreCompetencyQuestionServiceTest {
         BehaviorIndicator indicator = new BehaviorIndicator();
         SchoolSubject subject = mock(SchoolSubject.class);
 
-        CoreCompetencyQuestionCreateDto dto = CoreCompetencyQuestionCreateDto.builder()
+        CoreCompetencyQuestionDto dto = CoreCompetencyQuestionDto.builder()
                 .questionNo(2)
                 .questionName("수정된 질문")
                 .questionContent("수정된 내용")

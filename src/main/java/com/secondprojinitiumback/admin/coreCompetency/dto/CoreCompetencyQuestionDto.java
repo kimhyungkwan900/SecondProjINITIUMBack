@@ -1,7 +1,6 @@
 package com.secondprojinitiumback.admin.coreCompetency.dto;
 
 import com.secondprojinitiumback.admin.coreCompetency.domain.CoreCompetencyQuestion;
-import com.secondprojinitiumback.admin.coreCompetency.domain.ResponseChoiceOption;
 import lombok.*;
 
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 
 // 문항 등록/수정 요청을 위한 DTO
-public class CoreCompetencyQuestionCreateDto {
+public class CoreCompetencyQuestionDto {
     private Long Id;                // 문항 ID
     private Long assessmentId;       // 진단평가 ID
     private Integer questionNo;      // 문항 번호
@@ -29,8 +28,8 @@ public class CoreCompetencyQuestionCreateDto {
     List<ResponseChoiceOptionDto> responseChoiceOptions;
 
     //엔티티 -> dto 변환 메소드
-    public static CoreCompetencyQuestionCreateDto fromEntity(CoreCompetencyQuestion question) {
-        return CoreCompetencyQuestionCreateDto.builder()
+    public static CoreCompetencyQuestionDto fromEntity(CoreCompetencyQuestion question) {
+        return CoreCompetencyQuestionDto.builder()
                 .Id(question.getId())
                 .assessmentId(question.getAssessment().getId())
                 .questionNo(question.getQuestionNo())

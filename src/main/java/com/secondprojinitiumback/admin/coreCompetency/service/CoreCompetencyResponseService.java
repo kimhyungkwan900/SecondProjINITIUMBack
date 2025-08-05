@@ -41,6 +41,9 @@ public class CoreCompetencyResponseService {
         CoreCompetencyQuestion question = coreCompetencyQuestionRepository.findById(questionId)
                 .orElseThrow(() -> new IllegalArgumentException("문항 없음"));
 
+        CoreCompetencyAssessment assessment = coreCompetencyAssessmentRepository.findById(assessmentId)
+                .orElseThrow(() -> new IllegalArgumentException("평가 없음"));
+
         // 선택한 보기 정보 조회 (없으면 예외)
         ResponseChoiceOption selectedOption = responseChoiceOptionRepository.findById(optionId)
                 .orElseThrow(() -> new IllegalArgumentException("선택지 없음"));

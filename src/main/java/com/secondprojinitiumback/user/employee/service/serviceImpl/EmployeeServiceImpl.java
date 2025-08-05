@@ -103,13 +103,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<EmployeeDto> getEmployeeList(EmployeeSearchDto employeeSearchDto) {
-        List<Employee> employees = employeeRepository.search(employeeSearchDto);
-        return employees.stream().map(this::toEmployeeDto).collect(Collectors.toList());
-    }
-
-    @Override
     public void resignEmployee(String employeeNo) {
         Employee employee = findEmployeeById(employeeNo);
         EmployeeStatusInfo resignStatus = findStatusByCode("30"); // 퇴사 상태 코드

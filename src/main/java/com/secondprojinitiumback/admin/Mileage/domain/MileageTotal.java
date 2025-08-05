@@ -12,12 +12,18 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class MileageTotal {
+/*
+    학번을 PK로 사용하고 FK로 사용하기위해 JoinColumn 으로 받아와 ID로 사용하도록 수정했습니다
+*/
 
     @Id
-    @JoinColumn(name = "STDNT_NO")
+    @Column(name = "STDNT_NO")
+    private String studentNo;
+
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId // 이게 있어야 학번이 PK이자 FK임을 동시에 표현 가능
-    private Student student;
+    @MapsId("studentNo") // studentNo 필드를 Student 엔티티의 기본 키에 매핑
+    @JoinColumn(name = "STDNT_NO") // 외래 키 컬럼 지정 (STDNT_NO)
+    private Student student; // 이게 있어야 학번이 PK이자 FK임을 동시에 표현 가능
 
     @Column(name = "MLG_TOT_SCORE", nullable = false)
     private Double totalScore; // 누적 점수

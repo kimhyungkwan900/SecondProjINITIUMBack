@@ -183,7 +183,7 @@ public class StudentServiceImpl implements StudentService {
     // 계좌 번호로 은행 계좌 정보 조회
     private BankAccount findBankAccountByNoNullable(String accountNo) {
         if (accountNo == null || accountNo.isBlank()) return null;
-        return bankAccountRepository.findByAccountNumber(accountNo)
+        return bankAccountRepository.findByAccountNo(accountNo)
                 .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 계좌번호: " + accountNo));
     }
 
@@ -214,9 +214,9 @@ public class StudentServiceImpl implements StudentService {
                 .email(student.getEmail())
                 .clubCode(student.getClubCode())
                 .grade(student.getGrade())
-                .advisorName(student.getAdvisor() != null ? student.getAdvisor().getName() : null)
-                .studentStatusName(student.getStudentStatus() != null ? student.getStudentStatus().getStudentStatusName() : null)
-                .schoolSubjectName(student.getSchoolSubject() != null ? student.getSchoolSubject().getSubjectName() : null)
+                .advisorId(student.getAdvisor() != null ? student.getAdvisor().getName() : null)
+                .studentStatusCode(student.getStudentStatus() != null ? student.getStudentStatus().getStudentStatusCode() : null)
+                .schoolSubjectCode(student.getSchoolSubject() != null ? student.getSchoolSubject().getSubjectCode() : null)
                 .build();
     }
 }

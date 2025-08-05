@@ -45,7 +45,7 @@ public class EmployeeController {
     public ResponseEntity<EmployeeDto> appointStaff(@RequestBody StaffAppointDto dto) {
         // 직원 임용 처리
         EmployeeDto createdEmployee = employeeService.appointStaff(dto);
-        URI location = URI.create(String.format("/api/v1/employees/%s", createdEmployee.getEmpNo()));
+        URI location = URI.create(String.format("/api/employees/%s", createdEmployee.getEmpNo()));
         return ResponseEntity.created(location).body(createdEmployee);
     }
 

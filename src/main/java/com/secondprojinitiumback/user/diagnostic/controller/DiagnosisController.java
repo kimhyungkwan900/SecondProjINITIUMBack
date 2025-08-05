@@ -2,10 +2,7 @@ package com.secondprojinitiumback.user.diagnostic.controller;
 
 import com.secondprojinitiumback.user.diagnostic.domain.DiagnosticResult;
 import com.secondprojinitiumback.user.diagnostic.domain.DiagnosticResultDetail;
-import com.secondprojinitiumback.user.diagnostic.dto.DiagnosisSubmitRequestDto;
-import com.secondprojinitiumback.user.diagnostic.dto.DiagnosticQuestionDto;
-import com.secondprojinitiumback.user.diagnostic.dto.DiagnosticResultDto;
-import com.secondprojinitiumback.user.diagnostic.dto.DiagnosticTestDto;
+import com.secondprojinitiumback.user.diagnostic.dto.*;
 import com.secondprojinitiumback.user.diagnostic.repository.DiagnosticResultDetailRepository;
 import com.secondprojinitiumback.user.diagnostic.repository.DiagnosticResultRepository;
 import com.secondprojinitiumback.user.diagnostic.service.DiagnosisScoreService;
@@ -70,6 +67,23 @@ public class DiagnosisController {
     public ResponseEntity<DiagnosticResultDto> getResult(@PathVariable Long resultId) {
         return ResponseEntity.ok(diagnosisService.getResultSummary(resultId));
     }
+
+    @GetMapping("/result/{resultId}/details")
+    public ResponseEntity<List<DiagnosticResultDetailDto>> getResultDetails(@PathVariable Long resultId) {
+        List<DiagnosticResultDetail> details = resultDetailRepository.findByResultId(resultId);
+
+        List<DiagnosticResultDetailDto> dtoList = details.stream()
+                .map(d -> DiagnosticResultDetailDto.builder()
+                        .questionId(d.getQuestion().getId())
+                        .questionContent(d.getQuestion().getContent())
+                        .selectedValue(d.getSelectedValue())
+                        .score(d.getScore())
+                        .build())
+                .toList();
+
+        return ResponseEntity.ok(dtoList);
+    }
+
 
     // 🔍 진단검사명 검색
     @GetMapping("/tests/search")

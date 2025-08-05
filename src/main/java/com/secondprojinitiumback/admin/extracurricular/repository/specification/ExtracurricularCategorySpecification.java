@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExtracurricularCategorySpecification {
+
     public static Specification<ExtracurricularCategory> filterCategories(
             List<Integer> competencyIds,
             String programName,

@@ -69,4 +69,10 @@ public class ExtracurricularCategoryController {
         List<SchoolSubject> list = extracurricularCategoryService.findAllSchoolSubject();
         return ResponseEntity.ok(list);
     }
+
+    @GetMapping("/category/list")
+    public ResponseEntity<List<ExtracurricularCategoryDTO>> getCategoryList(@RequestParam String empId){
+        List<ExtracurricularCategoryDTO> list = extracurricularCategoryService.findByEmpNo(empId);
+        return ResponseEntity.ok(list);
+    }
 }

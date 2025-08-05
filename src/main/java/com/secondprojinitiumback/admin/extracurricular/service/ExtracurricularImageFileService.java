@@ -42,6 +42,8 @@ public class ExtracurricularImageFileService {
             throw new RuntimeException("파일 저장 실패", e);
         }
     }
+
+
     public void deleteFile(String filePath) {
         try {
             String filename = Paths.get(filePath).getFileName().toString();

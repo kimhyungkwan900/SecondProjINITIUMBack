@@ -14,5 +14,5 @@ public interface ExtracurricularCategoryRepository extends JpaRepository<Extracu
     // 상위 카테고리 번호로 비교과 카테고리 목록 조회
     List<ExtracurricularCategory> findByStgrId(Long stgrId, Sort sort);
 
-
+    List<ExtracurricularCategory> findExtracurricularCategoriesBySchoolSubject_SubjectCode(String schoolSubjectSubjectCode);
 }

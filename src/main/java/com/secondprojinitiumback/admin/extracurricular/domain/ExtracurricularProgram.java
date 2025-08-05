@@ -87,7 +87,7 @@ public class ExtracurricularProgram {
     private LocalDateTime sttsChgDt; // 상태 변경일
 
     @Column(name = "cnd_cn")
-    private String cndCn;
+    private String cndCn; //  수료 조건
 
     @Column(name = "field")
     private String field; // 예비 필드 (기타 정보 또는 내부 용도)

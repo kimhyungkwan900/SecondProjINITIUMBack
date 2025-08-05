@@ -191,13 +191,23 @@ public class ExternalDiagnosisService {
 
 
     /**
-     * ✅ 외부 진단 검사 결과 제출 및 저장 (CareerNet V1 기준, 응답 상세 로깅 추가)
+     * ✅ 외부 진단 검사 결과 제출 및 저장 (CareerNet V1 기준, 응답 상세 로깅 + 성별 코드 매핑 추가)
      */
     public ExternalDiagnosisResultDto submitExternalResult(ExternalDiagnosisRequestDto dto) {
 
         // 🔍 학생 정보 조회
         Student student = studentRepository.findById(dto.getStudentNo())
                 .orElseThrow(() -> new IllegalArgumentException("학생을 찾을 수 없습니다."));
+
+        // 🔄 성별 코드 매핑 (팀 코드 → CareerNet 코드)
+        String careerNetGender;
+        if ("10".equals(dto.getGender())) {
+            careerNetGender = "100323"; // 남자
+        } else if ("20".equals(dto.getGender())) {
+            careerNetGender = "100324"; // 여자
+        } else {
+            throw new IllegalArgumentException("지원되지 않는 성별 코드입니다: " + dto.getGender());
+        }
 
         // 📌 CareerNet V1 API는 application/x-www-form-urlencoded 방식으로 전송
         HttpHeaders headers = new HttpHeaders();
@@ -211,7 +221,7 @@ public class ExternalDiagnosisService {
         formData.add("qestrnSeq", dto.getQestrnSeq());
         formData.add("trgetSe", dto.getTrgetSe());
         formData.add("name", student.getName());
-        formData.add("gender", dto.getGender());
+        formData.add("gender", careerNetGender); // 🔹 매핑된 성별 코드 전송
         formData.add("school", dto.getSchool() != null ? dto.getSchool() : "");
         formData.add("grade", dto.getGrade());
         formData.add("startDtm", dto.getStartDtm() != null ? dto.getStartDtm() : String.valueOf(System.currentTimeMillis()));
@@ -286,5 +296,6 @@ public class ExternalDiagnosisService {
             throw new RuntimeException("외부 진단검사 요청 실패: " + e.getMessage(), e);
         }
     }
+
 
 }

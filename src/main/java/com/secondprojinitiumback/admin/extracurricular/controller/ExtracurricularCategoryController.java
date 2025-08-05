@@ -46,16 +46,16 @@ public class ExtracurricularCategoryController {
 
     @GetMapping("/category")
     public ResponseEntity<List<ExtracurricularCategoryDTO>> getCategories(
-            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Long stgrId,
             @RequestParam(required = false) String programName,
             @RequestParam(required = false) List<Integer> competencyIds,
             @RequestParam(required = false) String departmentCode) {
 
         List<ExtracurricularCategoryDTO> list;
 
-        if (categoryId != null) {
+        if (stgrId != null) {
             // 1) 카테고리 ID 우선 조회
-            list = extracurricularCategoryService.findByCategoryId(categoryId);
+            list = extracurricularCategoryService.findByCategoryId(stgrId);
         } else {
             // 2) 필터 조건 조회
             list = extracurricularCategoryService.findByFilters(programName, competencyIds, departmentCode);

@@ -103,6 +103,7 @@ public class ExtracurricularCategoryService {
                 .collect(Collectors.toList());
     }
 
+    // 카테고리 필터
     public List<ExtracurricularCategoryDTO> findByFilters(String programName, List<Integer> competencyIds, String departmentCode) {
         if (competencyIds != null && competencyIds.isEmpty()) {
             competencyIds = null;  // 빈 리스트일 땐 null로 변경
@@ -117,6 +118,10 @@ public class ExtracurricularCategoryService {
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
+
+
+
+
 
     private ExtracurricularCategoryDTO toDto(ExtracurricularCategory entity) {
         return ExtracurricularCategoryDTO.builder()

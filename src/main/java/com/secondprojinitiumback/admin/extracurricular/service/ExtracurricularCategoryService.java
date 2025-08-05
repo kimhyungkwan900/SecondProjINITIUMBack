@@ -7,6 +7,8 @@ import com.secondprojinitiumback.admin.extracurricular.repository.Extracurricula
 import com.secondprojinitiumback.admin.extracurricular.repository.specification.ExtracurricularCategorySpecification;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
 import com.secondprojinitiumback.common.repository.SchoolSubjectRepository;
+import com.secondprojinitiumback.user.employee.domain.Employee;
+import com.secondprojinitiumback.user.employee.repository.EmployeeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -26,6 +28,7 @@ public class ExtracurricularCategoryService {
     private final ExtracurricularCategoryRepository extracurricularCategoryRepository;
     private final ModelMapper modelMapper;
     private final SchoolSubjectRepository schoolSubjectRepository;
+    private final EmployeeRepository employeeRepository;
 
     // 비교과 카테고리 등록
     public void insertExtracurricularCategory(ExtracurricularCategoryFormDTO dto) {
@@ -103,7 +106,6 @@ public class ExtracurricularCategoryService {
                 .collect(Collectors.toList());
     }
 
-    // 카테고리 필터
     public List<ExtracurricularCategoryDTO> findByFilters(String programName, List<Integer> competencyIds, String departmentCode) {
         if (competencyIds != null && competencyIds.isEmpty()) {
             competencyIds = null;  // 빈 리스트일 땐 null로 변경
@@ -118,10 +120,6 @@ public class ExtracurricularCategoryService {
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
-
-
-
-
 
     private ExtracurricularCategoryDTO toDto(ExtracurricularCategory entity) {
         return ExtracurricularCategoryDTO.builder()
@@ -139,5 +137,16 @@ public class ExtracurricularCategoryService {
     // 학과 가져오기
     public List<SchoolSubject> findAllSchoolSubject() {
         return schoolSubjectRepository.findAll();
+    }
+
+    // 로그인한 학과가 관리하는 분류체계 불러오기
+    public List<ExtracurricularCategoryDTO> findByEmpNo(String empNo) {
+        Employee employee = employeeRepository.findById(empNo).orElseThrow();
+        List<ExtracurricularCategory> categoryList = extracurricularCategoryRepository
+                .findExtracurricularCategoriesBySchoolSubject_SubjectCode(employee.getSchoolSubject().getSubjectCode());
+        return categoryList.stream()
+                .filter(category -> "Y".equalsIgnoreCase(category.getCtgryUseYn()))  // useYn이 Y인 항목만 필터링
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 }

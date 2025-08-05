@@ -10,4 +10,6 @@ import java.util.Collection;
 public interface ExtracurricularImageRepository extends JpaRepository<ExtracurricularImage,Integer> {
 
     Collection<Object> findByExtracurricularProgram_EduMngId(Long extracurricularProgramEduMngId);
+
+    ExtracurricularImage findExtracurricularImageByExtracurricularProgram_EduMngId(Long extracurricularProgramEduMngId);
 }

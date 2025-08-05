@@ -1,18 +1,26 @@
 package com.secondprojinitiumback.admin.extracurricular.service;
 
+import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularCategory;
+import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularImage;
 import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularProgram;
 import com.secondprojinitiumback.admin.extracurricular.domain.enums.*;
-import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularProgramFormDTO;
-import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularProgramUpdateFormDTO;
+import com.secondprojinitiumback.admin.extracurricular.dto.*;
 import com.secondprojinitiumback.admin.extracurricular.repository.ExtracurricularCategoryRepository;
+import com.secondprojinitiumback.admin.extracurricular.repository.ExtracurricularImageRepository;
 import com.secondprojinitiumback.admin.extracurricular.repository.ExtracurricularProgramRepository;
+import com.secondprojinitiumback.admin.extracurricular.repository.specification.ExtracurricularProgramSpecification;
+import com.secondprojinitiumback.admin.extracurricular.repository.specification.ProgramFilterRequest;
 import com.secondprojinitiumback.user.employee.domain.Employee;
 import com.secondprojinitiumback.user.employee.repository.EmployeeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,14 +36,24 @@ public class ExtracurricularProgramService {
     private final EmployeeRepository employeeRepository;
     private final ExtracurricularScheduleService extracurricularScheduleService;
 
+    private final ExtracurricularImageFileService extracurricularImageFileService;
+    private final ExtracurricularImageRepository extracurricularImageRepository;
+
     // 비교과 프로그램 등록 신청
-    public void insertExtracurricularProgram(ExtracurricularProgramFormDTO dto, String empId){
+
+
+    public void insertExtracurricularProgram(ExtracurricularProgramFormDTO dto, String empId, MultipartFile imageFile) {
         Employee employee = employeeRepository.findById(empId)
                 .orElseThrow(() -> new IllegalArgumentException("직원이 존재하지 않습니다."));
 
+        ExtracurricularCategory category = categoryRepository.findById(dto.getCtgryId()).orElseThrow();
+
+        System.out.println(imageFile);
+
+
         ExtracurricularProgram program = ExtracurricularProgram.builder()
                 .employee(employee) // 사원 ID 필요
-                .extracurricularCategory(dto.getExtracurricularCategory()) // 마찬가지로 필요
+                .extracurricularCategory(category)
                 .eduNm(dto.getEduNm())
                 .eduType(dto.getEduType())
                 .eduTrgtLmt(dto.getEduTrgtLmt())
@@ -49,12 +67,26 @@ public class ExtracurricularProgramService {
                 .eduBgngYmd(dto.getEduBgngYmd())
                 .eduEndYmd(dto.getEduEndYmd())
                 .eduPlcNm(dto.getEduPlcNm())
+                .cndCn(dto.getCndCn())
                 .eduAplyDt(LocalDateTime.now())
                 .sttsNm(SttsNm.REQUESTED) // 상태 ENUM
                 .build();
 
         extracurricularProgramRepository.save(program);
 
+        if (imageFile != null && !imageFile.isEmpty()) {
+            // 1. 파일 저장 (물리 경로에 저장)
+            String savedFilePath = extracurricularImageFileService.saveFile(imageFile);
+            // 2. 이미지 정보 엔티티 생성
+            ExtracurricularImage image = ExtracurricularImage.builder()
+                    .extracurricularProgram(program)
+                    .imgFilePathNm(savedFilePath)
+                    .imgFileSz((int) imageFile.getSize())
+                    .imgType(ImgType.PNG)
+                    .build();
+            // 3. 이미지 엔티티 저장 (별도의 Repository 필요)
+            extracurricularImageRepository.save(image);
+        }
         extracurricularScheduleService.registerSchedulesAutomatically(
                 program,
                 dto.getEduBgngYmd(),             // 교육 시작일
@@ -63,6 +95,51 @@ public class ExtracurricularProgramService {
                 dto.getEduStartTime(),           // 시작 시간
                 dto.getEduEndTime()              // 종료 시간
         );
+    }
+
+    //비교과 프로그램 등록 요청 리스트 및 필터 조회
+    public Page<ExtracurricularProgramAdminDTO> filterList(ProgramFilterRequest filter, Pageable pageable) {
+        Specification<ExtracurricularProgram> spec = ExtracurricularProgramSpecification.filterBy(filter);
+
+        Page<ExtracurricularProgram> programs = extracurricularProgramRepository.findAll(spec, pageable);
+
+        return programs.map(program -> {
+            ExtracurricularProgramAdminDTO dto = new ExtracurricularProgramAdminDTO();
+            dto.setEduMngId(program.getEduMngId());
+            dto.setEduNm(program.getEduNm());
+            dto.setEduType(program.getEduType());
+            dto.setEduTrgtLmt(program.getEduTrgtLmt());
+            dto.setEduGndrLmt(program.getEduGndrLmt());
+            dto.setEduSlctnType(program.getEduSlctnType());
+            dto.setEduPtcpNope(program.getEduPtcpNope());
+            dto.setEduPrps(program.getEduPrps());
+            dto.setEduDtlCn(program.getEduDtlCn());
+            dto.setEduAplyBgngDt(program.getEduAplyBgngDt());
+            dto.setEduAplyEndDt(program.getEduAplyEndDt());
+            dto.setEduBgngYmd(program.getEduBgngYmd());
+            dto.setEduEndDt(program.getEduEndYmd());
+            dto.setEduPlcNm(program.getEduPlcNm());
+            dto.setEduAplyDt(program.getEduAplyDt());
+            dto.setEduSttsNm(program.getSttsNm());
+
+            dto.setEmpNo(program.getEmployee().getEmpNo());
+            dto.setName(program.getEmployee().getName());
+
+            if (program.getEmployee() != null && program.getEmployee().getSchoolSubject() != null) {
+                dto.setSubjectName(program.getEmployee().getSchoolSubject().getSubjectName());
+            } else {
+                dto.setSubjectName(null); // 또는 빈 문자열 등 원하는 기본값
+            }
+
+            ExtracurricularImage image = extracurricularImageRepository.findExtracurricularImageByExtracurricularProgram_EduMngId(program.getEduMngId());
+
+            if (image != null) {
+                dto.setExtracurricularImageDTO(modelMapper.map(image, ExtracurricularImageDTO.class));
+            } else {
+                dto.setExtracurricularImageDTO(null);
+            }
+            return dto;
+        });
     }
 
     //비교과 프로그램 등록 승인 및 반려 수정

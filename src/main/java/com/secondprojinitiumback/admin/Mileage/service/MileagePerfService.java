@@ -82,7 +82,7 @@ public class MileagePerfService {
         mileagePerfRepository.save(perf);
 
         // 마일리지 누계 업데이트
-        MileageTotal total = mileageTotalRepository.findById(student.getStudentNo())
+        MileageTotal total = mileageTotalRepository.findById(student) //ToString 제거
                 .orElseGet(() -> MileageTotal.builder()
                         .student(student)
                         .totalScore(0.0) // 없으면 0점으로 시작
@@ -117,7 +117,7 @@ public class MileagePerfService {
             int score = perf.getAccMlg();                // 적립된 마일리지
 
             // 누계 점수 가져오기 (없으면 새로 생성, but 실제로는 존재해야 함)
-            MileageTotal total = mileageTotalRepository.findById(student.getStudentNo())
+            MileageTotal total = mileageTotalRepository.findById(student) // ToString 제거
                     .orElseThrow(() -> new EntityNotFoundException("누계 정보가 없습니다."));
 
             // 점수 차감

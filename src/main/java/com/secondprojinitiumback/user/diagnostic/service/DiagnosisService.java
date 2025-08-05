@@ -201,6 +201,7 @@ public class DiagnosisService {
                 .resultId(result.getId())
                 .studentNo(result.getStudent().getStudentNo()) // 🔹 studentNo 사용
                 .testId(result.getTest().getId())
+                .testName(result.getTest().getName())
                 .totalScore(result.getTotalScore())
                 .completionDate(result.getCompletionDate())
                 .interpretedMessage(interpreted)
@@ -213,6 +214,7 @@ public class DiagnosisService {
                         .resultId(result.getId())
                         .studentNo(result.getStudent().getStudentNo())
                         .testId(result.getTest().getId())
+                        .testName(result.getTest().getName())
                         .totalScore(result.getTotalScore())
                         .completionDate(result.getCompletionDate())
                         .interpretedMessage(scoreService.interpretScore(result.getTest().getId(), result.getTotalScore()))

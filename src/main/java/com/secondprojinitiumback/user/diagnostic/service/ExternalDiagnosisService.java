@@ -191,13 +191,26 @@ public class ExternalDiagnosisService {
 
 
     /**
-     * ✅ 외부 진단 검사 결과 제출 및 저장 (CareerNet V1 기준, 응답 상세 로깅 추가)
+     * ✅ 외부 진단 검사 결과 제출 및 저장 (CareerNet V1 기준, 검사자 타입 무조건 대학생 적용)
      */
     public ExternalDiagnosisResultDto submitExternalResult(ExternalDiagnosisRequestDto dto) {
 
         // 🔍 학생 정보 조회
         Student student = studentRepository.findById(dto.getStudentNo())
                 .orElseThrow(() -> new IllegalArgumentException("학생을 찾을 수 없습니다."));
+
+        // 🔄 성별 코드 매핑 (팀 코드 → CareerNet 코드)
+        String careerNetGender;
+        if ("10".equals(dto.getGender())) {
+            careerNetGender = "100323"; // 남자
+        } else if ("20".equals(dto.getGender())) {
+            careerNetGender = "100324"; // 여자
+        } else {
+            throw new IllegalArgumentException("지원되지 않는 성별 코드입니다: " + dto.getGender());
+        }
+
+        // 🔄 검사자 타입 무조건 대학생
+        String careerNetTrgetSe = "100208";
 
         // 📌 CareerNet V1 API는 application/x-www-form-urlencoded 방식으로 전송
         HttpHeaders headers = new HttpHeaders();
@@ -209,9 +222,9 @@ public class ExternalDiagnosisService {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("apikey", apiKey.trim());
         formData.add("qestrnSeq", dto.getQestrnSeq());
-        formData.add("trgetSe", dto.getTrgetSe());
+        formData.add("trgetSe", careerNetTrgetSe); // 🔹 항상 대학생 코드
         formData.add("name", student.getName());
-        formData.add("gender", dto.getGender());
+        formData.add("gender", careerNetGender);   // 🔹 매핑된 성별 코드
         formData.add("school", dto.getSchool() != null ? dto.getSchool() : "");
         formData.add("grade", dto.getGrade());
         formData.add("startDtm", dto.getStartDtm() != null ? dto.getStartDtm() : String.valueOf(System.currentTimeMillis()));
@@ -230,7 +243,7 @@ public class ExternalDiagnosisService {
                     String.class
             );
 
-            // 🔍 응답 전체 로깅 (Body + Status + Header)
+            // 🔍 응답 로깅
             log.info("CareerNet Report API Status: {}", response.getStatusCode());
             log.info("CareerNet Report API Headers: {}", response.getHeaders());
             log.info("CareerNet Report API Raw Body: {}", response.getBody());
@@ -256,15 +269,13 @@ public class ExternalDiagnosisService {
                 throw new RuntimeException("CareerNet API 응답에 RESULT 데이터가 없습니다.");
             }
 
-            // inspctSeq / url 값 추출 (Key 이름 변동 가능성 대비)
             String inspectSeq = String.valueOf(resultData.getOrDefault("inspctSeq", resultData.get("inspect_seq")));
             String resultUrl = String.valueOf(resultData.get("url"));
 
-            // 📌 DB에 저장할 검사 정보 조회
+            // 📌 DB 저장
             ExternalDiagnosticTest test = testRepository.findByQuestionApiCode(dto.getQestrnSeq())
                     .orElseThrow(() -> new IllegalArgumentException("외부 심리검사 정보를 찾을 수 없습니다."));
 
-            // 📌 결과 저장
             ExternalDiagnosticResult saved = ExternalDiagnosticResult.builder()
                     .test(test)
                     .student(student)
@@ -274,7 +285,6 @@ public class ExternalDiagnosisService {
                     .build();
             resultRepository.save(saved);
 
-            // 📌 결과 DTO 반환
             return ExternalDiagnosisResultDto.builder()
                     .inspectSeq(inspectSeq)
                     .resultUrl(resultUrl)

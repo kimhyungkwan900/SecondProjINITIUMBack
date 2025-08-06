@@ -149,7 +149,7 @@ public class LoginInfoServiceImpl implements LoginInfoService {
                     .studentNo(student.getStudentNo())
                     .schoolSubject(student.getSchoolSubject().getSubjectName())
                     .loginId(loginInfo.getLoginId())
-                    .gender(student.getGender() != null ? student.getGender().getCodeName() : null)
+                    .gender(student.getGender().getId().getCode())
                     .grade(student.getGrade())
                     .build();
         } else if ("E".equalsIgnoreCase(userType) || "A".equalsIgnoreCase(userType)) {
@@ -162,7 +162,7 @@ public class LoginInfoServiceImpl implements LoginInfoService {
                     .employeeNo(employee.getEmpNo())
                     .schoolSubject(employee.getSchoolSubject().getSubjectName())
                     .loginId(loginInfo.getLoginId())
-                    .gender(employee.getGender() != null ? employee.getGender().getCodeName() : null)
+                    .gender(employee.getGender().getId().getCode())
                     .grade(null)
                     .build();
         } else {

@@ -3,8 +3,6 @@ package com.secondprojinitiumback.common.security.domain;
 import com.secondprojinitiumback.common.converter.LocalDateTimeToChar12Converter;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 
@@ -50,7 +48,6 @@ public class LoginAuthInfo {
     private LocalDateTime lastUsedAt;
 
     // 강제 로그아웃 여부
-    @Column(name = "LGT_YN", length = 1)
-    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "LGT_YN", length = 1, columnDefinition = "CHAR(1) DEFAULT 'N'")
     private boolean isForcedLogout;
 }

@@ -1,6 +1,5 @@
 package com.secondprojinitiumback.common.security.domain;
 
-import com.secondprojinitiumback.common.domain.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
@@ -8,8 +7,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 
@@ -42,8 +39,7 @@ public class LoginInfo {
     private String accountStatusCode = "N";
 
     // true: 비밀번호 변경 필요, false: 비밀번호 변경 불필요
-    @Column(name = "PSWD_CHG_YN", length = 1)
-    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "PSWD_CHG_YN", length = 1, columnDefinition = "CHAR(1) DEFAULT 'Y'")
     private boolean passwordChangeRequired;
 
     // 로그인 실패 횟수
@@ -113,6 +109,11 @@ public class LoginInfo {
     }
     public void updateLastLoginDateTime() {
         this.lastLoginDateTime = LocalDateTime.now();
+    }
+
+    public void updateLastPasswordChangeDateTime() {
+        this.lastPasswordChangeDateTime = LocalDateTime.now();
+        this.passwordChangeRequired = false;
     }
 
 }

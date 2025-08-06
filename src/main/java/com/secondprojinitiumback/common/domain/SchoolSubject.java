@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Table(name = "SCSBJT")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SchoolSubject extends BaseEntity {
+public class SchoolSubject{
 
     // 학과과목코드
     @Id

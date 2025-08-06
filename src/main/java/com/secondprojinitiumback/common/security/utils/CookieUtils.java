@@ -40,24 +40,23 @@ public class CookieUtils {
         response.addHeader("Set-Cookie", cookie.toString());
     }
 
-    public static void deleteCookie(HttpServletRequest request, String name) {
+    public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name) {
         Cookie[] cookies = request.getCookies();
         if (cookies == null) {
             return;
         }
 
-        ResponseCookie expiredCookie = ResponseCookie.from(name, "")
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .maxAge(0) // 즉시 만료
-                .sameSite("Lax")
-                .build();
-
-        // 쿠키를 삭제하기 위해 응답 헤더에 추가
-        HttpServletResponse response = (HttpServletResponse) request.getAttribute("response");
-        if (response != null) {
-            response.addHeader(HttpHeaders.SET_COOKIE, expiredCookie.toString());
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals(name)) {
+                ResponseCookie expiredCookie = ResponseCookie.from(name, "")
+                        .httpOnly(true)
+                        .secure(false)
+                        .path("/")
+                        .maxAge(0) // 즉시 만료
+                        .sameSite("Lax")
+                        .build();
+                response.addHeader(HttpHeaders.SET_COOKIE, expiredCookie.toString());
+            }
         }
     }
 

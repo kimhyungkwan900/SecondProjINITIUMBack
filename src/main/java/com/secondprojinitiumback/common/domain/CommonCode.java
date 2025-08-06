@@ -9,7 +9,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Table(name = "COMM_CODE")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CommonCode extends BaseEntity {
+public class CommonCode{
 
     // 코드 그룹 ID
     @EmbeddedId

@@ -70,7 +70,7 @@ public class ExternalDiagnosticTest {
 
     @Column(name = "CATEGORY_GRP")
     @Builder.Default
-    private String categoryGroup = "C0002";  // 업무구분 그룹 코드
+    private String categoryGroup = "CO0002";  // 업무구분 그룹 코드
 
     @Column(name = "CATEGORY_CD")
     @Builder.Default

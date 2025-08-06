@@ -16,7 +16,6 @@ public class DiagnosticTestDto {
     private Long id;
     private String name;
     private String description;
-    private Boolean useYn;
 
     private List<DiagnosticQuestionDto> questions;
     private List<ScoreLevelDto> scoreLevels;
@@ -58,7 +57,6 @@ public class DiagnosticTestDto {
                 .id(entity.getId())
                 .name(entity.getName())
                 .description(entity.getDescription())
-                .useYn(Optional.ofNullable(entity.getUseYn()).map("Y"::equalsIgnoreCase).orElse(false))
                 .questions(questionDtos)
                 .scoreLevels(scoreLevelDtos)
                 .build();

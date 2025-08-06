@@ -40,15 +40,15 @@ public class MileagePerf {
     @JoinColumn(name = "MLG_SCOR_PLCY_ID", nullable = false)
     private ScorePolicy scorePolicy; // 배점 정책
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "SCHLR_APLY_ID")
-//    private ScholarshipApply scholarshipApply; // 장학금 신청
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SCHLR_APLY_ID")
+    private ScholarshipApply scholarshipApply; // 장학금 신청
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "STDNT_NO", referencedColumnName = "STDNT_NO", nullable = false)
     private Student student; // 학생 정보
 
-    // 실적이 취소된 상태인지 확인하는 메서드
+    // 실적이 취소된 상태인지 확인하는
     public boolean isCanceled() {
 
         return canceledAt != null;

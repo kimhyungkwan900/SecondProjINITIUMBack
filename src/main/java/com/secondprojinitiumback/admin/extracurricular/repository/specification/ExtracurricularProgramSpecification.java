@@ -24,6 +24,10 @@ public class ExtracurricularProgramSpecification {
                 predicates.add(cb.equal(root.get("employee").get("schoolSubject").get("subjectCode"), filter.getDepartmentCode()));
             }
 
+            if (filter.getEduType() != null) {
+                predicates.add(cb.equal(root.get("eduType"), filter.getEduType()));
+            }
+
             return cb.and(predicates.toArray(new Predicate[0]));
         };
     }

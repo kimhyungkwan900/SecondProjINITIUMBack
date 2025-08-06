@@ -45,8 +45,9 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // 로그인, 회원가입 API는 인증 없이 접근 허용
-                        .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/login","/api/**", "/images/**").permitAll()
                         // OPTIONS 요청은 항상 허용
+                        .requestMatchers("/images/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // /admin/** 경로는 ADMIN 권한이 있는 사용자만 접근 가능
                         .requestMatchers("/api/admin/** ").hasRole("A")
@@ -71,4 +72,6 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
+
 }

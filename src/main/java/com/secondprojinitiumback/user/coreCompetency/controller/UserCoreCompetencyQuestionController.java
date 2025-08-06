@@ -4,10 +4,7 @@ import com.secondprojinitiumback.user.coreCompetency.dto.UserCoreCompetencyQuest
 import com.secondprojinitiumback.user.coreCompetency.service.UserCoreCompetencyQuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,10 +13,17 @@ import java.util.List;
 @RequestMapping("/api/user/assessments")
 public class UserCoreCompetencyQuestionController {
 
+    // 사용자용 핵심역량 문항 서비스 의존성 주입
     private final UserCoreCompetencyQuestionService userCoreCompetencyQuestionService;
 
+    /**
+     * 특정 평가(assessmentId)에 해당하는 핵심역량 문항 + 선택지 리스트 조회 API
+
+     * 요청 예시: GET /api/user/assessments/3/questions
+     */
     @GetMapping("/{assessmentId}/questions")
     public ResponseEntity<List<UserCoreCompetencyQuestionDto>> getQuestions(@PathVariable Long assessmentId) {
+        // 서비스에서 문항 DTO 리스트 받아와서 200 OK 응답으로 반환
         return ResponseEntity.ok(userCoreCompetencyQuestionService.getQuestionsByAssessment(assessmentId));
     }
 }

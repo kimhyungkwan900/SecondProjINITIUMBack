@@ -244,3 +244,13 @@ INSERT INTO COMM_CODE (CD_SE, CD, CD_NM) VALUES
                                              ('MG0001', '2', '승인'),
                                              ('MG0001', '3', '반려'),
                                              ('MG0001', '4', '지급');
+
+-- 학기 코드
+INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, USE_YN) VALUES
+                                            ('SEMES', '1', '1학기', 'Y'),
+                                            ('SEMES', '2', '2학기', 'Y');
+
+-- 온라인/오프라인 코드
+INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, USE_YN) VALUES
+                                            ('ONLYN', 'Y', '온라인', 'Y'),
+                                            ('ONLYN', 'N', '오프라인', 'Y');

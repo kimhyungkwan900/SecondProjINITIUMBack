@@ -149,6 +149,8 @@ public class LoginInfoServiceImpl implements LoginInfoService {
                     .studentNo(student.getStudentNo())
                     .schoolSubject(student.getSchoolSubject().getSubjectName())
                     .loginId(loginInfo.getLoginId())
+                    .gender(student.getGender().getId().getCode())
+                    .grade(student.getGrade())
                     .build();
         } else if ("E".equalsIgnoreCase(userType) || "A".equalsIgnoreCase(userType)) {
             Employee employee = employeeRepository.findByLoginInfoLoginId(loginId)
@@ -160,6 +162,8 @@ public class LoginInfoServiceImpl implements LoginInfoService {
                     .employeeNo(employee.getEmpNo())
                     .schoolSubject(employee.getSchoolSubject().getSubjectName())
                     .loginId(loginInfo.getLoginId())
+                    .gender(employee.getGender().getId().getCode())
+                    .grade(null)
                     .build();
         } else {
             throw new IllegalArgumentException("알 수 없는 사용자 유형입니다: " + userType);

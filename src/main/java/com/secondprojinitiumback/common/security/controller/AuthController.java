@@ -30,8 +30,6 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
 
-        System.out.println("==== LoginController: login() called ====");
-
         LoginInfo loginInfo = loginInfoService.authenticate(loginRequestDto.getLoginId(), loginRequestDto.getPassword());
 
         if (!"N".equals(loginInfo.getAccountStatusCode())) {
@@ -64,11 +62,8 @@ public class AuthController {
     public ResponseEntity<UserDetailDto> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
         // 현재 로그인한 사용자 정보 조회
         if (userDetails == null) {
-            System.out.println("==== AuthController: userDetails is null ====");
             return ResponseEntity.notFound().build();
         }
-        
-        System.out.println("==== AuthController: userDetails.getUsername() -> " + userDetails.getUsername() + " ====");
 
         // UserDetails에서 로그인 ID를 가져와서 LoginInfo 조회
         LoginInfo loginInfo = loginInfoService.getLoginInfoByLoginId(userDetails.getUsername());

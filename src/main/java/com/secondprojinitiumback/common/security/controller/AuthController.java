@@ -7,6 +7,10 @@ import com.secondprojinitiumback.common.security.dto.TokenInfoDto;
 import com.secondprojinitiumback.common.security.dto.UserDetailDto;
 import com.secondprojinitiumback.common.security.service.LoginInfoService;
 import com.secondprojinitiumback.common.security.config.jwt.TokenProvider;
+import com.secondprojinitiumback.common.security.utils.CookieConstants;
+import com.secondprojinitiumback.common.security.utils.CookieUtils;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,27 +28,34 @@ public class AuthController {
     private final TokenProvider tokenProvider;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
-        // ID/PW 및 계정 상태 확인
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+
         LoginInfo loginInfo = loginInfoService.authenticate(loginRequestDto.getLoginId(), loginRequestDto.getPassword());
 
         if (!"N".equals(loginInfo.getAccountStatusCode())) {
             throw new RuntimeException(new AccountLockedException("계정이 잠겨있습니다."));
         }
 
-        // Access Token 및 Refresh Token 발급
         TokenInfoDto tokenInfo = tokenProvider.generateTokens(loginInfo.getLoginId(), loginInfo.getUserType());
 
-        // 로그인 정보 및 이력 저장
+        // CookieUtils를 사용하여 쿠키에 토큰 추가
+        CookieUtils.addCookie(response, CookieConstants.ACCESS_TOKEN, tokenInfo.getAccessToken(), tokenProvider.getAccessTokenExpirySeconds());
+        CookieUtils.addCookie(response, CookieConstants.REFRESH_TOKEN, tokenInfo.getRefreshToken(), tokenProvider.getRefreshTokenExpirySeconds());
+
         loginInfoService.saveUserAuthInfo(loginInfo, tokenInfo);
         loginInfoService.saveLoginHistory(loginInfo, loginRequestDto.getIpAddress());
 
-        // 사용자 정보 조회
         UserDetailDto userDetail = loginInfoService.loadUserDetail(loginInfo);
 
-        // 응답 생성
-        LoginResponseDto response = new LoginResponseDto(tokenInfo, userDetail);
-        return ResponseEntity.ok(response);
+        LoginResponseDto loginResponse = new LoginResponseDto(userDetail);
+        return ResponseEntity.ok(loginResponse);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+        CookieUtils.deleteCookie(request, response, CookieConstants.ACCESS_TOKEN);
+        CookieUtils.deleteCookie(request, response, CookieConstants.REFRESH_TOKEN);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
@@ -53,7 +64,7 @@ public class AuthController {
         if (userDetails == null) {
             return ResponseEntity.notFound().build();
         }
-        
+
         // UserDetails에서 로그인 ID를 가져와서 LoginInfo 조회
         LoginInfo loginInfo = loginInfoService.getLoginInfoByLoginId(userDetails.getUsername());
         UserDetailDto userDetailDto = loginInfoService.loadUserDetail(loginInfo);

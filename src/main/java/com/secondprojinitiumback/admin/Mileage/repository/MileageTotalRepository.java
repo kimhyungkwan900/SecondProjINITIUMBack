@@ -7,6 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 // 해당 Entitiy 키 변수형이 Student이므로 Student를 제네릭으로 사용
-public interface MileageTotalRepository extends JpaRepository<MileageTotal, Student> {
+//public interface MileageTotalRepository extends JpaRepository<MileageTotal, Student> {
 
+public interface MileageTotalRepository extends JpaRepository<MileageTotal, String> {
+    Optional<MileageTotal> findByStudent(Student student);
+
+    Optional<MileageTotal> findByStudent_StudentNo(String studentNo);
 }

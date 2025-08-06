@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 public class MileageTotalResponseDto {
 
     private String studentNo;  // 학번
-    private Double totalScore;    // 누적 마일리지 점수
+    private Double totalScore; // 누적 마일리지 점수
 
 }

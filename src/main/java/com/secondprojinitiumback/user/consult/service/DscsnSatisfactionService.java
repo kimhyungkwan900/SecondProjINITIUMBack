@@ -33,11 +33,11 @@ public class DscsnSatisfactionService {
         String seqNum = getNextSatisfactionSequence(prefix);
 
         //4. ID 생성
-        String dscsnApplyId = prefix + seqNum;
+        String dscsnSatisfyId = prefix + seqNum;
 
         //엔티티 생성
         DscsnSatisfaction dscsnSatisfaction = DscsnSatisfaction.builder()
-                .dscsnSatisfyId(dscsnSatisfactionDto.getDscsnInfoId()) // 상담 정보 ID를 만족도 ID로 사용
+                .dscsnSatisfyId(dscsnSatisfyId)
                 .dscsnSatisfyScore(dscsnSatisfactionDto.getDscsnSatisfyScore())
                 .dscsnImp(dscsnSatisfactionDto.getDscsnImp())
                 .dscsnInfo(dscsnInfo) // 상담 정보 엔티티 설정

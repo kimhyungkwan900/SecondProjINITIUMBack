@@ -106,10 +106,16 @@ public class LoginInfoServiceImpl implements LoginInfoService {
     @Override
     @Transactional
     public void saveUserAuthInfo(LoginInfo loginInfo, TokenInfoDto tokenInfo) {
-        // 로그인 인증 정보 저장
+        LocalDateTime now = LocalDateTime.now();
+
         LoginAuthInfo authInfo = LoginAuthInfo.builder()
                 .loginInfo(loginInfo)
+                .accessToken(tokenInfo.getAccessToken())
                 .refreshToken(tokenInfo.getRefreshToken())
+                .issuedAt(now)
+                .expiresAt(now.plusSeconds(tokenInfo.getAccessTokenExpiresIn()))
+                .lastUsedAt(now)
+                .isForcedLogout(false)
                 .build();
         loginAuthInfoRepository.save(authInfo);
     }
@@ -140,6 +146,11 @@ public class LoginInfoServiceImpl implements LoginInfoService {
                     .userType(userType)
                     .name(student.getName())
                     .email(student.getEmail())
+                    .studentNo(student.getStudentNo())
+                    .schoolSubject(student.getSchoolSubject().getSubjectName())
+                    .loginId(loginInfo.getLoginId())
+                    .gender(student.getGender().getId().getCode())
+                    .grade(student.getGrade())
                     .build();
         } else if ("E".equalsIgnoreCase(userType) || "A".equalsIgnoreCase(userType)) {
             Employee employee = employeeRepository.findByLoginInfoLoginId(loginId)
@@ -148,6 +159,11 @@ public class LoginInfoServiceImpl implements LoginInfoService {
                     .userType(userType)
                     .name(employee.getName())
                     .email(employee.getEmail())
+                    .employeeNo(employee.getEmpNo())
+                    .schoolSubject(employee.getSchoolSubject().getSubjectName())
+                    .loginId(loginInfo.getLoginId())
+                    .gender(employee.getGender().getId().getCode())
+                    .grade(null)
                     .build();
         } else {
             throw new IllegalArgumentException("알 수 없는 사용자 유형입니다: " + userType);

@@ -37,7 +37,6 @@ public class DiagnosisService {
         DiagnosticTest test = DiagnosticTest.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
-                .useYn(Boolean.TRUE.equals(dto.getUseYn()) ? "Y" : "N")
                 .build();
 
         // 🔹 문항 추가
@@ -106,7 +105,7 @@ public class DiagnosisService {
     // DiagnosisService.java
     public List<DiagnosticTestDto> searchTestsByKeyword(String keyword) {
         List<DiagnosticTest> tests = testRepository
-                .findByNameContainingIgnoreCaseAndUseYn(keyword, "Y"); // 🔹 "Y"로 명시
+                .findByNameContainingIgnoreCase(keyword);
         return tests.stream()
                 .map(DiagnosticTestDto::from)
                 .collect(Collectors.toList());

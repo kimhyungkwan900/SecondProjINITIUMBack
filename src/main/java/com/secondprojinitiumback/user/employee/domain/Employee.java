@@ -1,6 +1,7 @@
 package com.secondprojinitiumback.user.employee.domain;
 
 import com.secondprojinitiumback.common.bank.domain.BankAccount;
+import com.secondprojinitiumback.common.converter.LocalDateToChar8Converter;
 import com.secondprojinitiumback.common.domain.CommonCode;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
 import com.secondprojinitiumback.common.domain.base.BaseEntity;
@@ -67,6 +68,7 @@ public class Employee {
     private CommonCode gender;
 
     @Column(name = "EMP_BRDT", nullable = false)
+    @Convert(converter = LocalDateToChar8Converter.class)
     @PastOrPresent(message = "생년월일은 과거나 오늘이어야 합니다.")
     private LocalDate birthDate;
 

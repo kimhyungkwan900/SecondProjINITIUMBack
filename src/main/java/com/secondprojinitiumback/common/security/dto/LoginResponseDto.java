@@ -1,13 +1,14 @@
 package com.secondprojinitiumback.common.security.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Getter
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginResponseDto {
-    private TokenInfoDto tokenInfo;
-    private UserDetailDto userDetail;
+    private UserDetailDto userInfo;
 }

@@ -35,7 +35,6 @@ public class AdminResponseChoiceOptionService {
         // 각 DTO를 ResponseChoiceOption 엔티티로 변환하여 저장
         for (ResponseChoiceOptionDto dto : dtos) {
             ResponseChoiceOption option = ResponseChoiceOption.builder()
-                    .question(question) // 연관된 문항 설정
                     .label(dto.getLabel()) // 보기 라벨
                     .score(dto.getScore()) // 보기 점수
                     .build();

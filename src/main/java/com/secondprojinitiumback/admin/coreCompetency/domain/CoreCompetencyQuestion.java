@@ -3,6 +3,9 @@ package com.secondprojinitiumback.admin.coreCompetency.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -44,6 +47,9 @@ public class CoreCompetencyQuestion {
     @Column(name = "level_type")
     private LevelTypeEnum levelType;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CHC_OPT_ID", nullable = false)
+    private List<ResponseChoiceOption> responseChoiceOptions = new ArrayList<>();
 
 
 }

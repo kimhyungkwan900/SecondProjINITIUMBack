@@ -2,11 +2,12 @@ package com.secondprojinitiumback.user.coreCompetency.dto;
 
 import lombok.*;
 
-@Builder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponseDto {
-    private Long qu
+public class UserResponseRequestDto {
+    private Long questionId;
+    private String label;
+    private Integer score;
 }

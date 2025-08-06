@@ -19,7 +19,7 @@ public class CoreCompetencyAssessment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 평가 ID (PK)
 
-    // 학과 정보 연결
+    // 학과(부서) 정보 연결
     @ManyToOne
     @JoinColumn(name = "SCSBJT_NO")
     private SchoolSubject schoolSubject;

@@ -3,7 +3,7 @@ package com.secondprojinitiumback.admin.coreCompetency.service;
 import com.secondprojinitiumback.admin.coreCompetency.repository.BehaviorIndicatorRepository;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
 import com.secondprojinitiumback.common.repository.SchoolSubjectRepository;
-import com.secondprojinitiumback.user.coreCompetency.dto.BehaviorIndicatorDto;
+import com.secondprojinitiumback.admin.coreCompetency.dto.BehaviorIndicatorDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

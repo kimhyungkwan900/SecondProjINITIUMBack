@@ -1,8 +1,6 @@
 package com.secondprojinitiumback.user.coreCompetency.controller;
 
-import com.secondprojinitiumback.admin.coreCompetency.domain.IdealTalentProfile;
-import com.secondprojinitiumback.admin.coreCompetency.repository.IdealTalentProfileRepository;
-import com.secondprojinitiumback.user.coreCompetency.dto.IdealTalentProfileDto;
+import com.secondprojinitiumback.user.coreCompetency.dto.UserIdealTalentProfileDto;
 import com.secondprojinitiumback.user.coreCompetency.service.IdealTalentProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +12,14 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/ideal-talent-profile")
-public class IdealTalentProfileController {
+@RequestMapping("/api/user/ideal-talent-profile")
+public class UserIdealTalentProfileController {
 
     private final IdealTalentProfileService idealTalentProfileService;
 
     @GetMapping("/tree")
-    public ResponseEntity<List<IdealTalentProfileDto>> getIdealTalentTree() {
-        List<IdealTalentProfileDto> tree = idealTalentProfileService.getIdealTalentStructure();
+    public ResponseEntity<List<UserIdealTalentProfileDto>> getIdealTalentTree() {
+        List<UserIdealTalentProfileDto> tree = idealTalentProfileService.getIdealTalentStructure();
         return ResponseEntity.ok(tree);
     }
 }

@@ -15,7 +15,7 @@ public class DiagnosticResultDto {
     private Long resultId;
     private String studentNo;
     private Long testId;
-    private String testName; // 🔹 추가
+    private String testName;
     private Integer totalScore;
     private LocalDateTime completionDate;
     private String interpretedMessage;

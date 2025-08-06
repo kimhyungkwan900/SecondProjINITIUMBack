@@ -10,7 +10,7 @@ import lombok.*; // Lombok import 추가
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class University extends BaseEntity {
+public class University{
 
     // 대학코드
     @Id

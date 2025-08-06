@@ -9,7 +9,7 @@ import org.hibernate.type.SqlTypes;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "LGN_AUTH_INFO")
+@Table(name = "LGN_USER_AUTH_INFO")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor

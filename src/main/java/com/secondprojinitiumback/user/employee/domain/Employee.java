@@ -25,7 +25,7 @@ import java.time.LocalDate;
         })
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Employee extends BaseEntity {
+public class Employee {
 
     // 교직원 번호 (사번)
     @Id

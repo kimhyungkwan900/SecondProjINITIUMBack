@@ -47,7 +47,7 @@ public class SecurityConfig {
                         // 로그인 API는 인증 없이 접근 허용
                         .requestMatchers("/**").permitAll()
                         // OPTIONS 요청은 항상 허용
-//                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // /admin/** 경로는 ADMIN 권한이 있는 사용자만 접근 가능
 //                        .requestMatchers("/api/admin/**").hasRole("A")
                         // 나머지 API 요청은 인증된 사용자만 접근 가능

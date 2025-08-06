@@ -106,10 +106,16 @@ public class LoginInfoServiceImpl implements LoginInfoService {
     @Override
     @Transactional
     public void saveUserAuthInfo(LoginInfo loginInfo, TokenInfoDto tokenInfo) {
-        // 로그인 인증 정보 저장
+        LocalDateTime now = LocalDateTime.now();
+
         LoginAuthInfo authInfo = LoginAuthInfo.builder()
                 .loginInfo(loginInfo)
+                .accessToken(tokenInfo.getAccessToken())
                 .refreshToken(tokenInfo.getRefreshToken())
+                .issuedAt(now)
+                .expiresAt(now.plusSeconds(tokenInfo.getAccessTokenExpiresIn()))
+                .lastUsedAt(now)
+                .isForcedLogout(false)
                 .build();
         loginAuthInfoRepository.save(authInfo);
     }

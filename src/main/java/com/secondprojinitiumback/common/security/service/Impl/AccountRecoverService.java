@@ -28,9 +28,13 @@ public class AccountRecoverService {
 
     @Transactional(readOnly = true)
     public String findLoginIdByEmail(String email) {
+        // 이메일로 로그인 ID 찾기
         return studentRepository.findByEmail(email)
+                // 학생목록에서 로그인ID 찾기
                 .map(student -> student.getLoginInfo().getLoginId())
+                // 직원목록에서 로그인ID 찾기
                 .or(() -> employeeRepository.findByEmail(email).map(employee -> employee.getLoginInfo().getLoginId()))
+                // 없다면 예외 발생
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 

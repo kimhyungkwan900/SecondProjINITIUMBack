@@ -14,10 +14,9 @@ import com.secondprojinitiumback.user.employee.domain.Employee;
 import com.secondprojinitiumback.user.employee.repository.EmployeeRepository;
 import com.secondprojinitiumback.user.student.domain.Student;
 import com.secondprojinitiumback.user.student.repository.StudentRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.secondprojinitiumback.common.exception.CustomException;
+import com.secondprojinitiumback.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,24 +60,33 @@ public class LoginInfoServiceImpl implements LoginInfoService {
     @Override
     public void changePassword(String loginId, String currentPassword, String newPassword) {
         LoginInfo loginInfo = loginInfoRepository.findById(loginId)
-                .orElseThrow(() -> new EntityNotFoundException("로그인 정보 없음: " + loginId));
+                .orElseThrow(() -> new CustomException(ErrorCode.LOGIN_INFO_NOT_FOUND));
 
         // 현재 비밀번호 검증
         if (!passwordEncoder.matches(currentPassword, loginInfo.getPassword())) {
-            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+            throw new CustomException(ErrorCode.PASSWORD_MISMATCH);
+        }
+
+        // 새 비밀번호 유효성 검사
+        if (newPassword.length() < 8) {
+            throw new CustomException(ErrorCode.PASSWORD_TOO_SHORT);
         }
 
         // 새 비밀번호 암호화
         String newEncodedPassword = passwordEncoder.encode(newPassword);
         // 비밀번호 변경
         loginInfo.changePassword(newEncodedPassword);
+
+        // 비밀번호 변경일자 업데이트
+        loginInfo.updateLastPasswordChangeDateTime();
+        loginInfoRepository.save(loginInfo);
     }
 
     // 로그인정보 삭제
     @Override
     public void deleteLoginInfo(String loginId) {
         LoginInfo loginInfo = loginInfoRepository.findById(loginId)
-                .orElseThrow(() -> new EntityNotFoundException("로그인 정보 없음: " + loginId));
+                .orElseThrow(() -> new CustomException(ErrorCode.LOGIN_INFO_NOT_FOUND));
         loginInfoRepository.delete(loginInfo);
     }
 
@@ -92,11 +100,11 @@ public class LoginInfoServiceImpl implements LoginInfoService {
     public LoginInfo authenticate(String loginId, String rawPassword) {
         // 로그인 ID로 사용자 정보 조회
         LoginInfo loginInfo = loginInfoRepository.findById(loginId)
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + loginId));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         
         // 비밀번호 검증
         if (!passwordEncoder.matches(rawPassword, loginInfo.getPassword())) {
-            throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
+            throw new CustomException(ErrorCode.INVALID_CREDENTIALS);
         }
 
         // 로그인 정보 반환
@@ -141,7 +149,7 @@ public class LoginInfoServiceImpl implements LoginInfoService {
         // 사용자 유형에 따라 학생 또는 직원 정보 조회
         if ("S".equalsIgnoreCase(userType)) {
             Student student = studentRepository.findByLoginInfoLoginId(loginId)
-                    .orElseThrow(() -> new EntityNotFoundException("학생 정보를 찾을 수 없습니다: " + loginId));
+                    .orElseThrow(() -> new CustomException(ErrorCode.STUDENT_NOT_FOUND));
             return UserDetailDto.builder()
                     .userType(userType)
                     .name(student.getName())
@@ -154,7 +162,7 @@ public class LoginInfoServiceImpl implements LoginInfoService {
                     .build();
         } else if ("E".equalsIgnoreCase(userType) || "A".equalsIgnoreCase(userType)) {
             Employee employee = employeeRepository.findByLoginInfoLoginId(loginId)
-                    .orElseThrow(() -> new EntityNotFoundException("직원 정보를 찾을 수 없습니다: " + loginId));
+                    .orElseThrow(() -> new CustomException(ErrorCode.EMPLOYEE_NOT_FOUND));
             return UserDetailDto.builder()
                     .userType(userType)
                     .name(employee.getName())
@@ -166,7 +174,7 @@ public class LoginInfoServiceImpl implements LoginInfoService {
                     .grade(null)
                     .build();
         } else {
-            throw new IllegalArgumentException("알 수 없는 사용자 유형입니다: " + userType);
+            throw new CustomException(ErrorCode.UNKNOWN_USER_TYPE);
         }
     }
 
@@ -174,6 +182,6 @@ public class LoginInfoServiceImpl implements LoginInfoService {
     public LoginInfo getLoginInfoByLoginId(String loginId) {
         // 로그인 ID로 로그인 정보 조회
         return loginInfoRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + loginId));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 }

@@ -51,7 +51,7 @@ class DscsnSatisfactionServiceTest {
     @Test
     void saveDscsnSatisfaction_success_firstSequence() {
         // given: satisfactionRepository에서 마지막이 없다고 응답
-        when(dscsnInfoRepository.findById("A1001"))
+        when(dscsnInfoRepository.findById("AI1001"))
                 .thenReturn(Optional.of(sampleInfo));
         when(dscsnSatisfactionRepository
                 .findTopByDscsnSatisfyIdStartingWithOrderByDscsnSatisfyIdDesc("AS"))
@@ -66,8 +66,8 @@ class DscsnSatisfactionServiceTest {
         verify(dscsnSatisfactionRepository).save(captor.capture());
 
         DscsnSatisfaction saved = captor.getValue();
-        // ID는 DTO의 dscsnInfoId 그대로 사용
-        assertThat(saved.getDscsnSatisfyId()).isEqualTo("A1001");
+
+        assertThat(saved.getDscsnSatisfyId()).isEqualTo("AS0001");
         assertThat(saved.getDscsnSatisfyScore()).isEqualTo("만족");
         assertThat(saved.getDscsnImp()).isEqualTo("유익한 상담이었습니다.");
         assertThat(saved.getDscsnInfo()).isSameAs(sampleInfo);

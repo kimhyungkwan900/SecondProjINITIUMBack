@@ -25,12 +25,14 @@ public class ScholarshipApplyController {
     //상세 조회
     @GetMapping("/{id}")
     public ScholarshipApplyResponseDto getDetail(@PathVariable Long id) {
+
         return service.getDetail(id);
     }
 
     // 신청 등록
     @PostMapping
     public void register(@RequestBody ScholarshipApplyRequestDto dto) {
+
         service.register(dto);
     }
 

@@ -65,14 +65,23 @@ public class ScholarshipApplyService {
         return ScholarshipApplyResponseDto.from(apply);
     }
 
-    // 3. 신청 등록
+    // 3. 장학금 신청
     public void register(ScholarshipApplyRequestDto dto) {
         Student student = studentRepository.findById(dto.getStudentNo())
-                .orElseThrow(() -> new EntityNotFoundException("학생 정보 없음"));
+                .orElseThrow(() -> new EntityNotFoundException("학생이 존재하지 않습니다"));
         BankAccount account = bankAccountRepository.findById(dto.getAccountNo())
-                .orElseThrow(() -> new EntityNotFoundException("계좌 정보 없음"));
+                .orElseThrow(() -> new EntityNotFoundException("계좌가 존재하지 않습니다"));
         CommonCode code = codeRepository.findById(new CommonCodeId(dto.getCodeSe(), dto.getCode()))
-                .orElseThrow(() -> new EntityNotFoundException("코드 정보 없음"));
+                .orElseThrow(() -> new EntityNotFoundException("코드가 없습니다"));
+
+        //학생의 마일리지 누계 조회
+        MileageTotal total = mileageTotalRepository.findByStudent_StudentNo(dto.getStudentNo())
+                .orElseThrow(() -> new EntityNotFoundException("누적 마일리지가 존재하지 않습니다"));
+
+        //마일리지 기준 조건 체크
+        if (total.getTotalScore() < 100) {
+            throw new IllegalStateException("100점 이상의 누적 마일리지가 있어야 신청할 수 있습니다.");
+        }
 
         ScholarshipApply apply = ScholarshipApply.builder()
                 .student(student)
@@ -126,11 +135,11 @@ public class ScholarshipApplyService {
                 .orElseThrow(() -> new EntityNotFoundException("학생 없음"));
 
         // Student 엔티티로 MileageTotal을 조회
-        MileageTotal total = mileageTotalRepository.findById(student)
+        MileageTotal total = mileageTotalRepository.findByStudent(student)
                 .orElseThrow(() -> new EntityNotFoundException("마일리지 없음"));
 
         return MileageTotalResponseDto.builder()
-                .studentNo(studentNo)
+                .studentNo(student.getStudentNo())
                 .totalScore(total.getTotalScore())
                 .build();
     }

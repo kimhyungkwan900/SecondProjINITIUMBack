@@ -19,23 +19,9 @@ public class QLoginInfo extends EntityPathBase<LoginInfo> {
 
     public static final QLoginInfo loginInfo = new QLoginInfo("loginInfo");
 
-    public final com.secondprojinitiumback.common.domain.base.QBaseEntity _super = new com.secondprojinitiumback.common.domain.base.QBaseEntity(this);
-
     public final DateTimePath<java.time.LocalDateTime> accountJoinDate = createDateTime("accountJoinDate", java.time.LocalDateTime.class);
 
     public final StringPath accountStatusCode = createString("accountStatusCode");
-
-    //inherited
-    public final StringPath createdBy = _super.createdBy;
-
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
-
-    //inherited
-    public final StringPath createdIp = _super.createdIp;
-
-    //inherited
-    public final NumberPath<Long> createdProgramId = _super.createdProgramId;
 
     public final DateTimePath<java.time.LocalDateTime> lastLoginDateTime = createDateTime("lastLoginDateTime", java.time.LocalDateTime.class);
 
@@ -44,18 +30,6 @@ public class QLoginInfo extends EntityPathBase<LoginInfo> {
     public final NumberPath<Integer> loginFailCount = createNumber("loginFailCount", Integer.class);
 
     public final StringPath loginId = createString("loginId");
-
-    //inherited
-    public final StringPath modifiedBy = _super.modifiedBy;
-
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
-
-    //inherited
-    public final StringPath modifiedIp = _super.modifiedIp;
-
-    //inherited
-    public final NumberPath<Long> modifiedProgramId = _super.modifiedProgramId;
 
     public final StringPath password = createString("password");
 

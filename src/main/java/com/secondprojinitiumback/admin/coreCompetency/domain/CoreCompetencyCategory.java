@@ -26,7 +26,7 @@ public class CoreCompetencyCategory {
     @Column(name = "CTGR_CN", nullable = false)
     private String coreCategoryNote; // 핵심역량 카테고리 설명
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ITP_ID", nullable = false)
     private IdealTalentProfile idealTalentProfile; // 인재상 프로필과 연관
 

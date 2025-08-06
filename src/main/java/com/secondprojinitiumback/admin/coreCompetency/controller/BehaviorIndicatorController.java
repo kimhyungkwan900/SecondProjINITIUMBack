@@ -1,7 +1,7 @@
 package com.secondprojinitiumback.admin.coreCompetency.controller;
 
 import com.secondprojinitiumback.admin.coreCompetency.service.BehaviorIndicatorService;
-import com.secondprojinitiumback.user.coreCompetency.dto.BehaviorIndicatorDto;
+import com.secondprojinitiumback.admin.coreCompetency.dto.BehaviorIndicatorDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

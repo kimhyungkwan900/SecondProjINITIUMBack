@@ -21,7 +21,7 @@ public class IdealTalentProfile {
     private String name; // 인재상 이름
 
     //프론트에서 트리구조를 출력하기 위한 양방향 설정
-    @OneToOne(mappedBy = "idealTalentProfile", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "idealTalentProfile")
     private CoreCompetencyCategory coreCompetencyCategories;
 
 

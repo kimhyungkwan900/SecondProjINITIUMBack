@@ -23,5 +23,3 @@ INSERT INTO Behavior_Indicator (STGR_ID, SCSBJT_NO, INDCTR_NM, IS_COMMON, IS_COM
                                                                                                (14, '161','5.2.2 문학과 사회, 역사, 철학 등 타 분야와의 연계 속에서 의미를 도출할 수 있다.','N', 'ComYN'),
                                                                                                (14, '161','5.2.3 다양한 관점을 통합해 새로운 분석 틀을 제안할 수 있다.','N', 'ComYN'),
                                                                                                (14, '161','5.2.4 문학작품을 문화·정치·경제 등 복합적 맥락에서 해석할 수 있다.','N', 'ComYN');
-
-DELETE from behavior_indicator where SCSBJT_NO = 'KOR01';

@@ -22,35 +22,9 @@ public class QCommonCode extends EntityPathBase<CommonCode> {
 
     public static final QCommonCode commonCode = new QCommonCode("commonCode");
 
-    public final com.secondprojinitiumback.common.domain.base.QBaseEntity _super = new com.secondprojinitiumback.common.domain.base.QBaseEntity(this);
-
     public final StringPath codeName = createString("codeName");
 
-    //inherited
-    public final StringPath createdBy = _super.createdBy;
-
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
-
-    //inherited
-    public final StringPath createdIp = _super.createdIp;
-
-    //inherited
-    public final NumberPath<Long> createdProgramId = _super.createdProgramId;
-
     public final QCommonCodeId id;
-
-    //inherited
-    public final StringPath modifiedBy = _super.modifiedBy;
-
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
-
-    //inherited
-    public final StringPath modifiedIp = _super.modifiedIp;
-
-    //inherited
-    public final NumberPath<Long> modifiedProgramId = _super.modifiedProgramId;
 
     public final StringPath remark = createString("remark");
 

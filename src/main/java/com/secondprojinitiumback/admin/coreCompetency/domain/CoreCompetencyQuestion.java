@@ -47,8 +47,7 @@ public class CoreCompetencyQuestion {
     @Column(name = "level_type")
     private LevelTypeEnum levelType;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CHC_OPT_ID", nullable = false)
+    @OneToMany(mappedBy = "question",fetch = FetchType.LAZY)
     private List<ResponseChoiceOption> responseChoiceOptions = new ArrayList<>();
 
 

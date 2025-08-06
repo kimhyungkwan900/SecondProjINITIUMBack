@@ -17,6 +17,10 @@ public class ResponseChoiceOption {
     @Column(name = "CHC_OPT_ID")
     private Long id; // 보기 ID
 
+    @ManyToOne
+    @JoinColumn(name = "QSTN_ID", referencedColumnName = "QSTN_ID")
+    private CoreCompetencyQuestion question;
+
     @Column(name = "CHC_OPT_LBL")
     private String label; // 보기 라벨
 

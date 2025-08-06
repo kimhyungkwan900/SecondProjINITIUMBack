@@ -1,4 +1,4 @@
 package com.secondprojinitiumback.user.coreCompetency.controller;
 
-public class UserCoreCompetencyQuestionController {
+public class UserCoreCompetencyAssessmentController {
 }

@@ -139,7 +139,8 @@ public class ExtracurricularCategoryService {
         return schoolSubjectRepository.findAll();
     }
 
-    // 로그인한 학과가 관리하는 분류체계 불러오기
+
+    // 로그인한 운영자의 학과가 관리하는 분류체계 불러오기
     public List<ExtracurricularCategoryDTO> findByEmpNo(String empNo) {
         Employee employee = employeeRepository.findById(empNo).orElseThrow();
         List<ExtracurricularCategory> categoryList = extracurricularCategoryRepository

@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
         })
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LoginInfo extends BaseEntity {
+public class LoginInfo {
 
     // 로그인 ID는 최대 20자로 제한되며, 유일해야 함
     @Id
@@ -28,7 +28,7 @@ public class LoginInfo extends BaseEntity {
     private String loginId;
 
     // 비밀번호는 암호화되어 저장되며, 최대 길이는 100자로 제한 Bcrypt 대응
-    @Column(name = "LGN_PW", length = 100, nullable = false)
+    @Column(name = "LGN_PSWD", length = 100, nullable = false)
     private String password;
 
 

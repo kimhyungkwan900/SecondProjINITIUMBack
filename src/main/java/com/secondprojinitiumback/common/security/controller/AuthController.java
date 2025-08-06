@@ -25,6 +25,9 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
+
+        System.out.println("==== LoginController: login() called ====");
+
         // ID/PW 및 계정 상태 확인
         LoginInfo loginInfo = loginInfoService.authenticate(loginRequestDto.getLoginId(), loginRequestDto.getPassword());
 

@@ -106,7 +106,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepositoryCustom {
 
     // 상태 코드 검색
     private BooleanExpression eqStatus(String statusCode) {
-        return StringUtils.hasText(statusCode) ? QEmployee.employee.employeeStatus.employeeStatusCode.eq(statusCode) : null;
+        return StringUtils.hasText(statusCode) ? QEmployee.employee.employeeStatus.id.employeeStatusCode.eq(statusCode) : null;
     }
 
     // 성별 코드 검색

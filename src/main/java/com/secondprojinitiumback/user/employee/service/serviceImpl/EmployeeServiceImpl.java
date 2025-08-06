@@ -159,7 +159,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     // 직원 상태 코드로 상태 정보 조회
     private EmployeeStatusInfo findStatusByCode(String statusCode) {
         return employeeStatusInfoRepository
-                .findByEmployeeStatusCodeAndEmployeeStatusCodeSe(statusCode, "AM0120")
+                .findByIdEmployeeStatusCodeAndIdEmployeeStatusCodeSe(statusCode, "AM0120")
                 .orElseThrow(() -> new EntityNotFoundException("상태 없음: " + statusCode));
     }
 
@@ -195,7 +195,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         String schoolSubjectNo = (employee.getSchoolSubject() != null)
                 ? employee.getSchoolSubject().getSubjectCode() : null;
         String employeeStatusCode = (employee.getEmployeeStatus() != null)
-                ? employee.getEmployeeStatus().getEmployeeStatusCode() : null;
+                ? employee.getEmployeeStatus().getId().getEmployeeStatusCode() : null;
         String genderCode = (employee.getGender() != null)
                 ? employee.getGender().getId().getCode() : null;
         String bankAccountNo = null;

@@ -62,7 +62,7 @@ public class StudentServiceImpl implements StudentService {
         CommonCode gender = findCommonCode(dto.getGender(), "CO0001");
         Employee advisor = findEmployeeById(dto.getAdvisorNo());
         BankAccount bankAccount = findBankAccountByNoNullable(dto.getBankAccountNumber());
-        StudentStatusInfo initialStatus = findStudentStatusByCode(dto.getStudentStatusCode(), "SL0030");
+        StudentStatusInfo initialStatus = findStudentStatusByCode(dto.getStudentStatusCode());
 
         // 학생 엔티티 생성 및 저장
         Student student = Student.create(
@@ -81,7 +81,7 @@ public class StudentServiceImpl implements StudentService {
     public StudentDto changeStudentStatus(String studentNo, String statusCode) {
         // 학생과 상태 정보 조회
         Student student = findStudentById(studentNo);
-        StudentStatusInfo statusInfo = findStudentStatusByCode(statusCode, "SL0030");
+        StudentStatusInfo statusInfo = findStudentStatusByCode(statusCode);
         // 상태 변경
         student.changeStatus(statusInfo);
         // 학생 정보 저장
@@ -112,7 +112,7 @@ public class StudentServiceImpl implements StudentService {
         Student student = findStudentById(studentNo);
         SchoolSubject schoolSubject = findSchoolSubjectByCode(dto.getSchoolSubjectCode());
         Employee advisor = findEmployeeById(dto.getAdvisorNo());
-        StudentStatusInfo statusInfo = findStudentStatusByCode(dto.getStudentStatusCode(), "SL0030");
+        StudentStatusInfo statusInfo = findStudentStatusByCode(dto.getStudentStatusCode());
         BankAccount bankAccount = findBankAccountByNoNullable(dto.getBankAccountNo());
         // 공통 코드 조회 (성별)
         CommonCode gender = findCommonCodeNullable(dto.getGender(), "CO0001");
@@ -188,8 +188,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     // 학적 상태 코드로 학적 상태 정보 조회
-    private StudentStatusInfo findStudentStatusByCode(String code, String groupCode) {
-        return studentStatusInfoRepository.findByStudentStatusCodeAndStudentStatusCodeSe(code, groupCode)
+    private StudentStatusInfo findStudentStatusByCode(String code) {
+        return studentStatusInfoRepository.findByIdStudentStatusCodeAndIdStudentStatusCodeSe(code, "SL0030")
                 .orElseThrow(() -> new EntityNotFoundException("학적 상태 코드 없음: " + code));
     }
 
@@ -215,7 +215,7 @@ public class StudentServiceImpl implements StudentService {
                 .clubCode(student.getClubCode())
                 .grade(student.getGrade())
                 .advisorId(student.getAdvisor() != null ? student.getAdvisor().getName() : null)
-                .studentStatusCode(student.getStudentStatus() != null ? student.getStudentStatus().getStudentStatusCode() : null)
+                .studentStatusCode(student.getStudentStatus() != null ? student.getStudentStatus().getId().getStudentStatusCode() : null)
                 .schoolSubjectCode(student.getSchoolSubject() != null ? student.getSchoolSubject().getSubjectCode() : null)
                 .build();
     }

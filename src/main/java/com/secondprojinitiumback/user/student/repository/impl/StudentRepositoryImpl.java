@@ -130,7 +130,7 @@ public class StudentRepositoryImpl implements StudentRepositoryCustom {
 
     // 학적 상태 코드 검색
     private BooleanExpression eqStatus(String statusCode) {
-        return StringUtils.hasText(statusCode) ? QStudent.student.studentStatus.studentStatusCode.eq(statusCode) : null;
+        return StringUtils.hasText(statusCode) ? QStudent.student.studentStatus.id.studentStatusCode.eq(statusCode) : null;
     }
 
     // 학년 검색

@@ -1,4 +1,4 @@
 package com.secondprojinitiumback.user.coreCompetency.service;
 
-public class UserCoreCompetencyQuestionService {
+public class UserCoreCompetencyAssessmentService {
 }

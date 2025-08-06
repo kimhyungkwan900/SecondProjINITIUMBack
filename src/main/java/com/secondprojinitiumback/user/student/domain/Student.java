@@ -29,7 +29,7 @@ import java.time.LocalDate;
         })
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Student extends BaseEntity {
+public class Student {
     // 학생 번호 (학번)
     @Id
     @Column(name = "STDNT_NO", length = 10)

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "STDNT_STTS")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class StudentStatusInfo extends BaseEntity {
+public class StudentStatusInfo {
 
     @EmbeddedId
     private StudentStatusId id;

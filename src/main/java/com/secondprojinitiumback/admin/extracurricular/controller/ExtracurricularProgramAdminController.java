@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.admin.extracurricular.controller;
 
+import com.secondprojinitiumback.admin.extracurricular.domain.enums.EduType;
 import com.secondprojinitiumback.admin.extracurricular.domain.enums.SttsNm;
 import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularProgramAdminDTO;
 import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularProgramFormDTO;
@@ -60,9 +61,10 @@ public class ExtracurricularProgramAdminController {
                 @RequestParam(required = false) String keyword,
                 @RequestParam(required = false) SttsNm status,
                 @RequestParam(required = false) String departmentCode,
+                @RequestParam(required = false) EduType eduType,
                 @PageableDefault(size = 5, sort = "eduMngId", direction = Sort.Direction.DESC) Pageable pageable
         ) {
-                ProgramFilterRequest filter = new ProgramFilterRequest(status, keyword, departmentCode);
+                ProgramFilterRequest filter = new ProgramFilterRequest(status, keyword, departmentCode, eduType);
                 Page<ExtracurricularProgramAdminDTO> result = extracurricularProgramService.filterList(filter, pageable);
                 return ResponseEntity.ok(result);
         }

@@ -30,6 +30,7 @@ public interface ExtracurricularApplyRepository extends JpaRepository<Extracurri
     // 비교과 프로그램 ID와 신청 상태를 기준으로 신청 내역 조회 (특정 프로그램의 승인자/대기자 등 필터링 가능)
     List<ExtracurricularApply> findByExtracurricularProgram_EduMngIdAndAprySttsNm(Long eduMngId, AprySttsNm aprySttsNm);
 
+    int countByExtracurricularProgram_EduMngIdAndAprySttsNm(Long extracurricularProgramEduMngId, AprySttsNm aprySttsNm);
     // 위와 동일: 프로그램 ID와 신청 상태를 기준으로 신청 내역 조회 (메서드 명명 방식만 다름)
     List<ExtracurricularApply> findExtracurricularAppliesByExtracurricularProgram_EduMngIdAndAprySttsNm(Long eduMngId, AprySttsNm statusNm);
 

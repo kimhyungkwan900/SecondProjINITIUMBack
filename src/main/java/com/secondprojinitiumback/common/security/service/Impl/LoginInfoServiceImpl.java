@@ -184,4 +184,16 @@ public class LoginInfoServiceImpl implements LoginInfoService {
         return loginInfoRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
+
+    @Override
+    @Transactional
+    public void logout(String accessToken, String refreshToken) {
+        // 액세스 토큰으로 인증 정보 조회 및 삭제
+        loginAuthInfoRepository.findByAccessToken(accessToken)
+                .ifPresent(loginAuthInfoRepository::delete);
+
+        // 리프레시 토큰으로 인증 정보 조회 및 삭제
+        loginAuthInfoRepository.findByRefreshToken(refreshToken)
+                .ifPresent(loginAuthInfoRepository::delete);
+    }
 }

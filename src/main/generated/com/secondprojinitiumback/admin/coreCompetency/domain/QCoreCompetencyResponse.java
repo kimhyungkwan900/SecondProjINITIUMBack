@@ -58,7 +58,7 @@ public class QCoreCompetencyResponse extends EntityPathBase<CoreCompetencyRespon
         super(type, metadata, inits);
         this.assessment = inits.isInitialized("assessment") ? new QCoreCompetencyAssessment(forProperty("assessment"), inits.get("assessment")) : null;
         this.question = inits.isInitialized("question") ? new QCoreCompetencyQuestion(forProperty("question"), inits.get("question")) : null;
-        this.selectedOption = inits.isInitialized("selectedOption") ? new QResponseChoiceOption(forProperty("selectedOption")) : null;
+        this.selectedOption = inits.isInitialized("selectedOption") ? new QResponseChoiceOption(forProperty("selectedOption"), inits.get("selectedOption")) : null;
         this.student = inits.isInitialized("student") ? new com.secondprojinitiumback.user.student.domain.QStudent(forProperty("student"), inits.get("student")) : null;
     }
 

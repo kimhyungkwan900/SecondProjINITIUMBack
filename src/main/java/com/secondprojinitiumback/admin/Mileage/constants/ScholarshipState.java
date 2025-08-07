@@ -9,7 +9,7 @@ public enum ScholarshipState {
     REJECT("3", "반려"),
     PAYMENT("4", "지급");
 
-    public static final String CODE_GROUP = "MG0001";
+    public static final String CODE_GROUP = "ML0001";
 
     private final String code;
     private final String label;

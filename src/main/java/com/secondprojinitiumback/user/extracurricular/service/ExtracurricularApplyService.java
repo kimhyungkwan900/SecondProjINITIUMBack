@@ -10,6 +10,7 @@ import com.secondprojinitiumback.user.extracurricular.dto.ExtracurricularApplyFo
 import com.secondprojinitiumback.user.extracurricular.repository.ExtracurricularApplyRepository;
 import com.secondprojinitiumback.user.student.domain.Student;
 import com.secondprojinitiumback.user.student.repository.StudentRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -31,18 +32,26 @@ public class ExtracurricularApplyService {
     public void applyExtracurricular(String stdntNo, ExtracurricularApplyFormDTO dto) {
         Student student = studentRepository.findById(stdntNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 학생 없음: " + stdntNo));
+
         dto.setEduAplyDt(LocalDateTime.now()); // 신청 일시 설정
-        ExtracurricularProgram program = extracurricularProgramRepository.findById(dto.getExtracurricularProgram().getEduMngId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 비교과 프로그램 없음: " + dto.getExtracurricularProgram().getEduMngId()));
+
+
+
+        Long eduMngId = dto.getExtracurricularProgram().getEduMngId();
+        ExtracurricularProgram program = extracurricularProgramRepository
+                .findByEduMngId(eduMngId)
+                .orElseThrow(() -> new EntityNotFoundException("프로그램이 존재하지 않습니다."));
+
         // 중복 신청 방지
         boolean exists = extracurricularApplyRepository.existsBystudentAndExtracurricularProgram(student, program);
         if(exists){
             throw new IllegalArgumentException("이미 신청한 프로그램입니다: " + program.getEduMngId());
         }
         // 신청 기간 확인
-        if (LocalDateTime.now().isBefore(dto.getExtracurricularProgram().getEduAplyBgngDt()) ||
-                LocalDateTime.now().isAfter(dto.getExtracurricularProgram().getEduAplyEndDt())) {
-            throw new IllegalStateException("현재는 신청 기간이 아닙니다.");
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime programStart = program.getEduAplyBgngDt();  // 이 값이 null일 수 있음
+        if (now.isBefore(programStart)) {
+            throw new RuntimeException("프로그램 신청 기간이 아닙니다.");
         }
         // 선착순 인원 제한
         long acceptCount = extracurricularApplyRepository.countByExtracurricularProgramAndAprySttsNm(program, AprySttsNm.ACCEPT);

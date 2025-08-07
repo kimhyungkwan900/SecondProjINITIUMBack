@@ -12,6 +12,10 @@ import com.secondprojinitiumback.admin.extracurricular.repository.specification.
 import com.secondprojinitiumback.admin.extracurricular.repository.specification.ProgramFilterRequest;
 import com.secondprojinitiumback.user.employee.domain.Employee;
 import com.secondprojinitiumback.user.employee.repository.EmployeeRepository;
+import com.secondprojinitiumback.user.extracurricular.domain.ExtracurricularApply;
+import com.secondprojinitiumback.user.extracurricular.domain.enums.AprySttsNm;
+import com.secondprojinitiumback.user.extracurricular.dto.ExtracurricularApplyDTO;
+import com.secondprojinitiumback.user.extracurricular.repository.ExtracurricularApplyRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -39,6 +43,7 @@ public class ExtracurricularProgramService {
     private final ExtracurricularImageFileService extracurricularImageFileService;
     private final ExtracurricularImageRepository extracurricularImageRepository;
 
+    private final ExtracurricularApplyRepository extracurricularApplyRepository;
     // 비교과 프로그램 등록 신청
 
 
@@ -125,19 +130,35 @@ public class ExtracurricularProgramService {
             dto.setEmpNo(program.getEmployee().getEmpNo());
             dto.setName(program.getEmployee().getName());
 
+            dto.setRequest(extracurricularApplyRepository.countByExtracurricularProgram_EduMngIdAndAprySttsNm(program.getEduMngId(), AprySttsNm.APPLY));
+            dto.setAccept(extracurricularApplyRepository.countByExtracurricularProgram_EduMngIdAndAprySttsNm(program.getEduMngId(), AprySttsNm.ACCEPT));
+
             if (program.getEmployee() != null && program.getEmployee().getSchoolSubject() != null) {
                 dto.setSubjectName(program.getEmployee().getSchoolSubject().getSubjectName());
             } else {
                 dto.setSubjectName(null); // 또는 빈 문자열 등 원하는 기본값
             }
-
             ExtracurricularImage image = extracurricularImageRepository.findExtracurricularImageByExtracurricularProgram_EduMngId(program.getEduMngId());
-
             if (image != null) {
                 dto.setExtracurricularImageDTO(modelMapper.map(image, ExtracurricularImageDTO.class));
             } else {
                 dto.setExtracurricularImageDTO(null);
             }
+
+            List<ExtracurricularApply> applyList = extracurricularApplyRepository
+                    .findByExtracurricularProgram_EduMngId(program.getEduMngId());
+
+            List<ExtracurricularApplyDTO> dtoList = applyList.stream()
+                    .map(apply -> ExtracurricularApplyDTO.builder()
+                            .eduAplyId(apply.getEduAplyId())
+                            .eduAplyCn(apply.getEduAplyCn())
+                            .aprySttsNm(apply.getAprySttsNm())
+                            .eduAplyDt(apply.getEduAplyDt())
+                            .build())
+                    .toList();
+
+                dto.setApplyList(dtoList);
+
             return dto;
         });
     }

@@ -36,4 +36,6 @@ public interface ExtracurricularApplyRepository extends JpaRepository<Extracurri
 
     // 비교과 프로그램 ID와 학생 번호를 기준으로 특정 학생의 신청 내역을 Optional로 조회 (단일 결과 기대 시 사용)
     Optional<ExtracurricularApply> findExtracurricularAppliesByExtracurricularProgram_EduMngIdAndStudent_studentNo(Long eduMngId, String stdntNo);
+
+    List<ExtracurricularApply> findByExtracurricularProgram_EduMngId(Long extracurricularProgramEduMngId);
 }

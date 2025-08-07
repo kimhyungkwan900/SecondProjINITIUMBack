@@ -19,7 +19,7 @@ public class ExtracurricularCategory {
     private Long ctgryId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "scbjt_no")
+    @JoinColumn(name = "scsbjt_no")
     private SchoolSubject schoolSubject;
 
     @Column(name = "stgr_id", nullable = false)

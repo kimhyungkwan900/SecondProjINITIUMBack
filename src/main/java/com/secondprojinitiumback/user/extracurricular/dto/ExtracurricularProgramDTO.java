@@ -2,9 +2,9 @@ package com.secondprojinitiumback.user.extracurricular.dto;
 
 import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularCategory;
 import com.secondprojinitiumback.admin.extracurricular.domain.enums.*;
-import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularCategoryDTO;
-import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularImageDTO;
+import com.secondprojinitiumback.admin.extracurricular.dto.*;
 import com.secondprojinitiumback.user.employee.domain.Employee;
+import com.secondprojinitiumback.user.employee.dto.EmployeeDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +20,8 @@ import java.util.List;
 public class ExtracurricularProgramDTO {
     private Long eduMngId;
     private Long ctgryId;
+
+    private String empNo;
 
     private String eduNm; // 프로그램 이름
     private EduType eduType; // 프로그램 유형 (TEAM/INDIVIDUAL)
@@ -46,5 +48,12 @@ public class ExtracurricularProgramDTO {
     private List<ExtracurricularImageDTO> extracurricularImageDTO; //  이미지 반환
 
     private String ctgryNm;
+
+    private String name; //운영자 이름
+    private String email; // 운영자 email
+    private String subjectName; // 운영 부서 이름
+    private String tel; // 운영자 번호
+
+    private List<ExtracurricularScheduleDTO> extracurricularSchedules ;// 일정
 
 }

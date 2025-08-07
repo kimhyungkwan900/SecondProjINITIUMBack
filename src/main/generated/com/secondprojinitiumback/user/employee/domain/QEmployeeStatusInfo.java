@@ -22,37 +22,11 @@ public class QEmployeeStatusInfo extends EntityPathBase<EmployeeStatusInfo> {
 
     public static final QEmployeeStatusInfo employeeStatusInfo = new QEmployeeStatusInfo("employeeStatusInfo");
 
-    public final com.secondprojinitiumback.common.domain.base.QBaseEntity _super = new com.secondprojinitiumback.common.domain.base.QBaseEntity(this);
-
-    //inherited
-    public final StringPath createdBy = _super.createdBy;
-
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
-
-    //inherited
-    public final StringPath createdIp = _super.createdIp;
-
-    //inherited
-    public final NumberPath<Long> createdProgramId = _super.createdProgramId;
-
     public final com.secondprojinitiumback.common.domain.QCommonCode employeeStatusGroup;
 
     public final StringPath employeeStatusName = createString("employeeStatusName");
 
     public final QEmployeeStatusId id;
-
-    //inherited
-    public final StringPath modifiedBy = _super.modifiedBy;
-
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
-
-    //inherited
-    public final StringPath modifiedIp = _super.modifiedIp;
-
-    //inherited
-    public final NumberPath<Long> modifiedProgramId = _super.modifiedProgramId;
 
     public QEmployeeStatusInfo(String variable) {
         this(EmployeeStatusInfo.class, forVariable(variable), INITS);

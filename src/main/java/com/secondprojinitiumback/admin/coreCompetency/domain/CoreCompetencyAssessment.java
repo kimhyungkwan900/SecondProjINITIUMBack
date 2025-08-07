@@ -42,6 +42,12 @@ public class CoreCompetencyAssessment {
     @Column(name = "ACAD_YR")
     private String academicYear; // 학년도
 
+    @Column(name = "CAHRT_TP")
+    private String chartType = "개인별+전체"; // 차트 표시 선택
+
+    @Column(name = "ALYS_TP")
+    private String analysisType = "평균"; // 분석 기준
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
             @JoinColumn(name = "STERM_CD", referencedColumnName = "CD"),

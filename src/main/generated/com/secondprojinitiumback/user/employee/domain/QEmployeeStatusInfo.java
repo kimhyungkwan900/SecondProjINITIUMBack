@@ -36,13 +36,11 @@ public class QEmployeeStatusInfo extends EntityPathBase<EmployeeStatusInfo> {
     //inherited
     public final NumberPath<Long> createdProgramId = _super.createdProgramId;
 
-    public final StringPath employeeStatusCode = createString("employeeStatusCode");
-
-    public final StringPath employeeStatusCodeSe = createString("employeeStatusCodeSe");
-
     public final com.secondprojinitiumback.common.domain.QCommonCode employeeStatusGroup;
 
     public final StringPath employeeStatusName = createString("employeeStatusName");
+
+    public final QEmployeeStatusId id;
 
     //inherited
     public final StringPath modifiedBy = _super.modifiedBy;
@@ -55,8 +53,6 @@ public class QEmployeeStatusInfo extends EntityPathBase<EmployeeStatusInfo> {
 
     //inherited
     public final NumberPath<Long> modifiedProgramId = _super.modifiedProgramId;
-
-    public final StringPath remark = createString("remark");
 
     public QEmployeeStatusInfo(String variable) {
         this(EmployeeStatusInfo.class, forVariable(variable), INITS);
@@ -77,6 +73,7 @@ public class QEmployeeStatusInfo extends EntityPathBase<EmployeeStatusInfo> {
     public QEmployeeStatusInfo(Class<? extends EmployeeStatusInfo> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.employeeStatusGroup = inits.isInitialized("employeeStatusGroup") ? new com.secondprojinitiumback.common.domain.QCommonCode(forProperty("employeeStatusGroup"), inits.get("employeeStatusGroup")) : null;
+        this.id = inits.isInitialized("id") ? new QEmployeeStatusId(forProperty("id")) : null;
     }
 
 }

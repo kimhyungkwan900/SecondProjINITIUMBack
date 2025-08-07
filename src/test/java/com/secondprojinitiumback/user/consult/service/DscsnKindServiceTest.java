@@ -72,28 +72,23 @@ class DscsnKindServiceTest {
                 DscsnKind.builder()
                         .dscsnKindId("C002")
                         .dscsnKindName("취업시장 탐색")
-                        .dscsnTypeName("진로취업상담").build(),
-                DscsnKind.builder()
-                        .dscsnKindId("A001")
-                        .dscsnKindName("대학원 진학")
-                        .dscsnTypeName("지도교수상담").build()
+                        .dscsnTypeName("진로취업상담").build()
         );
         Page<DscsnKind> domainPage = new PageImpl<>(list, pageReq, list.size());
 
-        when(dscsnKindRepository.getDscsnKindPageByCondition(dscsnKindDto, pageReq))
+        when(dscsnKindRepository.getDscsnKindPageByCondition(searchDto, pageReq))
                 .thenReturn(domainPage);
 
         Page<DscsnKindDto> result = dscsnKindService.getDscsnKind(searchDto, pageReq);
 
         assertThat(result.getTotalElements()).isEqualTo(2);
-        assertThat(result.getContent())
-                .extracting(dscsnKindDto.getDscsnKindId(),
-                        dscsnKindDto.getDscsnKindName(),
-                        dscsnKindDto.getDscsnTypeName())
-                .containsExactly(
-                        tuple("C001", "진로방향 고민", "진로취업상담"),
-                        tuple("C002", "취업시장 탐색", "진로취업상담")
-                );
+        assertThat(result.getContent().getFirst().getDscsnKindId()).isEqualTo("C001");
+        assertThat(result.getContent().getFirst().getDscsnKindName()).isEqualTo("진로방향 고민");
+        assertThat(result.getContent().getFirst().getDscsnTypeName()).isEqualTo("진로취업상담");
+
+        assertThat(result.getContent().get(1).getDscsnKindId()).isEqualTo("C002");
+        assertThat(result.getContent().get(1).getDscsnKindName()).isEqualTo("취업시장 탐색");
+        assertThat(result.getContent().get(1).getDscsnTypeName()).isEqualTo("진로취업상담");
     }
 
     //--- saveDscsnKind: 저장 인자 검증

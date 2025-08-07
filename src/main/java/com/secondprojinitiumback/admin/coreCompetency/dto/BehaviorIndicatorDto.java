@@ -1,4 +1,4 @@
-package com.secondprojinitiumback.user.coreCompetency.dto;
+package com.secondprojinitiumback.admin.coreCompetency.dto;
 
 import com.secondprojinitiumback.admin.coreCompetency.domain.BehaviorIndicator;
 import lombok.*;

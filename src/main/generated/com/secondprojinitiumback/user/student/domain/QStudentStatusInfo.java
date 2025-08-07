@@ -36,6 +36,8 @@ public class QStudentStatusInfo extends EntityPathBase<StudentStatusInfo> {
     //inherited
     public final NumberPath<Long> createdProgramId = _super.createdProgramId;
 
+    public final QStudentStatusId id;
+
     //inherited
     public final StringPath modifiedBy = _super.modifiedBy;
 
@@ -48,13 +50,7 @@ public class QStudentStatusInfo extends EntityPathBase<StudentStatusInfo> {
     //inherited
     public final NumberPath<Long> modifiedProgramId = _super.modifiedProgramId;
 
-    public final StringPath remark = createString("remark");
-
     public final com.secondprojinitiumback.common.domain.QCommonCode statusCode;
-
-    public final StringPath studentStatusCode = createString("studentStatusCode");
-
-    public final StringPath studentStatusCodeSe = createString("studentStatusCodeSe");
 
     public final StringPath studentStatusName = createString("studentStatusName");
 
@@ -76,6 +72,7 @@ public class QStudentStatusInfo extends EntityPathBase<StudentStatusInfo> {
 
     public QStudentStatusInfo(Class<? extends StudentStatusInfo> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.id = inits.isInitialized("id") ? new QStudentStatusId(forProperty("id")) : null;
         this.statusCode = inits.isInitialized("statusCode") ? new com.secondprojinitiumback.common.domain.QCommonCode(forProperty("statusCode"), inits.get("statusCode")) : null;
     }
 

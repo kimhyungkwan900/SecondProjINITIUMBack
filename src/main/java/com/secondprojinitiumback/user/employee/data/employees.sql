@@ -154,3 +154,6 @@ INSERT INTO EMP_INFO VALUES
 INSERT INTO EMP_INFO VALUES
                          ('S049001', 'S049001', '049', NULL, '평생교육원직원1', 'CO0001', '10', '19880101', 'staffedu04901@univ.ac.kr', '01004930001', 'AM0120', '10'),
                          ('S049002', 'S049002', '049', NULL, '평생교육원직원2', 'CO0001', '20', '19880102', 'staffedu04902@univ.ac.kr', '01004930002', 'AM0120', '10');
+
+-- 개발자 개인
+INSERT INTO EMP_INFO VALUES ('S123456', 'S123456', '049', NULL, '개발계정', 'CO0001', '10', '20010115', 'bearson0115@gmail.com', '01004930003', 'AM0120', '10');

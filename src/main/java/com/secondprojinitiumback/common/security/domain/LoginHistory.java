@@ -2,8 +2,6 @@ package com.secondprojinitiumback.common.security.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 
@@ -39,8 +37,7 @@ public class LoginHistory {
     private String loginIpAddress;
 
     // 로그인 성공 여부
-    @Column(name = "LGN_YN", length = 1)
-    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "LGN_YN", length = 1, columnDefinition = "CHAR(1) DEFAULT 'N'")
     private boolean isSuccessful;
 
 }

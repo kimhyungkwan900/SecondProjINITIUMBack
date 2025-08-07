@@ -1,6 +1,7 @@
 package com.secondprojinitiumback.user.coreCompetency.dto;
 
 
+import com.secondprojinitiumback.admin.coreCompetency.dto.BehaviorIndicatorDto;
 import lombok.*;
 
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class IdealTalentProfileDto {
+public class UserIdealTalentProfileDto {
     private String idealTalent;
     private List<CoreCompetencyCategoryDto> coreCompetencyCategories;
 

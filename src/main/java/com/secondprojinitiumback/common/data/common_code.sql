@@ -21,7 +21,7 @@ INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002
 INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'SL', '학적', 16, 'Y', '업무구분');
 INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'SP', '교직', 17, 'Y', '업무구분');
 INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'SS', '학생', 18, 'Y', '업무구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'MG', '마일리지', 19, 'Y', '업무구분');
+INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'ML', '마일리지', 19, 'Y', '업무구분');
 INSERT INTO comm_code (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'NC', '진단검사', 20, 'Y', '업무구분');
 
 -- 부서구분
@@ -240,7 +240,17 @@ INSERT INTO COMM_CODE (CD_SE, CD, CD_NM) VALUES
 
 -- 마일리지 상태 코드
 INSERT INTO COMM_CODE (CD_SE, CD, CD_NM) VALUES
-                                             ('MG0001', '1', '신청'),
-                                             ('MG0001', '2', '승인'),
-                                             ('MG0001', '3', '반려'),
-                                             ('MG0001', '4', '지급');
+                                             ('ML0001', '1', '신청'),
+                                             ('ML0001', '2', '승인'),
+                                             ('ML0001', '3', '반려'),
+                                             ('ML0001', '4', '지급');
+
+-- 학기 코드
+INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, USE_YN) VALUES
+                                            ('SEMES', '1', '1학기', 'Y'),
+                                            ('SEMES', '2', '2학기', 'Y');
+
+-- 온라인/오프라인 코드
+INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, USE_YN) VALUES
+                                            ('ONLYN', 'Y', '온라인', 'Y'),
+                                            ('ONLYN', 'N', '오프라인', 'Y');

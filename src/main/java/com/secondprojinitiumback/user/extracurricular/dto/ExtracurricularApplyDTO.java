@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ExtracurricularApplyDTO {
     private Long eduAplyId;
-    private ExtracurricularProgram extracurricularProgram;
     private String eduAplyCn; // 신청 작성 내용
     private AprySttsNm aprySttsNm; // 신청 상태
     private LocalDateTime eduAplyDt;

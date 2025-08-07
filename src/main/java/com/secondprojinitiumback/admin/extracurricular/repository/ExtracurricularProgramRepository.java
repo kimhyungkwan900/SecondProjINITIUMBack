@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ExtracurricularProgramRepository extends JpaRepository<ExtracurricularProgram, Long>,
@@ -16,5 +17,7 @@ public interface ExtracurricularProgramRepository extends JpaRepository<Extracur
     List<ExtracurricularProgram> findByEduEndYmdBeforeAndSttsNm(LocalDate date, SttsNm SttsNm);
 
     List<ExtracurricularProgram> findByEduBgngYmdBeforeAndSttsNm(LocalDate eduBgngYmdBefore, SttsNm sttsNm);
+
+    Optional<ExtracurricularProgram> findByEduMngId(Long eduMngId);
 }
 

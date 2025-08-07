@@ -42,6 +42,8 @@ public class ExtracurricularCategoryService {
         SchoolSubject schoolSubject = schoolSubjectRepository.findBySubjectCode(dto.getSubjectCode()).orElseThrow();
         if (schoolSubject == null) {
             throw new RuntimeException("주관부서(SubjectCode)가 올바르지 않습니다: " + dto.getSubjectCode());
+        }else{
+            System.out.println(dto.getSubjectCode());
         }
 
         extracurricularCategory.setSchoolSubject(schoolSubject);

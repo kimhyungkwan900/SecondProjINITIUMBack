@@ -28,7 +28,6 @@ public class LoginInfo {
     @Column(name = "LGN_PSWD", length = 100, nullable = false)
     private String password;
 
-
     // 사용자 유형 코드: S(학생), E(교직원), A(역량센터)
     @Column(name = "USER_TYPE", length = 1, nullable = false, columnDefinition = "CHAR(1) DEFAULT 'S'")
     @Pattern(regexp = "S|E|A", message = "USER_TYPE은 S(학생), E(교직원), A(역량센터) 중 하나여야 합니다.")

@@ -216,7 +216,7 @@ public class StudentServiceImpl implements StudentService {
                 .admissionDate(student.getAdmissionDate())
                 .birthDate(student.getBirthDate())
                 .grade(student.getGrade())
-                .advisorId(student.getAdvisor() != null ? student.getAdvisor().getName() : null)
+                .advisorId(student.getAdvisor() != null ? student.getAdvisor().getEmpNo() : null)
                 .studentStatusCode(student.getStudentStatus() != null ? student.getStudentStatus().getId().getStudentStatusCode() : null)
                 .schoolSubjectCode(student.getSchoolSubject() != null ? student.getSchoolSubject().getSubjectCode() : null)
                 .genderCode(student.getGender() != null ? student.getGender().getId().getCode() : null)

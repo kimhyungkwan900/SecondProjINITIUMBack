@@ -24,9 +24,13 @@ public class QCoreCompetencyAssessment extends EntityPathBase<CoreCompetencyAsse
 
     public final StringPath academicYear = createString("academicYear");
 
+    public final StringPath analysisType = createString("analysisType");
+
     public final StringPath assessmentName = createString("assessmentName");
 
     public final StringPath assessmentNo = createString("assessmentNo");
+
+    public final StringPath chartType = createString("chartType");
 
     public final StringPath endDate = createString("endDate");
 

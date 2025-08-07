@@ -22,33 +22,7 @@ public class QStudentStatusInfo extends EntityPathBase<StudentStatusInfo> {
 
     public static final QStudentStatusInfo studentStatusInfo = new QStudentStatusInfo("studentStatusInfo");
 
-    public final com.secondprojinitiumback.common.domain.base.QBaseEntity _super = new com.secondprojinitiumback.common.domain.base.QBaseEntity(this);
-
-    //inherited
-    public final StringPath createdBy = _super.createdBy;
-
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
-
-    //inherited
-    public final StringPath createdIp = _super.createdIp;
-
-    //inherited
-    public final NumberPath<Long> createdProgramId = _super.createdProgramId;
-
     public final QStudentStatusId id;
-
-    //inherited
-    public final StringPath modifiedBy = _super.modifiedBy;
-
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
-
-    //inherited
-    public final StringPath modifiedIp = _super.modifiedIp;
-
-    //inherited
-    public final NumberPath<Long> modifiedProgramId = _super.modifiedProgramId;
 
     public final com.secondprojinitiumback.common.domain.QCommonCode statusCode;
 

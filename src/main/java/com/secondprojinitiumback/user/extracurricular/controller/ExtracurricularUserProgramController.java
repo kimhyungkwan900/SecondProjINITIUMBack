@@ -22,7 +22,7 @@ import java.util.List;
 public class ExtracurricularUserProgramController {
 
     private final ExtracurricularProgramUserService extracurricularProgramUserService;
-
+    // 프로그램 리스트
     @GetMapping("/program/list")
     public ResponseEntity<Page<ExtracurricularProgramDTO>> filterPrograms(
             @RequestParam(required = false) List<Integer> competencyIds,
@@ -33,6 +33,7 @@ public class ExtracurricularUserProgramController {
         Page<ExtracurricularProgramDTO> result = extracurricularProgramUserService.findByFilters(competencyIds, keyword, statusFilter,pageable);
         return ResponseEntity.ok(result);
     }
+    // 프로그램 디테일
     @GetMapping("/program")
     public ResponseEntity<ExtracurricularProgramDTO> programDetail(
             @RequestParam(required = false) Long eduMngId

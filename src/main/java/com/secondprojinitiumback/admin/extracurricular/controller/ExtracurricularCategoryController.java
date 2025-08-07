@@ -2,6 +2,7 @@ package com.secondprojinitiumback.admin.extracurricular.controller;
 
 import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularCategoryDTO;
 import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularCategoryFormDTO;
+import com.secondprojinitiumback.admin.extracurricular.dto.SchoolSubjectDTO;
 import com.secondprojinitiumback.admin.extracurricular.service.ExtracurricularCategoryService;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
 import com.secondprojinitiumback.user.employee.domain.Employee;
@@ -11,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/api/extracurricular")
@@ -21,6 +24,7 @@ public class ExtracurricularCategoryController {
 
     @PostMapping("/category")
     public ResponseEntity<String> insertCategory(@RequestBody ExtracurricularCategoryFormDTO dto) {
+        System.out.println("dto" + dto.getSubjectCode());
         extracurricularCategoryService.insertExtracurricularCategory(dto);
         return ResponseEntity.ok("분류 체계 등록 완료");
     }
@@ -65,9 +69,12 @@ public class ExtracurricularCategoryController {
     }
 
     @GetMapping("/category/employees")
-    public ResponseEntity<List<SchoolSubject>> getEmployees() {
+    public ResponseEntity<List<SchoolSubjectDTO>> getEmployees() {
         List<SchoolSubject> list = extracurricularCategoryService.findAllSchoolSubject();
-        return ResponseEntity.ok(list);
+        List<SchoolSubjectDTO> dtoList = list.stream()
+                .map(subject -> new SchoolSubjectDTO(subject.getSubjectCode(), subject.getSubjectName()))
+        .collect(Collectors.toList());
+        return ResponseEntity.ok(dtoList);
     }
 
     @GetMapping("/category/list")

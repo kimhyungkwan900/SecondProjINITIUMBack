@@ -20,7 +20,12 @@ public class ExtracurricularApplyUserController {
     public ResponseEntity<?> applyExtracurricularProgram(
             @RequestParam("stdfntNo") String stdfntNo,
             @RequestBody ExtracurricularApplyFormDTO formDTO
-            ) {
+    ) {
+        System.out.println("===== 신청 요청 수신 =====");
+        System.out.println("학생번호: " + stdfntNo);
+        System.out.println("교육 ID: " + formDTO.getExtracurricularProgram().getEduMngId());
+        System.out.println("신청 내용: " + formDTO.getEduAplyCn());
+
         extracurricularApplyService.applyExtracurricular(stdfntNo, formDTO);
         return ResponseEntity.ok("비교과 프로그램 신청이 완료되었습니다.");
     }

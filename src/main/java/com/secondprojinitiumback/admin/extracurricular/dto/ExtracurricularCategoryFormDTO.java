@@ -20,5 +20,6 @@ public class ExtracurricularCategoryFormDTO {
    private LocalDateTime dataCrtDt;
 
    private String ctgryUseYn;
+
    private String subjectCode;
 }

@@ -3,11 +3,19 @@ package com.secondprojinitiumback.user.extracurricular.service;
 import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularCategory;
 import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularImage;
 import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularProgram;
+import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularSchedule;
 import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularImageDTO;
+import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularScheduleDTO;
 import com.secondprojinitiumback.admin.extracurricular.repository.ExtracurricularCategoryRepository;
 import com.secondprojinitiumback.admin.extracurricular.repository.ExtracurricularImageRepository;
 import com.secondprojinitiumback.admin.extracurricular.repository.ExtracurricularProgramRepository;
+import com.secondprojinitiumback.admin.extracurricular.repository.ExtracurricularScheduleRepository;
 import com.secondprojinitiumback.admin.extracurricular.service.ExtracurricularImageFileService;
+import com.secondprojinitiumback.common.domain.SchoolSubject;
+import com.secondprojinitiumback.common.repository.SchoolSubjectRepository;
+import com.secondprojinitiumback.user.employee.domain.Employee;
+import com.secondprojinitiumback.user.employee.dto.EmployeeDto;
+import com.secondprojinitiumback.user.employee.repository.EmployeeRepository;
 import com.secondprojinitiumback.user.extracurricular.domain.enums.AprySttsNm;
 import com.secondprojinitiumback.user.extracurricular.dto.ExtracurricularProgramDTO;
 import com.secondprojinitiumback.user.extracurricular.repository.ExtracurricularApplyRepository;
@@ -31,9 +39,16 @@ public class ExtracurricularProgramUserService {
 
     private final ExtracurricularImageRepository extracurricularImageRepository;
 
+    private final EmployeeRepository employeeRepository;
+    private final SchoolSubjectRepository schoolSubjectRepository;
+
+    private final ExtracurricularScheduleRepository extracurricularScheduleRepository;
+
     private final ExtracurricularApplyRepository extracurricularApplyRepository;
     private final ExtracurricularCategoryRepository extracurricularCategoryRepository;
     private final ModelMapper modelMapper;
+
+
 
     public Page<ExtracurricularProgramDTO> findByFilters(
             List<Integer> competencyIds,
@@ -45,17 +60,14 @@ public class ExtracurricularProgramUserService {
 
         // 기본 상태 필터: REQUESTED 제외
         spec = spec.and(ExtracurricularUserProgramSpecification.sttsNmNotRequested());
-
         // 역량 필터
         if (competencyIds != null && !competencyIds.isEmpty()) {
             spec = spec.and(ExtracurricularUserProgramSpecification.hasAnyCompetencyId(competencyIds));
         }
-
         // 키워드 필터
         if (keyword != null && !keyword.trim().isEmpty()) {
             spec = spec.and(ExtracurricularUserProgramSpecification.hasKeyword(keyword));
         }
-
         // 날짜 비교를 위해 현재 시간 얻기
         LocalDateTime now = LocalDateTime.now();
 
@@ -89,7 +101,9 @@ public class ExtracurricularProgramUserService {
                             .toList();
 
                     dto.setExtracurricularImageDTO(imageDTOList);
+
                     dto.setAccept(extracurricularApplyRepository.countByExtracurricularProgram_EduMngIdAndAprySttsNm(program.getEduMngId(), AprySttsNm.ACCEPT));
+
                     dto.setCtgryNm(program.getExtracurricularCategory().getCtgryNm());
                     return dto;
                 })
@@ -109,6 +123,9 @@ public class ExtracurricularProgramUserService {
 
         dto.setEduMngId(program.getEduMngId());
         dto.setEduNm(program.getEduNm());
+        dto.setEduDtlCn(program.getEduDtlCn());
+        dto.setEduTrgtLmt(program.getEduTrgtLmt());
+        dto.setEduGndrLmt(program.getEduGndrLmt());
         dto.setEduAplyBgngDt(program.getEduAplyBgngDt());
         dto.setEduAplyEndDt(program.getEduAplyEndDt());
         dto.setEduBgngYmd(program.getEduBgngYmd());
@@ -117,16 +134,49 @@ public class ExtracurricularProgramUserService {
         dto.setEduType(program.getEduType());
         dto.setEduMlg(program.getEduMlg());
         dto.setCtgryNm(program.getExtracurricularCategory().getCtgryNm());
+        dto.setEduPrps(program.getEduPrps());
+        dto.setCndCn(program.getCndCn());
+        dto.setName(program.getEmployee().getName());
+        dto.setEmail(program.getEmployee().getEmail());
+        dto.setEduPlcNm(program.getEduPlcNm());
 
+        dto.setAccept(extracurricularApplyRepository.countByExtracurricularProgram_EduMngIdAndAprySttsNm(program.getEduMngId(), AprySttsNm.ACCEPT));
+
+        String subjectCode = program.getEmployee().getSchoolSubject().getSubjectCode();
+        SchoolSubject schoolSubject = schoolSubjectRepository.findBySubjectCode(subjectCode).orElseThrow();
+        if (schoolSubject != null) {
+            dto.setSubjectName(schoolSubject.getSubjectName());  // 학과 이름 세팅
+        } else {
+            dto.setSubjectName("학과 정보 없음");
+        }
         // 이미지 조회 및 DTO 변환
         List<ExtracurricularImage> images =
                 extracurricularImageRepository.findByExtracurricularProgram_EduMngId(eduMngId);
 
         List<ExtracurricularImageDTO> imageDTOs = images.stream()
-                .map(image -> new ExtracurricularImageDTO())
+                .map(image -> {
+                    ExtracurricularImageDTO dtoImg = new ExtracurricularImageDTO();
+                    dtoImg.setImgId(image.getImgId());
+                    dtoImg.setImgFilePathNm(image.getImgFilePathNm());
+                    return dtoImg;
+                })
+                .collect(Collectors.toList());
+        dto.setExtracurricularImageDTO(imageDTOs);
+
+        List<ExtracurricularSchedule> schedules = extracurricularScheduleRepository
+                .findByExtracurricularProgram_EduMngId(eduMngId);
+        List<ExtracurricularScheduleDTO> scheduleDTOs = schedules.stream()
+                .map(schedule -> {
+                    ExtracurricularScheduleDTO scheduleDTO = new ExtracurricularScheduleDTO();
+                    scheduleDTO.setEduShdlId(schedule.getEduShdlId());
+                    scheduleDTO.setEduDt(schedule.getEduDt());
+                    scheduleDTO.setEduEndTm(schedule.getEduEdnTm());  // 필드명이 DTO와 맞게 eduEndTm으로!
+                    return scheduleDTO;
+                })
                 .collect(Collectors.toList());
 
-        dto.setExtracurricularImageDTO(imageDTOs);
+        dto.setExtracurricularSchedules(scheduleDTOs);
+
 
         return dto;
     }

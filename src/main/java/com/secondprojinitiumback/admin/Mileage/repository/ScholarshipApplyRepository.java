@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface ScholarshipApplyRepository extends JpaRepository<ScholarshipApply, Long> {
 
     @EntityGraph(attributePaths = {
@@ -29,5 +31,7 @@ public interface ScholarshipApplyRepository extends JpaRepository<ScholarshipApp
             @Param("stateCode") String stateCode,
             Pageable pageable
     );
+
+    Page<ScholarshipApply> findAllByStudent_StudentNo(String studentNo, Pageable pageable);
 }
 

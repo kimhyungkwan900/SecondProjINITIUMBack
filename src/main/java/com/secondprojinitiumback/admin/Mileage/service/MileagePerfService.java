@@ -85,7 +85,7 @@ public class MileagePerfService {
         MileageTotal total = mileageTotalRepository.findById(student.getStudentNo())
                 .orElseGet(() -> MileageTotal.builder()
                         .student(student)
-                        .totalScore(0.0) // 없으면 0점으로 시작
+                        .totalScore(0) // 없으면 0점으로 시작
                         .build()
                 );
 

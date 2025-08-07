@@ -26,7 +26,7 @@ public class MileageTotal {
     private Student student; // 이게 있어야 학번이 PK이자 FK임을 동시에 표현 가능
 
     @Column(name = "MLG_TOT_SCORE", nullable = false)
-    private Double totalScore; // 누적 점수
+    private Integer totalScore; // 누적 점수
 
     // 누적 점수 더하기
     public void add(int score) {
@@ -37,7 +37,7 @@ public class MileageTotal {
     public void subtract(int score) {
         this.totalScore -= score;
         if (this.totalScore < 0) {
-            this.totalScore = 0.0;
+            this.totalScore = 0;
         }
     }
 }

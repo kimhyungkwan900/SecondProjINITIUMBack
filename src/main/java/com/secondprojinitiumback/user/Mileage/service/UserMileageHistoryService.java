@@ -34,7 +34,7 @@ public class UserMileageHistoryService {
         // 1. 사용자의 누적 점수 조회
         double totalScore = mileageTotalRepository.findByStudent_StudentNo(studentNo)
                 .map(MileageTotal::getTotalScore)
-                .orElse(0.0); //없으면 0.0 반환
+                .orElse(0); //없으면 0 반환
 
         Pageable pageable = pageRequestDto.toPageable();
 

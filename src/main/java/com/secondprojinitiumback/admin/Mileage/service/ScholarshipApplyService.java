@@ -173,7 +173,7 @@ public class ScholarshipApplyService {
 
         return MileageTotalResponseDto.builder()
                 .studentNo(student.getStudentNo())
-                .totalScore(total.getTotalScore())
+                .totalScore((double) total.getTotalScore())
                 .build();
     }
 }

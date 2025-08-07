@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.user.diagnostic.domain;
 
+import com.secondprojinitiumback.common.security.domain.LoginInfo;
 import com.secondprojinitiumback.user.student.domain.Student;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,6 +25,10 @@ public class DiagnosticResult {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "STDNT_NO", referencedColumnName = "STDNT_NO")
     private Student student;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "LGN_ID", referencedColumnName = "LGN_ID")
+    private LoginInfo loginInfo;
 
 
     /**

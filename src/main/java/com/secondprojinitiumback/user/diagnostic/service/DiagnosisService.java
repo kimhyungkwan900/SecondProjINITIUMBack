@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.user.diagnostic.service;
 
+import com.secondprojinitiumback.common.security.domain.LoginInfo;
 import com.secondprojinitiumback.user.diagnostic.domain.*;
 import com.secondprojinitiumback.user.diagnostic.dto.*;
 import com.secondprojinitiumback.user.diagnostic.repository.*;
@@ -8,6 +9,7 @@ import com.secondprojinitiumback.user.student.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,8 @@ public class DiagnosisService {
     private final DiagnosticResultDetailRepository resultDetailRepository;
     private final DiagnosisScoreService scoreService;
     private final StudentRepository studentRepository;
+    private final DiagnosticResultRepository diagnosticResultRepository;
+    private final DiagnosisScoreService diagnosisScoreService;
 
     /**
      * 진단검사 등록
@@ -147,17 +151,21 @@ public class DiagnosisService {
     /**
      * 검사 제출 (studentNo 기반 저장)
      */
-    public Long submitDiagnosis(DiagnosisSubmitRequestDto request) {
+    public Long submitDiagnosis(DiagnosisSubmitRequestDto request, LoginInfo loginInfo) {
+        System.out.println("✅ 진단검사 제출: testId = " + request.getTestId());
+        System.out.println("✅ 로그인 아이디 = " + loginInfo.getLoginId());
+
         DiagnosticTest test = testRepository.findById(request.getTestId())
                 .orElseThrow(() -> new IllegalArgumentException("검사를 찾을 수 없습니다."));
 
         // 🔹 studentNo 기반 Student 조회
-        Student student = studentRepository.findById(request.getStudentNo())
+        Student student = studentRepository.findByLoginInfoLoginId(loginInfo.getLoginId())
                 .orElseThrow(() -> new IllegalArgumentException("학생을 찾을 수 없습니다."));
 
         DiagnosticResult result = DiagnosticResult.builder()
                 .test(test)
                 .student(student) // 🔹 userId 대신 Student 엔티티 저장
+                .loginInfo(loginInfo)
                 .completionDate(LocalDateTime.now())
                 .build();
         resultRepository.save(result);
@@ -186,6 +194,29 @@ public class DiagnosisService {
 
         return result.getId();
     }
+
+    public DiagnosticResultDto getResultWithStudentCheck(Long resultId, String loginId) {
+        // 1. 결과 조회
+        DiagnosticResult result = diagnosticResultRepository.findById(resultId)
+                .orElseThrow(() -> new IllegalArgumentException("검사 결과가 존재하지 않습니다."));
+
+        // 2. 검사 결과의 주인 확인
+        String resultOwnerLoginId = result.getStudent().getLoginInfo().getLoginId();
+        if (!resultOwnerLoginId.equals(loginId)) {
+            throw new AccessDeniedException("본인의 검사 결과만 조회할 수 있습니다.");
+        }
+
+        // 3. 점수 해석 메시지 계산
+        String interpreted = diagnosisScoreService.interpretScore(
+                result.getTest().getId(),
+                result.getTotalScore()
+        );
+
+        // 4. DTO 반환
+        return DiagnosticResultDto.from(result, interpreted);
+    }
+
+
 
     /**
      * 결과 요약 조회 (studentNo 반환)

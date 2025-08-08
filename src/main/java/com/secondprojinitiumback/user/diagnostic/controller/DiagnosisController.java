@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.*;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -242,5 +243,35 @@ public class DiagnosisController {
                 .build());
 
         return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/results/{studentNo}/paged")
+    public ResponseEntity<Page<DiagnosticResultDto>> getAllResultsByStudentPaged(
+            @PathVariable String studentNo,
+            @PageableDefault(size = 3, sort = "completionDate", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        // 🔐 본인 확인 (기존 로직 재사용)
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AccessDeniedException("인증되지 않은 사용자입니다.");
+        }
+        String loginId = null;
+        if (authentication.getPrincipal() instanceof UserDetails userDetails) {
+            loginId = userDetails.getUsername();
+        }
+        if (loginId == null) {
+            throw new AccessDeniedException("로그인 정보를 확인할 수 없습니다.");
+        }
+
+        Student student = studentRepository.findByLoginInfoLoginId(loginId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 학생이 존재하지 않습니다."));
+
+        if (!student.getStudentNo().equals(studentNo)) {
+            throw new AccessDeniedException("본인의 검사 결과만 조회할 수 있습니다.");
+        }
+
+        // ✅ 페이징 서비스 호출
+        Page<DiagnosticResultDto> page = diagnosisService.getPagedInternalResults(studentNo, pageable);
+        return ResponseEntity.ok(page);
     }
 }

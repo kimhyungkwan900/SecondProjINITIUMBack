@@ -5,6 +5,9 @@ import com.secondprojinitiumback.common.domain.SchoolSubject;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -73,5 +76,9 @@ public class CoreCompetencyAssessment {
     @Lob
     @Column(name = "GUID_CN")
     private String guideContent; // 평가 안내문
+
+    @OneToMany(mappedBy = "assessment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CoreCompetencyCategory> coreCompetencyCategories = new ArrayList<>();
+
 
 }

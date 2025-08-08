@@ -29,17 +29,6 @@ public class BehaviorIndicator {
     @JoinColumn(name = "STGR_ID", nullable = false)
     private SubCompetencyCategory subCompetencyCategory; // 하위 역량 카테고리 (외래 키: 하위 역량 ID)
 
-    // 실제 DB 컬럼 값을 담는 필드
-    @Column(name = "IS_COMMON")
-    private String isCommon;
-
-    @Column(name = "IS_COMMON_CD_SE")
-    private String isCommonGroupCode;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SCSBJT_NO")
-    private SchoolSubject schoolSubject; // 학과
-
     //양방향 설정
     @OneToOne(mappedBy = "behaviorIndicator", fetch = FetchType.LAZY)
     private CoreCompetencyQuestion questions;

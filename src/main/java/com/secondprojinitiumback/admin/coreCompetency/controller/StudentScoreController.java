@@ -1,7 +1,7 @@
 package com.secondprojinitiumback.admin.coreCompetency.controller;
 
 import com.secondprojinitiumback.admin.coreCompetency.domain.CoreCompetencyResult;
-import com.secondprojinitiumback.admin.coreCompetency.service.StudentCompetencyScoreService;
+import com.secondprojinitiumback.admin.coreCompetency.service.AdminStudentCompetencyScoreService;
 import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyResultRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class StudentScoreController {
 
-    private final StudentCompetencyScoreService scoreService;
+    private final AdminStudentCompetencyScoreService scoreService;
     private final CoreCompetencyResultRepository resultRepository;
 
     /**

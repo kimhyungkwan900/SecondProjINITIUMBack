@@ -1,7 +1,11 @@
 package com.secondprojinitiumback.admin.coreCompetency.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,8 +25,9 @@ public class IdealTalentProfile {
     private String name; // 인재상 이름
 
     //프론트에서 트리구조를 출력하기 위한 양방향 설정
-    @OneToOne(mappedBy = "idealTalentProfile")
-    private CoreCompetencyCategory coreCompetencyCategories;
+    @OneToMany(mappedBy = "idealTalentProfile")
+    @JsonIgnore
+    private List<CoreCompetencyCategory> coreCompetencyCategories = new ArrayList<>();
 
 
 }

@@ -22,7 +22,7 @@ import java.time.LocalDate;
  */
 @Service
 @RequiredArgsConstructor
-public class CoreCompetencyResponseService {
+public class AdminCoreCompetencyResponseService {
 
     // 평가, 문항, 선택지, 응답 저장을 위한 레포지토리들
     private final CoreCompetencyAssessmentRepository coreCompetencyAssessmentRepository;

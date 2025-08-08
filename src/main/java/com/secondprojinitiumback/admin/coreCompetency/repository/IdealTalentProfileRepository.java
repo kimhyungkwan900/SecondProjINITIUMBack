@@ -9,10 +9,10 @@ import java.util.Collection;
 import java.util.List;
 
 public interface IdealTalentProfileRepository extends JpaRepository<IdealTalentProfile, Long> {
-    @Query("SELECT p FROM IdealTalentProfile p " +
-            "JOIN FETCH p.coreCompetencyCategories c " +
-            "JOIN FETCH c.subCompetencyCategories")
-    List<IdealTalentProfile> findAllWithCoreAndSub();
+    @Query("SELECT i FROM IdealTalentProfile i " +
+            "JOIN FETCH i.coreCompetencyCategories c")
+    List<IdealTalentProfile> findAllWithCoreAndSub(); // 이름 그대로 둬도 됨
+
 
 
     interface CoreCompetencyResultRepository extends JpaRepository<CoreCompetencyResult,Long> {

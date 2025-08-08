@@ -2,14 +2,10 @@
 package com.secondprojinitiumback.admin.coreCompetency.service;
 
 import com.secondprojinitiumback.admin.coreCompetency.domain.*;
-import com.secondprojinitiumback.admin.coreCompetency.dto.CoreCompetencyResultDto;
 import com.secondprojinitiumback.admin.coreCompetency.dto.QuestionStatisticsDto;
-import com.secondprojinitiumback.admin.coreCompetency.repository.BehaviorIndicatorMajorQuestionMappingRepository;
 import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyAssessmentRepository;
 import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyResponseRepository;
-import com.secondprojinitiumback.admin.coreCompetency.repository.IdealTalentProfileRepository;
 import com.secondprojinitiumback.user.student.domain.Student;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class CoreCompetencyResultService {
+public class AdminCoreCompetencyResultService {
 
     private final CoreCompetencyAssessmentRepository assessmentRepository;
     private final CoreCompetencyResponseRepository responseRepository;

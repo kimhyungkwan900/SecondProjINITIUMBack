@@ -21,6 +21,16 @@ public class ExternalQuestionResponseDto {
     @Builder
     public static class QuestionItem {
         private String questionText;     // 질문 내용
-        private List<String> options;    // 보기 목록
+        private List<Option> options;    // 보기 목록(텍스트 + 실제 전송값)
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class Option {
+        private String text;   // answer01 ~ answer10
+        private String value;  // answerScore01 ~ answerScore10 (실제 전송값)
     }
 }

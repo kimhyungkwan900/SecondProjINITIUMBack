@@ -1,10 +1,7 @@
 package com.secondprojinitiumback.user.diagnostic.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
-
-import java.util.Map;
 
 @Getter
 @Setter
@@ -35,4 +32,10 @@ public class ExternalDiagnosisRequestDto {
 
     @NotBlank(message = "시작일시는 필수입니다.")
     private String startDtm;
+
+    @NotBlank
+    private String name;
+
+    @NotBlank
+    private String email;
 }

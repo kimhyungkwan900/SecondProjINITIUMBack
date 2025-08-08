@@ -34,22 +34,23 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ExternalDiagnosisService {
 
-    private final ExternalDiagnosticTestRepository testRepository;
-    private final ExternalDiagnosticResultRepository resultRepository;
-    private final StudentRepository studentRepository;
-    private final RestTemplate restTemplate;
+    private final ExternalDiagnosticTestRepository testRepository;     // 외부 검사 정의 조회용
+    private final ExternalDiagnosticResultRepository resultRepository; // 외부 검사 결과 저장/조회용
+    private final StudentRepository studentRepository;                 // 학생 조회용
+    private final RestTemplate restTemplate;                           // CareerNet API 호출용
 
     @Value("${career.api.key}")
-    private String apiKey;
+    private String apiKey; // CareerNet API 인증키
 
     @Value("${career.api.questions-url}")
-    private String questionUrl; // ex) https://www.career.go.kr/inspct/openapi/test/questions
+    private String questionUrl; // 문항 조회 API URL
 
     @Value("${career.api.report-url}")
-    private String reportUrl;   // ex) https://www.career.go.kr/inspct/openapi/test/report
+    private String reportUrl;   // 결과 제출 API URL
 
     /**
-     * 🔍 외부 진단검사 전체 목록 조회
+     * 🔍 모든 외부 진단검사 목록 조회
+     * - DB의 ExternalDiagnosticTest 전체를 조회 후 DTO로 변환
      */
     public List<ExternalTestListDto> getAvailableExternalTests() {
         return testRepository.findAll().stream()
@@ -58,7 +59,8 @@ public class ExternalDiagnosisService {
     }
 
     /**
-     * 📜 특정 학생의 모든 외부 검사 결과 조회
+     * 특정 학생의 모든 외부 검사 결과 조회
+     * - studentNo로 필터링
      */
     public List<ExternalDiagnosisResultDto> getAllResultsByStudent(String studentNo) {
         return resultRepository.findByStudent_StudentNo(studentNo).stream()
@@ -67,7 +69,8 @@ public class ExternalDiagnosisService {
     }
 
     /**
-     * 🔍 외부 진단검사 검색
+     * 외부 검사명 기반 검색
+     * - 대소문자 무시, 부분 일치
      */
     public List<ExternalTestListDto> searchExternalTestsByName(String keyword) {
         return testRepository.findByNameContainingIgnoreCase(keyword).stream()
@@ -76,7 +79,8 @@ public class ExternalDiagnosisService {
     }
 
     /**
-     * 🔍 페이징 처리된 외부 진단검사 검색
+     * 외부 진단검사 페이징 검색
+     * - Pageable 파라미터로 페이지/정렬 가능
      */
     public Page<ExternalTestListDto> getPagedExternalTests(String keyword, Pageable pageable) {
         Page<ExternalDiagnosticTest> page = testRepository.findByNameContainingIgnoreCase(keyword, pageable);
@@ -84,23 +88,26 @@ public class ExternalDiagnosisService {
     }
 
     /**
-     * 📄 외부 진단 문항 조회 (원본 응답 Map)
+     * 외부 문항 원본 조회
+     * - CareerNet API GET 호출
+     * - Map<String,Object> 그대로 반환
      */
     public Map<String, Object> fetchExternalQuestions(String qestrnSeq) {
+        // 요청 URL 구성
         UriComponents uri = UriComponentsBuilder
                 .fromHttpUrl(questionUrl)
                 .queryParam("apikey", apiKey)
                 .queryParam("q", qestrnSeq)
                 .build(true);
 
-        log.info("CareerNet API Request URL: {}", uri.toUriString());
-
+        // HTTP 헤더 구성
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-        headers.set("User-Agent", "Mozilla/5.0");
+        headers.set("User-Agent", "Mozilla/5.0");// 일부 API는 User-Agent 필수
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
+        // API 호출
         ResponseEntity<String> response = restTemplate.exchange(
                 uri.toUri(),
                 HttpMethod.GET,
@@ -108,17 +115,19 @@ public class ExternalDiagnosisService {
                 String.class
         );
 
-        // 필요하면 3xx 수동 처리 (대부분 자동처리됨)
+        // 리다이렉션 처리
         if (response.getStatusCode().is3xxRedirection() && response.getHeaders().getLocation() != null) {
             String redirectUrl = response.getHeaders().getLocation().toString();
             log.warn("Redirect detected ({}): {}", response.getStatusCode(), redirectUrl);
             response = restTemplate.exchange(redirectUrl, HttpMethod.GET, entity, String.class);
         }
 
+        // 응답 코드 검증
         if (!response.getStatusCode().is2xxSuccessful()) {
             throw new RuntimeException("CareerNet API 호출 실패 - 상태코드: " + response.getStatusCode());
         }
 
+        // JSON → Map 변환
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(response.getBody(), Map.class);
@@ -128,16 +137,17 @@ public class ExternalDiagnosisService {
     }
 
     /**
-     * 📄 외부 진단 문항 조회 (파싱된 응답 DTO: 보기 텍스트 + 실제 전송값 포함)
+     * 외부 문항 파싱 조회
+     * - 보기(text/value) 포함된 DTO 반환
      */
     public ExternalQuestionResponseDto getParsedExternalQuestions(String qestrnSeq) {
         Map<String, Object> raw = fetchExternalQuestions(qestrnSeq);
 
-        // CareerNet v1 응답의 상단 메타(없을 수 있어 기본값 처리)
+        // 상단 메타 정보
         String title = Optional.ofNullable((String) raw.get("qestrnNm")).orElse("제목 없음");
         String description = Optional.ofNullable((String) raw.get("qestrnDesc")).orElse("");
 
-        // RESULT 배열
+        // RESULT 배열 가져오기
         List<Map<String, Object>> resultList = Optional.ofNullable((List<Map<String, Object>>) raw.get("RESULT"))
                 .filter(list -> !list.isEmpty())
                 .orElseThrow(() -> {
@@ -145,7 +155,7 @@ public class ExternalDiagnosisService {
                     return new RuntimeException("CareerNet API에서 질문 데이터를 가져오지 못했습니다.");
                 });
 
-        // 각 문항 파싱 (answerNN + answerScoreNN)
+        // 문항 파싱
         List<ExternalQuestionResponseDto.QuestionItem> questions = resultList.stream()
                 .map(item -> {
                     List<ExternalQuestionResponseDto.Option> options = new ArrayList<>();
@@ -155,8 +165,8 @@ public class ExternalDiagnosisService {
                         String val  = (String) item.get("answerScore" + idx);
                         if (text != null && !text.isBlank() && val != null && !val.isBlank()) {
                             options.add(ExternalQuestionResponseDto.Option.builder()
-                                    .text(text)
-                                    .value(val)
+                                    .text(text)   // 보기 내용
+                                    .value(val)   // CareerNet 전송 값
                                     .build());
                         }
                     }
@@ -175,16 +185,18 @@ public class ExternalDiagnosisService {
     }
 
     /**
-     * ✅ 외부 진단 검사 결과 제출 및 저장 (CareerNet V1)
+     * ✅ 외부 검사 결과 제출 및 저장
+     * - CareerNet API POST 요청
+     * - 결과 URL + 검사코드 DB 저장
      */
     public ExternalDiagnosisResultDto submitExternalResult(ExternalDiagnosisRequestDto dto) {
         try {
-            // 1) startDtm 보정
+            // 1) startDtm 기본값 처리
             String startDtm = (dto.getStartDtm() == null || dto.getStartDtm().isBlank())
                     ? String.valueOf(System.currentTimeMillis())
                     : dto.getStartDtm();
 
-            // 2) JSON 페이로드 구성 (!!! apikey 소문자 주의)
+            // 2) JSON 요청 페이로드 생성
             Map<String, Object> payload = new HashMap<>();
             payload.put("apikey", apiKey);
             payload.put("qestrnSeq", dto.getQestrnSeq());
@@ -197,27 +209,26 @@ public class ExternalDiagnosisService {
             payload.put("startDtm", Long.parseLong(startDtm)); // 숫자로 보내는 편이 안전
             payload.put("answers", dto.getAnswers());          // "B1=5 B2=3 ..." 또는 "2,2,3,..."
 
+            // 3) HTTP 요청 헤더 설정
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
+            // 4) POST 요청
             HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
-
-            // 3) POST (JSON)
-            ResponseEntity<Map> response = restTemplate.exchange(
-                    reportUrl, HttpMethod.POST, request, Map.class
-            );
+            ResponseEntity<Map> response = restTemplate.exchange(reportUrl, HttpMethod.POST, request, Map.class);
 
             Map<String, Object> bodyMap = response.getBody();
             if (bodyMap == null || !bodyMap.containsKey("RESULT")) {
                 throw new RuntimeException("검사 결과 파싱 실패: RESULT 키 없음");
             }
 
+            // 5) CareerNet 응답에서 결과 URL, 검사 코드 추출
             Map<String, Object> resultMap = (Map<String, Object>) bodyMap.get("RESULT");
             String url = (String) resultMap.get("url");
             String inspctSeq = String.valueOf(resultMap.get("inspctSeq"));
 
-            // 4) DB 저장
+            // 6) DB 저장
             Student student = studentRepository.findByStudentNo(dto.getStudentNo())
                     .orElseThrow(() -> new IllegalArgumentException("학생을 찾을 수 없습니다: " + dto.getStudentNo()));
 

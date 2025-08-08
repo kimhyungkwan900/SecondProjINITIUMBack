@@ -21,7 +21,7 @@ public class DiagnosticTestDto {
     private List<ScoreLevelDto> scoreLevels;
 
     public static DiagnosticTestDto from(DiagnosticTest entity) {
-        // 🔹 질문 DTO 변환
+        // 질문 DTO 변환
         List<DiagnosticQuestionDto> questionDtos = Optional.ofNullable(entity.getQuestions())
                 .orElse(List.of())
                 .stream()
@@ -43,7 +43,7 @@ public class DiagnosticTestDto {
                         .build())
                 .toList();
 
-        // 🔹 점수 구간 DTO 변환
+        // 점수 구간 DTO 변환
         List<ScoreLevelDto> scoreLevelDtos = Optional.ofNullable(entity.getScoreLevels())
                 .orElse(List.of())
                 .stream()

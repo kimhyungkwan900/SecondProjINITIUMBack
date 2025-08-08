@@ -11,7 +11,7 @@ import lombok.*;
 public class ExternalDiagnosisResultDto {
     private String inspectSeq;
     private String resultUrl;
-    private String testName; // 이름 포함
+    private String testName;
 
     public static ExternalDiagnosisResultDto from(ExternalDiagnosticResult result) {
         return ExternalDiagnosisResultDto.builder()

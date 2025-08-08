@@ -287,4 +287,21 @@ public class DiagnosisService {
                 .toList();
     }
 
+    public Page<DiagnosticResultDto> getPagedInternalResults(String studentNo, Pageable pageable) {
+        return resultRepository
+                .findByStudent_StudentNoOrderByCompletionDateDesc(studentNo, pageable)
+                .map(result -> DiagnosticResultDto.builder()
+                        .resultId(result.getId())
+                        .studentNo(result.getStudent().getStudentNo())
+                        .testId(result.getTest().getId())
+                        .testName(result.getTest().getName())
+                        .totalScore(result.getTotalScore())
+                        .completionDate(result.getCompletionDate())
+                        .interpretedMessage(
+                                scoreService.interpretScore(result.getTest().getId(), result.getTotalScore())
+                        )
+                        .build()
+                );
+    }
+
 }

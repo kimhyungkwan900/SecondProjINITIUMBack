@@ -1,14 +1,17 @@
 package com.secondprojinitiumback.user.extracurricular.controller;
 
+import com.secondprojinitiumback.user.extracurricular.dto.AppliedExtracurricularProgramDTO;
 import com.secondprojinitiumback.user.extracurricular.dto.ExtracurricularProgramDTO;
 import com.secondprojinitiumback.user.extracurricular.service.ExtracurricularProgramUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,4 +44,17 @@ public class ExtracurricularUserProgramController {
         ExtracurricularProgramDTO dto = extracurricularProgramUserService.findProgramByEduMngId(eduMngId);
         return ResponseEntity.ok(dto);
     }
+
+    @GetMapping("/program/applied")
+    @PreAuthorize("hasAnyRole('S', 'E', 'A')")
+    public ResponseEntity<Page<AppliedExtracurricularProgramDTO>> getAppliedPrograms(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PageableDefault(size = 5, sort = "eduAplyId", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        String userId = userDetails.getUsername();
+        Page<AppliedExtracurricularProgramDTO> result = extracurricularProgramUserService.getAppliedPrograms(userId, pageable);
+        return ResponseEntity.ok(result);
+    }
+
+
 }

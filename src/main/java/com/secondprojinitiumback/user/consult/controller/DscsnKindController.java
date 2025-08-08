@@ -1,10 +1,7 @@
 package com.secondprojinitiumback.user.consult.controller;
 
-import com.secondprojinitiumback.user.consult.domain.DscsnKind;
-import com.secondprojinitiumback.user.consult.dto.common.DscsnInfoListDto;
 import com.secondprojinitiumback.user.consult.dto.common.DscsnKindDto;
 import com.secondprojinitiumback.user.consult.dto.common.DscsnKindListDto;
-import com.secondprojinitiumback.user.consult.repository.DscsnKindRepository;
 import com.secondprojinitiumback.user.consult.service.DscsnKindService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -13,10 +10,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -27,10 +22,10 @@ public class DscsnKindController {
 
     //--- 상담항목 추가
     @PostMapping("/admin/consult/dscsnkind/new")
-    public ResponseEntity<?> newDscsnKind(@ModelAttribute DscsnKindDto dscsnKindDto) {
+    public ResponseEntity<?> newDscsnKind(@RequestBody DscsnKindDto dscsnKindDto) {
         try{
             dscsnKindService.saveDscsnKind(dscsnKindDto);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok("항목 추가 완료");
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("항목 등록 중 에러 발생");
         }
@@ -62,10 +57,10 @@ public class DscsnKindController {
 
     //--- 상담항목 수정
     @PutMapping("/admin/consult/dscsnkind/update")
-    public ResponseEntity<?> updateDscsnKind(@ModelAttribute DscsnKindDto dscsnKindDto) {
+    public ResponseEntity<?> updateDscsnKind(@RequestBody DscsnKindDto dscsnKindDto) {
         try {
             dscsnKindService.updateDscsnKind(dscsnKindDto);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok("항목 수정 완료");
         }
         catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("입력값 오류");

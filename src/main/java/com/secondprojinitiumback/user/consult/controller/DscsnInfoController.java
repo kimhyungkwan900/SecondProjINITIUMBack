@@ -21,7 +21,7 @@ public class DscsnInfoController {
 
     //--- 상담내역 조회(상담사, 학생)
     @GetMapping({"/dscsnInfo/list", "/dscsnInfo/list/{page}"})
-    public ResponseEntity<?> getDscsnInfoList(@ModelAttribute DscsnInfoSearchDto dscsnInfoSearchDto,  @PathVariable int page) {
+    public ResponseEntity<?> getDscsnInfoList(@ModelAttribute DscsnInfoSearchDto dscsnInfoSearchDto, @PathVariable int page) {
 
         Pageable pageable = PageRequest.of(page, 10);
         Page<DscsnInfoResponseDto> dscsnInfos = dscsnInfoService.getDscsnInfo(dscsnInfoSearchDto, pageable);
@@ -36,8 +36,8 @@ public class DscsnInfoController {
     }
 
     //--- 상담상태 변경(상담사, 교수)
-    @PutMapping("/dscsnInfo/list/{status}")
-    public ResponseEntity<?> updateDscsnStatus(@PathVariable String status, @RequestBody String dscsnInfoId) {
+    @PutMapping("/dscsnInfo/list/{dscsnInfoId}")
+    public ResponseEntity<?> updateDscsnStatus(@PathVariable String dscsnInfoId, @RequestBody String status) {
 
         try {
             dscsnInfoService.updateDscsnStatus(dscsnInfoId, status);

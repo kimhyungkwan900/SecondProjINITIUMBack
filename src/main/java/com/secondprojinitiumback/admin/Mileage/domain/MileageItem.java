@@ -25,7 +25,7 @@ public class MileageItem {
     @Column(name="MLG_ALTCL_CD", nullable = false, length = 20)
     private String itemCode; //마일리지 항목 코드
 
-    @Column(name="CRNT_DT")
+    @Column(name="CRTN_DT ")
     private LocalDateTime createdAt; //생성일
 
     @Column(name="MDFCN_DT")

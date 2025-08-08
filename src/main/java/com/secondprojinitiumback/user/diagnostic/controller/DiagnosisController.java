@@ -35,32 +35,35 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DiagnosisController {
 
-    private final DiagnosisService diagnosisService;
-    private final DiagnosticResultRepository resultRepository;
-    private final DiagnosticResultDetailRepository resultDetailRepository;
-    private final DiagnosisScoreService scoreService;
-    private final PdfGenerationService pdfGenerationService;
-    private final LoginInfoRepository loginInfoRepository;
-    private final StudentRepository studentRepository;
+    private final DiagnosisService diagnosisService;                // 진단검사 핵심 서비스
+    private final DiagnosticResultRepository resultRepository;      // 결과 조회/저장 Repository
+    private final DiagnosticResultDetailRepository resultDetailRepository; // 결과 상세 조회/저장 Repository
+    private final DiagnosisScoreService scoreService;                // 점수 계산/해석 서비스
+    private final PdfGenerationService pdfGenerationService;         // PDF 생성 서비스
+    private final LoginInfoRepository loginInfoRepository;           // 로그인 정보 조회 Repository
+    private final StudentRepository studentRepository;               // 학생 조회 Repository
 
-    // 🔍 검사 목록 조회
+    // 검사 목록 조회
     @GetMapping("/tests")
     public ResponseEntity<List<DiagnosticTestDto>> getAvailableTests() {
         return ResponseEntity.ok(diagnosisService.getAvailableTests());
     }
 
-    // 📄 검사 문항 조회
+    // 검사 문항 조회
     @GetMapping("/{testId}/questions")
     public ResponseEntity<List<DiagnosticQuestionDto>> getQuestions(@PathVariable Long testId) {
         return ResponseEntity.ok(diagnosisService.getQuestionsByTestId(testId));
     }
 
-    // ✅ 사용자 응답 제출
+    /**
+     * 사용자 응답 제출
+     * - 로그인 ID 추출 → LoginInfo 조회 → 서비스에 제출 요청
+     */
     @PostMapping("/submit")
     public ResponseEntity<Map<String, Object>> submitDiagnosis(
             @RequestBody DiagnosisSubmitRequestDto dto
     ) {
-        // ✅ 로그인 ID 직접 추출
+        // 로그인 ID 직접 추출
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new AccessDeniedException("인증되지 않은 사용자입니다.");
@@ -75,7 +78,7 @@ public class DiagnosisController {
             throw new AccessDeniedException("로그인 정보를 가져올 수 없습니다.");
         }
 
-        // ✅ LoginInfo 조회
+        // LoginInfo 조회
         LoginInfo loginInfo = loginInfoRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new RuntimeException("해당 로그인 사용자를 찾을 수 없습니다."));
 
@@ -91,10 +94,13 @@ public class DiagnosisController {
 
 
 
-    // 📜 특정 학생의 모든 내부 진단검사 결과 목록 조회
+    /**
+     * 특정 학생의 모든 내부 진단검사 결과 조회
+     * - 로그인 사용자와 요청 studentNo가 동일해야 함
+     */
     @GetMapping("/results/{studentNo}")
     public ResponseEntity<List<DiagnosticResultDto>> getAllResultsByStudent(@PathVariable String studentNo) {
-        // 🔐 현재 로그인 사용자 확인
+        // 현재 로그인 사용자 확인
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new AccessDeniedException("인증되지 않은 사용자입니다.");
@@ -109,7 +115,7 @@ public class DiagnosisController {
             throw new AccessDeniedException("로그인 정보를 확인할 수 없습니다.");
         }
 
-        // 🔍 로그인된 사용자의 studentNo 조회 (DB 연동 필요)
+        // 로그인된 사용자의 studentNo 조회 (DB 연동 필요)
         Student student = studentRepository.findByLoginInfoLoginId(loginId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 학생이 존재하지 않습니다."));
 
@@ -122,10 +128,13 @@ public class DiagnosisController {
     }
 
 
-    // 📊 결과 요약 조회
+    /**
+     * 결과 요약 조회
+     * - 본인 소유 여부 검증 포함
+     */
     @GetMapping("/result/{resultId}")
     public ResponseEntity<DiagnosticResultDto> getResult(@PathVariable Long resultId) {
-        // 🔐 현재 로그인한 사용자 인증 정보 가져오기
+        // 현재 로그인한 사용자 인증 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -142,13 +151,17 @@ public class DiagnosisController {
             throw new AccessDeniedException("로그인 정보를 확인할 수 없습니다.");
         }
 
-        // 📌 서비스 호출 시 loginId 전달
+        // 서비스 호출 시 loginId 전달
         DiagnosticResultDto resultDto = diagnosisService.getResultWithStudentCheck(resultId, loginId);
 
         return ResponseEntity.ok(resultDto);
     }
 
-
+    /**
+     * 결과 상세 조회
+     * - 각 문항별 선택 값과 점수 확인
+     * - 본인 소유 여부 검증
+     */
     @GetMapping("/result/{resultId}/details")
     public ResponseEntity<List<DiagnosticResultDetailDto>> getResultDetails(@PathVariable Long resultId) {
         // 1. 현재 로그인한 사용자 정보 가져오기
@@ -159,7 +172,7 @@ public class DiagnosisController {
 
         String loginId = null;
         if (authentication.getPrincipal() instanceof UserDetails userDetails) {
-            loginId = userDetails.getUsername(); // ✅ 로그인 ID 추출
+            loginId = userDetails.getUsername(); // 로그인 ID 추출
         }
 
         if (loginId == null) {
@@ -194,13 +207,13 @@ public class DiagnosisController {
 
 
 
-    // 🔍 진단검사명 검색
+    // 진단검사명 검색
     @GetMapping("/tests/search")
     public ResponseEntity<List<DiagnosticTestDto>> searchTests(@RequestParam String keyword) {
         return ResponseEntity.ok(diagnosisService.searchTestsByKeyword(keyword));
     }
 
-    // 📑 진단검사 페이징 조회
+    // 진단검사 페이징 조회
     @GetMapping("/tests/paged")
     public ResponseEntity<Page<DiagnosticTestDto>> getPagedTests(
             @RequestParam(defaultValue = "") String keyword,
@@ -211,7 +224,7 @@ public class DiagnosisController {
         return ResponseEntity.ok(diagnosisService.getPagedTests(keyword, pageable));
     }
 
-    // 📄 PDF 결과 다운로드
+    // PDF 결과 다운로드
     @GetMapping("/result/{resultId}/pdf")
     public ResponseEntity<byte[]> downloadDiagnosisPdf(@PathVariable Long resultId) throws IOException {
         DiagnosticResult result = resultRepository.findById(resultId)

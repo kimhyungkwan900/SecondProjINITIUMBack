@@ -11,13 +11,13 @@ import lombok.*;
 public class ExternalDiagnosisResultDto {
     private String inspectSeq;
     private String resultUrl;
-    private String testName; // 🔹 추가
+    private String testName;
 
     public static ExternalDiagnosisResultDto from(ExternalDiagnosticResult result) {
         return ExternalDiagnosisResultDto.builder()
                 .inspectSeq(result.getInspectCode())
                 .resultUrl(result.getResultUrl())
-                .testName(result.getTest().getName()) // 🔹 이름 포함
+                .testName(result.getTest().getName())
                 .build();
     }
 }

@@ -33,6 +33,19 @@ public class DscsnKindService {
         );
     }
 
+    //--- 상담신청 페이지 상담항목 가져오기
+    public List<DscsnKindDto> getDscsnKindByPrefix(String prefix) {
+        List<DscsnKind> dscsnKinds = dscsnKindRepository.findByDscsnKindIdStartingWith(prefix);
+
+        return dscsnKinds.stream()
+                .map(dscsnKind -> DscsnKindDto.builder()
+                        .dscsnKindId(dscsnKind.getDscsnKindId())
+                        .dscsnKindName(dscsnKind.getDscsnKindName())
+                        .dscsnTypeName(dscsnKind.getDscsnTypeName())
+                        .build())
+                .toList();
+    }
+
     //--- 상담 항목 등록
     public void saveDscsnKind(DscsnKindDto dscsnKindDto) {
 

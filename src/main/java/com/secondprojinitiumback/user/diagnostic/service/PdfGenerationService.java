@@ -32,19 +32,19 @@ public class PdfGenerationService {
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf);
 
-        // ✅ 한글 폰트 설정
+        // 한글 폰트 설정
         File fontFile = ResourceUtils.getFile("classpath:fonts/NotoSansKR-Regular.ttf");
         PdfFont koreanFont = PdfFontFactory.createFont(fontFile.getAbsolutePath(), PdfEncodings.IDENTITY_H, true);
         document.setFont(koreanFont);
 
-        // ✅ 타이틀
+        // 타이틀
         document.add(new Paragraph("- 진단검사 결과 요약 -")
                 .setFontSize(18)
                 .setBold()
                 .setTextAlignment(TextAlignment.CENTER)
                 .setMarginBottom(20));
 
-        // ✅ 기본 정보
+        // 기본 정보
         document.add(new Paragraph("▪ 검사명: " + result.getTest().getName()));
         document.add(new Paragraph("▪ 학생번호: " + result.getStudent().getStudentNo()));
         document.add(new Paragraph("▪ 학생명: " + result.getStudent().getName()));
@@ -52,7 +52,7 @@ public class PdfGenerationService {
         document.add(new Paragraph("▪ 응답일: " + result.getCompletionDate()));
         document.add(new Paragraph(" "));
 
-        // ✅ 해석 영역
+        // 해석 영역
         document.add(new Paragraph("< 해석 >")
                 .setBold()
                 .setFontSize(14)
@@ -63,11 +63,11 @@ public class PdfGenerationService {
                 .setTextAlignment(TextAlignment.LEFT));
         document.add(new Paragraph(" "));
 
-        // ✅ 구분선
+        // 구분선
         document.add(new Paragraph("────────────────────────────────────────").setFontSize(10).setTextAlignment(TextAlignment.CENTER));
         document.add(new Paragraph(" "));
 
-        // ✅ 문항별 응답 결과
+        // 문항별 응답 결과
         document.add(new Paragraph("< 문항별 응답 결과 >")
                 .setFontSize(14)
                 .setBold()

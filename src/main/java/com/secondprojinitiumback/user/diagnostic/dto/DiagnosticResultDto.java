@@ -25,7 +25,7 @@ public class DiagnosticResultDto {
                 .resultId(result.getId())
                 .studentNo(result.getStudent().getStudentNo())
                 .testId(result.getTest().getId())
-                .testName(result.getTest().getName()) // 🔹 이름 포함
+                .testName(result.getTest().getName())
                 .totalScore(result.getTotalScore())
                 .completionDate(result.getCompletionDate())
                 .interpretedMessage(interpreted)

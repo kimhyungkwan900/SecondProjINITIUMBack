@@ -39,13 +39,9 @@ public class DscsnKindController {
     //--- 상담신청 페이지 상담항목 가져오기
     @GetMapping("/consult/dscsnkind/get/{prefix}")
     public ResponseEntity<?> getDscsnKindForConsult(@PathVariable String prefix) {
-        try {
-            List<DscsnKindDto> dscsnKinds = dscsnKindService.getDscsnKindByPrefix(prefix);
+        List<DscsnKindDto> dscsnKinds = dscsnKindService.getDscsnKindByPrefix(prefix);
 
-            return ResponseEntity.ok(dscsnKinds);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("데이터 처리 중 오류가 발생했습니다.");
-        }
+        return ResponseEntity.ok(dscsnKinds);
     }
 
     //--- 상담항목 조회

@@ -21,12 +21,12 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/admin/consult/dscsnkind")
+@RequestMapping("/api")
 public class DscsnKindController {
     private final DscsnKindService dscsnKindService;
 
     //--- 상담항목 추가
-    @PostMapping("/new")
+    @PostMapping("/admin/consult/dscsnkind/new")
     public ResponseEntity<?> newDscsnKind(@ModelAttribute DscsnKindDto dscsnKindDto) {
         try{
             dscsnKindService.saveDscsnKind(dscsnKindDto);
@@ -36,8 +36,20 @@ public class DscsnKindController {
         }
     }
 
+    //--- 상담신청 페이지 상담항목 가져오기
+    @GetMapping("/consult/dscsnkind/get/{prefix}")
+    public ResponseEntity<?> getDscsnKindForConsult(@PathVariable String prefix) {
+        try {
+            List<DscsnKindDto> dscsnKinds = dscsnKindService.getDscsnKindByPrefix(prefix);
+
+            return ResponseEntity.ok(dscsnKinds);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("데이터 처리 중 오류가 발생했습니다.");
+        }
+    }
+
     //--- 상담항목 조회
-    @GetMapping({"/", "/{page}"})
+    @GetMapping({"/admin/consult/dscsnkind/", "/admin/consult/dscsnkind/{page}"})
     public ResponseEntity<?> getDscsnKind(@ModelAttribute DscsnKindDto dscsnKindDto, @PathVariable int page) {
 
         Pageable pageable = PageRequest.of(page, 10);
@@ -53,7 +65,7 @@ public class DscsnKindController {
     }
 
     //--- 상담항목 수정
-    @PutMapping("/update")
+    @PutMapping("/admin/consult/dscsnkind/update")
     public ResponseEntity<?> updateDscsnKind(@ModelAttribute DscsnKindDto dscsnKindDto) {
         try {
             dscsnKindService.updateDscsnKind(dscsnKindDto);
@@ -68,7 +80,7 @@ public class DscsnKindController {
     }
 
     //--- 상담항목 삭제
-    @DeleteMapping("/delete")
+    @DeleteMapping("/admin/consult/dscsnkind/delete")
     public ResponseEntity<?> deleteDscsnKind(@RequestBody List<String> dscsnKindIds) {
         try {
             dscsnKindService.deleteDscsnKind(dscsnKindIds);

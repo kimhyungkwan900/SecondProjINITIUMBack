@@ -26,7 +26,7 @@ public class QMileageTotal extends EntityPathBase<MileageTotal> {
 
     public final StringPath studentNo = createString("studentNo");
 
-    public final NumberPath<Double> totalScore = createNumber("totalScore", Double.class);
+    public final NumberPath<Integer> totalScore = createNumber("totalScore", Integer.class);
 
     public QMileageTotal(String variable) {
         this(MileageTotal.class, forVariable(variable), INITS);

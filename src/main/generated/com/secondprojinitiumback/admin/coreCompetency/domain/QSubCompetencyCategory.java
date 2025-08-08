@@ -24,6 +24,10 @@ public class QSubCompetencyCategory extends EntityPathBase<SubCompetencyCategory
 
     public final ListPath<BehaviorIndicator, QBehaviorIndicator> behaviorIndicators = this.<BehaviorIndicator, QBehaviorIndicator>createList("behaviorIndicators", BehaviorIndicator.class, QBehaviorIndicator.class, PathInits.DIRECT2);
 
+    public final com.secondprojinitiumback.common.domain.QCommonCode competencyCategory;
+
+    public final StringPath competencyCategoryGroup = createString("competencyCategoryGroup");
+
     public final QCoreCompetencyCategory coreCompetencyCategory;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
@@ -50,6 +54,7 @@ public class QSubCompetencyCategory extends EntityPathBase<SubCompetencyCategory
 
     public QSubCompetencyCategory(Class<? extends SubCompetencyCategory> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.competencyCategory = inits.isInitialized("competencyCategory") ? new com.secondprojinitiumback.common.domain.QCommonCode(forProperty("competencyCategory"), inits.get("competencyCategory")) : null;
         this.coreCompetencyCategory = inits.isInitialized("coreCompetencyCategory") ? new QCoreCompetencyCategory(forProperty("coreCompetencyCategory"), inits.get("coreCompetencyCategory")) : null;
     }
 

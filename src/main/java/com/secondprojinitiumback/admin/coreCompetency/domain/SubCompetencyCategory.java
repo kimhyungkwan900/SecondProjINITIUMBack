@@ -1,5 +1,7 @@
 package com.secondprojinitiumback.admin.coreCompetency.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.secondprojinitiumback.common.domain.CommonCode;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +22,7 @@ public class SubCompetencyCategory {
     @Column(name = "STGR_ID")
     private Long id; // 하위 역량 ID
 
+
     @Column(name = "STGR_NM", nullable = false)
     private String subCategoryName; // 하위 역량명
 
@@ -28,11 +31,25 @@ public class SubCompetencyCategory {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CTGR_ID", nullable = false)
+    @JsonIgnore
     private CoreCompetencyCategory coreCompetencyCategory;
 
     //양방향 설정
     @OneToMany(mappedBy = "subCompetencyCategory", fetch = FetchType.LAZY)
     private List<BehaviorIndicator> behaviorIndicators = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+            @JoinColumn(name = "COMP_CD", referencedColumnName = "CD"),
+            @JoinColumn(name = "COMP_GRP", referencedColumnName = "CD_SE")
+    })
+    private CommonCode competencyCategory;
+
+    @Builder.Default
+    @Column(name = "COMP_GRP", insertable = false, updatable = false)
+    private String competencyCategoryGroup = "COMP";
+
+
 
 
 }

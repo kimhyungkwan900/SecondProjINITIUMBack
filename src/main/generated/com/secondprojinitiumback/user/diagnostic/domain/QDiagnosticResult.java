@@ -28,6 +28,8 @@ public class QDiagnosticResult extends EntityPathBase<DiagnosticResult> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final com.secondprojinitiumback.common.security.domain.QLoginInfo loginInfo;
+
     public final com.secondprojinitiumback.user.student.domain.QStudent student;
 
     public final QDiagnosticTest test;
@@ -52,6 +54,7 @@ public class QDiagnosticResult extends EntityPathBase<DiagnosticResult> {
 
     public QDiagnosticResult(Class<? extends DiagnosticResult> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.loginInfo = inits.isInitialized("loginInfo") ? new com.secondprojinitiumback.common.security.domain.QLoginInfo(forProperty("loginInfo")) : null;
         this.student = inits.isInitialized("student") ? new com.secondprojinitiumback.user.student.domain.QStudent(forProperty("student"), inits.get("student")) : null;
         this.test = inits.isInitialized("test") ? new QDiagnosticTest(forProperty("test"), inits.get("test")) : null;
     }

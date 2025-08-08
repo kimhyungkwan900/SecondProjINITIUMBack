@@ -18,35 +18,24 @@ public class QIdealTalentProfile extends EntityPathBase<IdealTalentProfile> {
 
     private static final long serialVersionUID = -159719181L;
 
-    private static final PathInits INITS = PathInits.DIRECT2;
-
     public static final QIdealTalentProfile idealTalentProfile = new QIdealTalentProfile("idealTalentProfile");
 
-    public final QCoreCompetencyCategory coreCompetencyCategories;
+    public final ListPath<CoreCompetencyCategory, QCoreCompetencyCategory> coreCompetencyCategories = this.<CoreCompetencyCategory, QCoreCompetencyCategory>createList("coreCompetencyCategories", CoreCompetencyCategory.class, QCoreCompetencyCategory.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath name = createString("name");
 
     public QIdealTalentProfile(String variable) {
-        this(IdealTalentProfile.class, forVariable(variable), INITS);
+        super(IdealTalentProfile.class, forVariable(variable));
     }
 
     public QIdealTalentProfile(Path<? extends IdealTalentProfile> path) {
-        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
+        super(path.getType(), path.getMetadata());
     }
 
     public QIdealTalentProfile(PathMetadata metadata) {
-        this(metadata, PathInits.getFor(metadata, INITS));
-    }
-
-    public QIdealTalentProfile(PathMetadata metadata, PathInits inits) {
-        this(IdealTalentProfile.class, metadata, inits);
-    }
-
-    public QIdealTalentProfile(Class<? extends IdealTalentProfile> type, PathMetadata metadata, PathInits inits) {
-        super(type, metadata, inits);
-        this.coreCompetencyCategories = inits.isInitialized("coreCompetencyCategories") ? new QCoreCompetencyCategory(forProperty("coreCompetencyCategories"), inits.get("coreCompetencyCategories")) : null;
+        super(IdealTalentProfile.class, metadata);
     }
 
 }

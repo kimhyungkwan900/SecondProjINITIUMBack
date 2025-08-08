@@ -25,10 +25,10 @@ import static org.mockito.Mockito.*;
  *   StudentCompetencyScore 엔티티로 저장하는 기능을 테스트함
  */
 @ExtendWith(MockitoExtension.class)
-class StudentCompetencyScoreServiceTest {
+class AdminStudentCompetencyScoreServiceTest {
 
     @InjectMocks
-    private StudentCompetencyScoreService studentCompetencyScoreService;
+    private AdminStudentCompetencyScoreService adminStudentCompetencyScoreService;
 
     @Mock
     private CoreCompetencyResponseRepository responseRepository;
@@ -121,7 +121,7 @@ class StudentCompetencyScoreServiceTest {
                 ));
 
         // When
-        studentCompetencyScoreService.saveStudentScoreBySubCompetency(result);
+        adminStudentCompetencyScoreService.saveStudentScoreBySubCompetency(result);
 
         // Then
         // 기존 점수 삭제 확인

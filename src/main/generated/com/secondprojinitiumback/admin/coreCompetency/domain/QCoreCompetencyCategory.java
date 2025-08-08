@@ -22,6 +22,12 @@ public class QCoreCompetencyCategory extends EntityPathBase<CoreCompetencyCatego
 
     public static final QCoreCompetencyCategory coreCompetencyCategory = new QCoreCompetencyCategory("coreCompetencyCategory");
 
+    public final QCoreCompetencyAssessment assessment;
+
+    public final com.secondprojinitiumback.common.domain.QCommonCode competencyCategory;
+
+    public final StringPath competencyCategoryGroup = createString("competencyCategoryGroup");
+
     public final StringPath coreCategoryName = createString("coreCategoryName");
 
     public final StringPath coreCategoryNote = createString("coreCategoryNote");
@@ -50,7 +56,9 @@ public class QCoreCompetencyCategory extends EntityPathBase<CoreCompetencyCatego
 
     public QCoreCompetencyCategory(Class<? extends CoreCompetencyCategory> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.idealTalentProfile = inits.isInitialized("idealTalentProfile") ? new QIdealTalentProfile(forProperty("idealTalentProfile"), inits.get("idealTalentProfile")) : null;
+        this.assessment = inits.isInitialized("assessment") ? new QCoreCompetencyAssessment(forProperty("assessment"), inits.get("assessment")) : null;
+        this.competencyCategory = inits.isInitialized("competencyCategory") ? new com.secondprojinitiumback.common.domain.QCommonCode(forProperty("competencyCategory"), inits.get("competencyCategory")) : null;
+        this.idealTalentProfile = inits.isInitialized("idealTalentProfile") ? new QIdealTalentProfile(forProperty("idealTalentProfile")) : null;
     }
 
 }

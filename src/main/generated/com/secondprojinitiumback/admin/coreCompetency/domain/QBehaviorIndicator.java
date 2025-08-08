@@ -24,15 +24,9 @@ public class QBehaviorIndicator extends EntityPathBase<BehaviorIndicator> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final StringPath isCommon = createString("isCommon");
-
-    public final StringPath isCommonGroupCode = createString("isCommonGroupCode");
-
     public final StringPath name = createString("name");
 
     public final QCoreCompetencyQuestion questions;
-
-    public final com.secondprojinitiumback.common.domain.QSchoolSubject schoolSubject;
 
     public final QSubCompetencyCategory subCompetencyCategory;
 
@@ -55,7 +49,6 @@ public class QBehaviorIndicator extends EntityPathBase<BehaviorIndicator> {
     public QBehaviorIndicator(Class<? extends BehaviorIndicator> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.questions = inits.isInitialized("questions") ? new QCoreCompetencyQuestion(forProperty("questions"), inits.get("questions")) : null;
-        this.schoolSubject = inits.isInitialized("schoolSubject") ? new com.secondprojinitiumback.common.domain.QSchoolSubject(forProperty("schoolSubject"), inits.get("schoolSubject")) : null;
         this.subCompetencyCategory = inits.isInitialized("subCompetencyCategory") ? new QSubCompetencyCategory(forProperty("subCompetencyCategory"), inits.get("subCompetencyCategory")) : null;
     }
 

@@ -5,6 +5,8 @@ import com.secondprojinitiumback.admin.coreCompetency.domain.CoreCompetencyCateg
 import com.secondprojinitiumback.admin.coreCompetency.domain.SubCompetencyCategory;
 import com.secondprojinitiumback.admin.coreCompetency.dto.CompetencyCategoryDto;
 import com.secondprojinitiumback.admin.coreCompetency.service.AdminCompetencyCategoryService;
+import com.secondprojinitiumback.common.domain.CommonCode;
+import com.secondprojinitiumback.common.domain.CommonCodeId;
 import com.secondprojinitiumback.common.security.config.jwt.TokenAuthenticationFilter;
 import com.secondprojinitiumback.common.security.config.jwt.TokenProvider;
 import org.junit.jupiter.api.DisplayName;
@@ -53,8 +55,11 @@ class AdminCompetencyCategoryControllerTest {
         CompetencyCategoryDto dto = new CompetencyCategoryDto();
         dto.setName("창의역량");
         dto.setDescription("창의적 문제해결 능력");
-        dto.setLevelType("CORE_COMPETENCY");
         dto.setIdealTalentProfileId(1L);
+
+        CommonCodeId codeId = new CommonCodeId("C", "COMP");
+        CommonCode commonCode = CommonCode.builder().id(codeId).build();
+        dto.setCompetencyCategory(commonCode);
 
         // when
         doNothing().when(categoryService).createCategory(dto);
@@ -73,8 +78,11 @@ class AdminCompetencyCategoryControllerTest {
         CompetencyCategoryDto dto = new CompetencyCategoryDto();
         dto.setName("창의적 사고");
         dto.setDescription("창의적 문제 해결 능력 향상");
-        dto.setLevelType("SUB_COMPETENCY");
         dto.setParentId(1L);
+
+        CommonCodeId codeId = new CommonCodeId("S", "COMP");
+        CommonCode commonCode = CommonCode.builder().id(codeId).build();
+        dto.setCompetencyCategory(commonCode);
 
         doNothing().when(categoryService).createCategory(dto);
 
@@ -92,8 +100,11 @@ class AdminCompetencyCategoryControllerTest {
         dto.setId(1L);
         dto.setName("수정한 핵심역량");
         dto.setDescription("수정한 핵심역량 설명");
-        dto.setLevelType("CORE_COMPETENCY");
         dto.setIdealTalentProfileId(1L);
+
+        CommonCodeId codeId = new CommonCodeId("C", "COMP");
+        CommonCode commonCode = CommonCode.builder().id(codeId).build();
+        dto.setCompetencyCategory(commonCode);
 
         doNothing().when(categoryService).updateCategory(1L, dto);
 
@@ -111,8 +122,11 @@ class AdminCompetencyCategoryControllerTest {
         dto.setId(1L);
         dto.setName("하위역량 수정");
         dto.setDescription("하위역량 설명 수정");
-        dto.setLevelType("SUB_COMPETENCY");
         dto.setParentId(1L);
+
+        CommonCodeId codeId = new CommonCodeId("S", "COMP");
+        CommonCode commonCode = CommonCode.builder().id(codeId).build();
+        dto.setCompetencyCategory(commonCode);
 
         doNothing().when(categoryService).updateCategory(1L, dto);
 

@@ -16,6 +16,8 @@ import lombok.*;
 public class CoreCompetencyAssessmentDto {
 
     /** 진단 평가 고유 번호 (예: ASMT2025-01) */
+    private Long id;
+
     private String assessmentNo;
 
     /** 진단 평가명 */
@@ -65,6 +67,7 @@ public class CoreCompetencyAssessmentDto {
      */
     public static CoreCompetencyAssessmentDto fromEntity(CoreCompetencyAssessment assessment) {
         return CoreCompetencyAssessmentDto.builder()
+                .id(assessment.getId())
                 .assessmentNo(assessment.getAssessmentNo())
                 .assessmentName(assessment.getAssessmentName())
                 .startDate(assessment.getStartDate())

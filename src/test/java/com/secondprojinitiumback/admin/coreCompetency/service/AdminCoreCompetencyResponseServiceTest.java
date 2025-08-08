@@ -5,11 +5,15 @@ import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyA
 import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyQuestionRepository;
 import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyResponseRepository;
 import com.secondprojinitiumback.admin.coreCompetency.repository.ResponseChoiceOptionRepository;
+import com.secondprojinitiumback.user.coreCompetency.dto.UserResponseBulkRequestDto;
+import com.secondprojinitiumback.user.coreCompetency.dto.UserResponseRequestDto;
 import com.secondprojinitiumback.user.student.domain.Student;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -19,11 +23,11 @@ import static org.mockito.Mockito.*;
  * CoreCompetencyResponseService의 단위 테스트 클래스
  * - 학생이 핵심역량 평가에서 응답을 제출했을 때, 응답이 DB에 정상 저장되는지 검증
  */
-class CoreCompetencyResponseServiceTest {
+class AdminCoreCompetencyResponseServiceTest {
 
     // 테스트 대상 서비스
     @InjectMocks
-    private CoreCompetencyResponseService coreCompetencyResponseService;
+    private AdminCoreCompetencyResponseService adminCoreCompetencyResponseService;
 
     // 의존성으로 주입될 Repository들 모킹
     @Mock
@@ -57,10 +61,10 @@ class CoreCompetencyResponseServiceTest {
         // Given
         Long assessmentId = 10L;
         Long questionId = 100L;
-        Long optionId = 1000L;
 
-        Student student = mock(Student.class); // 학생 객체는 단순 mock 처리
+        Student student = mock(Student.class);
 
+        // 평가, 문항, 보기 mock
         CoreCompetencyAssessment assessment = CoreCompetencyAssessment.builder()
                 .id(assessmentId)
                 .assessmentName("평가1")
@@ -72,21 +76,31 @@ class CoreCompetencyResponseServiceTest {
                 .build();
 
         ResponseChoiceOption option = ResponseChoiceOption.builder()
-                .id(optionId)
+                .id(1000L)
                 .label("보기1")
                 .score(5)
                 .build();
 
-        // 각 ID로 엔티티 조회 시 결과를 반환하도록 설정
+        // DTO 생성
+        UserResponseRequestDto responseDto = new UserResponseRequestDto();
+        responseDto.setQuestionId(questionId);
+        responseDto.setLabel("보기1");
+
+        UserResponseBulkRequestDto bulkDto = new UserResponseBulkRequestDto();
+        bulkDto.setAssessmentId(assessmentId);
+        bulkDto.setResponses(List.of(responseDto));
+
+        // Mock 설정
         when(assessmentRepository.findById(assessmentId)).thenReturn(Optional.of(assessment));
         when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));
-        when(optionRepository.findById(optionId)).thenReturn(Optional.of(option));
+        when(optionRepository.findByQuestionIdAndLabel(questionId, "보기1")).thenReturn(Optional.of(option));
 
-        // When: 응답 저장 서비스 호출
-        coreCompetencyResponseService.saveStudentResponse(student, assessmentId, questionId, optionId);
+        // When
+        adminCoreCompetencyResponseService.saveResponsesByLabel(student, bulkDto);
 
-        // Then: 응답 저장 로직이 정확히 1번 실행되었는지 검증
+        // Then
         verify(responseRepository, times(1)).save(any(CoreCompetencyResponse.class));
     }
+
 }
 

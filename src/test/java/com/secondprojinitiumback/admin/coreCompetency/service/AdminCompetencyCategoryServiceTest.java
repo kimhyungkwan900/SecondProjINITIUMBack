@@ -7,6 +7,8 @@ import com.secondprojinitiumback.admin.coreCompetency.dto.CompetencyCategoryDto;
 import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyCategoryRepository;
 import com.secondprojinitiumback.admin.coreCompetency.repository.IdealTalentProfileRepository;
 import com.secondprojinitiumback.admin.coreCompetency.repository.SubCompetencyCategoryRepository;
+import com.secondprojinitiumback.common.domain.CommonCode;
+import com.secondprojinitiumback.common.domain.CommonCodeId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,8 +52,12 @@ class AdminCompetencyCategoryServiceTest {
         dto.setId(1L);
         dto.setName("창의역량");
         dto.setDescription("창의적 문제 해결 능력");
-        dto.setLevelType("CORE_COMPETENCY");
         dto.setIdealTalentProfileId(1L);
+
+        CommonCodeId codeId = new CommonCodeId("C", "COMP");
+        CommonCode commonCode = CommonCode.builder().id(codeId).build();
+        dto.setCompetencyCategory(commonCode);
+
 
         // 인재상 엔티티가 정상적으로 조회됨을 모의
         IdealTalentProfile profile = IdealTalentProfile.builder().id(1L).build();
@@ -72,8 +78,11 @@ class AdminCompetencyCategoryServiceTest {
         dto.setId(1L);
         dto.setName("창의적 사고");
         dto.setDescription("창의적 문제 해결 능력 향상");
-        dto.setLevelType("SUB_COMPETENCY");
         dto.setParentId(1L);
+
+        CommonCodeId codeId = new CommonCodeId("S", "COMP");
+        CommonCode commonCode = CommonCode.builder().id(codeId).build();
+        dto.setCompetencyCategory(commonCode);
 
         // 상위 카테고리 존재 모의
         CoreCompetencyCategory parent = CoreCompetencyCategory.builder().id(1L).build();
@@ -98,8 +107,11 @@ class AdminCompetencyCategoryServiceTest {
         CompetencyCategoryDto dto = new CompetencyCategoryDto();
         dto.setName("수정한 역량");
         dto.setDescription("수정한 역량 설명");
-        dto.setLevelType("CORE_COMPETENCY");
         dto.setIdealTalentProfileId(1L);
+
+        CommonCodeId codeId = new CommonCodeId("C", "COMP");
+        CommonCode commonCode = CommonCode.builder().id(codeId).build();
+        dto.setCompetencyCategory(commonCode);
 
         // 레포지토리 응답 모의
         when(coreCompetencyCategoryRepository.findById(id)).thenReturn(Optional.of(existing));
@@ -123,8 +135,11 @@ class AdminCompetencyCategoryServiceTest {
         CompetencyCategoryDto dto = new CompetencyCategoryDto();
         dto.setName("수정한 하위 역량");
         dto.setDescription("수정한 하위 역량 설명");
-        dto.setLevelType("SUB_COMPETENCY");
         dto.setParentId(1L);
+
+        CommonCodeId codeId = new CommonCodeId("S", "COMP");
+        CommonCode commonCode = CommonCode.builder().id(codeId).build();
+        dto.setCompetencyCategory(commonCode);
 
         when(subCompetencyCategoryRepository.findById(id)).thenReturn(Optional.of(existing));
 

@@ -11,32 +11,33 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DscsnInfoSearchDto {
 
-    String userType; //사용자 유형(S(학생), E(교직원), A(역량센터))
+    String userType;        //사용자 유형(S(학생), E(교직원), A(역량센터))
+    String consultorType;   // 상담자 유형 (P(교수), K(외부상담사)
 
-    String serialNo; //학번 아니면 사번
+    String serialNo;        //학번 아니면 사번
 
-    String dscsnType; //상담분야
+    String dscsnType;       //상담분야
 
-    String startDate; //상담일: 시작
+    String startDate;       //상담일: 시작
 
-    String endDate; //상담일: 종료
+    String endDate;         //상담일: 종료
 
-    String dscsnStatus; //상담상태
+    String dscsnStatus;     //상담상태
 
-    String year; //연도
+    String year;            //연도
 
-    String startMonth; //학기
+    String startMonth;      //학기
     String endMonth;
 
-    String dscsnKindId; //상담항목
+    String dscsnKindId;     //상담항목
 
-    String studentNo; //학번
+    String studentNo;       //학번
 
-    String studentName; // /성명
+    String studentName;     //성명
 
-    String studentStatus; //학적상태
+    String studentStatus;   //학적상태
 
     //상담자(아이디): 일단 보류
 
-    String depart; //소속(학과)
+    String depart;          //소속(학과)
 }

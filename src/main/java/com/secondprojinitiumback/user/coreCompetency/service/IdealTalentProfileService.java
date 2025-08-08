@@ -30,29 +30,26 @@ public class IdealTalentProfileService {
 
                 // 2. 각 인재상(profile)을 IdealTalentProfileDto로 변환
                 .map(profile -> {
-                    // 인재상과 1:1로 연결된 핵심역량 엔티티 조회
-                    CoreCompetencyCategory core = profile.getCoreCompetencyCategories();
+                    // 인재상에 연결된 모든 핵심역량 리스트
+                    List<UserIdealTalentProfileDto.CoreCompetencyCategoryDto> coreCompetencyDtos = profile.getCoreCompetencyCategories().stream()
+                            .map(core -> {
+                                List<UserIdealTalentProfileDto.SubCompetencyCategoryDto> subDtos = core.getSubCompetencyCategories().stream()
+                                        .map(sub -> UserIdealTalentProfileDto.SubCompetencyCategoryDto.builder()
+                                                .subName(sub.getSubCategoryName())
+                                                .subDefinition(sub.getSubCategoryNote())
+                                                .build())
+                                        .collect(Collectors.toList());
 
-                    // 핵심역량에 연결된 하위역량 목록을 DTO 리스트로 변환
-                    List<UserIdealTalentProfileDto.SubCompetencyCategoryDto> subCompetencyCategoryDto =
-                            core.getSubCompetencyCategories().stream()
-                                    .map(sub ->
-                                            UserIdealTalentProfileDto.SubCompetencyCategoryDto.builder()
-                                                    .subName(sub.getSubCategoryName())           // 하위역량명
-                                                    .subDefinition(sub.getSubCategoryNote())     // 하위역량 설명
-                                                    .build())
-                                    .collect(Collectors.toList());
+                                return UserIdealTalentProfileDto.CoreCompetencyCategoryDto.builder()
+                                        .coreName(core.getCoreCategoryName())
+                                        .coreDefinition(core.getCoreCategoryNote())
+                                        .subCompetencyCategories(subDtos)
+                                        .build();
+                            }).collect(Collectors.toList());
 
-                    // 인재상 DTO 생성 및 반환
                     return UserIdealTalentProfileDto.builder()
-                            .idealTalent(profile.getName()) // 인재상명
-                            .coreCompetencyCategories(List.of( // 핵심역량은 1:1이므로 리스트에 한 개만 포함
-                                    UserIdealTalentProfileDto.CoreCompetencyCategoryDto.builder()
-                                            .coreName(core.getCoreCategoryName())           // 핵심역량명
-                                            .coreDefinition(core.getCoreCategoryNote())     // 핵심역량 설명
-                                            .subCompetencyCategories(subCompetencyCategoryDto) // 하위역량 리스트 포함
-                                            .build()
-                            ))
+                            .idealTalent(profile.getName())
+                            .coreCompetencyCategories(coreCompetencyDtos)
                             .build();
                 })
 

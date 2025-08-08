@@ -17,7 +17,8 @@ public interface CoreCompetencyQuestionRepository extends JpaRepository<CoreComp
      * - 지연 로딩(Lazy Loading)을 방지하여 N+1 문제 예방
 
      */
-    @Query("SELECT q FROM CoreCompetencyQuestion q LEFT JOIN FETCH q.responseChoiceOptions " +
+    @Query("SELECT DISTINCT q FROM CoreCompetencyQuestion q LEFT JOIN FETCH q.responseChoiceOptions " +
             "WHERE q.assessment.id = :assessmentId")
     List<CoreCompetencyQuestion> findAllWithOptionsByAssessmentId(@Param("assessmentId") Long assessmentId);
+
 }

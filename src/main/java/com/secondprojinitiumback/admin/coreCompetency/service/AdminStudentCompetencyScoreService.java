@@ -13,7 +13,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class StudentCompetencyScoreService {
+public class AdminStudentCompetencyScoreService {
 
     private final CoreCompetencyResponseRepository coreCompetencyResponseRepository;
     private final StudentCompetencyScoreRepository studentCompetencyScoreRepository;

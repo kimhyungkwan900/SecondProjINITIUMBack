@@ -1,7 +1,7 @@
 package com.secondprojinitiumback.admin.coreCompetency.controller;
 
 import com.secondprojinitiumback.admin.coreCompetency.dto.QuestionStatisticsDto;
-import com.secondprojinitiumback.admin.coreCompetency.service.CoreCompetencyResultService;
+import com.secondprojinitiumback.admin.coreCompetency.service.AdminCoreCompetencyResultService;
 import com.secondprojinitiumback.user.student.domain.Student;
 import com.secondprojinitiumback.user.student.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AdminResultStatisticsController {
 
-    private final CoreCompetencyResultService resultService;
+    private final AdminCoreCompetencyResultService resultService;
     private final StudentRepository studentRepository;
 
     /**

@@ -29,11 +29,11 @@ import static org.mockito.Mockito.when;
  * - 핵심 기능: 특정 평가에 대해 학생이 각 문항에 대해 선택한 보기(Label)를 문항 번호로 매핑하여 반환
  */
 @ExtendWith(MockitoExtension.class)
-public class CoreCompetencyResultServiceTest {
+public class AdminCoreCompetencyResultServiceTest {
 
     // 테스트 대상 서비스
     @InjectMocks
-    private CoreCompetencyResultService coreCompetencyResultService;
+    private AdminCoreCompetencyResultService adminCoreCompetencyResultService;
 
     // 의존성 Mock 객체
     @Mock
@@ -98,7 +98,7 @@ public class CoreCompetencyResultServiceTest {
                 .thenReturn(List.of(response1, response2));
 
         // When: 서비스 호출
-        Map<Integer, String> result = coreCompetencyResultService.getStudentResponseLabels(student, assessment.getId());
+        Map<Integer, String> result = adminCoreCompetencyResultService.getStudentResponseLabels(student, assessment.getId());
 
         // Then: 문항 번호 → 선택지 라벨 매핑 결과 검증
         assertEquals("매우그렇다", result.get(1));

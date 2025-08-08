@@ -21,12 +21,6 @@ public class AdminAssessmentSearchService {
 
     /**
      * ✅ 진단목록 조회 (상세 정보 포함)
-     *
-     * @param year        학년도 (예: "2025")
-     * @param semester    학기명 (예: "1학기", "2학기")
-     * @param assessmentNo 진단번호 (예: "ASMT2025-01")
-     * @return CoreCompetencyAssessmentDto 리스트 (상세 정보 포함)
-     *
      * - AdminAssessmentSearchBar + AdminAssessmentListTable에서 사용
      * - semesterCode와 onlineYn은 CodeName 기준으로 조회됨
      */
@@ -42,10 +36,6 @@ public class AdminAssessmentSearchService {
 
     /**
      * ✅ 결과표 전용 진단 목록 조회 (차트/분석 기준만 포함)
-     *
-     * @param year        학년도
-     * @param semester    학기명
-     * @param assessmentNo 진단번호
      * @return CoreCompetencyAssessmentDto 리스트 (간략 정보만 포함)
      *
      * - AdminAssessmentResultListTable 등에서 결과표 표시용으로 사용

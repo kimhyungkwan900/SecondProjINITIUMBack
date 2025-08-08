@@ -254,3 +254,8 @@ INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, USE_YN) VALUES
 INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, USE_YN) VALUES
                                             ('ONLYN', 'Y', '온라인', 'Y'),
                                             ('ONLYN', 'N', '오프라인', 'Y');
+
+-- 핵심/하위역량 코드
+INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, USE_YN) VALUES
+                                                     ('COMP', 'C', '핵심역량', 'Y'),
+                                                     ('COMP', 'S', '하위역량', 'Y');

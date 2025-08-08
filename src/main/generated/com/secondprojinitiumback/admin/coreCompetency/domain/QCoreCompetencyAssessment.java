@@ -32,6 +32,8 @@ public class QCoreCompetencyAssessment extends EntityPathBase<CoreCompetencyAsse
 
     public final StringPath chartType = createString("chartType");
 
+    public final ListPath<CoreCompetencyCategory, QCoreCompetencyCategory> coreCompetencyCategories = this.<CoreCompetencyCategory, QCoreCompetencyCategory>createList("coreCompetencyCategories", CoreCompetencyCategory.class, QCoreCompetencyCategory.class, PathInits.DIRECT2);
+
     public final StringPath endDate = createString("endDate");
 
     public final StringPath guideContent = createString("guideContent");

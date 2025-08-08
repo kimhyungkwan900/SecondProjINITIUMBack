@@ -179,36 +179,33 @@ public class ExternalDiagnosisService {
      */
     public ExternalDiagnosisResultDto submitExternalResult(ExternalDiagnosisRequestDto dto) {
         try {
-            // (주의) startDtm은 필수 / epoch millis 문자열
-            String startDtm = dto.getStartDtm();
-            if (startDtm == null || startDtm.isBlank()) {
-                startDtm = String.valueOf(System.currentTimeMillis());
-            }
+            // 1) startDtm 보정
+            String startDtm = (dto.getStartDtm() == null || dto.getStartDtm().isBlank())
+                    ? String.valueOf(System.currentTimeMillis())
+                    : dto.getStartDtm();
 
-            // x-www-form-urlencoded 바디 구성 (apikey 포함!)
-            String body =
-                    "apikey="   + URLEncoder.encode(apiKey, StandardCharsets.UTF_8) +
-                            "&qestrnSeq="+ URLEncoder.encode(dto.getQestrnSeq(), StandardCharsets.UTF_8) +
-                            "&trgetSe=" + URLEncoder.encode(dto.getTrgetSe(), StandardCharsets.UTF_8) +
-                            "&name="    + URLEncoder.encode(dto.getName(), StandardCharsets.UTF_8) +
-                            "&gender="  + URLEncoder.encode(dto.getGender(), StandardCharsets.UTF_8) +
-                            "&school="  + URLEncoder.encode(Optional.ofNullable(dto.getSchool()).orElse(""), StandardCharsets.UTF_8) +
-                            "&grade="   + URLEncoder.encode(dto.getGrade(), StandardCharsets.UTF_8) +
-                            "&email="   + URLEncoder.encode(Optional.ofNullable(dto.getEmail()).orElse(""), StandardCharsets.UTF_8) +
-                            "&startDtm="+ URLEncoder.encode(startDtm, StandardCharsets.UTF_8) +
-                            "&answers=" + URLEncoder.encode(dto.getAnswers(), StandardCharsets.UTF_8);
+            // 2) JSON 페이로드 구성 (!!! apikey 소문자 주의)
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("apikey", apiKey);
+            payload.put("qestrnSeq", dto.getQestrnSeq());
+            payload.put("trgetSe", dto.getTrgetSe());
+            payload.put("name", dto.getName());
+            payload.put("gender", dto.getGender());
+            payload.put("school", Optional.ofNullable(dto.getSchool()).orElse(""));
+            payload.put("grade", dto.getGrade());
+            payload.put("email", Optional.ofNullable(dto.getEmail()).orElse(""));
+            payload.put("startDtm", Long.parseLong(startDtm)); // 숫자로 보내는 편이 안전
+            payload.put("answers", dto.getAnswers());          // "B1=5 B2=3 ..." 또는 "2,2,3,..."
 
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            headers.setContentType(MediaType.APPLICATION_JSON);
             headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
-            HttpEntity<String> request = new HttpEntity<>(body, headers);
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
 
+            // 3) POST (JSON)
             ResponseEntity<Map> response = restTemplate.exchange(
-                    reportUrl, // 프로퍼티 값 사용
-                    HttpMethod.POST,
-                    request,
-                    Map.class
+                    reportUrl, HttpMethod.POST, request, Map.class
             );
 
             Map<String, Object> bodyMap = response.getBody();
@@ -220,7 +217,7 @@ public class ExternalDiagnosisService {
             String url = (String) resultMap.get("url");
             String inspctSeq = String.valueOf(resultMap.get("inspctSeq"));
 
-            // DB 저장: 학생/검사 엔티티 연관
+            // 4) DB 저장
             Student student = studentRepository.findByStudentNo(dto.getStudentNo())
                     .orElseThrow(() -> new IllegalArgumentException("학생을 찾을 수 없습니다: " + dto.getStudentNo()));
 

@@ -16,6 +16,7 @@ public class UserScholarshipStatusController {
 
     private final UserScholarshipStatusService statusService;
 
+    // 장학금 신청 현황 조회
     @GetMapping("/{studentNo}")
     public PageResponseDto<UserScholarshipStatusDto> getStatus(
             @PathVariable String studentNo,

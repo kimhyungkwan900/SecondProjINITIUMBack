@@ -1,5 +1,10 @@
 package com.secondprojinitiumback.user.consult.dto.responsedto;
 
+import com.secondprojinitiumback.user.employee.domain.Employee;
+import jakarta.persistence.Column;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,5 +26,4 @@ public class DscsnScheduleResponseDto {
     private String scheduleDate; // 상담일정 날짜 (YYYYMMdd 형식)
 
     private String startTime; // 상담일정 시간 (HHMM 형식)
-
 }

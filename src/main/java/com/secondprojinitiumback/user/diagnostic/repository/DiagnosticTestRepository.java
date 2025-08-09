@@ -3,10 +3,12 @@ package com.secondprojinitiumback.user.diagnostic.repository;
 import com.secondprojinitiumback.user.diagnostic.domain.DiagnosticTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DiagnosticTestRepository extends JpaRepository<DiagnosticTest, Long> {
@@ -35,5 +37,14 @@ public interface DiagnosticTestRepository extends JpaRepository<DiagnosticTest, 
 
     // 존재 + 삭제 안 됨
     boolean existsByIdAndDelYn(Long id, String delYn);
+
+    @EntityGraph(attributePaths = {
+            "questions",
+            "questions.answers",
+            "scoreLevels"
+    })
+    Optional<DiagnosticTest> findById(Long id);
+
+    Optional<DiagnosticTest> findWithChildrenById(Long id);
 
 }

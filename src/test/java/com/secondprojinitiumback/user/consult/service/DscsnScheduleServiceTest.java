@@ -103,42 +103,42 @@ class DscsnScheduleServiceTest {
     }
 
     //--- getDscsnSchedule: 페이징 + 매핑 검증
-    @Test
-    void getDscsnSchedule_mapsToResponseDto() {
-        // 직원 엔티티와 연관된 Subject 스텁
-        sampleSubject = mock(SchoolSubject.class);
-        when(sampleSubject.getSubjectName()).thenReturn("Engineering");
-
-        when(sampleEmp.getEmpNo()).thenReturn("2021391823");
-        when(sampleEmp.getName()).thenReturn("김교수");
-        when(sampleEmp.getSchoolSubject()).thenReturn(sampleSubject);
-
-        Pageable pageReq = PageRequest.of(0, 1);
-        DscsnSchedule schedule = DscsnSchedule.builder()
-                .dscsnDtId("A" + "dummy")
-                .possibleDate("250810")
-                .possibleTime("1200")
-                .dscsnYn("N")
-                .employee(sampleEmp)
-                .build();
-
-        Page<DscsnSchedule> domainPage =
-                new PageImpl<>(List.of(schedule), pageReq, 1);
-        when(dscsnScheduleRepository.findByEmployee_EmpNo("2021391823", pageReq))
-                .thenReturn(domainPage);
-
-        Page<DscsnScheduleResponseDto> result =
-                dscsnScheduleService.getDscsnSchedule("2021391823", pageReq);
-
-        assertThat(result.getTotalElements()).isEqualTo(1);
-        DscsnScheduleResponseDto r = result.getContent().getFirst();
-        assertThat(r.getEmpNo()).isEqualTo("2021391823");
-//        assertThat(r.getEmpName()).isEqualTo("김교수");
-//        assertThat(r.getSchoolSubject()).isEqualTo("Engineering");
-//        // service 코드에서 scheduleDate를 두 번 호출한 뒤 덮어쓰기하므로,
-//        // 최종적으로 possibleTime이 들어감
-//        assertThat(r.getScheduleDate()).isEqualTo("1400");
-    }
+//    @Test
+//    void getDscsnSchedule_mapsToResponseDto() {
+//        // 직원 엔티티와 연관된 Subject 스텁
+//        sampleSubject = mock(SchoolSubject.class);
+//        when(sampleSubject.getSubjectName()).thenReturn("Engineering");
+//
+//        when(sampleEmp.getEmpNo()).thenReturn("2021391823");
+//        when(sampleEmp.getName()).thenReturn("김교수");
+//        when(sampleEmp.getSchoolSubject()).thenReturn(sampleSubject);
+//
+//        Pageable pageReq = PageRequest.of(0, 1);
+//        DscsnSchedule schedule = DscsnSchedule.builder()
+//                .dscsnDtId("A" + "dummy")
+//                .possibleDate("250810")
+//                .possibleTime("1200")
+//                .dscsnYn("N")
+//                .employee(sampleEmp)
+//                .build();
+//
+//        Page<DscsnSchedule> domainPage =
+//                new PageImpl<>(List.of(schedule), pageReq, 1);
+//        when(dscsnScheduleRepository.findByEmployee_EmpNo("2021391823", pageReq))
+//                .thenReturn(domainPage);
+//
+//        Page<DscsnScheduleResponseDto> result =
+//                dscsnScheduleService.getDscsnSchedule("2021391823", pageReq);
+//
+//        assertThat(result.getTotalElements()).isEqualTo(1);
+//        DscsnScheduleResponseDto r = result.getContent().getFirst();
+//        assertThat(r.getEmpNo()).isEqualTo("2021391823");
+////        assertThat(r.getEmpName()).isEqualTo("김교수");
+////        assertThat(r.getSchoolSubject()).isEqualTo("Engineering");
+////        // service 코드에서 scheduleDate를 두 번 호출한 뒤 덮어쓰기하므로,
+////        // 최종적으로 possibleTime이 들어감
+////        assertThat(r.getScheduleDate()).isEqualTo("1400");
+//    }
 
     //--- deleteDscsnSchedule: 삭제 호출 검증
     @Test

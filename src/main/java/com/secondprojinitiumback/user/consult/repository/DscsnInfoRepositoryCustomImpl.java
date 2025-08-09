@@ -29,10 +29,10 @@ public class DscsnInfoRepositoryCustomImpl implements DscsnInfoRepositoryCustom 
         // 사용자 유형에 따라 쿼리문 추가
         switch(dscsnInfoSearchDto.getUserType()){
             case "S":
-                builder.and(dscsnInfo.dscsnApply.student.studentNo.eq(dscsnInfoSearchDto.getSerialNo()));
+                builder.and(dscsnInfo.dscsnApply.student.studentNo.eq(dscsnInfoSearchDto.getEmpNo()));
                 break;
             case "E":
-                builder.and(dscsnInfo.dscsnApply.dscsnDt.employee.empNo.eq(dscsnInfoSearchDto.getSerialNo()));
+                builder.and(dscsnInfo.dscsnApply.dscsnDt.employee.empNo.eq(dscsnInfoSearchDto.getEmpNo()));
                 break;
             case "A":
                 // 관리자는 모든 상담현황 조회 가능하므로 추가하는 쿼리문 X
@@ -65,6 +65,10 @@ public class DscsnInfoRepositoryCustomImpl implements DscsnInfoRepositoryCustom 
         //학번
         if(StringUtils.hasText(dscsnInfoSearchDto.getStudentNo())){
             builder.and(dscsnInfo.dscsnApply.student.studentNo.eq(dscsnInfoSearchDto.getStudentNo()));
+        }
+        //교번
+        if(StringUtils.hasText(dscsnInfoSearchDto.getEmpNo())){
+            builder.and(dscsnInfo.dscsnApply.dscsnDt.employee.empNo.eq(dscsnInfoSearchDto.getEmpNo()));
         }
         //성명
         if(StringUtils.hasText(dscsnInfoSearchDto.getStudentName())){

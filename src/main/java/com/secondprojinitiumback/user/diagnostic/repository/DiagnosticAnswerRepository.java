@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DiagnosticAnswerRepository extends JpaRepository<DiagnosticAnswer, Long> {
@@ -30,4 +31,10 @@ public interface DiagnosticAnswerRepository extends JpaRepository<DiagnosticAnsw
     @Transactional
     @Query("DELETE FROM DiagnosticAnswer a WHERE a.question.test.id = :testId")
     void deleteAnswersByTestId(@Param("testId") Long testId);
+
+    // ✅ 연관 경로 사용
+    List<DiagnosticAnswer> findByQuestion_Id(Long questionId);
+
+    // ✅ 선택값으로 단건 찾기 (성능/정확도)
+    Optional<DiagnosticAnswer> findByQuestion_IdAndSelectValue(Long questionId, Integer selectValue);
 }

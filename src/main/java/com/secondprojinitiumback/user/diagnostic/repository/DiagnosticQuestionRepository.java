@@ -28,4 +28,6 @@ public interface DiagnosticQuestionRepository extends JpaRepository<DiagnosticQu
     @Transactional
     @Query("DELETE FROM DiagnosticQuestion q WHERE q.test.id = :testId")
     void deleteQuestionsByTestId(@Param("testId") Long testId);
+
+    List<DiagnosticQuestion> findByTest_IdOrderByOrderAsc(Long testId);
 }

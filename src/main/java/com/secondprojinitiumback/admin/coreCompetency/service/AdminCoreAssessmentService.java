@@ -101,6 +101,4 @@ public class AdminCoreAssessmentService {
     public List<CoreCompetencyAssessment> getAllCoreCompetencyAssessments() {
         return coreCompetencyAssessmentRepository.findAll();
     }
-
-    // 페이징 처리 (미구현)
 }

@@ -70,6 +70,7 @@ public class MileageItemService {
 
     // 4. 항목 여러 개 삭제 (선택 삭제)
     public void deleteAll(List<Long> ids) {
+
         mileageItemRepository.deleteAllByIdInBatch(ids); // 한번에 일괄 삭제
     }
 

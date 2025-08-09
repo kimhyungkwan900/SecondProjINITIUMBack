@@ -27,6 +27,11 @@ public class DiagnosticTest {
     @Column(name = "DGNSTC_TST_DC")
     private String description;
 
+    // ✅ 소프트 삭제 플래그: 기본 N
+    @Column(name = "DEL_YN", length = 1, nullable = false)
+    @Builder.Default
+    private String delYn = "N";
+
     @Column(name = "USE_YN", length = 1)
     private String useYn;
 

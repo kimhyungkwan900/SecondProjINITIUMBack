@@ -32,7 +32,7 @@ public class DiagnosisScoreService {
      * - 구간이 존재하면 "레벨명 - 설명" 형식 반환, 없으면 기본 메시지 반환
      */
     public String interpretScore(Long testId, int score) {
-        return levelRepository.findByTestIdAndMinScoreLessThanEqualAndMaxScoreGreaterThanEqual(testId, score, score)
+        return levelRepository.findByTest_IdAndMinScoreLessThanEqualAndMaxScoreGreaterThanEqual(testId, score, score)
                 .map(level -> level.getLevelName() + " - " + level.getDescription())
                 .orElse("해석 불가 점수");
     }

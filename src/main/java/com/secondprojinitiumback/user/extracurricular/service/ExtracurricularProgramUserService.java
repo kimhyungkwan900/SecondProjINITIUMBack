@@ -76,7 +76,10 @@ public class ExtracurricularProgramUserService {
         // statusFilter에 따라 추가 조건
         if ("available".equalsIgnoreCase(statusFilter)) {
             // 신청 마감일이 현재보다 미래인 (신청 가능한) 프로그램
-            spec = spec.and((root, query, builder) -> builder.greaterThanOrEqualTo(root.get("eduAplyEndDt"), now));
+            spec = spec.and((root, query, builder) -> builder.and(
+                    builder.lessThanOrEqualTo(root.get("eduAplyBgngDt"), now),
+                    builder.greaterThanOrEqualTo(root.get("eduAplyEndDt"), now)
+            ));
         } else if ("past".equalsIgnoreCase(statusFilter)) {
             // 신청 마감일이 현재보다 과거인 (신청 마감된) 프로그램
             spec = spec.and((root, query, builder) -> builder.lessThan(root.get("eduAplyEndDt"), now));

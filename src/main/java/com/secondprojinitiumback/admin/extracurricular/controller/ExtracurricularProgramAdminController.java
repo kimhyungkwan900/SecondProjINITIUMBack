@@ -28,7 +28,7 @@ public class ExtracurricularProgramAdminController {
         public final ExtracurricularProgramService extracurricularProgramService;
 
         // 프로그램 등록 신청
-        @PostMapping(value = "/aplication", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+        @PostMapping(value = "/application", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
         public ResponseEntity<?> registerProgram(@RequestPart("ExtracurricularFormDTO") ExtracurricularProgramFormDTO dto,
                                                  @RequestPart(value = "image", required = false ) MultipartFile imageFile,
                                                  @RequestParam String empId) {
@@ -68,5 +68,7 @@ public class ExtracurricularProgramAdminController {
                 Page<ExtracurricularProgramAdminDTO> result = extracurricularProgramService.filterList(filter, pageable);
                 return ResponseEntity.ok(result);
         }
+
+
 
 }

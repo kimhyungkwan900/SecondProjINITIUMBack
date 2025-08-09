@@ -31,8 +31,6 @@ public class DiagnosisService {
     private final DiagnosticResultDetailRepository resultDetailRepository;
     private final DiagnosisScoreService scoreService;
     private final StudentRepository studentRepository;
-    private final DiagnosticResultRepository diagnosticResultRepository;
-    private final DiagnosisScoreService diagnosisScoreService;
 
     /**
      * 진단검사 등록
@@ -303,6 +301,80 @@ public class DiagnosisService {
                                 scoreService.interpretScore(result.getTest().getId(), result.getTotalScore())
                         )
                         .build());
+    }
+
+    @Transactional
+    public Long updateDiagnosticTest(Long testId, DiagnosticTestDto dto) {
+        // 1) 테스트 + 자식들 로드
+        DiagnosticTest test = testRepository.findWithChildrenById(testId)
+                .orElseThrow(() -> new IllegalArgumentException("수정할 검사가 존재하지 않습니다. id=" + testId));
+
+        if ("Y".equals(test.getDelYn())) {
+            throw new IllegalArgumentException("삭제(숨김) 상태의 검사는 수정할 수 없습니다.");
+        }
+
+        // 2) 기본 필드 수정
+        if (dto.getName() != null) test.setName(dto.getName());
+        if (dto.getDescription() != null) test.setDescription(dto.getDescription());
+        // (선택) categoryGroup/categoryValue 수정 허용 시 여기에 반영
+
+        // 3) 자식 컬렉션 전체 교체 — 질문/보기
+        test.getQuestions().clear(); // orphanRemoval=true 라서 기존 문항/보기 삭제됨
+        if (dto.getQuestions() != null) {
+            for (DiagnosticQuestionDto qdto : dto.getQuestions()) {
+                DiagnosticQuestion q = DiagnosticQuestion.builder()
+                        .test(test)
+                        .content(qdto.getContent())
+                        .order(qdto.getOrder())
+                        .answerType(qdto.getAnswerType() != null
+                                ? AnswerType.valueOf(qdto.getAnswerType())
+                                : null)
+                        .build();
+
+                // 보기들
+                List<DiagnosticAnswer> answers = (qdto.getAnswers() == null ? List.<DiagnosticAnswer>of() :
+                        qdto.getAnswers().stream()
+                                .map(adto -> DiagnosticAnswer.builder()
+                                        .question(q)
+                                        .content(adto.getContent())
+                                        .score(adto.getScore())
+                                        .selectValue(adto.getSelectValue())
+                                        .build())
+                                .toList()
+                );
+
+                q.setAnswers(answers);
+                test.getQuestions().add(q);
+            }
+        }
+
+        // 4) 자식 컬렉션 전체 교체 — 점수 레벨
+        test.getScoreLevels().clear(); // orphanRemoval=true
+        if (dto.getScoreLevels() != null) {
+            for (ScoreLevelDto s : dto.getScoreLevels()) {
+                DiagnosticScoreLevel lvl = DiagnosticScoreLevel.builder()
+                        .test(test)
+                        .minScore(s.getMinScore())
+                        .maxScore(s.getMaxScore())
+                        .levelName(s.getLevelName())
+                        .description(s.getDescription())
+                        .build();
+                test.getScoreLevels().add(lvl);
+            }
+        }
+
+        // 5) Dirty Checking으로 반영
+        return test.getId();
+    }
+
+    @Transactional(readOnly = true)
+    public DiagnosticTestDto getAdminTestForEdit(Long testId) {
+        var test = testRepository.findWithChildrenById(testId)
+                .orElseThrow(() -> new IllegalArgumentException("검사를 찾을 수 없습니다. id=" + testId));
+
+        questionRepository.findByTest_IdOrderByOrderAsc(testId);
+
+        return DiagnosticTestDto.from(test);
     }
 
 }

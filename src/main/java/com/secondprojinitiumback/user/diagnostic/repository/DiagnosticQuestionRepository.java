@@ -1,6 +1,7 @@
 package com.secondprojinitiumback.user.diagnostic.repository;
 
 import com.secondprojinitiumback.user.diagnostic.domain.DiagnosticQuestion;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,11 +13,7 @@ import java.util.List;
 
 @Repository
 public interface DiagnosticQuestionRepository extends JpaRepository<DiagnosticQuestion, Long> {
-    /**
-     * 특정 검사(testId)에 속한 문항 목록 조회
-     * - ORDER BY order ASC: 문항 출력 순서를 보장
-     */
-    List<DiagnosticQuestion> findByTestIdOrderByOrderAsc(Long testId);
+
 
     /**
      * 특정 검사(testId)에 속한 모든 문항 삭제
@@ -29,5 +26,6 @@ public interface DiagnosticQuestionRepository extends JpaRepository<DiagnosticQu
     @Query("DELETE FROM DiagnosticQuestion q WHERE q.test.id = :testId")
     void deleteQuestionsByTestId(@Param("testId") Long testId);
 
+    @EntityGraph(attributePaths = {"answers"})
     List<DiagnosticQuestion> findByTest_IdOrderByOrderAsc(Long testId);
 }

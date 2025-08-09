@@ -14,7 +14,7 @@ public class DscsnInfoSearchDto {
     String userType;        //사용자 유형(S(학생), E(교직원), A(역량센터))
     String consultorType;   // 상담자 유형 (P(교수), K(외부상담사)
 
-    String serialNo;        //학번 아니면 사번
+    String empNo;        //사번
 
     String dscsnType;       //상담분야
 

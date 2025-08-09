@@ -8,6 +8,7 @@ import com.secondprojinitiumback.common.security.utils.CookieConstants;
 import com.secondprojinitiumback.common.security.utils.CookieUtils;
 import com.secondprojinitiumback.common.exception.CustomException;
 import com.secondprojinitiumback.common.exception.ErrorCode;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -55,8 +56,21 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+        // 토큰 추출
+        String accessToken = CookieUtils.getCookie(request, CookieConstants.ACCESS_TOKEN)
+                .map(Cookie::getValue)
+                .orElse(null);
+        String refreshToken = CookieUtils.getCookie(request, CookieConstants.REFRESH_TOKEN)
+                .map(Cookie::getValue)
+                .orElse(null);
+
+        // 서버에서 저장된 인증 정보 무효화 처리
+        loginInfoService.logout(accessToken, refreshToken);
+
+        // 쿠키 삭제
         CookieUtils.deleteCookie(request, response, CookieConstants.ACCESS_TOKEN);
         CookieUtils.deleteCookie(request, response, CookieConstants.REFRESH_TOKEN);
+
         return ResponseEntity.ok().build();
     }
 

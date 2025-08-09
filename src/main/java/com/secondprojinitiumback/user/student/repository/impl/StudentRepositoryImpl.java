@@ -57,48 +57,52 @@ public class StudentRepositoryImpl implements StudentRepositoryCustom {
         QEmployee advisor = QEmployee.employee;
         QCommonCode gender = new QCommonCode("gender");
 
-        return queryFactory
+        JPAQuery<Student> query = queryFactory
                 .selectFrom(student)
                 .leftJoin(student.schoolSubject, schoolSubject).fetchJoin()
                 .leftJoin(student.school, university).fetchJoin()
                 .leftJoin(student.studentStatus, studentStatus).fetchJoin()
                 .leftJoin(student.advisor, advisor).fetchJoin()
-                .leftJoin(student.gender, gender).fetchJoin()
-                .where(
-                        eqStudentNo(searchDto.getStudentNo()),
-                        containsName(searchDto.getName()),
-                        eqUniversity(searchDto.getUniversityCode()),
-                        eqSchoolSubject(searchDto.getSchoolSubjectCode()),
-                        eqClub(searchDto.getClubCode()),
-                        eqStatus(searchDto.getStudentStatusCode()),
-                        eqGrade(searchDto.getGrade()),
-                        eqGender(searchDto.getGenderCode()),
-                        eqAdvisor(searchDto.getAdvisorId()),
-                        containsEmail(searchDto.getEmail()),
-                        betweenAdmissionDate(searchDto.getAdmissionDateFrom(), searchDto.getAdmissionDateTo())
-                );
+                .leftJoin(student.gender, gender).fetchJoin();
+
+        return applyConditions(query, searchDto);
     }
 
     // 전체 개수 조회 쿼리
     private JPAQuery<Long> createCountQuery(StudentSearchDto searchDto) {
         QStudent student = QStudent.student;
+        QSchoolSubject schoolSubject = QSchoolSubject.schoolSubject;
+        QUniversity university = QUniversity.university;
+        QStudentStatusInfo studentStatus = QStudentStatusInfo.studentStatusInfo;
+        QEmployee advisor = QEmployee.employee;
+        QCommonCode gender = new QCommonCode("gender");
 
-        return queryFactory
+        JPAQuery<Long> query = queryFactory
                 .select(student.count())
                 .from(student)
-                .where(
-                        eqStudentNo(searchDto.getStudentNo()),
-                        containsName(searchDto.getName()),
-                        eqUniversity(searchDto.getUniversityCode()),
-                        eqSchoolSubject(searchDto.getSchoolSubjectCode()),
-                        eqClub(searchDto.getClubCode()),
-                        eqStatus(searchDto.getStudentStatusCode()),
-                        eqGrade(searchDto.getGrade()),
-                        eqGender(searchDto.getGenderCode()),
-                        eqAdvisor(searchDto.getAdvisorId()),
-                        containsEmail(searchDto.getEmail()),
-                        betweenAdmissionDate(searchDto.getAdmissionDateFrom(), searchDto.getAdmissionDateTo())
-                );
+                .leftJoin(student.schoolSubject, schoolSubject)
+                .leftJoin(student.school, university)
+                .leftJoin(student.studentStatus, studentStatus)
+                .leftJoin(student.advisor, advisor)
+                .leftJoin(student.gender, gender);
+
+        return applyConditions(query, searchDto);
+    }
+
+    private <T> JPAQuery<T> applyConditions(JPAQuery<T> query, StudentSearchDto searchDto) {
+        return query.where(
+                eqStudentNo(searchDto.getStudentNo()),
+                containsName(searchDto.getName()),
+                eqUniversity(searchDto.getUniversityCode()),
+                eqSchoolSubject(searchDto.getSchoolSubjectCode()),
+                eqClub(searchDto.getClubCode()),
+                eqStatus(searchDto.getStudentStatusCode()),
+                eqGrade(searchDto.getGrade()),
+                eqGender(searchDto.getGenderCode()),
+                eqAdvisor(searchDto.getAdvisorId()),
+                containsEmail(searchDto.getEmail()),
+                betweenAdmissionDate(searchDto.getAdmissionDateFrom(), searchDto.getAdmissionDateTo())
+        );
     }
 
     // === 검색 조건 메서드들 (BooleanExpression) ===
@@ -120,7 +124,11 @@ public class StudentRepositoryImpl implements StudentRepositoryCustom {
 
     // 담당 학과 코드 검색
     private BooleanExpression eqSchoolSubject(String schoolSubjectCode) {
-        return StringUtils.hasText(schoolSubjectCode) ? QStudent.student.schoolSubject.subjectCode.eq(schoolSubjectCode) : null;
+        if (!StringUtils.hasText(schoolSubjectCode)) {
+            return null;
+        }
+        return QStudent.student.schoolSubject.subjectCode.eq(schoolSubjectCode)
+                .and(QStudent.student.schoolSubject.deptDivision.id.codeGroup.eq("CO0003"));
     }
 
     // 동아리 코드 검색
@@ -130,7 +138,11 @@ public class StudentRepositoryImpl implements StudentRepositoryCustom {
 
     // 학적 상태 코드 검색
     private BooleanExpression eqStatus(String statusCode) {
-        return StringUtils.hasText(statusCode) ? QStudent.student.studentStatus.id.studentStatusCode.eq(statusCode) : null;
+        if (!StringUtils.hasText(statusCode)) {
+            return null;
+        }
+        return QStudent.student.studentStatus.id.studentStatusCode.eq(statusCode)
+                .and(QStudent.student.studentStatus.id.studentStatusCodeSe.eq("SL0030"));
     }
 
     // 학년 검색
@@ -140,7 +152,11 @@ public class StudentRepositoryImpl implements StudentRepositoryCustom {
 
     // 성별 코드 검색
     private BooleanExpression eqGender(String genderCode) {
-        return StringUtils.hasText(genderCode) ? QStudent.student.gender.id.code.eq(genderCode) : null;
+        if (!StringUtils.hasText(genderCode)) {
+            return null;
+        }
+        return QStudent.student.gender.id.code.eq(genderCode)
+                .and(QStudent.student.gender.id.codeGroup.eq("CO0001"));
     }
 
     // 지도교수 ID 검색

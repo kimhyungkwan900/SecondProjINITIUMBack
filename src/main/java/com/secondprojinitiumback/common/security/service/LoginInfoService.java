@@ -32,4 +32,7 @@ public interface LoginInfoService {
 
     // 로그인 ID로 로그인 정보 조회
     LoginInfo getLoginInfoByLoginId(String loginId);
+
+    // 로그아웃 처리
+    void logout(String accessToken, String refreshToken);
 }

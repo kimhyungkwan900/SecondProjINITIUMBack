@@ -4,6 +4,8 @@ import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularPro
 import com.secondprojinitiumback.user.extracurricular.domain.ExtracurricularApply;
 import com.secondprojinitiumback.user.extracurricular.domain.enums.AprySttsNm;
 import com.secondprojinitiumback.user.student.domain.Student;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -38,4 +40,6 @@ public interface ExtracurricularApplyRepository extends JpaRepository<Extracurri
     Optional<ExtracurricularApply> findExtracurricularAppliesByExtracurricularProgram_EduMngIdAndStudent_studentNo(Long eduMngId, String stdntNo);
 
     List<ExtracurricularApply> findByExtracurricularProgram_EduMngId(Long extracurricularProgramEduMngId);
+
+    Page<ExtracurricularApply> findByStudent_StudentNo(String studentNo, Pageable pageable);
 }

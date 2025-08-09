@@ -17,6 +17,8 @@ import com.secondprojinitiumback.user.employee.domain.Employee;
 import com.secondprojinitiumback.user.employee.dto.EmployeeDto;
 import com.secondprojinitiumback.user.employee.repository.EmployeeRepository;
 import com.secondprojinitiumback.user.extracurricular.domain.enums.AprySttsNm;
+import com.secondprojinitiumback.user.extracurricular.domain.ExtracurricularApply;
+import com.secondprojinitiumback.user.extracurricular.dto.AppliedExtracurricularProgramDTO;
 import com.secondprojinitiumback.user.extracurricular.dto.ExtracurricularProgramDTO;
 import com.secondprojinitiumback.user.extracurricular.repository.ExtracurricularApplyRepository;
 import com.secondprojinitiumback.user.extracurricular.repository.specification.ExtracurricularUserProgramSpecification;
@@ -181,4 +183,25 @@ public class ExtracurricularProgramUserService {
         return dto;
     }
 
+    public Page<AppliedExtracurricularProgramDTO> getAppliedPrograms(String userId, Pageable pageable) {
+        // 학생의 신청 내역을 페이징 처리하여 조회
+        Page<ExtracurricularApply> applies = extracurricularApplyRepository.findByStudent_StudentNo(userId, pageable);
+        // 만약 신청 내역이 없다면 빈 페이지 반환
+        List<AppliedExtracurricularProgramDTO> dtoList = applies.getContent().stream()
+                .map(apply -> {
+                    ExtracurricularProgram program = apply.getExtracurricularProgram();
+                    return AppliedExtracurricularProgramDTO.builder()
+                            .eduMngId(program.getEduMngId())
+                            .eduNm(program.getEduNm())
+                            .ctgryNm(program.getExtracurricularCategory().getCtgryNm())
+                            .eduAplyBgngDt(program.getEduAplyBgngDt())
+                            .eduAplyEndDt(program.getEduAplyEndDt())
+                            .aprySttsNm(apply.getAprySttsNm())
+                            .build();
+                })
+                .collect(Collectors.toList());
+        // 만약 신청 내역이 없다면 빈 리스트를 반환
+        return new PageImpl<>(dtoList, pageable, applies.getTotalElements());
     }
+
+}

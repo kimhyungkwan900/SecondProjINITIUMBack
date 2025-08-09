@@ -1,6 +1,8 @@
 package com.secondprojinitiumback.user.diagnostic.repository;
 
 import com.secondprojinitiumback.user.diagnostic.domain.DiagnosticResult;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -34,4 +36,8 @@ public interface DiagnosticResultRepository extends JpaRepository<DiagnosticResu
     @Transactional
     @Query("DELETE FROM DiagnosticResult r WHERE r.test.id = :testId")// 검사 ID로 결과 삭제
     void deleteResultsByTestId(@Param("testId") Long testId);
+
+    Page<DiagnosticResult> findByStudent_StudentNoOrderByCompletionDateDesc(
+            String studentNo, Pageable pageable
+    );
 }

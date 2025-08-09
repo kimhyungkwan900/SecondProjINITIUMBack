@@ -83,7 +83,7 @@ public class ScholarshipApplyService {
         MileageTotal total = mileageTotalRepository.findByStudent_StudentNo(dto.getStudentNo())
                 .orElseThrow(() -> new EntityNotFoundException("누적 마일리지가 존재하지 않습니다"));
 
-        //마일리지 기준 조건 체크
+        //마일리지 기준 조건 체크  : 요구사항 기능 명세서에 작성할 것 (얼마 이상 이어야지 신청이 가능하다라고)
         if (total.getTotalScore() < 100) {
             throw new IllegalStateException("100점 이상의 누적 마일리지가 있어야 신청할 수 있습니다.");
         }

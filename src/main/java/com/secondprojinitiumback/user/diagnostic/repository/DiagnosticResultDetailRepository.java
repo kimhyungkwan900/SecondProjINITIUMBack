@@ -35,4 +35,6 @@ public interface DiagnosticResultDetailRepository extends JpaRepository<Diagnost
       )
     """)// 해당 검사(testId)에 속한 모든 결과 상세 삭제
     void deleteDetailsByTestId(@Param("testId") Long testId);
+
+    List<DiagnosticResultDetail> findByResult_Id(Long resultId);
 }

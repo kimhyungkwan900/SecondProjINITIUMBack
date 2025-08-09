@@ -24,4 +24,16 @@ public interface DiagnosticTestRepository extends JpaRepository<DiagnosticTest, 
      */
     Page<DiagnosticTest> findByNameContainingIgnoreCase(String keyword, Pageable pageable);
 
+    // 삭제 안 된 전체
+    List<DiagnosticTest> findAllByDelYn(String delYn);
+
+    // 검색 (삭제 안 된 것만)
+    List<DiagnosticTest> findByNameContainingIgnoreCaseAndDelYn(String keyword, String delYn);
+
+    // 페이징 검색 (삭제 안 된 것만)
+    Page<DiagnosticTest> findByNameContainingIgnoreCaseAndDelYn(String keyword, String delYn, Pageable pageable);
+
+    // 존재 + 삭제 안 됨
+    boolean existsByIdAndDelYn(Long id, String delYn);
+
 }

@@ -34,11 +34,9 @@ public class DscsnScheduleRepositoryCustomImpl implements DscsnScheduleRepositor
             builder.and(dscsnSchedule.dscsnDtId.startsWith(dscsnType));
         }
 
-        List<DscsnSchedule> dscsnKindList = queryFactory
+        return queryFactory
                 .selectFrom(dscsnSchedule)
                 .where(builder)
                 .fetch();
-
-        return dscsnKindList;
     }
 }

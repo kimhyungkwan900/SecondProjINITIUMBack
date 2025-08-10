@@ -70,7 +70,7 @@ public class DscsnScheduleService {
                         .empName(dscsnSchedule.getEmployee().getName())
                         .schoolSubject(dscsnSchedule.getEmployee().getSchoolSubject().getSubjectName())
                         .scheduleDate(dscsnSchedule.getPossibleDate())
-                        .scheduleDate(dscsnSchedule.getPossibleTime())
+                        .startTime(dscsnSchedule.getPossibleTime())
                         .build())
                 .toList();
     }

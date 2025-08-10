@@ -128,7 +128,6 @@ public class Employee {
     public void updateMyInfo(EmployeeUpdateMyInfoDto dto, BankAccount bankAccount) {
         if (dto.getEmail() != null) this.email = dto.getEmail();
         if (dto.getTel() != null) this.tel = dto.getTel();
-        if (dto.getBirthDate() != null) this.birthDate = dto.getBirthDate();
         if (bankAccount != null) this.bankAccount = bankAccount;
     }
 

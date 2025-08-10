@@ -30,8 +30,8 @@ public class BankAccount {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-            @JoinColumn(name = "CD", referencedColumnName = "CD"),
-            @JoinColumn(name = "CD_SE", referencedColumnName = "CD_SE")
+            @JoinColumn(name = "CD_SE", referencedColumnName = "CD_SE"),
+            @JoinColumn(name = "CD", referencedColumnName = "CD")
     })
     private CommonCode bankCode;
 
@@ -43,4 +43,9 @@ public class BankAccount {
         this.useYn = (useYn == null) ? "Y" : useYn;
         this.bankCode = bankCode;
     }
+
+    public void changeOwner(String ownerId) { this.ownerId = ownerId; }
+    public void changeUseYn(String useYn) { this.useYn = "Y".equalsIgnoreCase(useYn) ? "Y" : "N"; }
+    public void changeAccountType(String accountType) { this.accountType = accountType; }
+    public void changeBankCode(CommonCode code) { this.bankCode = code; }
 }

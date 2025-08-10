@@ -24,8 +24,6 @@ public class QCoreCompetencyResult extends EntityPathBase<CoreCompetencyResult> 
 
     public final QCoreCompetencyAssessment assessment;
 
-    public final StringPath classificationCode = createString("classificationCode");
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final QCoreCompetencyResponse response;

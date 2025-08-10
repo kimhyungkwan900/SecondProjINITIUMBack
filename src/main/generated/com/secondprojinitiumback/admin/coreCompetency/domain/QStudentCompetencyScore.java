@@ -22,13 +22,15 @@ public class QStudentCompetencyScore extends EntityPathBase<StudentCompetencySco
 
     public static final QStudentCompetencyScore studentCompetencyScore = new QStudentCompetencyScore("studentCompetencyScore");
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+    public final StringPath classificationCode = createString("classificationCode");
 
-    public final QBehaviorIndicatorMajorQuestionMapping mapping;
+    public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final QCoreCompetencyResult result;
 
     public final NumberPath<java.math.BigDecimal> standardScore = createNumber("standardScore", java.math.BigDecimal.class);
+
+    public final QSubCompetencyCategory subCategory;
 
     public final NumberPath<java.math.BigDecimal> totalAverageScore = createNumber("totalAverageScore", java.math.BigDecimal.class);
 
@@ -50,8 +52,8 @@ public class QStudentCompetencyScore extends EntityPathBase<StudentCompetencySco
 
     public QStudentCompetencyScore(Class<? extends StudentCompetencyScore> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.mapping = inits.isInitialized("mapping") ? new QBehaviorIndicatorMajorQuestionMapping(forProperty("mapping"), inits.get("mapping")) : null;
         this.result = inits.isInitialized("result") ? new QCoreCompetencyResult(forProperty("result"), inits.get("result")) : null;
+        this.subCategory = inits.isInitialized("subCategory") ? new QSubCompetencyCategory(forProperty("subCategory"), inits.get("subCategory")) : null;
     }
 
 }

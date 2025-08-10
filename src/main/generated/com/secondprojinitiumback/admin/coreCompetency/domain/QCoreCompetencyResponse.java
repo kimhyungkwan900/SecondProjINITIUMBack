@@ -22,15 +22,11 @@ public class QCoreCompetencyResponse extends EntityPathBase<CoreCompetencyRespon
 
     public static final QCoreCompetencyResponse coreCompetencyResponse = new QCoreCompetencyResponse("coreCompetencyResponse");
 
-    public final QCoreCompetencyAssessment assessment;
-
     public final StringPath completeDate = createString("completeDate");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final QCoreCompetencyQuestion question;
-
-    public final StringPath resultContent = createString("resultContent");
 
     public final NumberPath<Integer> resultScore = createNumber("resultScore", Integer.class);
 
@@ -58,7 +54,6 @@ public class QCoreCompetencyResponse extends EntityPathBase<CoreCompetencyRespon
 
     public QCoreCompetencyResponse(Class<? extends CoreCompetencyResponse> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.assessment = inits.isInitialized("assessment") ? new QCoreCompetencyAssessment(forProperty("assessment"), inits.get("assessment")) : null;
         this.question = inits.isInitialized("question") ? new QCoreCompetencyQuestion(forProperty("question"), inits.get("question")) : null;
         this.selectedOption = inits.isInitialized("selectedOption") ? new QResponseChoiceOption(forProperty("selectedOption"), inits.get("selectedOption")) : null;
         this.student = inits.isInitialized("student") ? new com.secondprojinitiumback.user.student.domain.QStudent(forProperty("student"), inits.get("student")) : null;

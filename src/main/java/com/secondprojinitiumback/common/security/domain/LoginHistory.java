@@ -9,35 +9,57 @@ import java.time.LocalDateTime;
 @Table(name = "LGN_HISTORY")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 public class LoginHistory {
 
-    // 로그인 기록 ID (PK)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "LGN_HISTORY_ID", nullable = false)
+    @Column(name = "LGN_HISTORY_ID")
     private Long id;
 
-    // 로그인 정보 (FK)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "LGN_ID", nullable = false)
     private LoginInfo loginInfo;
 
-    // 로그인 일시
-    @Column(name = "LGN_DT")
+    @Column(name = "LGN_DT", nullable = false)
     private LocalDateTime loginDateTime;
 
-    // 로그아웃 일시
     @Column(name = "LGT_DT")
     private LocalDateTime logoutDateTime;
 
-    // 로그인 IP 주소
-    @Column(name = "LGN_IP_ADDR", length = 15)
+    @Column(name = "LGN_IP_ADDR", length = 45)
     private String loginIpAddress;
 
-    // 로그인 성공 여부
-    @Column(name = "LGN_YN", length = 1, columnDefinition = "CHAR(1) DEFAULT 'N'")
-    private boolean isSuccessful;
+    @Column(name = "LGN_YN", length = 1, nullable = false)
+    private Boolean loginSuccess;
 
+    /* ===== 팩토리 ===== */
+    public static LoginHistory success(LoginInfo loginInfo, String ip) {
+        return LoginHistory.builder()
+                .loginInfo(loginInfo)
+                .loginDateTime(LocalDateTime.now())
+                .loginIpAddress(ip)
+                .loginSuccess(Boolean.TRUE)
+                .build();
+    }
+
+    public static LoginHistory fail(LoginInfo loginInfo, String ip) {
+        return LoginHistory.builder()
+                .loginInfo(loginInfo)
+                .loginDateTime(LocalDateTime.now())
+                .loginIpAddress(ip)
+                .loginSuccess(Boolean.FALSE)
+                .build();
+    }
+
+    /* ===== 행위 ===== */
+    public void markLogoutNow() {
+        this.logoutDateTime = LocalDateTime.now();
+    }
+
+    /* 양방향 내부 세터 (외부 공개 금지) */
+    void setLoginInfoInternal(LoginInfo loginInfo) {
+        this.loginInfo = loginInfo;
+    }
 }

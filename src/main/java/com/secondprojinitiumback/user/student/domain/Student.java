@@ -9,6 +9,7 @@ import com.secondprojinitiumback.common.domain.base.BaseEntity;
 import com.secondprojinitiumback.common.security.domain.LoginInfo;
 import com.secondprojinitiumback.user.student.dto.AdminUpdateStudentDto;
 import com.secondprojinitiumback.user.student.dto.UpdateStudentDto;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Past;
@@ -103,7 +104,7 @@ public class Student {
 
     // 학년: 10(1학년), 20(2학년), 30(3학년), 40(4학년)
     @Column(name = "GRADE", length = 5, nullable = false)
-    @Pattern(regexp = "10|20|30|40", message = "학년은 10, 20, 30, 40 중 하나여야 합니다.")
+    @Pattern(regexp = "1|2|3|4", message = "학년은 1, 2, 3, 4 중 하나여야 합니다.")
     private String grade;
 
     // 생성자
@@ -178,10 +179,9 @@ public class Student {
         this.studentStatus = newStatus;
     }
 
-    public void updateMyInfo(UpdateStudentDto dto, BankAccount bankAccount) {
-        if (dto.getEmail() != null) {
-            this.email = dto.getEmail();
-        }
+    public void changeEmail(String email) { this.email = email; }
+
+    public void changeBankAccount(@Nullable BankAccount bankAccount) {
         this.bankAccount = bankAccount;
     }
 

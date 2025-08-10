@@ -9,48 +9,46 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "LGN_INFO",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "LGN_ID")
-        })
+@Table(name = "LGN_INFO")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LoginInfo {
 
-    // 로그인 ID는 최대 20자로 제한되며, 유일해야 함
     @Id
-    @Column(name = "LGN_ID", length = 20, nullable = false, unique = true)
+    @Column(name = "LGN_ID", length = 20, nullable = false)
     private String loginId;
 
-    // 비밀번호는 암호화되어 저장되며, 최대 길이는 100자로 제한 Bcrypt 대응
+    // 로그인 비밀번호
     @Column(name = "LGN_PSWD", length = 100, nullable = false)
     private String password;
 
-    // 사용자 유형 코드: S(학생), E(교직원), A(역량센터)
-    @Column(name = "USER_TYPE", length = 1, nullable = false, columnDefinition = "CHAR(1) DEFAULT 'S'")
-    @Pattern(regexp = "S|E|A", message = "USER_TYPE은 S(학생), E(교직원), A(역량센터) 중 하나여야 합니다.")
-    private String userType = "S";
+    // S(학생)/E(교직원)/A(역량센터)
+    @Column(name = "USER_TYPE", length = 1, nullable = false)
+    @Pattern(regexp = "S|E|A", message = "USER_TYPE은 S/E/A 중 하나여야 합니다.")
+    private String userType;
 
-    // 계정 상태 코드: N(정상), L(잠김), D(삭제)
-    @Column(name = "ACNT_STTS_CD", length = 1, columnDefinition = "CHAR(1) DEFAULT 'N'")
-    private String accountStatusCode = "N";
+    // N(정상)/L(잠김)/D(삭제)
+    @Column(name = "ACNT_STTS_CD", length = 1, nullable = false)
+    private String accountStatusCode;
 
-    // true: 비밀번호 변경 필요, false: 비밀번호 변경 불필요
-    @Column(name = "PSWD_CHG_YN", length = 1, columnDefinition = "CHAR(1) DEFAULT 'Y'")
-    private boolean passwordChangeRequired;
+    // Y(비밀번호 변경 필요)/N(비밀번호 변경 불필요)
+    @Column(name = "PSWD_CHG_YN", length = 1, nullable = false)
+    private Boolean passwordChangeRequired;
 
-    // 로그인 실패 횟수
-    @Column(name = "LGN_FAIL_NMTM", columnDefinition = "INT DEFAULT 0")
-    @Min(value = 0)
-    private int loginFailCount = 0;
+    // 로그인 실패 횟수 (최대 5회)
+    @Column(name = "LGN_FAIL_NMTM", nullable = false)
+    @Min(0)
+    private int loginFailCount;
 
     // 계정 가입 일시
-    @Column(name = "ACNT_JOIN_DT", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "ACNT_JOIN_DT", nullable = false)
     private LocalDateTime accountJoinDate;
 
-    // 마지막 비밀번호 변경 일시
+    // 비밀번호 변경 일시
     @Column(name = "LAST_PSWD_CHG_DT")
     private LocalDateTime lastPasswordChangeDateTime;
 
@@ -58,61 +56,77 @@ public class LoginInfo {
     @Column(name = "LAST_LOGIN_DT")
     private LocalDateTime lastLoginDateTime;
 
+    /* ===== 연관관계: LoginAuthInfo / LoginHistory ===== */
+    @OneToMany(mappedBy = "loginInfo", fetch = FetchType.LAZY)
+    private List<LoginAuthInfo> authInfos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "loginInfo", fetch = FetchType.LAZY)
+    private List<LoginHistory> loginHistories = new ArrayList<>();
+
     @Builder
     private LoginInfo(String loginId,
                       String password,
                       String userType,
                       String accountStatusCode,
-                      boolean passwordChangeRequired,
-                      int loginFailCount,
+                      Boolean passwordChangeRequired,
+                      Integer loginFailCount,
                       LocalDateTime accountJoinDate,
-                      LocalDateTime lastPasswordChangeDateTime) {
+                      LocalDateTime lastPasswordChangeDateTime,
+                      LocalDateTime lastLoginDateTime) {
         this.loginId = loginId;
         this.password = password;
-        this.userType = userType != null ? userType : "S";
-        this.accountStatusCode = accountStatusCode != null ? accountStatusCode : "N";
-        this.passwordChangeRequired = passwordChangeRequired;
-        this.loginFailCount = loginFailCount;
-        this.accountJoinDate = accountJoinDate != null ? accountJoinDate : LocalDateTime.now();
+        this.userType = (userType != null ? userType : "S");
+        this.accountStatusCode = (accountStatusCode != null ? accountStatusCode : "N");
+        this.passwordChangeRequired = (passwordChangeRequired != null ? passwordChangeRequired : Boolean.TRUE);
+        this.loginFailCount = (loginFailCount != null ? loginFailCount : 0);
+        this.accountJoinDate = (accountJoinDate != null ? accountJoinDate : LocalDateTime.now());
         this.lastPasswordChangeDateTime = lastPasswordChangeDateTime;
+        this.lastLoginDateTime = lastLoginDateTime;
     }
 
-    public void increaseLoginFailCount() {
-        this.loginFailCount++;
-    }
+    /* ===== 도메인 메서드 ===== */
+    public void increaseLoginFailCount() { this.loginFailCount++; }
+    public void resetLoginFailCount() { this.loginFailCount = 0; }
 
-    public void resetLoginFailCount() {
-        this.loginFailCount = 0;
-    }
-
+    // 비밀번호 변경
     public void changePassword(String encodedNewPassword) {
         this.password = encodedNewPassword;
-        this.passwordChangeRequired = false;
+        this.passwordChangeRequired = Boolean.FALSE;
         this.lastPasswordChangeDateTime = LocalDateTime.now();
         this.loginFailCount = 0;
     }
 
+    // 임시 비밀번호 발급
     public void issueTemporaryPassword(String encodedTemporaryPassword) {
         this.password = encodedTemporaryPassword;
-        this.passwordChangeRequired = true;
+        this.passwordChangeRequired = Boolean.TRUE;
         this.lastPasswordChangeDateTime = LocalDateTime.now();
         this.loginFailCount = 0;
+        this.accountStatusCode = "L"; // 잠김 상태로 변경
     }
 
-    public void lockAccount() { this.accountStatusCode = "L"; }
+    // 계정 상태 변경
+    public void lockAccount()   { this.accountStatusCode = "L"; }
     public void unlockAccount() { this.accountStatusCode = "N"; }
 
+    // 비밀번호 변경 필요 여부
     public boolean isPasswordExpired() {
         return lastPasswordChangeDateTime != null &&
                 lastPasswordChangeDateTime.isBefore(LocalDateTime.now().minusMonths(6));
     }
+
+    // 마지막 로그인 일시 업데이트
     public void updateLastLoginDateTime() {
         this.lastLoginDateTime = LocalDateTime.now();
     }
 
-    public void updateLastPasswordChangeDateTime() {
-        this.lastPasswordChangeDateTime = LocalDateTime.now();
-        this.passwordChangeRequired = false;
+    // 양방향 편의 메서드
+    void addAuthInfo(LoginAuthInfo auth) {
+        this.authInfos.add(auth);
+        auth.setLoginInfoInternal(this);
     }
-
+    void addLoginHistory(LoginHistory history) {
+        this.loginHistories.add(history);
+        history.setLoginInfoInternal(this);
+    }
 }

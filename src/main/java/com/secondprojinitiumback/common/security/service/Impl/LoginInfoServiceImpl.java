@@ -57,28 +57,31 @@ public class LoginInfoServiceImpl implements LoginInfoService {
     }
 
     // 비밀번호 변경 (암호화 + 저장)
+    @Transactional
     @Override
     public void changePassword(String loginId, String currentPassword, String newPassword) {
         LoginInfo loginInfo = loginInfoRepository.findById(loginId)
                 .orElseThrow(() -> new CustomException(ErrorCode.LOGIN_INFO_NOT_FOUND));
 
-        // 현재 비밀번호 검증
+        // 현재 비밀번호 확인
         if (!passwordEncoder.matches(currentPassword, loginInfo.getPassword())) {
             throw new CustomException(ErrorCode.PASSWORD_MISMATCH);
         }
 
-        // 새 비밀번호 유효성 검사
-        if (newPassword.length() < 8) {
+        // 비밀번호 유효성검사 (최소 길이 8자)
+        if (newPassword == null || newPassword.length() < 8) {
             throw new CustomException(ErrorCode.PASSWORD_TOO_SHORT);
         }
 
-        // 새 비밀번호 암호화
-        String newEncodedPassword = passwordEncoder.encode(newPassword);
-        // 비밀번호 변경
-        loginInfo.changePassword(newEncodedPassword);
+        // 기존 비밀번호와 동일하다면 예외
+        if (passwordEncoder.matches(newPassword, loginInfo.getPassword())) {
+            throw new CustomException(ErrorCode.INVALID_PARAMETER);
+        }
 
-        // 비밀번호 변경일자 업데이트
-        loginInfo.updateLastPasswordChangeDateTime();
+        // 새 비밀번호 암호화 후 변경
+        String encoded = passwordEncoder.encode(newPassword);
+        loginInfo.changePassword(encoded);
+
         loginInfoRepository.save(loginInfo);
     }
 
@@ -115,28 +118,26 @@ public class LoginInfoServiceImpl implements LoginInfoService {
     @Transactional
     public void saveUserAuthInfo(LoginInfo loginInfo, TokenInfoDto tokenInfo) {
         LocalDateTime now = LocalDateTime.now();
-
-        LoginAuthInfo authInfo = LoginAuthInfo.builder()
-                .loginInfo(loginInfo)
-                .accessToken(tokenInfo.getAccessToken())
-                .refreshToken(tokenInfo.getRefreshToken())
-                .issuedAt(now)
-                .expiresAt(now.plusSeconds(tokenInfo.getAccessTokenExpiresIn()))
-                .lastUsedAt(now)
-                .isForcedLogout(false)
-                .build();
+        LocalDateTime refreshExp = now.plusSeconds(
+                tokenInfo.getRefreshTokenExpiresIn()
+        );
+        // 새 인증 정보 발급(AT/RT) 및 발급·만료·사용시각 기록
+        LoginAuthInfo authInfo = LoginAuthInfo.issue(
+                loginInfo,
+                tokenInfo.getAccessToken(),
+                tokenInfo.getRefreshToken(),
+                now,
+                refreshExp
+        );
+        authInfo.markUsed(now);
         loginAuthInfoRepository.save(authInfo);
     }
 
     @Override
     @Transactional
     public void saveLoginHistory(LoginInfo loginInfo, String ipAddress) {
-        // 로그인 이력 저장
-        LoginHistory history = LoginHistory.builder()
-                .loginInfo(loginInfo)
-                .loginIpAddress(ipAddress)
-                .loginDateTime(LocalDateTime.now())
-                .build();
+        // 성공 로그인 이력
+        LoginHistory history = LoginHistory.success(loginInfo, ipAddress);
         loginHistoryRepository.save(history);
     }
 

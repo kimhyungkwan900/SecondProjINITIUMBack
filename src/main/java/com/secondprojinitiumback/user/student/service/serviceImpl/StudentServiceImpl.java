@@ -4,8 +4,11 @@ import com.secondprojinitiumback.common.bank.Repository.BankAccountRepository;
 import com.secondprojinitiumback.common.bank.domain.BankAccount;
 
 import com.secondprojinitiumback.common.domain.CommonCode;
+import com.secondprojinitiumback.common.domain.CommonCodeId;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
 import com.secondprojinitiumback.common.domain.University;
+import com.secondprojinitiumback.common.exception.CustomException;
+import com.secondprojinitiumback.common.exception.ErrorCode;
 import com.secondprojinitiumback.common.security.domain.LoginInfo;
 import com.secondprojinitiumback.common.security.dto.CreateLoginDto;
 import com.secondprojinitiumback.common.security.service.LoginInfoService;
@@ -20,7 +23,7 @@ import com.secondprojinitiumback.user.student.dto.*;
 import com.secondprojinitiumback.user.student.repository.StudentRepository;
 import com.secondprojinitiumback.user.student.repository.StudentStatusInfoRepository;
 import com.secondprojinitiumback.user.student.service.serviceinterface.StudentService;
-import jakarta.persistence.EntityNotFoundException;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -107,6 +110,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional
     public StudentDto adminUpdateStudentInfo(String studentNo, AdminUpdateStudentDto dto) {
         // 학생, 학과, 교직원, 학적 상태, 계좌 정보 조회
         Student student = findStudentById(studentNo);
@@ -126,14 +130,63 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional
     public StudentDto updateMyInfo(String studentNo, UpdateStudentDto dto) {
-        // 학생, 계좌 정보 조회
         Student student = findStudentById(studentNo);
-        BankAccount bankAccount = findBankAccountByNoNullable(dto.getBankAccountNo());
-        // 학생 정보 업데이트
-        student.updateMyInfo(dto, bankAccount);
-        // 학생 정보 저장
+
+        // 이메일 변경
+        if (dto.getEmail() != null) {
+            String newEmail = dto.getEmail().trim();
+            if (!newEmail.isEmpty() && !newEmail.equals(student.getEmail())) {
+                student.changeEmail(newEmail);
+            }
+        }
+
+        // 계좌 변경
+        if (dto.getBankAccountNo() != null && !dto.getBankAccountNo().isBlank()) {
+            BankAccount account = upsertStudentBankAccount(studentNo, dto);
+            student.changeBankAccount(account);
+        }
+
+
+
         return toStudentDto(student);
+    }
+
+    private BankAccount upsertStudentBankAccount(String studentNo, UpdateStudentDto dto) {
+        final String actNo = dto.getBankAccountNo().trim();
+
+        return bankAccountRepository.findById(actNo)
+                .map(acc -> {
+
+                    // 소유자가 같지않다면 같도록 변경
+                    if (!studentNo.equals(acc.getOwnerId())) {
+                        acc.changeOwner(studentNo);
+                    }
+                    // 사용여부 Y
+                    if (!"Y".equalsIgnoreCase(acc.getUseYn())) {
+                        acc.changeUseYn("Y");
+                    }
+                    // 계좌유형 입금
+                    if (!"DPST".equalsIgnoreCase(acc.getAccountType())) {
+                        acc.changeAccountType("DPST");
+                    }
+                    // 은행코드 적용
+                    applyBankCodeIfPresent(acc, dto);
+                    return acc;
+                })
+                .orElseGet(() -> {
+                    // 신규 생성
+                    return bankAccountRepository.save(
+                            BankAccount.builder()
+                                    .accountNo(actNo)
+                                    .ownerId(studentNo)
+                                    .accountType("DPST")
+                                    .useYn("Y")
+                                    .bankCode(resolveBankCodeNullable(dto))
+                                    .build()
+                    );
+                });
     }
 
     // entity 조회 메서드들
@@ -141,19 +194,19 @@ public class StudentServiceImpl implements StudentService {
     // 학번으로 학생 정보 조회
     private Student findStudentById(String studentNo) {
         return studentRepository.findById(studentNo)
-                .orElseThrow(() -> new EntityNotFoundException("학생 정보 없음: " + studentNo));
+                .orElseThrow(() -> new CustomException(ErrorCode.STUDENT_NOT_FOUND));
     }
 
     // 학과 코드로 학과 정보 조회
     private SchoolSubject findSchoolSubjectByCode(String code) {
         return schoolSubjectRepository.findBySubjectCode(code)
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 학과 코드: " + code));
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PARAMETER));
     }
 
     // 대학 코드로 대학 정보 조회
     private University findUniversityByCode(String code) {
         return universityRepository.findById(code)
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 대학 코드: " + code));
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PARAMETER));
     }
 
     // nullable 처리된 대학 코드로 대학 정보 조회
@@ -165,13 +218,13 @@ public class StudentServiceImpl implements StudentService {
     // 교직원 번호로 교직원 정보 조회
     private Employee findEmployeeById(String employeeNo) {
         return employeeRepository.findById(employeeNo)
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 교직원 번호: " + employeeNo));
+                .orElseThrow(() -> new CustomException(ErrorCode.EMPLOYEE_NOT_FOUND));
     }
 
     // 공통 코드 조회 (코드와 그룹 코드로)
     private CommonCode findCommonCode(String code, String groupCode) {
         return commonCodeRepository.findById_CodeAndId_CodeGroup(code, groupCode)
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 공통 코드: " + code));
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PARAMETER));
     }
 
     // nullable 처리된 공통 코드 조회 (코드와 그룹 코드로)
@@ -184,15 +237,29 @@ public class StudentServiceImpl implements StudentService {
     private BankAccount findBankAccountByNoNullable(String accountNo) {
         if (accountNo == null || accountNo.isBlank()) return null;
         return bankAccountRepository.findByAccountNo(accountNo)
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 계좌번호: " + accountNo));
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PARAMETER));
     }
 
     // 학적 상태 코드로 학적 상태 정보 조회
     private StudentStatusInfo findStudentStatusByCode(String code) {
         return studentStatusInfoRepository.findByIdStudentStatusCodeAndIdStudentStatusCodeSe(code, "SL0030")
-                .orElseThrow(() -> new EntityNotFoundException("학적 상태 코드 없음: " + code));
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PARAMETER));
     }
 
+    // 은행 코드가 있다면 계좌에 적용
+    private void applyBankCodeIfPresent(BankAccount acc, UpdateStudentDto dto) {
+        CommonCode code = resolveBankCodeNullable(dto);
+        if (code != null) {
+            acc.changeBankCode(code);
+        }
+    }
+
+    // nullable 처리된 은행 코드 조회 (은행 코드와 은행 코드 그룹)
+    private CommonCode resolveBankCodeNullable(UpdateStudentDto dto) {
+        if (dto.getBankCd() == null) return null;
+        return commonCodeRepository.findById(new CommonCodeId("CO0005", dto.getBankCd()))
+                .orElseThrow(() -> new CustomException(ErrorCode.COMMON_CODE_NOT_FOUND));
+    }
     // 학번 생성 로직
     private String generateStudentNo(LocalDate admissionDate, String schoolSubjectCode) {
         String admissionYear = String.valueOf(admissionDate.getYear());

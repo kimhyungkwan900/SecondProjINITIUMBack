@@ -23,9 +23,6 @@ public class AdminCoreCompetencyResultService {
 
     /**
      * [학생 응답 결과] 학생이 평가에서 각 문항에 대해 어떤 선택지를 선택했는지 보여줌
-     * @param student 학생 정보
-     * @param assessmentId 평가 ID
-     * @return 문항 번호 → 선택한 보기 라벨 Map
      */
     public Map<Integer, String> getStudentResponseLabels(Student student, Long assessmentId) {
         CoreCompetencyAssessment assessment = assessmentRepository.findById(assessmentId)
@@ -42,8 +39,6 @@ public class AdminCoreCompetencyResultService {
 
     /**
      * [총계표 데이터 생성] 문항별로 응답자 수, 선택 분포(1~5), 평균 점수를 계산하여 반환
-     * @param assessmentId 평가 ID
-     * @return 총계표에 표시될 문항별 통계 리스트
      */
     public List<QuestionStatisticsDto> getTotalQuestionStatistics(Long assessmentId) {
         List<CoreCompetencyResponse> responses = responseRepository.findByAssessmentId(assessmentId);
@@ -72,7 +67,7 @@ public class AdminCoreCompetencyResultService {
             result.add(QuestionStatisticsDto.builder()
                     .questionNo(question.getQuestionNo())
                     .questionName(question.getName())
-                    .subCategoryName(question.getBehaviorIndicator().getSubCompetencyCategory().getSubCategoryName())
+                    .subCategoryName(question.getSubCompetencyCategory().getSubCategoryName())
                     .responseCount(resps.size())
                     .choiceCounts(counts)
                     .averageScore(BigDecimal.valueOf(avg).setScale(2, RoundingMode.HALF_UP))

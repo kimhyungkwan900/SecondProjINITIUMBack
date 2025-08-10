@@ -22,9 +22,13 @@ public class QResponseChoiceOption extends EntityPathBase<ResponseChoiceOption> 
 
     public static final QResponseChoiceOption responseChoiceOption = new QResponseChoiceOption("responseChoiceOption");
 
+    public final StringPath answerType = createString("answerType");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath label = createString("label");
+
+    public final NumberPath<Integer> optionNo = createNumber("optionNo", Integer.class);
 
     public final QCoreCompetencyQuestion question;
 

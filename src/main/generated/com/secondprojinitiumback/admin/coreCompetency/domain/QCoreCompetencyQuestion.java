@@ -26,21 +26,19 @@ public class QCoreCompetencyQuestion extends EntityPathBase<CoreCompetencyQuesti
 
     public final QCoreCompetencyAssessment assessment;
 
-    public final QBehaviorIndicator behaviorIndicator;
-
     public final StringPath description = createString("description");
 
     public final NumberPath<Integer> displayOrder = createNumber("displayOrder", Integer.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final EnumPath<LevelTypeEnum> levelType = createEnum("levelType", LevelTypeEnum.class);
-
     public final StringPath name = createString("name");
 
     public final NumberPath<Integer> questionNo = createNumber("questionNo", Integer.class);
 
     public final ListPath<ResponseChoiceOption, QResponseChoiceOption> responseChoiceOptions = this.<ResponseChoiceOption, QResponseChoiceOption>createList("responseChoiceOptions", ResponseChoiceOption.class, QResponseChoiceOption.class, PathInits.DIRECT2);
+
+    public final QSubCompetencyCategory subCompetencyCategory;
 
     public QCoreCompetencyQuestion(String variable) {
         this(CoreCompetencyQuestion.class, forVariable(variable), INITS);
@@ -61,7 +59,7 @@ public class QCoreCompetencyQuestion extends EntityPathBase<CoreCompetencyQuesti
     public QCoreCompetencyQuestion(Class<? extends CoreCompetencyQuestion> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.assessment = inits.isInitialized("assessment") ? new QCoreCompetencyAssessment(forProperty("assessment"), inits.get("assessment")) : null;
-        this.behaviorIndicator = inits.isInitialized("behaviorIndicator") ? new QBehaviorIndicator(forProperty("behaviorIndicator"), inits.get("behaviorIndicator")) : null;
+        this.subCompetencyCategory = inits.isInitialized("subCompetencyCategory") ? new QSubCompetencyCategory(forProperty("subCompetencyCategory"), inits.get("subCompetencyCategory")) : null;
     }
 
 }

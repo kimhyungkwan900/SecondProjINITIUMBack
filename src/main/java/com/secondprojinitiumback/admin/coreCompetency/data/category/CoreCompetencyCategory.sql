@@ -10,13 +10,3 @@ INSERT INTO CORE_COMPETENCY_CATEGORY (ITP_ID, ASMT_ID,CTGR_NM, CTGR_CN, COMP_GRP
                                                                     (3, 2,'비판적 사고와 지식탐색 역량', '문제를 분석하고, \n필요한 정보를 수집·활용하여 지식을 확장하는 능력','COMP','C'),
                                                                     (4, 2,'협력적 소통 역량', '타인과 원활하게 의사소통하고, \n공동의 목표를 위해 함께 일할 수 있는 능력','COMP','C'),
                                                                     (5, 2,'세계 시민의식과 문화이해 역량', '다양한 관점과 문화를 이해하고, \n넓은 시야로 문제를 인식하는 능력','COMP','C');
-
-ALTER TABLE CORE_COMPETENCY_CATEGORY
-    ADD COLUMN COMP_GRP CHAR(6),
-    ADD COLUMN COMP_CD VARCHAR(10);
-
-UPDATE CORE_COMPETENCY_CATEGORY
-SET COMP_GRP = 'COMP',
-    COMP_CD = 'C';
-
-

@@ -39,16 +39,17 @@ public class CoreCompetencyQuestion {
     @Column(name = "ANSR_ALOW_CNT")
     private Integer answerAllowCount; // 허용 응답 개수 (객관식 보기 중 선택 가능 개수)
 
-    @OneToOne
-    @JoinColumn(name = "INDCTR_ID", nullable = false)
-    private BehaviorIndicator behaviorIndicator; // 행동 지표 ID (외래 키, insertable=false, updatable=false)
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "level_type")
-    private LevelTypeEnum levelType;
-
-    @OneToMany(mappedBy = "question",fetch = FetchType.LAZY)
+    //옵션 교체 저장시 깔끔하게 떨어지도록 추가
+    @OneToMany(mappedBy = "question",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    @OrderBy("optionNo ASC")
     private List<ResponseChoiceOption> responseChoiceOptions = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "STGR_ID", nullable = false)
+    private SubCompetencyCategory subCompetencyCategory;
 
 
 }

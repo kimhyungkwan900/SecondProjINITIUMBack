@@ -1,7 +1,5 @@
 package com.secondprojinitiumback.admin.coreCompetency.dto;
 
-import com.secondprojinitiumback.admin.coreCompetency.domain.BehaviorIndicator;
-import jdk.jshell.Snippet;
 import lombok.*;
 
 import java.util.List;

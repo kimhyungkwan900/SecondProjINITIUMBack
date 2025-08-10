@@ -1,7 +1,6 @@
 package com.secondprojinitiumback.user.coreCompetency.dto;
 
 
-import com.secondprojinitiumback.admin.coreCompetency.dto.BehaviorIndicatorDto;
 import lombok.*;
 
 import java.util.List;
@@ -24,7 +23,6 @@ public class UserIdealTalentProfileDto {
     public static class SubCompetencyCategoryDto {
         private String subName;
         private String subDefinition;
-        private List<BehaviorIndicatorDto> behaviorIndicators;
     }
 }
 

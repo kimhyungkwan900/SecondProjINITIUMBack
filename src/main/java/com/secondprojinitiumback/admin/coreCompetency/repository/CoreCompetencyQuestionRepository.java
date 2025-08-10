@@ -21,4 +21,7 @@ public interface CoreCompetencyQuestionRepository extends JpaRepository<CoreComp
             "WHERE q.assessment.id = :assessmentId")
     List<CoreCompetencyQuestion> findAllWithOptionsByAssessmentId(@Param("assessmentId") Long assessmentId);
 
+    List<CoreCompetencyQuestion> findBySubCompetencyCategory_IdOrderByDisplayOrderAscQuestionNoAsc(Long subCategoryId);
+
+    List<CoreCompetencyQuestion> findByAssessment_IdAndSubCompetencyCategory_IdOrderByDisplayOrderAsc(Long assessmentId, Long subId);
 }

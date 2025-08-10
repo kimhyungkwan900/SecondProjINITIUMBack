@@ -35,8 +35,7 @@ public class AdminStudentCompetencyScoreService {
 
         for (CoreCompetencyResponse response : responses) {
             CoreCompetencyQuestion question = response.getQuestion();
-            BehaviorIndicator indicator = question.getBehaviorIndicator();
-            SubCompetencyCategory subCategory = indicator.getSubCompetencyCategory();
+            SubCompetencyCategory subCategory = question.getSubCompetencyCategory();
 
             if (subCategory == null) continue;
 

@@ -36,9 +36,9 @@ public class ExtracurricularSurveyResponseService {
         extracurricularSurveyResponseRepository.save(surveyResponse);
         // 설문 응답 후 자동 수료 처리 호출
         Long eduMngId = surveyResponse.getExtracurricularSurvey().getExtracurricularProgram().getEduMngId(); // 비교과 프로그램 ID
-        String stdntNo = surveyResponse.getStdntInfo().getStdntNo(); // 학생 번호
+        String studentNo = surveyResponse.getStudent().getStudentNo(); // 학생 번호
         // 출석률 및 설문 기준 충족 시 자동 수료 처리
-        extracurricularCompletionService.autoCompleteExtracurricularProgram(eduMngId, stdntNo);
+        extracurricularCompletionService.autoCompleteExtracurricularProgram(eduMngId, studentNo);
     }
 
     // 비교과 프로그램에 등록된 설문 조사 확인

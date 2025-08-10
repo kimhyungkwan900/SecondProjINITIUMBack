@@ -1,7 +1,7 @@
 package com.secondprojinitiumback.admin.extracurricular.domain;
 
 
-import com.secondprojinitiumback.admin.extracurricular.domain.test.StdntInfo;
+import com.secondprojinitiumback.user.student.domain.Student;
 import jakarta.persistence.*;
 
 @Entity
@@ -18,7 +18,7 @@ public class ExtracurricularTeamMember {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stdnt_no", nullable = false)
-    private StdntInfo stdntInfo; // 학생 정보
+    private Student student; // 학생 정보
 
     @Column(name = "team_qlfc_yn")
     private String teamQlfcYn; // 팀 소속 여부 (Y/N)

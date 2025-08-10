@@ -5,6 +5,9 @@ import com.secondprojinitiumback.common.domain.SchoolSubject;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,7 +22,7 @@ public class CoreCompetencyAssessment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 평가 ID (PK)
 
-    // 학과 정보 연결
+    // 학과(부서) 정보 연결
     @ManyToOne
     @JoinColumn(name = "SCSBJT_NO")
     private SchoolSubject schoolSubject;
@@ -42,6 +45,12 @@ public class CoreCompetencyAssessment {
     @Column(name = "ACAD_YR")
     private String academicYear; // 학년도
 
+    @Column(name = "CAHRT_TP")
+    private String chartType = "개인별+전체"; // 차트 표시 선택
+
+    @Column(name = "ALYS_TP")
+    private String analysisType = "평균"; // 분석 기준
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
             @JoinColumn(name = "STERM_CD", referencedColumnName = "CD"),
@@ -50,7 +59,7 @@ public class CoreCompetencyAssessment {
     private CommonCode semesterCode; // 학기 정보 (FK)
 
     @Builder.Default
-    @Column(name = "STERM_GRP")
+    @Column(name = "STERM_GRP", insertable = false, updatable = false)
     private String semesterGroup = "SEMESTER"; // 학기 구분 코드 (고정값)
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -61,11 +70,15 @@ public class CoreCompetencyAssessment {
     private CommonCode onlineExecCode;  // 온라인 실행 여부 (고정값: Y/N)
 
     @Builder.Default
-    @Column(name = "ONLNE_EXEC_GRP")
+    @Column(name = "ONLNE_EXEC_GRP", insertable = false, updatable = false)
     private String onlineExecGroupCode = "ONLINE_YN";
 
     @Lob
     @Column(name = "GUID_CN")
     private String guideContent; // 평가 안내문
+
+    @OneToMany(mappedBy = "assessment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CoreCompetencyCategory> coreCompetencyCategories = new ArrayList<>();
+
 
 }

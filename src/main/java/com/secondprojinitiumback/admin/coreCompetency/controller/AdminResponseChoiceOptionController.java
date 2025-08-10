@@ -30,7 +30,7 @@ public class AdminResponseChoiceOptionController {
     }
 
     @GetMapping("/{questionId}/options")
-    public List<ResponseChoiceOptionDto> getOptions(@PathVariable Long questionId) {
+    public List<ResponseChoiceOptionDto> getAllOptions(@PathVariable Long questionId) {
         return responseService.getOptionsByQuestionId(questionId);
     }
 }

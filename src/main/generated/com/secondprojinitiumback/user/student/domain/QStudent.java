@@ -22,8 +22,6 @@ public class QStudent extends EntityPathBase<Student> {
 
     public static final QStudent student = new QStudent("student");
 
-    public final com.secondprojinitiumback.common.domain.base.QBaseEntity _super = new com.secondprojinitiumback.common.domain.base.QBaseEntity(this);
-
     public final DatePath<java.time.LocalDate> admissionDate = createDate("admissionDate", java.time.LocalDate.class);
 
     public final com.secondprojinitiumback.user.employee.domain.QEmployee advisor;
@@ -34,37 +32,13 @@ public class QStudent extends EntityPathBase<Student> {
 
     public final StringPath clubCode = createString("clubCode");
 
-    //inherited
-    public final StringPath createdBy = _super.createdBy;
-
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
-
-    //inherited
-    public final StringPath createdIp = _super.createdIp;
-
-    //inherited
-    public final NumberPath<Long> createdProgramId = _super.createdProgramId;
-
     public final StringPath email = createString("email");
 
     public final com.secondprojinitiumback.common.domain.QCommonCode gender;
 
     public final StringPath grade = createString("grade");
 
-    public final com.secondprojinitiumback.common.login.domain.QLoginInfo loginInfo;
-
-    //inherited
-    public final StringPath modifiedBy = _super.modifiedBy;
-
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
-
-    //inherited
-    public final StringPath modifiedIp = _super.modifiedIp;
-
-    //inherited
-    public final NumberPath<Long> modifiedProgramId = _super.modifiedProgramId;
+    public final com.secondprojinitiumback.common.security.domain.QLoginInfo loginInfo;
 
     public final StringPath name = createString("name");
 
@@ -97,7 +71,7 @@ public class QStudent extends EntityPathBase<Student> {
         this.advisor = inits.isInitialized("advisor") ? new com.secondprojinitiumback.user.employee.domain.QEmployee(forProperty("advisor"), inits.get("advisor")) : null;
         this.bankAccount = inits.isInitialized("bankAccount") ? new com.secondprojinitiumback.common.bank.domain.QBankAccount(forProperty("bankAccount"), inits.get("bankAccount")) : null;
         this.gender = inits.isInitialized("gender") ? new com.secondprojinitiumback.common.domain.QCommonCode(forProperty("gender"), inits.get("gender")) : null;
-        this.loginInfo = inits.isInitialized("loginInfo") ? new com.secondprojinitiumback.common.login.domain.QLoginInfo(forProperty("loginInfo")) : null;
+        this.loginInfo = inits.isInitialized("loginInfo") ? new com.secondprojinitiumback.common.security.domain.QLoginInfo(forProperty("loginInfo")) : null;
         this.school = inits.isInitialized("school") ? new com.secondprojinitiumback.common.domain.QUniversity(forProperty("school")) : null;
         this.schoolSubject = inits.isInitialized("schoolSubject") ? new com.secondprojinitiumback.common.domain.QSchoolSubject(forProperty("schoolSubject"), inits.get("schoolSubject")) : null;
         this.studentStatus = inits.isInitialized("studentStatus") ? new QStudentStatusInfo(forProperty("studentStatus"), inits.get("studentStatus")) : null;

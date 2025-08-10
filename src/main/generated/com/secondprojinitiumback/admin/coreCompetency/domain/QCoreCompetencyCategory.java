@@ -22,6 +22,12 @@ public class QCoreCompetencyCategory extends EntityPathBase<CoreCompetencyCatego
 
     public static final QCoreCompetencyCategory coreCompetencyCategory = new QCoreCompetencyCategory("coreCompetencyCategory");
 
+    public final QCoreCompetencyAssessment assessment;
+
+    public final com.secondprojinitiumback.common.domain.QCommonCode competencyCategory;
+
+    public final StringPath competencyCategoryGroup = createString("competencyCategoryGroup");
+
     public final StringPath coreCategoryName = createString("coreCategoryName");
 
     public final StringPath coreCategoryNote = createString("coreCategoryNote");
@@ -29,6 +35,8 @@ public class QCoreCompetencyCategory extends EntityPathBase<CoreCompetencyCatego
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final QIdealTalentProfile idealTalentProfile;
+
+    public final ListPath<SubCompetencyCategory, QSubCompetencyCategory> subCompetencyCategories = this.<SubCompetencyCategory, QSubCompetencyCategory>createList("subCompetencyCategories", SubCompetencyCategory.class, QSubCompetencyCategory.class, PathInits.DIRECT2);
 
     public QCoreCompetencyCategory(String variable) {
         this(CoreCompetencyCategory.class, forVariable(variable), INITS);
@@ -48,6 +56,8 @@ public class QCoreCompetencyCategory extends EntityPathBase<CoreCompetencyCatego
 
     public QCoreCompetencyCategory(Class<? extends CoreCompetencyCategory> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.assessment = inits.isInitialized("assessment") ? new QCoreCompetencyAssessment(forProperty("assessment"), inits.get("assessment")) : null;
+        this.competencyCategory = inits.isInitialized("competencyCategory") ? new com.secondprojinitiumback.common.domain.QCommonCode(forProperty("competencyCategory"), inits.get("competencyCategory")) : null;
         this.idealTalentProfile = inits.isInitialized("idealTalentProfile") ? new QIdealTalentProfile(forProperty("idealTalentProfile")) : null;
     }
 

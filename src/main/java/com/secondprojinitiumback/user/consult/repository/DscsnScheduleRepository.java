@@ -6,9 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface DscsnScheduleRepository extends JpaRepository<DscsnSchedule,String> {
-    DscsnSchedule findTopByDscsnDtIdStartingWithOrderByDscsnIdDesc(String prefix);
+import java.util.List;
 
-    Page<DscsnSchedule> findByEmployee_EmpNo(String empNo, Pageable pageable);
+@Repository
+public interface DscsnScheduleRepository extends JpaRepository<DscsnSchedule,String>, DscsnScheduleRepositoryCustom {
+    DscsnSchedule findTopByDscsnDtIdStartingWithOrderByDscsnDtIdDesc(String prefix);
 }

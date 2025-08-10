@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 @Transactional
@@ -58,34 +59,32 @@ public class DscsnScheduleService {
 
     //--- 상담사, 교수 상담일정 조회
     @Transactional(readOnly = true)
-    public Page<DscsnScheduleResponseDto> getDscsnSchedule(String empNo, Pageable pageable) {
+    public List<DscsnScheduleResponseDto> getDscsnSchedule(String startDay, String endDay, String dscsnType, String empNo) {
 
-        Page<DscsnSchedule> dscsnSchedules = dscsnScheduleRepository.findByEmployee_EmpNo(empNo, pageable);
+        List<DscsnSchedule> dscsnSchedules = dscsnScheduleRepository.findDscsnSchedule(startDay, endDay, dscsnType, empNo);
 
-        return dscsnSchedules.map(dscsnSchedule ->
+        return dscsnSchedules.stream()
+                .map(dscsnSchedule ->
                 DscsnScheduleResponseDto.builder()
                         .empNo(dscsnSchedule.getEmployee().getEmpNo())
                         .empName(dscsnSchedule.getEmployee().getName())
                         .schoolSubject(dscsnSchedule.getEmployee().getSchoolSubject().getSubjectName())
                         .scheduleDate(dscsnSchedule.getPossibleDate())
                         .scheduleDate(dscsnSchedule.getPossibleTime())
-                        .build()
-                );
+                        .build())
+                .toList();
     }
 
     //--- 상담사, 교수 일정 삭제
     public void deleteDscsnSchedule(String dscsnDtId) {
-        //상담일정 ID로 해당 상담일정 조회
-        DscsnSchedule dscsnSchedule = dscsnScheduleRepository.findById(dscsnDtId)
-                .orElseThrow(EntityExistsException::new);
 
-        //조회한 일정 삭제
-        dscsnScheduleRepository.delete(dscsnSchedule);
+        //상담일정 ID로 해당 상담일정 삭제
+        dscsnScheduleRepository.deleteById(dscsnDtId);
     }
 
     //시퀀스 번호 생성 메소드
     public String getNextScheduleSequence(String prefix) {
-        DscsnSchedule lastDscsnDt = dscsnScheduleRepository.findTopByDscsnDtIdStartingWithOrderByDscsnIdDesc(prefix);
+        DscsnSchedule lastDscsnDt = dscsnScheduleRepository.findTopByDscsnDtIdStartingWithOrderByDscsnDtIdDesc(prefix);
 
         if(lastDscsnDt == null) {
             return String.format("%03d", 1);

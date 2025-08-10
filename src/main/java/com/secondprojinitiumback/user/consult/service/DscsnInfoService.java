@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class DscsnInfoService {
     private final DscsnInfoRepository dscsnInfoRepository;
-//    private final SequenceGenerator sequenceGenerator;
 
     //--- 상담정보 생성
     public void createDscsnInfo(DscsnApply dscsnApply) {
@@ -37,7 +36,7 @@ public class DscsnInfoService {
         String seqNum = getNextInfoSequence(prefix);
 
         //3. ID 생성
-        String dscsnInfoId = prefix + String.format("%04d", seqNum); // I는 상담정보를 나타내는 접두사
+        String dscsnInfoId = prefix + seqNum; // I는 상담정보를 나타내는 접두사
 
         //상담정보 엔티티 생성
         DscsnInfo dscsnInfo = DscsnInfo.builder()
@@ -56,50 +55,12 @@ public class DscsnInfoService {
     @Transactional(readOnly = true)
     public Page<DscsnInfoResponseDto> getDscsnInfo(DscsnInfoSearchDto dscsnInfoSearchDto, Pageable pageable) {
 
-        Page<DscsnInfo> dscsnInfoPage = dscsnInfoRepository.getDscsnInfoPageByCondition(dscsnInfoSearchDto, pageable);
+        // 검색 조건에 따라 상담정보 페이지 조회
+        Page<DscsnInfo> dscsnInfoPage =
+                dscsnInfoRepository.getDscsnInfoPageByCondition(dscsnInfoSearchDto, pageable);
 
-        return dscsnInfoPage.map(dscsnInfo ->
-                DscsnInfoResponseDto.builder()
-                        .dscsnInfoId(dscsnInfo.getDscsnInfoId())
-                        .dscsnStatus(dscsnInfo.getDscsnStatus())
-                        .dscsnResultCn(dscsnInfo.getDscsnResultCn())
-                        .dscsnReleaseYn(dscsnInfo.getDscsnReleaseYn())
-                        .dscsnApplyDto(dscsnInfo.getDscsnApply() != null ?
-                            DscsnApplyResponseDto.builder()
-                                    .dscsnApplyId(dscsnInfo.getDscsnApply().getDscsnApplyId())
-                                    .studentTelno(dscsnInfo.getDscsnApply().getStudentTelno())
-                                    .dscsnApplyCn(dscsnInfo.getDscsnApply().getDscsnApplyCn())
-                                    .dscsnOnlineYn(dscsnInfo.getDscsnApply().getDscsnOnlineYn())
-                                    .studentDto(dscsnInfo.getDscsnApply().getStudent() != null ?
-                                            StudentDto.builder()
-                                                    .studentNo(dscsnInfo.getDscsnApply().getStudent().getStudentNo())
-                                                    .schoolSubject(dscsnInfo.getDscsnApply().getStudent().getSchoolSubject())
-                                                    .name(dscsnInfo.getDscsnApply().getStudent().getName())
-                                                    .build()
-                                                    :null
-                                    )
-                                    .dscsnScheduleDto(dscsnInfo.getDscsnApply().getDscsnDt() != null ?
-                                            DscsnScheduleResponseDto.builder()
-                                                    .scheduleDate(dscsnInfo.getDscsnApply().getDscsnDt().getPossibleDate())
-                                                    .startTime(dscsnInfo.getDscsnApply().getDscsnDt().getPossibleTime())
-                                                    .empNo(dscsnInfo.getDscsnApply().getDscsnDt().getEmployee().getEmpNo())
-                                                    .empName(dscsnInfo.getDscsnApply().getDscsnDt().getEmployee().getName())
-                                                    .schoolSubject(dscsnInfo.getDscsnApply().getDscsnDt().getEmployee().getSchoolSubject().getSubjectName())
-                                                    .build()
-                                            :null
-                                    )
-                                    .dscsnKindDto(dscsnInfo.getDscsnApply().getDscsnKind() != null ?
-                                            DscsnKindDto.builder()
-                                                    .dscsnKindName(dscsnInfo.getDscsnApply().getDscsnKind().getDscsnKindName())
-                                                    .dscsnTypeName(dscsnInfo.getDscsnApply().getDscsnKind().getDscsnTypeName())
-                                                    .build()
-                                            :null
-                                    )
-                                    .build()
-                                    :null
-                        )
-                        .build()
-        );
+        // 상담정보를 DscsnInfoResponseDto로 변환하여 반환
+        return dscsnInfoPage.map(this::toResponseDtoSafe);
     }
 
     //--- 상담상태 변경
@@ -144,5 +105,61 @@ public class DscsnInfoService {
             seqNum++; // 시퀀스 번호 증가
             return String.format("%04d", seqNum); // 4자리 문자열로 포맷팅
         }
+    }
+
+    private DscsnInfoResponseDto toResponseDtoSafe(DscsnInfo e) {
+        // null-safe 로컬 변수
+        var apply = e.getDscsnApply();
+        var student = (apply != null) ? apply.getStudent() : null;
+        var dt = (apply != null) ? apply.getDscsnDt() : null;
+        var emp = (dt != null) ? dt.getEmployee() : null;
+        var kind = (apply != null) ? apply.getDscsnKind() : null;
+
+        return DscsnInfoResponseDto.builder()
+                .dscsnInfoId(e.getDscsnInfoId())
+                .dscsnStatus(e.getDscsnStatus())
+                .dscsnResultCn(e.getDscsnResultCn())
+                .dscsnReleaseYn(e.getDscsnReleaseYn())
+
+                .dscsnApplyDto(
+                        (apply == null) ? null :
+                                DscsnApplyResponseDto.builder()
+                                        .dscsnApplyId(apply.getDscsnApplyId())
+                                        .studentTelno(apply.getStudentTelno())
+                                        .dscsnApplyCn(apply.getDscsnApplyCn())
+                                        .dscsnOnlineYn(apply.getDscsnOnlineYn())
+
+                                        .studentDto(
+                                                (student == null) ? null :
+                                                        StudentDto.builder()
+                                                                .studentNo(student.getStudentNo())
+                                                                .schoolSubject(student.getSchoolSubject())
+                                                                .name(student.getName())
+                                                                .build()
+                                        )
+
+                                        .dscsnScheduleDto(
+                                                (dt == null) ? null :
+                                                        DscsnScheduleResponseDto.builder()
+                                                                .scheduleDate(dt.getPossibleDate())
+                                                                .startTime(dt.getPossibleTime())
+                                                                .empNo( (emp != null) ? emp.getEmpNo() : null )
+                                                                .empName( (emp != null) ? emp.getName() : null )
+                                                                .schoolSubject( (emp != null && emp.getSchoolSubject() != null)
+                                                                        ? emp.getSchoolSubject().getSubjectName()
+                                                                        : null )
+                                                                .build()
+                                        )
+
+                                        .dscsnKindDto(
+                                                (kind == null) ? null :
+                                                        DscsnKindDto.builder()
+                                                                .dscsnKindName(kind.getDscsnKindName())
+                                                                .dscsnTypeName(kind.getDscsnTypeName())
+                                                                .build()
+                                        )
+                                        .build()
+                )
+                .build();
     }
 }

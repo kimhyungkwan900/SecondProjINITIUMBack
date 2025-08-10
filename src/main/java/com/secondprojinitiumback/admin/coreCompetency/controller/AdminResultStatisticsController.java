@@ -1,7 +1,7 @@
 package com.secondprojinitiumback.admin.coreCompetency.controller;
 
 import com.secondprojinitiumback.admin.coreCompetency.dto.QuestionStatisticsDto;
-import com.secondprojinitiumback.admin.coreCompetency.service.CoreCompetencyResultService;
+import com.secondprojinitiumback.admin.coreCompetency.service.AdminCoreCompetencyResultService;
 import com.secondprojinitiumback.user.student.domain.Student;
 import com.secondprojinitiumback.user.student.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,18 +15,18 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AdminResultStatisticsController {
 
-    private final CoreCompetencyResultService resultService;
+    private final AdminCoreCompetencyResultService resultService;
     private final StudentRepository studentRepository;
 
     /**
      * 학생의 평가 응답 보기(문항 번호 → 선택지 라벨) 조회
      */
-    @GetMapping("/student/{studentNo}/assessment/{assessmentId}/labels")
+    @GetMapping("/student/{studentNo}/assessment/{questionId}/labels")
     public Map<Integer, String> getStudentLabels(
             @PathVariable Student studentNo,
-            @PathVariable Long assessmentId
+            @PathVariable Long questionId
     ) {
-        return resultService.getStudentResponseLabels(studentNo, assessmentId);
+        return resultService.getStudentResponseLabels(studentNo, questionId);
     }
 
     /**

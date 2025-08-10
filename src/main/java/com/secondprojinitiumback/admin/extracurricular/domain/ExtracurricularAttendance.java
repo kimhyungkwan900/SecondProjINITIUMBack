@@ -1,6 +1,6 @@
 package com.secondprojinitiumback.admin.extracurricular.domain;
 
-import com.secondprojinitiumback.admin.extracurricular.domain.test.StdntInfo;
+import com.secondprojinitiumback.user.student.domain.Student;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,10 +23,9 @@ public class ExtracurricularAttendance {
     @JoinColumn(name = "edu_shdl_id")
     private ExtracurricularSchedule extracurricularSchedule; // 비교과 일정 ID
 
-    @ManyToOne
-    @JoinColumn(name = "stdnt_no")
-    private StdntInfo stdntInfo; // 학생 번호
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "")
+    private Student student;
     @Column(name = "atndc_dt")
     private LocalDateTime atndcDt;
 

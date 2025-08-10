@@ -9,8 +9,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,25 +22,57 @@ import org.springframework.web.bind.annotation.*;
 public class DscsnInfoController {
     private final DscsnInfoService dscsnInfoService;
 
-    //--- 상담내역 조회(상담사, 학생)
     @GetMapping({"/dscsnInfo/list", "/dscsnInfo/list/{page}"})
-    public ResponseEntity<?> getDscsnInfoList(@ModelAttribute DscsnInfoSearchDto dscsnInfoSearchDto,  @PathVariable int page) {
+    public ResponseEntity<?> getDscsnInfoList(
+            @ModelAttribute DscsnInfoSearchDto dscsnInfoSearchDto,
+            @PathVariable(required = false) Integer page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String sort,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        // 사용자 유형
+        String userType = userDetails.getAuthorities().stream()
+                .map(auth -> auth.getAuthority().replace("ROLE_", ""))
+                .findFirst()
+                .orElse("S");
 
-        Pageable pageable = PageRequest.of(page, 10);
+        String serialNo = userDetails.getUsername(); // 학생이면 학번, 상담사면 사번
+
+        // userType, serialNo을 강제로 덮어쓰기 (외부 파라미터 무시)
+        dscsnInfoSearchDto.setUserType(userType);
+        dscsnInfoSearchDto.setEmpNo(serialNo);
+
+        // 권한별 추가 필드 강제 세팅
+        if ("S".equals(userType)) {
+            dscsnInfoSearchDto.setStudentNo(serialNo);
+        }
+
+        // 페이지 번호 설정
+        int pageNo = page != null ? page : 0;
+
+        // 정렬 설정
+        Pageable pageable = (sort != null && !sort.isBlank())
+                ? PageRequest.of(pageNo, size, Sort.by(sort.split(",")[0])
+                .descending())
+                : PageRequest.of(pageNo, size);
+
+        // 상담정보 조회
         Page<DscsnInfoResponseDto> dscsnInfos = dscsnInfoService.getDscsnInfo(dscsnInfoSearchDto, pageable);
 
-        DscsnInfoListDto dscsnInfoListDto = DscsnInfoListDto.builder()
+        // 페이지 정보가 없을 경우 빈 리스트 반환
+        DscsnInfoListDto body = DscsnInfoListDto.builder()
                 .dscsnInfos(dscsnInfos)
                 .maxPage(10)
                 .totalPage(dscsnInfos.getTotalPages())
                 .build();
 
-        return ResponseEntity.ok(dscsnInfoListDto);
+        return ResponseEntity.ok(body);
     }
 
+
     //--- 상담상태 변경(상담사, 교수)
-    @PutMapping("/dscsnInfo/list/{status}")
-    public ResponseEntity<?> updateDscsnStatus(@PathVariable String status, @RequestBody String dscsnInfoId) {
+    @PutMapping("/dscsnInfo/list/{dscsnInfoId}")
+    public ResponseEntity<?> updateDscsnStatus(@PathVariable String dscsnInfoId, @RequestBody String status) {
 
         try {
             dscsnInfoService.updateDscsnStatus(dscsnInfoId, status);

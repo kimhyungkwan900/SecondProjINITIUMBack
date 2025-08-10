@@ -7,11 +7,14 @@ import com.secondprojinitiumback.admin.coreCompetency.dto.CompetencyCategoryDto;
 import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyCategoryRepository;
 import com.secondprojinitiumback.admin.coreCompetency.repository.IdealTalentProfileRepository;
 import com.secondprojinitiumback.admin.coreCompetency.repository.SubCompetencyCategoryRepository;
+import com.secondprojinitiumback.common.domain.CommonCode;
+import com.secondprojinitiumback.common.domain.CommonCodeId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,192 +22,196 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-// 핵심역량 및 하위역량 카테고리 서비스 테스트 클래스
+@ExtendWith(MockitoExtension.class)
+
+// AdminCompetencyCategoryService의 단위 테스트 클래스
+// 핵심역량/하위역량 등록, 수정, 삭제, 조회, 중복 체크 등 서비스 메서드 테스트
 class AdminCompetencyCategoryServiceTest {
 
-    // 핵심역량 저장소 Mock
+    // 핵심역량 레포지토리 모의 객체
     @Mock
     private CoreCompetencyCategoryRepository coreCompetencyCategoryRepository;
 
-    // 인재상 저장소 Mock
+    // 인재상 레포지토리 모의 객체
     @Mock
     private IdealTalentProfileRepository idealTalentProfileRepository;
 
-    // 하위역량 저장소 Mock
+    // 하위역량 레포지토리 모의 객체
     @Mock
     private SubCompetencyCategoryRepository subCompetencyCategoryRepository;
 
-    // 테스트 대상 서비스에 Mock 주입
+    // 테스트 대상 서비스에 모의 객체 주입
     @InjectMocks
     private AdminCompetencyCategoryService categoryService;
 
     @Test
     @DisplayName("핵심역량 카테고리 등록 테스트")
     void createCategoryTest() {
-        // Given: 핵심역량 생성 요청 DTO와 인재상 객체를 구성하여 등록 테스트 준비
-        CompetencyCategoryDto competencyCategoryDto = new CompetencyCategoryDto();
-        competencyCategoryDto.setName("창의역량");
-        competencyCategoryDto.setDescription("창의적 문제 해결 능력");
-        competencyCategoryDto.setLevelType("CORE_COMPETENCY");
-        competencyCategoryDto.setIdealTalentProfileId(1L);
+        // 핵심역량 등록을 위한 DTO와 인재상 엔티티 설정
+        CompetencyCategoryDto dto = new CompetencyCategoryDto();
+        dto.setId(1L);
+        dto.setName("창의역량");
+        dto.setDescription("창의적 문제 해결 능력");
+        dto.setIdealTalentProfileId(1L);
 
-        IdealTalentProfile idealTalentProfile = IdealTalentProfile.builder().id(1L).build();
-        when(idealTalentProfileRepository.findById(1L)).thenReturn(Optional.of(idealTalentProfile));
+        CommonCodeId codeId = new CommonCodeId("C", "COMP");
+        CommonCode commonCode = CommonCode.builder().id(codeId).build();
+        dto.setCompetencyCategory(commonCode);
 
-        // When: 핵심역량 등록 메서드 호출
-        categoryService.createCategory(competencyCategoryDto);
 
-        // Then: 핵심역량 저장 메서드가 1회 호출되었는지 검증
+        // 인재상 엔티티가 정상적으로 조회됨을 모의
+        IdealTalentProfile profile = IdealTalentProfile.builder().id(1L).build();
+        when(idealTalentProfileRepository.findById(1L)).thenReturn(Optional.of(profile));
+
+        // createCategory 호출 시 save가 정상적으로 호출됨을 검증
+        categoryService.createCategory(dto);
+
+        // 핵심역량 저장이 정확히 1번 호출되었는지 검증
         verify(coreCompetencyCategoryRepository, times(1)).save(any(CoreCompetencyCategory.class));
     }
 
     @Test
     @DisplayName("하위역량 카테고리 등록 테스트")
     void createSubCategoryTest() {
-        // Given: 하위역량 생성 요청 DTO와 상위 카테고리 객체를 구성하여 등록 테스트 준비
-        CompetencyCategoryDto competencyCategoryDto = new CompetencyCategoryDto();
-        competencyCategoryDto.setName("창의적 사고");
-        competencyCategoryDto.setDescription("창의적 문제 해결 능력 향상");
-        competencyCategoryDto.setLevelType("SUB_COMPETENCY");
-        competencyCategoryDto.setParentId(1L);
+        // 하위역량 등록용 DTO와 상위 카테고리 설정
+        CompetencyCategoryDto dto = new CompetencyCategoryDto();
+        dto.setId(1L);
+        dto.setName("창의적 사고");
+        dto.setDescription("창의적 문제 해결 능력 향상");
+        dto.setParentId(1L);
 
-        CoreCompetencyCategory coreCompetencyCategory = CoreCompetencyCategory.builder().id(1L).build();
-        when(coreCompetencyCategoryRepository.findById(1L)).thenReturn(Optional.of(coreCompetencyCategory));
+        CommonCodeId codeId = new CommonCodeId("S", "COMP");
+        CommonCode commonCode = CommonCode.builder().id(codeId).build();
+        dto.setCompetencyCategory(commonCode);
 
-        // When: 하위역량 등록 메서드 호출
-        categoryService.createCategory(competencyCategoryDto);
+        // 상위 카테고리 존재 모의
+        CoreCompetencyCategory parent = CoreCompetencyCategory.builder().id(1L).build();
+        when(coreCompetencyCategoryRepository.findById(1L)).thenReturn(Optional.of(parent));
 
-        // Then: 하위역량 저장 메서드가 1회 호출되었는지 검증
+        categoryService.createCategory(dto);
+
+        // 하위역량 저장이 정확히 1회 호출되었는지 검증
         verify(subCompetencyCategoryRepository, times(1)).save(any());
     }
 
     @Test
     @DisplayName("핵심역량 카테고리 수정 테스트")
     void updateCategoryTest() {
-        // Given: 기존 핵심역량과 수정 요청 DTO, 인재상 객체를 구성하여 수정 테스트 준비
-        Long CoreCategoryId = 1L;
-        CoreCompetencyCategory existingCompetencyCategory = CoreCompetencyCategory.builder().id(CoreCategoryId).build();
-        IdealTalentProfile idealTalentProfile = IdealTalentProfile.builder().id(10L).build();
+        Long id = 1L;
 
-        CompetencyCategoryDto competencyCategoryDto = new CompetencyCategoryDto();
-        competencyCategoryDto.setName("수정한 역량");
-        competencyCategoryDto.setDescription("수정한 역량 설명");
-        competencyCategoryDto.setLevelType("CORE_COMPETENCY");
-        competencyCategoryDto.setIdealTalentProfileId(1L);
+        // 기존 핵심역량 객체 설정
+        CoreCompetencyCategory existing = CoreCompetencyCategory.builder().id(id).build();
+        IdealTalentProfile newProfile = IdealTalentProfile.builder().id(10L).build();
 
-        when(coreCompetencyCategoryRepository.findById(CoreCategoryId)).thenReturn(Optional.of(existingCompetencyCategory));
-        when(idealTalentProfileRepository.findById(1L)).thenReturn(Optional.of(idealTalentProfile));
+        // 수정 요청 DTO 구성
+        CompetencyCategoryDto dto = new CompetencyCategoryDto();
+        dto.setName("수정한 역량");
+        dto.setDescription("수정한 역량 설명");
+        dto.setIdealTalentProfileId(1L);
 
-        // When: 수정 메서드 호출
-        categoryService.updateCategory(CoreCategoryId, competencyCategoryDto);
+        CommonCodeId codeId = new CommonCodeId("C", "COMP");
+        CommonCode commonCode = CommonCode.builder().id(codeId).build();
+        dto.setCompetencyCategory(commonCode);
 
-        // Then: 필드 값이 DTO와 일치하게 변경되었는지 확인 및 저장 메서드 호출 검증
-        assertEquals("수정한 역량", existingCompetencyCategory.getCoreCategoryName());
-        assertEquals("수정한 역량 설명", existingCompetencyCategory.getCoreCategoryNote());
-        verify(coreCompetencyCategoryRepository, times(1)).save(existingCompetencyCategory);
+        // 레포지토리 응답 모의
+        when(coreCompetencyCategoryRepository.findById(id)).thenReturn(Optional.of(existing));
+        when(idealTalentProfileRepository.findById(1L)).thenReturn(Optional.of(newProfile));
+
+        categoryService.updateCategory(id, dto);
+
+        // 필드 수정 검증
+        assertEquals("수정한 역량", existing.getCoreCategoryName());
+        assertEquals("수정한 역량 설명", existing.getCoreCategoryNote());
+
+        verify(coreCompetencyCategoryRepository, times(1)).save(existing);
     }
 
     @Test
     @DisplayName("하위역량 카테고리 수정 테스트")
     void updateSubCategoryTest() {
-        // Given: 기존 하위역량과 수정 요청 DTO를 구성하여 수정 테스트 준비
-        Long subCategoryId = 1L;
-        SubCompetencyCategory existingSubCategory = SubCompetencyCategory.builder().id(subCategoryId).build();
+        Long id = 1L;
 
-        CompetencyCategoryDto competencyCategoryDto = new CompetencyCategoryDto();
-        competencyCategoryDto.setName("수정한 하위 역량");
-        competencyCategoryDto.setDescription("수정한 하위 역량 설명");
-        competencyCategoryDto.setLevelType("SUB_COMPETENCY");
-        competencyCategoryDto.setParentId(1L);
+        SubCompetencyCategory existing = SubCompetencyCategory.builder().id(id).build();
+        CompetencyCategoryDto dto = new CompetencyCategoryDto();
+        dto.setName("수정한 하위 역량");
+        dto.setDescription("수정한 하위 역량 설명");
+        dto.setParentId(1L);
 
-        when(subCompetencyCategoryRepository.findById(subCategoryId)).thenReturn(Optional.of(existingSubCategory));
+        CommonCodeId codeId = new CommonCodeId("S", "COMP");
+        CommonCode commonCode = CommonCode.builder().id(codeId).build();
+        dto.setCompetencyCategory(commonCode);
 
-        // When: 수정 메서드 호출
-        categoryService.updateCategory(subCategoryId, competencyCategoryDto);
+        when(subCompetencyCategoryRepository.findById(id)).thenReturn(Optional.of(existing));
 
-        // Then: 필드 값이 DTO와 일치하게 변경되었는지 확인 및 저장 메서드 호출 검증
-        assertEquals("수정한 하위 역량", existingSubCategory.getSubCategoryName());
-        assertEquals("수정한 하위 역량 설명", existingSubCategory.getSubCategoryNote());
-        verify(subCompetencyCategoryRepository, times(1)).save(existingSubCategory);
+        categoryService.updateCategory(id, dto);
+
+        assertEquals("수정한 하위 역량", existing.getSubCategoryName());
+        assertEquals("수정한 하위 역량 설명", existing.getSubCategoryNote());
+
+        verify(subCompetencyCategoryRepository, times(1)).save(existing);
     }
-
 
     @Test
     @DisplayName("핵심역량 카테고리 삭제 테스트")
     void deleteCoreCategoryTest() {
-        // Given: 존재하는 핵심역량 ID에 대한 Mock 객체 설정
-        Long coreCategoryId = 1L;
-        CoreCompetencyCategory existingCoreCategory = CoreCompetencyCategory.builder().id(coreCategoryId).build();
-        when(coreCompetencyCategoryRepository.findById(coreCategoryId)).thenReturn(Optional.of(existingCoreCategory));
+        Long id = 1L;
+        CoreCompetencyCategory core = CoreCompetencyCategory.builder().id(id).build();
+        when(coreCompetencyCategoryRepository.findById(id)).thenReturn(Optional.of(core));
 
-        // When: 핵심역량 삭제 메서드 실행
-        categoryService.deleteCategory("CORE_COMPETENCY", coreCategoryId);
+        categoryService.deleteCategory("CORE_COMPETENCY", id);
 
-        // Then: 핵심역량이 정상적으로 삭제되었는지 확인
-        verify(coreCompetencyCategoryRepository, times(1)).delete(existingCoreCategory);
+        verify(coreCompetencyCategoryRepository, times(1)).delete(core);
     }
 
     @Test
     @DisplayName("하위역량 카테고리 삭제 테스트")
     void deleteSubCategoryTest() {
-        // Given: 존재하는 하위역량 ID에 대한 Mock 객체 설정
-        Long subCategoryId = 1L;
-        SubCompetencyCategory existingSubCategory = SubCompetencyCategory.builder().id(subCategoryId).build();
-        when(subCompetencyCategoryRepository.findById(subCategoryId)).thenReturn(Optional.of(existingSubCategory));
+        Long id = 1L;
+        SubCompetencyCategory sub = SubCompetencyCategory.builder().id(id).build();
+        when(subCompetencyCategoryRepository.findById(id)).thenReturn(Optional.of(sub));
 
-        // When: 하위역량 삭제 메서드 실행
-        categoryService.deleteCategory("SUB_COMPETENCY", subCategoryId);
+        categoryService.deleteCategory("SUB_COMPETENCY", id);
 
-        // Then: 하위역량이 정상적으로 삭제되었는지 확인
-        verify(subCompetencyCategoryRepository, times(1)).delete(existingSubCategory);
+        verify(subCompetencyCategoryRepository, times(1)).delete(sub);
     }
 
     @Test
     @DisplayName("핵심역량 이름 중복 체크 테스트")
     void checkCoreCategoryNameDuplicateTest() {
-        // Given: 중복된 핵심역량 이름에 대해 true 반환 설정
-        String categoryName = "창의역량";
-        when(coreCompetencyCategoryRepository.existsByCoreCategoryName(categoryName)).thenReturn(true);
+        String name = "창의역량";
+        when(coreCompetencyCategoryRepository.existsByCoreCategoryName(name)).thenReturn(true);
 
-        // When: 중복 여부 확인 메서드 실행
-        boolean isDuplicate = categoryService.isCoreCategoryNameDuplicate(categoryName);
+        boolean result = categoryService.isCoreCategoryNameDuplicate(name);
 
-        // Then: true 반환 및 existsByCoreCategoryName 호출 확인
-        assertTrue(isDuplicate);
-        verify(coreCompetencyCategoryRepository, times(1)).existsByCoreCategoryName(categoryName);
+        assertTrue(result);
+        verify(coreCompetencyCategoryRepository, times(1)).existsByCoreCategoryName(name);
     }
 
     @Test
     @DisplayName("하위역량 이름 중복 체크 테스트")
     void checkSubCategoryNameDuplicateTest() {
-        // Given: coreCategoryId 하위에 동일한 이름의 하위역량이 있을 때
-        Long coreCategoryId = 1L;
-        String subCategoryName = "창의적 사고";
-        when(subCompetencyCategoryRepository.findByCoreCategoryId(coreCategoryId))
-                .thenReturn(List.of(SubCompetencyCategory.builder().subCategoryName(subCategoryName).build()));
+        Long coreId = 1L;
+        String name = "창의적 사고";
+        SubCompetencyCategory sub = SubCompetencyCategory.builder().subCategoryName(name).build();
+        when(subCompetencyCategoryRepository.findByCoreCompetencyCategory_Id(coreId)).thenReturn(List.of(sub));
 
-        // When: 중복 여부 확인
-        boolean isDuplicate = categoryService.isSubCategoryNameDuplicate(coreCategoryId, subCategoryName);
+        boolean result = categoryService.isSubCategoryNameDuplicate(coreId, name);
 
-        // Then: true 반환 및 저장소 메서드 호출 확인
-        assertTrue(isDuplicate);
-        verify(subCompetencyCategoryRepository, times(1)).findByCoreCategoryId(coreCategoryId);
+        assertTrue(result);
+        verify(subCompetencyCategoryRepository, times(1)).findByCoreCompetencyCategory_Id(coreId);
     }
 
     @Test
     @DisplayName("핵심역량 전체 조회 테스트")
     void getAllCoreCompetencyCategoriesTest() {
-        // Given: 2개의 핵심역량이 저장되어 있을 때 반환 설정
-        List<CoreCompetencyCategory> categories = List.of(
+        List<CoreCompetencyCategory> list = List.of(
                 CoreCompetencyCategory.builder().id(1L).coreCategoryName("창의역량").build(),
                 CoreCompetencyCategory.builder().id(2L).coreCategoryName("비판적 사고").build()
         );
-        when(coreCompetencyCategoryRepository.findAll()).thenReturn(categories);
+        when(coreCompetencyCategoryRepository.findAll()).thenReturn(list);
 
-        // When: 전체 조회 실행
         List<CoreCompetencyCategory> result = categoryService.getAllCoreCompetencyCategories();
 
-        // Then: 크기 및 값 확인
         assertEquals(2, result.size());
         assertEquals("창의역량", result.get(0).getCoreCategoryName());
         verify(coreCompetencyCategoryRepository, times(1)).findAll();
@@ -213,54 +220,45 @@ class AdminCompetencyCategoryServiceTest {
     @Test
     @DisplayName("하위역량 전체 조회 테스트")
     void getAllSubCompetencyCategoriesTest() {
-        // Given: 2개의 하위역량이 저장되어 있을 때 반환 설정
-        List<SubCompetencyCategory> subCategories = List.of(
+        List<SubCompetencyCategory> list = List.of(
                 SubCompetencyCategory.builder().id(1L).subCategoryName("창의적 사고").build(),
                 SubCompetencyCategory.builder().id(2L).subCategoryName("비판적 사고").build()
         );
-        when(subCompetencyCategoryRepository.findAll()).thenReturn(subCategories);
+        when(subCompetencyCategoryRepository.findAll()).thenReturn(list);
 
-        // When: 전체 조회 실행
         List<SubCompetencyCategory> result = categoryService.getAllSubCompetencyCategories();
 
-        // Then: 크기 및 첫 번째 값 확인
         assertEquals(2, result.size());
         assertEquals("창의적 사고", result.get(0).getSubCategoryName());
         verify(subCompetencyCategoryRepository, times(1)).findAll();
     }
 
     @Test
-    @DisplayName("핵심역량 상세 조회 테스트")
+    @DisplayName("핵심역량 단건 조회 테스트")
     void getCoreCategoryTest() {
-        // Given: 특정 ID의 핵심역량 존재 시 반환 설정
-        Long coreCategoryId = 1L;
-        CoreCompetencyCategory coreCategory = CoreCompetencyCategory.builder().id(coreCategoryId).coreCategoryName("창의역량").build();
-        when(coreCompetencyCategoryRepository.findById(coreCategoryId)).thenReturn(Optional.of(coreCategory));
+        Long id = 1L;
+        CoreCompetencyCategory core = CoreCompetencyCategory.builder().id(id).coreCategoryName("창의역량").build();
+        when(coreCompetencyCategoryRepository.findById(id)).thenReturn(Optional.of(core));
 
-        // When: 상세 조회 실행
-        CoreCompetencyCategory result = categoryService.getCoreCategory(coreCategoryId);
+        CoreCompetencyCategory result = categoryService.getCoreCategory(id);
 
-        // Then: 결과가 null 아님 및 이름 일치 확인
         assertNotNull(result);
         assertEquals("창의역량", result.getCoreCategoryName());
-        verify(coreCompetencyCategoryRepository, times(1)).findById(coreCategoryId);
+        verify(coreCompetencyCategoryRepository, times(1)).findById(id);
     }
 
     @Test
-    @DisplayName("하위역량 상세 조회 테스트")
+    @DisplayName("하위역량 단건 조회 테스트")
     void getSubCategoryTest() {
-        // Given: 특정 ID의 하위역량 존재 시 반환 설정
-        Long subCategoryId = 1L;
-        SubCompetencyCategory subCategory = SubCompetencyCategory.builder().id(subCategoryId).subCategoryName("창의적 사고").build();
-        when(subCompetencyCategoryRepository.findById(subCategoryId)).thenReturn(Optional.of(subCategory));
+        Long id = 1L;
+        SubCompetencyCategory sub = SubCompetencyCategory.builder().id(id).subCategoryName("창의적 사고").build();
+        when(subCompetencyCategoryRepository.findById(id)).thenReturn(Optional.of(sub));
 
-        // When: 상세 조회 실행
-        SubCompetencyCategory result = categoryService.getSubCategory(subCategoryId);
+        SubCompetencyCategory result = categoryService.getSubCategory(id);
 
-        // Then: 결과가 null 아님 및 이름 일치 확인
         assertNotNull(result);
         assertEquals("창의적 사고", result.getSubCategoryName());
-        verify(subCompetencyCategoryRepository, times(1)).findById(subCategoryId);
+        verify(subCompetencyCategoryRepository, times(1)).findById(id);
     }
-
 }
+

@@ -4,6 +4,7 @@ import com.secondprojinitiumback.user.diagnostic.domain.DiagnosticTest;
 import lombok.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -15,29 +16,40 @@ public class DiagnosticTestDto {
     private Long id;
     private String name;
     private String description;
-    private Boolean useYn;
 
-    private List<DiagnosticQuestionDto> questions; // 기존 문항 리스트
-    private List<ScoreLevelDto> scoreLevels;       // 🔹 점수 구간 해석 리스트 추가
+    private List<DiagnosticQuestionDto> questions;
+    private List<ScoreLevelDto> scoreLevels;
 
     public static DiagnosticTestDto from(DiagnosticTest entity) {
-        List<DiagnosticQuestionDto> questionDtos = entity.getQuestions().stream()
+        // 질문 DTO 변환 (null-safe)
+        List<DiagnosticQuestionDto> questionDtos = Optional.ofNullable(entity.getQuestions())
+                .orElse(List.of())
+                .stream()
                 .map(q -> DiagnosticQuestionDto.builder()
                         .id(q.getId())
                         .content(q.getContent())
                         .order(q.getOrder())
-                        .answerType(q.getAnswerType().name())
-                        .answers(q.getAnswers().stream().map(a -> DiagnosticAnswerDto.builder()
-                                .id(a.getId())
-                                .content(a.getContent())
-                                .score(a.getScore())
-                                .selectValue(a.getSelectValue())
-                                .build()).toList())
+                        .answerType(q.getAnswerType() != null ? q.getAnswerType().name() : null)
+                        .answers(Optional.ofNullable(q.getAnswers())
+                                .orElse(List.of())
+                                .stream()
+                                .map(a -> DiagnosticAnswerDto.builder()
+                                        .id(a.getId())
+                                        .content(a.getContent())
+                                        .score(a.getScore())
+                                        .selectValue(a.getSelectValue())
+                                        .build())
+                                .toList())
                         .build())
                 .toList();
 
-        List<ScoreLevelDto> scoreLevelDtos = entity.getScoreLevels().stream()
+        // 점수 구간 DTO 변환 (min/max 누락 보완)
+        List<ScoreLevelDto> scoreLevelDtos = Optional.ofNullable(entity.getScoreLevels())
+                .orElse(List.of())
+                .stream()
                 .map(s -> ScoreLevelDto.builder()
+                        .minScore(s.getMinScore())      // ✅ 추가
+                        .maxScore(s.getMaxScore())      // ✅ 추가
                         .levelName(s.getLevelName())
                         .description(s.getDescription())
                         .build())
@@ -47,11 +59,8 @@ public class DiagnosticTestDto {
                 .id(entity.getId())
                 .name(entity.getName())
                 .description(entity.getDescription())
-                .useYn("Y".equalsIgnoreCase(entity.getUseYn()))
                 .questions(questionDtos)
-                .scoreLevels(scoreLevelDtos) // 🔹 점수 해석 포함
+                .scoreLevels(scoreLevelDtos)
                 .build();
     }
 }
-
-

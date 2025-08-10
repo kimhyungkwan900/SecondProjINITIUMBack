@@ -15,7 +15,7 @@ public class DscsnApplyController {
 
     //--- 상담 신청
     @PostMapping("/new")
-    public ResponseEntity<?> dscsnApply(@ModelAttribute DscsnApplyRequestDto dscsnApplyRequestDto) {
+    public ResponseEntity<?> dscsnApply(@RequestBody DscsnApplyRequestDto dscsnApplyRequestDto) {
         try{
             dscsnApplyService.applyConsultation(dscsnApplyRequestDto);
             return ResponseEntity.ok("상담 신청 완료");

@@ -1,10 +1,7 @@
 package com.secondprojinitiumback.user.consult.controller;
 
-import com.secondprojinitiumback.user.consult.domain.DscsnKind;
-import com.secondprojinitiumback.user.consult.dto.common.DscsnInfoListDto;
 import com.secondprojinitiumback.user.consult.dto.common.DscsnKindDto;
 import com.secondprojinitiumback.user.consult.dto.common.DscsnKindListDto;
-import com.secondprojinitiumback.user.consult.repository.DscsnKindRepository;
 import com.secondprojinitiumback.user.consult.service.DscsnKindService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -13,31 +10,37 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/admin/consult/dscsnkind")
+@RequestMapping("/api")
 public class DscsnKindController {
     private final DscsnKindService dscsnKindService;
 
     //--- 상담항목 추가
-    @PostMapping("/new")
-    public ResponseEntity<?> newDscsnKind(@ModelAttribute DscsnKindDto dscsnKindDto) {
+    @PostMapping("/admin/consult/dscsnkind/new")
+    public ResponseEntity<?> newDscsnKind(@RequestBody DscsnKindDto dscsnKindDto) {
         try{
             dscsnKindService.saveDscsnKind(dscsnKindDto);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok("항목 추가 완료");
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("항목 등록 중 에러 발생");
         }
     }
 
+    //--- 상담신청 페이지 상담항목 가져오기
+    @GetMapping("/consult/dscsnkind/get/{prefix}")
+    public ResponseEntity<?> getDscsnKindForConsult(@PathVariable String prefix) {
+        List<DscsnKindDto> dscsnKinds = dscsnKindService.getDscsnKindByPrefix(prefix);
+
+        return ResponseEntity.ok(dscsnKinds);
+    }
+
     //--- 상담항목 조회
-    @GetMapping({"/", "/{page}"})
+    @GetMapping({"/admin/consult/dscsnkind/", "/admin/consult/dscsnkind/{page}"})
     public ResponseEntity<?> getDscsnKind(@ModelAttribute DscsnKindDto dscsnKindDto, @PathVariable int page) {
 
         Pageable pageable = PageRequest.of(page, 10);
@@ -53,11 +56,11 @@ public class DscsnKindController {
     }
 
     //--- 상담항목 수정
-    @PutMapping("/update")
-    public ResponseEntity<?> updateDscsnKind(@ModelAttribute DscsnKindDto dscsnKindDto) {
+    @PutMapping("/admin/consult/dscsnkind/update")
+    public ResponseEntity<?> updateDscsnKind(@RequestBody DscsnKindDto dscsnKindDto) {
         try {
             dscsnKindService.updateDscsnKind(dscsnKindDto);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok("항목 수정 완료");
         }
         catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("입력값 오류");
@@ -68,7 +71,7 @@ public class DscsnKindController {
     }
 
     //--- 상담항목 삭제
-    @DeleteMapping("/delete")
+    @DeleteMapping("/admin/consult/dscsnkind/delete")
     public ResponseEntity<?> deleteDscsnKind(@RequestBody List<String> dscsnKindIds) {
         try {
             dscsnKindService.deleteDscsnKind(dscsnKindIds);

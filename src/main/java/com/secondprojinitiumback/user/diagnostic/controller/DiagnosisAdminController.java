@@ -2,6 +2,7 @@ package com.secondprojinitiumback.user.diagnostic.controller;
 
 import com.secondprojinitiumback.user.diagnostic.dto.DiagnosticTestDto;
 import com.secondprojinitiumback.user.diagnostic.service.DiagnosisService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,13 +18,21 @@ public class DiagnosisAdminController {
 
     private final DiagnosisService diagnosisService;
 
+    /**
+     * 모든 진단검사 목록 조회
+     * - 관리자용: 전체 검사 데이터 반환
+     */
     @GetMapping("/tests")
     public ResponseEntity<List<DiagnosticTestDto>> getAllTests() {
         return ResponseEntity.ok(diagnosisService.getAvailableTests());
     }
 
 
-    // 진단검사 생성
+    /**
+     * 진단검사 생성
+     * - 요청 본문(DTO)을 받아 서비스에 전달하여 저장
+     * - 생성된 검사 ID와 메시지를 JSON 형태로 반환
+     */
     @PostMapping("/tests")
     public ResponseEntity<Map<String, Object>> createTest(@RequestBody DiagnosticTestDto dto) {
         Long createdId = diagnosisService.registerDiagnosticTest(dto);
@@ -33,11 +42,34 @@ public class DiagnosisAdminController {
         return ResponseEntity.ok(response);
     }
 
-    // 진단검사 삭제
+    /**
+     * 진단검사 삭제
+     * - PathVariable로 검사 ID를 받아 서비스에 삭제 요청
+     * - 삭제 성공 시 204 No Content 응답
+     */
     @DeleteMapping("/tests/{id}")
     public ResponseEntity<Void> deleteTest(@PathVariable Long id) {
         diagnosisService.deleteDiagnosticTest(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/tests/{id}")
+    public ResponseEntity<Map<String, Object>> updateTest(
+            @PathVariable Long id,
+            @RequestBody @Valid DiagnosticTestDto dto
+    ) {
+        Long updatedId = diagnosisService.updateDiagnosticTest(id, dto);
+        Map<String, Object> body = Map.of(
+                "testId", updatedId,
+                "message", "검사가 성공적으로 수정되었습니다."
+        );
+        return ResponseEntity.ok(body);
+    }
+
+    @GetMapping("/tests/{id}")
+    public ResponseEntity<DiagnosticTestDto> getTestById(@PathVariable Long id) {
+        DiagnosticTestDto dto = diagnosisService.getAdminTestForEdit(id);
+        return ResponseEntity.ok(dto);
     }
 }
 

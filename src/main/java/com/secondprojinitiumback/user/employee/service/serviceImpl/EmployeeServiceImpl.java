@@ -4,9 +4,9 @@ import com.secondprojinitiumback.common.bank.domain.BankAccount;
 import com.secondprojinitiumback.common.bank.Repository.BankAccountRepository;
 import com.secondprojinitiumback.common.domain.CommonCode;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
-import com.secondprojinitiumback.common.login.domain.LoginInfo;
-import com.secondprojinitiumback.common.login.dto.CreateLoginDto;
-import com.secondprojinitiumback.common.login.service.serviceInterface.LoginInfoService;
+import com.secondprojinitiumback.common.security.domain.LoginInfo;
+import com.secondprojinitiumback.common.security.dto.CreateLoginDto;
+import com.secondprojinitiumback.common.security.service.LoginInfoService;
 import com.secondprojinitiumback.common.repository.CommonCodeRepository;
 import com.secondprojinitiumback.common.repository.SchoolSubjectRepository;
 import com.secondprojinitiumback.user.employee.domain.Employee;
@@ -39,115 +39,110 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeStatusInfoRepository employeeStatusInfoRepository;
 
     @Override
-    public void appointProfessor(ProfessorAppointDto dto) {
-        appointEmployee(dto, "P", "E"); // 교수
-    }
-    @Override
-    public void appointInstructor(CounselorHireDto dto) {
-        appointEmployee(dto, "K", "E"); // 강사
-    }
-    @Override
-    public void appointStaff(StaffAppointDto dto) {
-        appointEmployee(dto, "S", "E"); // 센터직원 등
+    public EmployeeDto appointProfessor(ProfessorAppointDto dto) {
+        return appointEmployee(dto, "P", "E");
     }
 
     @Override
-    public void appointEmployee(EmployeeAppointDto dto, String rolePrefix, String userType) {
-        SchoolSubject schoolSubject = findSchoolSubjectById(dto.getSchoolSubjectNo());      // 부서(학과) 코드 조회
-        String employeeNo = generateEmployeeNo(rolePrefix, schoolSubject.getSubjectCode()); // 교직원 번호 생성
-        LoginInfo loginInfo = createLoginInfo(employeeNo, userType, dto.getBirthDate());    // 로그인 정보 생성
-        BankAccount bankAccount = findBankAccountByIdNullable(dto.getBankAccountNo());      // 계좌 정보 조회 (null 허용)
-        CommonCode gender = findGenderByCode(dto.getGender());                              // 성별 코드 조회
-        EmployeeStatusInfo employeeStatus = findStatusByCode(dto.getEmployeeStatus());      // 재적상태 코드 조회
+    public EmployeeDto appointInstructor(CounselorHireDto dto) {
+        return appointEmployee(dto, "K", "E");
+    }
+
+    @Override
+    public EmployeeDto appointStaff(StaffAppointDto dto) {
+        return appointEmployee(dto, "S", "E");
+    }
+
+    private EmployeeDto appointEmployee(EmployeeAppointDto dto, String rolePrefix, String userType) {
+        SchoolSubject schoolSubject = findSchoolSubjectById(dto.getSchoolSubjectNo());
+        String employeeNo = generateEmployeeNo(rolePrefix, schoolSubject.getSubjectCode());
+        LoginInfo loginInfo = createLoginInfo(employeeNo, userType, dto.getBirthDate());
+        BankAccount bankAccount = findBankAccountByIdNullable(dto.getBankAccountNo());
+        CommonCode gender = findGenderByCode(dto.getGender());
+        EmployeeStatusInfo employeeStatus = findStatusByCode(dto.getEmployeeStatus());
 
         Employee employee = Employee.create(
-                employeeNo,
-                loginInfo,
-                schoolSubject,
-                bankAccount,
-                dto.getName(),
-                gender,
-                dto.getBirthDate(),
-                dto.getEmail(),
-                dto.getTel(),
-                employeeStatus
+                employeeNo, loginInfo, schoolSubject, bankAccount, dto.getName(),
+                gender, dto.getBirthDate(), dto.getEmail(), dto.getTel(), employeeStatus
         );
-        employeeRepository.save(employee);
+        Employee savedEmployee = employeeRepository.save(employee);
+        return toEmployeeDto(savedEmployee);
     }
 
-
     @Override
-    public void adminUpdateEmployeeInfo(String employeeNo, AdminUpdateEmployeeDto dto) {
+    public EmployeeDto adminUpdateEmployeeInfo(String employeeNo, AdminUpdateEmployeeDto dto) {
         Employee employee = findEmployeeById(employeeNo);
         SchoolSubject schoolSubject = findSchoolSubjectById(dto.getSchoolSubjectNo());
         CommonCode gender = findGenderByCode(dto.getGender());
         EmployeeStatusInfo employeeStatus = findStatusByCode(dto.getEmpStatus());
         employee.adminUpdate(dto, schoolSubject, gender, employeeStatus);
+        return toEmployeeDto(employee);
     }
 
     @Override
-    public void updateMyInfo(String employeeNo, EmployeeUpdateMyInfoDto dto) {
+    public EmployeeDto updateMyInfo(String employeeNo, EmployeeUpdateMyInfoDto dto) {
         Employee employee = findEmployeeById(employeeNo);
         BankAccount bankAccount = findBankAccountByIdNullable(dto.getBankAccountNo());
         employee.updateMyInfo(dto, bankAccount);
-    }
-    
-    // TODO : dto 변환 메서드 구현할것
-    @Override
-    public EmployeeSearchDto getEmployee(String employeeNo) {
-        Employee employee = findEmployeeById(employeeNo);
-        return null;
+        return toEmployeeDto(employee);
     }
 
     @Override
-    public List<EmployeeDto> getEmployeeList(EmployeeSearchDto employeeSearchDto) {
-        List<Employee> employees = employeeRepository.search(employeeSearchDto);
-        return employees.stream().map(this::toEmployeeDto).collect(Collectors.toList());
+    public EmployeeDto changeStatus(String employeeNo, String statusCode) {
+        Employee employee = findEmployeeById(employeeNo);
+        EmployeeStatusInfo newStatus = findStatusByCode(statusCode);
+        employee.changeStatus(newStatus);
+        return toEmployeeDto(employee);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public EmployeeDto getEmployee(String employeeNo) {
+        Employee employee = findEmployeeById(employeeNo);
+        return toEmployeeDto(employee);
     }
 
     @Override
     public void resignEmployee(String employeeNo) {
-
-        // 교직원 조회
         Employee employee = findEmployeeById(employeeNo);
-
-        // 퇴사상태코드 설정 10 재직 20 휴직 30 퇴사
-        EmployeeStatusInfo resignStatus = findStatusByCode("30");
-
-        // employee 상태 변경
+        EmployeeStatusInfo resignStatus = findStatusByCode("30"); // 퇴사 상태 코드
         employee.changeStatus(resignStatus);
 
         LoginInfo loginInfo = employee.getLoginInfo();
         if (loginInfo != null) {
-            // 로그인 정보 삭제
             loginInfoService.deleteLoginInfo(loginInfo.getLoginId());
         }
-
+        // void 반환이므로 return 문 제거
     }
 
+    @Override
+    @Transactional(readOnly = true)
     public Page<EmployeeDto> getEmployeePage(EmployeeSearchDto employeeSearchDto, Pageable pageable) {
         Page<Employee> employeePage = employeeRepository.searchPage(employeeSearchDto, pageable);
         return employeePage.map(this::toEmployeeDto);
     }
 
-    // entity 조회 메서드들
+    // Entity 조회 메소드들
 
+    // 교번/사번으로 직원 조회
     private Employee findEmployeeById(String employeeNo) {
         return employeeRepository.findById(employeeNo)
                 .orElseThrow(() -> new EntityNotFoundException("직원 정보 없음: " + employeeNo));
     }
 
+    // 학과 코드로 학과 조회
     private SchoolSubject findSchoolSubjectById(String subjectNo) {
         return schoolSubjectRepository.findById(subjectNo)
                 .orElseThrow(() -> new EntityNotFoundException("부서(학과) 코드 없음: " + subjectNo));
     }
 
+    // 계좌 번호로 은행 계좌 조회
     private BankAccount findBankAccountById(String accountNo) {
         return bankAccountRepository.findById(accountNo)
                 .orElseThrow(() -> new EntityNotFoundException("계좌 정보가 없습니다: " + accountNo));
     }
 
-    // 계좌번호는 null/blank 허용
+    // 계좌 번호가 null이거나 비어있을 경우 null 반환
     private BankAccount findBankAccountByIdNullable(String accountNo) {
         if (accountNo == null || accountNo.isBlank()) {
             return null;
@@ -155,17 +150,20 @@ public class EmployeeServiceImpl implements EmployeeService {
         return findBankAccountById(accountNo);
     }
 
+    // 성별 코드로 CommonCode 조회
     private CommonCode findGenderByCode(String genderCode) {
-        return commonCodeRepository.findByCdAndCdSe(genderCode, "CO0001")
+        return commonCodeRepository.findById_CodeAndId_CodeGroup(genderCode, "CO0001")
                 .orElseThrow(() -> new EntityNotFoundException("유효하지 않은 성별 코드: " + genderCode));
     }
 
+    // 직원 상태 코드로 상태 정보 조회
     private EmployeeStatusInfo findStatusByCode(String statusCode) {
         return employeeStatusInfoRepository
-                .findByEmployeeStatusCodeAndEmployeeStatusCodeSe(statusCode, "AM0120")
+                .findByIdEmployeeStatusCodeAndIdEmployeeStatusCodeSe(statusCode, "AM0120")
                 .orElseThrow(() -> new EntityNotFoundException("상태 없음: " + statusCode));
     }
 
+    // 로그인 정보 생성
     private LoginInfo createLoginInfo(String loginId, String userType, LocalDate birthDate) {
         CreateLoginDto createLoginDto = CreateLoginDto.builder()
                 .loginId(loginId)
@@ -175,33 +173,50 @@ public class EmployeeServiceImpl implements EmployeeService {
         return loginInfoService.createLoginInfo(createLoginDto);
     }
 
-    // 교직원 번호 생성 로직
+    // 교번/사번 생성 로직
     private String generateEmployeeNo(String role, String deptCode) {
-        // role: "P" (교수), "H" (직원), "S" (센터직원)
         String prefix = role;
-
-        // 부서 코드 3자리로 변환
         String dept = String.format("%03d", Integer.parseInt(deptCode));
-
-        // 최근 시퀀스 조회
         Optional<String> lastEmpNo = employeeRepository.findTopByEmpNoStartingWithOrderByEmpNoDesc(prefix + dept);
-
-        // 시퀀스 번호 생성
         int seq = 1;
         if (lastEmpNo.isPresent()) {
             String lastSeq = lastEmpNo.get().substring(lastEmpNo.get().length() - 3);
             seq = Integer.parseInt(lastSeq) + 1;
         }
-
-        // 시퀀스 번호를 3자리 문자열로 변환
         String seqStr = String.format("%03d", seq);
-
-        // 최종 교직원 번호 생성
         return prefix + dept + seqStr;
     }
 
-    // Employee 엔티티를 EmployeeSearchDto로 변환
+    // Employee 객체를 EmployeeDto로 변환
     private EmployeeDto toEmployeeDto(Employee employee) {
-        return null;
+        if (employee == null) {
+            return null;
+        }
+        String schoolSubjectNo = (employee.getSchoolSubject() != null)
+                ? employee.getSchoolSubject().getSubjectCode() : null;
+        String employeeStatusCode = (employee.getEmployeeStatus() != null)
+                ? employee.getEmployeeStatus().getId().getEmployeeStatusCode() : null;
+        String genderCode = (employee.getGender() != null)
+                ? employee.getGender().getId().getCode() : null;
+        String bankAccountNo = null;
+        String bankName = null;
+        if (employee.getBankAccount() != null) {
+            bankAccountNo = employee.getBankAccount().getAccountNo();
+            if (employee.getBankAccount().getBankCode() != null) {
+                bankName = employee.getBankAccount().getBankCode().getCodeName();
+            }
+        }
+        return EmployeeDto.builder()
+                .empNo(employee.getEmpNo())
+                .name(employee.getName())
+                .email(employee.getEmail())
+                .tel(employee.getTel())
+                .birthDate(employee.getBirthDate())
+                .schoolSubjectNo(schoolSubjectNo)
+                .employeeStatusCode(employeeStatusCode)
+                .genderCode(genderCode)
+                .bankAccountNo(bankAccountNo)
+                .bankName(bankName)
+                .build();
     }
 }

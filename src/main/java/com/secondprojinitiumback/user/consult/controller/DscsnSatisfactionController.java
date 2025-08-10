@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.*;
 public class DscsnSatisfactionController {
     private final DscsnSatisfactionService dscsnSatisfactionService;
 
+    //--- 상담 만족도 등록
     @PostMapping("/api/consult/satisfaction")
-    public ResponseEntity<?> newSatisfaction(@ModelAttribute DscsnSatisfactionDto dscsnSatisfactionDto) {
+    public ResponseEntity<?> newSatisfaction(@RequestBody DscsnSatisfactionDto dscsnSatisfactionDto) {
         try{
             dscsnSatisfactionService.saveDscsnSatisfaction(dscsnSatisfactionDto);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok("만족도 등록 완료");
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("만족도 설문 등록 중 에러 발생");
         }

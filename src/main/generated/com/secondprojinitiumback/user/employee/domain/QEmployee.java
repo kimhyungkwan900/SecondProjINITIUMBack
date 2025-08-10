@@ -22,23 +22,9 @@ public class QEmployee extends EntityPathBase<Employee> {
 
     public static final QEmployee employee = new QEmployee("employee");
 
-    public final com.secondprojinitiumback.common.domain.base.QBaseEntity _super = new com.secondprojinitiumback.common.domain.base.QBaseEntity(this);
-
     public final com.secondprojinitiumback.common.bank.domain.QBankAccount bankAccount;
 
     public final DatePath<java.time.LocalDate> birthDate = createDate("birthDate", java.time.LocalDate.class);
-
-    //inherited
-    public final StringPath createdBy = _super.createdBy;
-
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
-
-    //inherited
-    public final StringPath createdIp = _super.createdIp;
-
-    //inherited
-    public final NumberPath<Long> createdProgramId = _super.createdProgramId;
 
     public final StringPath email = createString("email");
 
@@ -48,19 +34,7 @@ public class QEmployee extends EntityPathBase<Employee> {
 
     public final com.secondprojinitiumback.common.domain.QCommonCode gender;
 
-    public final com.secondprojinitiumback.common.login.domain.QLoginInfo loginInfo;
-
-    //inherited
-    public final StringPath modifiedBy = _super.modifiedBy;
-
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
-
-    //inherited
-    public final StringPath modifiedIp = _super.modifiedIp;
-
-    //inherited
-    public final NumberPath<Long> modifiedProgramId = _super.modifiedProgramId;
+    public final com.secondprojinitiumback.common.security.domain.QLoginInfo loginInfo;
 
     public final StringPath name = createString("name");
 
@@ -89,7 +63,7 @@ public class QEmployee extends EntityPathBase<Employee> {
         this.bankAccount = inits.isInitialized("bankAccount") ? new com.secondprojinitiumback.common.bank.domain.QBankAccount(forProperty("bankAccount"), inits.get("bankAccount")) : null;
         this.employeeStatus = inits.isInitialized("employeeStatus") ? new QEmployeeStatusInfo(forProperty("employeeStatus"), inits.get("employeeStatus")) : null;
         this.gender = inits.isInitialized("gender") ? new com.secondprojinitiumback.common.domain.QCommonCode(forProperty("gender"), inits.get("gender")) : null;
-        this.loginInfo = inits.isInitialized("loginInfo") ? new com.secondprojinitiumback.common.login.domain.QLoginInfo(forProperty("loginInfo")) : null;
+        this.loginInfo = inits.isInitialized("loginInfo") ? new com.secondprojinitiumback.common.security.domain.QLoginInfo(forProperty("loginInfo")) : null;
         this.schoolSubject = inits.isInitialized("schoolSubject") ? new com.secondprojinitiumback.common.domain.QSchoolSubject(forProperty("schoolSubject"), inits.get("schoolSubject")) : null;
     }
 

@@ -3,6 +3,9 @@ package com.secondprojinitiumback.admin.coreCompetency.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -39,5 +42,13 @@ public class CoreCompetencyQuestion {
     @OneToOne
     @JoinColumn(name = "INDCTR_ID", nullable = false)
     private BehaviorIndicator behaviorIndicator; // 행동 지표 ID (외래 키, insertable=false, updatable=false)
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "level_type")
+    private LevelTypeEnum levelType;
+
+    @OneToMany(mappedBy = "question",fetch = FetchType.LAZY)
+    private List<ResponseChoiceOption> responseChoiceOptions = new ArrayList<>();
+
 
 }

@@ -27,12 +27,17 @@ public class DiagnosticTest {
     @Column(name = "DGNSTC_TST_DC")
     private String description;
 
+    // ✅ 소프트 삭제 플래그: 기본 N
+    @Column(name = "DEL_YN", length = 1, nullable = false)
+    @Builder.Default
+    private String delYn = "N";
+
     @Column(name = "USE_YN", length = 1)
     private String useYn;
 
     /**
      * 공통코드 참조 (업무구분: NC)
-     * CD_SE = 업무구분 그룹 (예: "C0002")
+     * CD_SE = 업무구분 그룹 (예: "CO0002")
      * CD = 코드 값 (예: "NC")
      */
     @ManyToOne(fetch = FetchType.LAZY)
@@ -44,7 +49,7 @@ public class DiagnosticTest {
 
     @Column(name = "CATEGORY_GRP")
     @Builder.Default
-    private String categoryGroup = "C0002";  // 업무구분 그룹 코드
+    private String categoryGroup = "CO0002";  // 업무구분 그룹 코드
 
     @Column(name = "CATEGORY_CD")
     @Builder.Default

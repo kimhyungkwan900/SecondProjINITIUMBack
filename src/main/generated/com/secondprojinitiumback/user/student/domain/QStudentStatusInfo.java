@@ -22,39 +22,9 @@ public class QStudentStatusInfo extends EntityPathBase<StudentStatusInfo> {
 
     public static final QStudentStatusInfo studentStatusInfo = new QStudentStatusInfo("studentStatusInfo");
 
-    public final com.secondprojinitiumback.common.domain.base.QBaseEntity _super = new com.secondprojinitiumback.common.domain.base.QBaseEntity(this);
-
-    //inherited
-    public final StringPath createdBy = _super.createdBy;
-
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
-
-    //inherited
-    public final StringPath createdIp = _super.createdIp;
-
-    //inherited
-    public final NumberPath<Long> createdProgramId = _super.createdProgramId;
-
-    //inherited
-    public final StringPath modifiedBy = _super.modifiedBy;
-
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
-
-    //inherited
-    public final StringPath modifiedIp = _super.modifiedIp;
-
-    //inherited
-    public final NumberPath<Long> modifiedProgramId = _super.modifiedProgramId;
-
-    public final StringPath remark = createString("remark");
+    public final QStudentStatusId id;
 
     public final com.secondprojinitiumback.common.domain.QCommonCode statusCode;
-
-    public final StringPath studentStatusCode = createString("studentStatusCode");
-
-    public final StringPath studentStatusCodeSe = createString("studentStatusCodeSe");
 
     public final StringPath studentStatusName = createString("studentStatusName");
 
@@ -76,6 +46,7 @@ public class QStudentStatusInfo extends EntityPathBase<StudentStatusInfo> {
 
     public QStudentStatusInfo(Class<? extends StudentStatusInfo> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.id = inits.isInitialized("id") ? new QStudentStatusId(forProperty("id")) : null;
         this.statusCode = inits.isInitialized("statusCode") ? new com.secondprojinitiumback.common.domain.QCommonCode(forProperty("statusCode"), inits.get("statusCode")) : null;
     }
 

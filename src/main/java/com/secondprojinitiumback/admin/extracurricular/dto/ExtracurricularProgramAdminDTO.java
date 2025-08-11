@@ -41,4 +41,6 @@ public class ExtracurricularProgramAdminDTO {
     private String subjectName;
 
     private List<ExtracurricularApplyDTO> applyList;
+
+    private List<ExtracurricularScheduleDTO> scheduleList;
 }

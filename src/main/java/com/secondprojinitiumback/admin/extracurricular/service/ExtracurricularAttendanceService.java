@@ -15,9 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -69,23 +67,64 @@ public class ExtracurricularAttendanceService {
     }
     // 특정 비교과 프로그램 Id로 출석 조회
     public List<ExtracurricularAttendanceDTO> getStudentsForAttendance(Long eduShdlId) {
-        // 일정 조회
         ExtracurricularSchedule schedule = extracurricularScheduleRepository
                 .findById(eduShdlId)
                 .orElseThrow(() -> new IllegalArgumentException("일정이 존재하지 않습니다."));
 
         Long eduMngId = schedule.getExtracurricularProgram().getEduMngId();
-        // 해당 프로그램에 승인 상태로 신청한 학생 리스트 조회
+
+        // 승인된 신청 학생 리스트
         List<ExtracurricularApply> approvedApplications =
-                extracurricularApplyRepository.findExtracurricularAppliesByExtracurricularProgram_EduMngIdAndAprySttsNm(eduMngId, AprySttsNm.ACCEPT);
-        // 학생 정보 리스트 추출
-        return approvedApplications.stream()
-                .map(apply -> {
-                    ExtracurricularAttendanceDTO dto = new ExtracurricularAttendanceDTO();
-                    dto.setStudent(apply.getStudent());
-                    // 필요 시 추가 매핑
-                    return dto;
-                })
-                .collect(Collectors.toList());
+                extracurricularApplyRepository.findExtracurricularAppliesByExtracurricularProgram_EduMngIdAndAprySttsNm(
+                        eduMngId, AprySttsNm.ACCEPT
+                );
+
+        // 출결 데이터 리스트 (출결이 등록된 학생)
+        List<ExtracurricularAttendance> attendanceList =
+                extracurricularAttendanceRepository.findByExtracurricularSchedule(schedule);
+
+        // 승인 학생 맵 (studentNo -> Student)
+        Map<String, Student> approvedStudentMap = approvedApplications.stream()
+                .map(ExtracurricularApply::getStudent)
+                .collect(Collectors.toMap(Student::getStudentNo, s -> s));
+
+        // 출결 학생 맵 (studentNo -> ExtracurricularAttendance)
+        Map<String, ExtracurricularAttendance> attendanceMap = attendanceList.stream()
+                .collect(Collectors.toMap(
+                        att -> att.getStudent().getStudentNo(),
+                        att -> att
+                ));
+
+        // 두 집합 학생 번호 합집합
+        Set<String> allStudentNos = new HashSet<>();
+        allStudentNos.addAll(approvedStudentMap.keySet());
+        allStudentNos.addAll(attendanceMap.keySet());
+
+        List<ExtracurricularAttendanceDTO> dtoList = new ArrayList<>();
+
+        for (String studentNo : allStudentNos) {
+            Student student = approvedStudentMap.get(studentNo);
+            ExtracurricularAttendance attendance = attendanceMap.get(studentNo);
+
+            // 출결 데이터가 없으면 상태는 'U' (미처리)
+            String status = (attendance != null) ? attendance.getAtndcYn() : "U";
+            Long atndcId = (attendance != null) ? attendance.getAtndcId() : null;
+
+            // 학생 객체가 없으면(출결 테이블에만 있음) 출석 학생 이름을 attendance -> student에서 가져오거나 "알 수 없음" 처리
+            String studentName = (student != null) ? student.getName() :
+                    (attendance != null && attendance.getStudent() != null) ? attendance.getStudent().getName() : "알 수 없음";
+
+            dtoList.add(ExtracurricularAttendanceDTO.builder()
+                    .atndcId(atndcId)
+                    .studentNo(studentNo)
+                    .studentName(studentName)
+                    .status(status)
+                    .build());
+        }
+
+        // 필요시 정렬도 가능 (예: 학생 번호 기준)
+        dtoList.sort(Comparator.comparing(ExtracurricularAttendanceDTO::getStudentNo));
+
+        return dtoList;
     }
 }

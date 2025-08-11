@@ -1,0 +1,15 @@
+INSERT INTO EXTRACURRICULAR_IMAGE (EDU_MNG_ID, IMG_FILE_PATH_NM, IMG_TYPE, IMG_FILE_SZ) VALUES
+                                                                                            (1, '/images/1.png', 'PNG', 24000),
+                                                                                            (2, '/images/2.png', 'PNG', 23500),
+                                                                                            (3, '/images/3.png', 'PNG', 23850),
+                                                                                            (4, '/images/4.png', 'PNG', 24200),
+                                                                                            (5, '/images/5.png', 'PNG', 23700),
+                                                                                            (6, '/images/6.png', 'PNG', 23950),
+                                                                                            (7, '/images/7.png', 'PNG', 24100),
+                                                                                            (8, '/images/8.png', 'PNG', 24100),
+                                                                                            (9, '/images/9.png', 'PNG', 24100),
+                                                                                            (10, '/images/10.png', 'PNG', 24100),
+                                                                                            (11, '/images/11.png', 'PNG', 24100),
+                                                                                            (12, '/images/12.png', 'PNG', 24100),
+                                                                                            (13, '/images/13.png', 'PNG', 24100),
+                                                                                            (14, '/images/14.png', 'PNG', 24100);

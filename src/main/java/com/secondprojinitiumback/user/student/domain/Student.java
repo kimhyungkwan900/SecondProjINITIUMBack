@@ -192,16 +192,21 @@ public class Student {
                             Employee advisor,
                             BankAccount bankAccount,
                             StudentStatusInfo studentStatus,
-                            University school) {
+                            University school,
+                            LocalDate birthDate,
+                            LocalDate admissionDate) {
+        if (dto.getName() != null) this.name = dto.getName();
         if (dto.getEmail() != null) this.email = dto.getEmail();
-        if (dto.getClubCode() != null) this.clubCode = dto.getClubCode();
+        if (birthDate != null) this.birthDate = birthDate;
+        if (admissionDate != null) this.admissionDate = admissionDate;
         if (dto.getGrade() != null) this.grade = dto.getGrade();
+        if (dto.getClubCode() != null) this.clubCode = dto.getClubCode();
+        if (school != null) this.school = school;
         if (schoolSubject != null) this.schoolSubject = schoolSubject;
-        if (gender != null) this.gender = gender;
         if (advisor != null) this.advisor = advisor;
         if (bankAccount != null) this.bankAccount = bankAccount;
         if (studentStatus != null) this.studentStatus = studentStatus;
-        if (school != null) this.school = school;
+        if (gender != null) this.gender = gender;
     }
 
 }

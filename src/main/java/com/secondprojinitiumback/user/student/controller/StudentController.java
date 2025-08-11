@@ -8,9 +8,12 @@ import com.secondprojinitiumback.user.student.dto.StudentDto;
 import com.secondprojinitiumback.user.student.dto.StudentSearchDto;
 import com.secondprojinitiumback.user.student.dto.UpdateStudentDto;
 import com.secondprojinitiumback.user.student.service.serviceinterface.StudentService;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -55,7 +58,9 @@ public class StudentController {
 
     // 학생 정보 수정 (관리자)
     @PutMapping("/{studentNo}/admin-info")
-    public ResponseEntity<StudentDto> adminUpdateStudentInfo(@PathVariable String studentNo, @RequestBody AdminUpdateStudentDto dto) {
+    public ResponseEntity<StudentDto> adminUpdateStudentInfo(
+            @PathVariable String studentNo, 
+            @Valid @RequestBody AdminUpdateStudentDto dto) {
         // 관리자용 학생 정보 수정 처리
         StudentDto updatedStudent = studentService.adminUpdateStudentInfo(studentNo, dto);
 
@@ -63,26 +68,40 @@ public class StudentController {
         return ResponseEntity.ok(updatedStudent);
     }
 
-    // 학생 검색 및 페이징 처리
+    // 학생 목록 검색 (페이징)
     @GetMapping
     public ResponseEntity<Page<StudentDto>> searchStudents(
-            @ModelAttribute StudentSearchDto searchDto,
-            Pageable pageable) {
-        // 학생 검색 및 페이징 처리
-        Page<StudentDto> studentPage = studentService.getStudentPage(searchDto, pageable);
-
-        // 검색 결과를 반환
-        return ResponseEntity.ok(studentPage);
+            @ModelAttribute @Valid StudentSearchDto searchDto,
+            @PageableDefault(size = 20, sort = "studentNo") Pageable pageable) {
+        // DTO 전체 유효성 검증
+        if (!searchDto.isValid()) {
+            throw new IllegalArgumentException(searchDto.getValidationErrorMessage());
+        }
+        try {
+            Page<StudentDto> studentPage = studentService.getStudentPage(searchDto, pageable);
+            return ResponseEntity.ok(studentPage);
+        } catch (Exception e) {
+            throw new RuntimeException("학생 검색 중 오류가 발생했습니다.", e);
+        }
     }
 
-    // 학생 단건 조회
+    // 학생 상세 조회 (학번)
     @GetMapping("/{studentNo}")
-    public ResponseEntity<StudentDto> getStudent(@PathVariable String studentNo) {
-        // 학생 단건 조회
-        StudentDto studentDto = studentService.getStudent(studentNo);
+    public ResponseEntity<StudentDto> getStudent(
+            @PathVariable @NotBlank(message = "학번은 필수입니다") String studentNo) {
+        try {
+            StudentDto studentDto = studentService.getStudent(studentNo);
+            return ResponseEntity.ok(studentDto);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            throw new RuntimeException("학생 조회 중 오류가 발생했습니다.", e);
+        }
+    }
 
-        // 조회된 학생 정보를 반환
-        return ResponseEntity.ok(studentDto);
+    @GetMapping("/search-form")
+    public ResponseEntity<StudentSearchDto> getSearchForm() {
+        return ResponseEntity.ok(new StudentSearchDto());
     }
 
     // 학생 상태 변경 (단일 메서드로 통합)
@@ -96,4 +115,6 @@ public class StudentController {
         // 상태 변경된 학생 정보를 반환
         return ResponseEntity.ok(updatedStudent);
     }
+
+
 }

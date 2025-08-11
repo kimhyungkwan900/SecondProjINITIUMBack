@@ -34,6 +34,8 @@ public class QCoreCompetencyQuestion extends EntityPathBase<CoreCompetencyQuesti
 
     public final StringPath name = createString("name");
 
+    public final NumberPath<Integer> optionCount = createNumber("optionCount", Integer.class);
+
     public final NumberPath<Integer> questionNo = createNumber("questionNo", Integer.class);
 
     public final ListPath<ResponseChoiceOption, QResponseChoiceOption> responseChoiceOptions = this.<ResponseChoiceOption, QResponseChoiceOption>createList("responseChoiceOptions", ResponseChoiceOption.class, QResponseChoiceOption.class, PathInits.DIRECT2);

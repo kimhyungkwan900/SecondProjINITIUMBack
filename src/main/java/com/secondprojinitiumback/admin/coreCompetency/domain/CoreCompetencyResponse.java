@@ -38,10 +38,10 @@ public class CoreCompetencyResponse {
     @Column(name = "CMPLET_DT")
     private String completeDate; // 응답 완료 일자
 
-    @Column(name = "RSPNS_RSULT_SCR")
-    private Integer resultScore; // 응답 결과 점수
+    @Column(name = "RSPNS_RSULT_LBL")
+    private String choiceLabel; // 응답 라벨
 
-    @Column(name = "SLCT_CNT")
-    private Integer selectCount; // 선택된 보기 수
+    @Column(name = "SLCT_SCR")
+    private Integer selectCount; // 선택된 보기 점수
 }
 

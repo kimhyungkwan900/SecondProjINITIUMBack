@@ -36,7 +36,7 @@ public class UserCoreCompetencySubmitService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 학생이 존재하지 않습니다."));
 
         // 2. 응답 항목 순회 및 저장
-        for (UserCoreCompetencySubmitDto.ResponseItem responseDto : dto.getResponseItemList()) {
+        for (UserCoreCompetencySubmitDto.ResponseItem responseDto : dto.getResponse()) {
             // 문항 조회
             CoreCompetencyQuestion question = coreCompetencyQuestionRepository.findById(responseDto.getQuestionId())
                     .orElseThrow(() -> new IllegalArgumentException("해당 문항이 존재하지 않습니다."));
@@ -52,8 +52,8 @@ public class UserCoreCompetencySubmitService {
                     .student(student)
                     .question(question)
                     .selectedOption(responseChoiceOption)
-                    .resultScore(responseDto.getScore())
-                    .selectCount(1)
+                    .choiceLabel(responseDto.getLabel())
+                    .selectCount(responseDto.getScore())
                     .completeDate(LocalDate.now().toString())
                     .build();
 

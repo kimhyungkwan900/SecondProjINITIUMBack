@@ -11,6 +11,7 @@ import com.secondprojinitiumback.admin.coreCompetency.repository.ResponseChoiceO
 import com.secondprojinitiumback.user.coreCompetency.dto.UserResponseBulkRequestDto;
 import com.secondprojinitiumback.user.coreCompetency.dto.UserResponseRequestDto;
 import com.secondprojinitiumback.user.student.domain.Student;
+import com.secondprojinitiumback.user.student.repository.StudentRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class AdminCoreCompetencyResponseService {
     private final CoreCompetencyQuestionRepository coreCompetencyQuestionRepository;
     private final ResponseChoiceOptionRepository responseChoiceOptionRepository;
     private final CoreCompetencyResponseRepository coreCompetencyResponseRepository;
+    private final StudentRepository studentRepository;
 
     /**
      * 학생이 문항에 응답한 결과를 저장함
@@ -39,6 +41,10 @@ public class AdminCoreCompetencyResponseService {
                 .orElseThrow(() -> new IllegalArgumentException("평가 없음"));
 
         for (UserResponseRequestDto responseDto : dto.getResponses()) {
+
+           student = studentRepository.findByStudentNo(student.getStudentNo())
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 학생입니다."));
+
             CoreCompetencyQuestion question = coreCompetencyQuestionRepository.findById(responseDto.getQuestionId())
                     .orElseThrow(() -> new IllegalArgumentException("문항 없음"));
 
@@ -51,9 +57,10 @@ public class AdminCoreCompetencyResponseService {
                     .question(question)
                     .assessment(assessment)
                     .selectedOption(selectedOption)
-                    .resultScore(selectedOption.getScore())
+                    .selectCount(selectedOption.getScore())
                     .completeDate(LocalDate.now().toString())
-                    .selectCount(1)
+                    .choiceLabel(responseDto.getLabel())
+                    .selectCount(responseDto.getScore())
                     .build();
 
             coreCompetencyResponseRepository.save(response);

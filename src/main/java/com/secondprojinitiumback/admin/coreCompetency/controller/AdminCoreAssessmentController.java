@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.admin.coreCompetency.controller;
 
+import com.secondprojinitiumback.admin.coreCompetency.dto.AssessmentListResponseDto;
 import com.secondprojinitiumback.admin.coreCompetency.dto.CoreCompetencyAssessmentDto;
 import com.secondprojinitiumback.admin.coreCompetency.domain.CoreCompetencyAssessment;
 import com.secondprojinitiumback.admin.coreCompetency.service.AdminCoreAssessmentService;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 public class AdminCoreAssessmentController {
 
     private final AdminCoreAssessmentService diagnosisService;
+
 
     /**
      * 새로운 핵심역량 진단 문항을 생성합니다.
@@ -73,5 +75,21 @@ public class AdminCoreAssessmentController {
                 .map(CoreCompetencyAssessmentDto::fromEntity)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtoList);
+    }
+
+    /**
+     * 사용자가 응시할 수 있는 평가 목록 조회 API
+     * (응시 완료 여부 포함)
+     */
+    @GetMapping
+    public ResponseEntity<List<AssessmentListResponseDto>> getAssessmentList() {
+        // 1. Spring Security의 SecurityContextHolder 등에서 현재 로그인한 유저 정보를 가져옵니다.
+        //    (예시: Principal 객체나 @AuthenticationPrincipal 어노테이션 사용)
+        String currentStudentNo = "2025108001"; // <<-- 실제로는 SecurityContext에서 가져와야 함
+
+        // 2. 서비스 메소드에 학생 정보를 전달합니다.
+        List<AssessmentListResponseDto> assessments = diagnosisService.findAssessmentsForStudent(currentStudentNo);
+
+        return ResponseEntity.ok(assessments);
     }
 }

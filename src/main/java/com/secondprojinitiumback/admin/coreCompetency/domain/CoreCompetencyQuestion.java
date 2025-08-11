@@ -39,12 +39,16 @@ public class CoreCompetencyQuestion {
     @Column(name = "ANSR_ALOW_CNT")
     private Integer answerAllowCount; // 허용 응답 개수 (객관식 보기 중 선택 가능 개수)
 
+    @Column(name = "OPTION_COUNT")
+    private Integer optionCount; // 이 문항의 총 선택지 개수 (예: 5)
+
     //옵션 교체 저장시 깔끔하게 떨어지도록 추가
     @OneToMany(mappedBy = "question",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.LAZY)
     @OrderBy("optionNo ASC")
+    @Builder.Default
     private List<ResponseChoiceOption> responseChoiceOptions = new ArrayList<>();
 
     @ManyToOne

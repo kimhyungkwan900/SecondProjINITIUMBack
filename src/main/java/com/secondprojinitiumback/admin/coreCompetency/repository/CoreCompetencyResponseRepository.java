@@ -14,4 +14,6 @@ public interface CoreCompetencyResponseRepository extends JpaRepository<CoreComp
     List<CoreCompetencyResponse> findByStudentAndAssessment(Student student, CoreCompetencyAssessment assessment);
 
     List<CoreCompetencyResponse> findByAssessmentId(Long assessmentId);
+
+    boolean existsByStudentAndAssessment(Student student, CoreCompetencyAssessment assessment);
 }

@@ -13,6 +13,7 @@ public class ResponseChoiceOptionDto {
     private Long optionId;           // 선택지 ID
     private String label;            // 보기 내용
     private Integer score;           // 배점
+    private Integer optionNo;        // 보기 번호 (1부터 시작)
     private String answerType; // 읽기전용: 항상 "SINGLE"
 
     public static ResponseChoiceOptionDto fromEntity(ResponseChoiceOption option) {
@@ -20,6 +21,7 @@ public class ResponseChoiceOptionDto {
                 .optionId(option.getId())
                 .label(option.getLabel())
                 .score(option.getScore())
+                .optionNo(option.getOptionNo())
                 .answerType(option.getAnswerType())
                 .build();
     }

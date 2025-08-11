@@ -41,7 +41,7 @@ public class AdminStudentCompetencyScoreService {
 
             // 하위역량 기준으로 점수를 그룹핑
             scoreMap.computeIfAbsent(subCategory, k -> new ArrayList<>())
-                    .add(response.getResultScore());
+                    .add(response.getSelectCount());
         }
 
         // 3. 기존 점수 삭제 (재계산 대비)

@@ -17,115 +17,128 @@ public class AdminCoreCompetencyQuestionService {
     private final CoreCompetencyQuestionRepository coreCompetencyQuestionRepository;
     private final CoreCompetencyAssessmentRepository coreCompetencyAssessmentRepository;
     private final SubCompetencyCategoryRepository subCompetencyCategoryRepository; // 하위역량 조회용
+    private final ResponseChoiceOptionRepository responseChoiceOptionRepository; // 선택지 관리용
 
     /**
      * [문항 생성]
-     * - 평가(assessmentId)와 하위역량(subCategoryId)을 지정하여 문항을 생성
-     * - answerAllowCount(선택지 개수)가 있으면 해당 개수만큼 옵션(선택지) 자동 생성
-     * - 초기 개수는 0도 허용 (추후 드롭다운 변경으로 옵션 생성 가능)
+     * - 평가와 하위 역량에 종속된 문항을 생성합니다.
+     * - 생성 시점에는 선택지가 없으며, 옵션 개수 설정 API를 통해 추가됩니다.
      */
     @Transactional
     public CoreCompetencyQuestion createCoreCompetencyQuestion(Long assessmentId, CoreCompetencyQuestionCreateRequestDto dto) {
+
         CoreCompetencyAssessment assessment = coreCompetencyAssessmentRepository.findById(assessmentId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 핵심 역량 진단입니다."));
-        if (dto.getSubCategoryId() == null) throw new IllegalArgumentException("하위역량 ID가 필요합니다.");
-        SubCompetencyCategory sub = subCompetencyCategoryRepository.findById(dto.getSubCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 평가입니다."));
+
+        SubCompetencyCategory subCategory = subCompetencyCategoryRepository.findById(dto.getSubCategoryId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 하위역량입니다."));
 
-        CoreCompetencyQuestion q = CoreCompetencyQuestion.builder()
+        CoreCompetencyQuestion question = CoreCompetencyQuestion.builder()
                 .assessment(assessment)
-                .subCompetencyCategory(sub)
+                .subCompetencyCategory(subCategory)
                 .questionNo(dto.getQuestionNo())
                 .name(dto.getQuestionName())
                 .description(dto.getQuestionContent())
                 .displayOrder(dto.getDisplayOrder())
-                .answerAllowCount(1) // 단일 선택 고정
+                .answerAllowCount(1) // 기본값 1
+                .optionCount(0) // 초기 옵션 개수 0
                 .build();
 
-        // 최초 생성 시 옵션은 0개로 두고,
-        // 화면에서 드롭다운 변경(PATCH /option-count)으로 개수만큼 재생성하는 흐름.
-        return coreCompetencyQuestionRepository.save(q);
+        return coreCompetencyQuestionRepository.save(question);
+
     }
 
 
     /**
      * [문항 수정]
-     * - 기본 정보(번호, 제목, 설명, 순서, 하위역량) 수정
-     * - answerAllowCount(선택지 개수)는 수정 불가 (드롭다운 API에서만 변경 가능)
-     * - 옵션은 추가/삭제 불가, 라벨·점수만 수정 가능
+     * - 문항의 기본 정보와 하위 역량을 수정합니다.
+     * - 기존 선택지를 모두 삭제하고 요청받은 새 선택지로 교체하여 개수 변경에 유연하게 대응합니다.
      */
+
     @Transactional
     public CoreCompetencyQuestion updateCoreCompetencyQuestion(Long questionId, CoreCompetencyQuestionCreateRequestDto dto) {
-        CoreCompetencyQuestion q = coreCompetencyQuestionRepository.findById(questionId)
+        CoreCompetencyQuestion question = coreCompetencyQuestionRepository.findById(questionId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 문항입니다."));
 
-        q.setQuestionNo(dto.getQuestionNo());
-        q.setName(dto.getQuestionName());
-        q.setDescription(dto.getQuestionContent());
-        q.setDisplayOrder(dto.getDisplayOrder());
+        // 기본 정보 수정
+        question.setName(dto.getQuestionName());
+        question.setDescription(dto.getQuestionContent());
+        question.setDisplayOrder(dto.getDisplayOrder());
+        question.setOptionCount(dto.getOptionCount());
 
-        // 단일 고정 규칙 준수
-        if (dto.getSelectAllowCount() != null && dto.getSelectAllowCount() != 1) {
-            throw new IllegalArgumentException("선택가능횟수는 1(단일)만 허용됩니다.");
+        if (dto.getSelectAllowCount() != null) {
+            question.setAnswerAllowCount(dto.getSelectAllowCount());
         }
 
+        // 하위역량 변경
         if (dto.getSubCategoryId() != null) {
-            SubCompetencyCategory sub = subCompetencyCategoryRepository.findById(dto.getSubCategoryId())
+            SubCompetencyCategory subCategory = subCompetencyCategoryRepository.findById(dto.getSubCategoryId())
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 하위역량입니다."));
-            q.setSubCompetencyCategory(sub);
+            question.setSubCompetencyCategory(subCategory);
         }
 
-        // 라벨/점수만 수정
+        // --- 선택지 수정 로직 ---
+
+        // 2. 이 문항에 연결된 기존 선택지들을 모두 삭제합니다.
+        responseChoiceOptionRepository.deleteByQuestion(question);
+
+        // 3. DTO에 담겨온 새로운 선택지 정보로 새 ResponseChoiceOption 객체들을 만들어 저장합니다.
         if (dto.getOptions() != null && !dto.getOptions().isEmpty()) {
-            updateOptionLabelsAndScores(q, dto);
+            List<ResponseChoiceOption> newOptions = dto.getOptions().stream()
+                    .map(optionDto -> ResponseChoiceOption.builder() // <<< 실제 빌더 사용
+                            .question(question)
+                            .optionNo(optionDto.getOptionNo())
+                            .label(optionDto.getLabel())
+                            .score(optionDto.getScore())
+                             .answerType("SINGLE") // 기본값이 있다면 빌더에서 생략 가능
+                            .build())
+                    .collect(Collectors.toList());
+
+            responseChoiceOptionRepository.saveAll(newOptions);
         }
-        return coreCompetencyQuestionRepository.save(q);
+
+        return question;
     }
 
-
     /**
-     * [드롭다운 변경 시]
-     * - 특정 문항 1개의 옵션만 전부 삭제 후, 지정된 개수(newCount)로 재생성
-     * - answerAllowCount 값도 갱신
+     * [선택지 개수 설정]
+     * - 특정 문항의 선택지들을 모두 지우고, 요청된 개수만큼 기본 선택지를 새로 생성
      */
     @Transactional
-    public CoreCompetencyQuestion setAnswerOptionCount(Long questionId, int newCount) {
-        if (newCount < 1) throw new IllegalArgumentException("옵션 개수는 1 이상이어야 합니다.");
-        CoreCompetencyQuestion q = coreCompetencyQuestionRepository.findById(questionId)
+    public CoreCompetencyQuestion setOptionCount(Long questionId, int newCount) {
+        if (newCount < 1) {
+            throw new IllegalArgumentException("옵션 개수는 1 이상이어야 합니다.");
+        }
+
+        CoreCompetencyQuestion question = coreCompetencyQuestionRepository.findById(questionId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 문항입니다."));
 
-        resetOptions(q, newCount); // 기존 전부 제거 → newCount개 생성
-        // q.setAnswerAllowCount(1); // 단일 고정, 굳이 다시 셋 필요 없음
-        return q;
+        question.getResponseChoiceOptions().clear();
+        generateDefaultOptions(question, newCount);
+
+        // 문항의 총 선택지 개수(optionCount) 필드를 업데이트
+        question.setOptionCount(newCount);
+
+        return coreCompetencyQuestionRepository.saveAndFlush(question);
     }
 
 
     /**
      * [문항 삭제]
-     * - 문항 삭제 후, 동일 평가 + 하위역량 묶음의 questionNo, displayOrder 재정렬
+     * - 문항을 삭제하고, 같은 그룹 내 다른 문항들의 번호를 재정렬합니다.
      */
     @Transactional
     public void deleteCoreCompetencyQuestion(Long questionId) {
-        CoreCompetencyQuestion question = coreCompetencyQuestionRepository.findById(questionId)
+        CoreCompetencyQuestion questionToDelete = coreCompetencyQuestionRepository.findById(questionId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 문항입니다."));
 
-        Long assessmentId = (question.getAssessment() != null) ? question.getAssessment().getId() : null;
-        Long subCategoryId = (question.getSubCompetencyCategory() != null) ? question.getSubCompetencyCategory().getId() : null;
+        Long assessmentId = questionToDelete.getAssessment().getId();
+        Long subCategoryId = questionToDelete.getSubCompetencyCategory().getId();
 
-        // 문항 삭제
-        coreCompetencyQuestionRepository.delete(question);
+        coreCompetencyQuestionRepository.delete(questionToDelete);
 
-        // 같은 묶음 문항들의 번호와 순서를 1부터 재부여
-        if (assessmentId != null && subCategoryId != null) {
-            List<CoreCompetencyQuestion> list =
-                    coreCompetencyQuestionRepository.findByAssessment_IdAndSubCompetencyCategory_IdOrderByDisplayOrderAsc(assessmentId, subCategoryId);
-            int i = 1;
-            for (CoreCompetencyQuestion q : list) {
-                q.setQuestionNo(i);
-                q.setDisplayOrder(i);
-                i++;
-            }
-        }
+        // 삭제 후, 같은 평가와 하위역량에 속한 문항들의 번호를 재정렬
+        reorderQuestions(assessmentId, subCategoryId);
     }
 
     /** [문항 단건 조회] */
@@ -141,70 +154,56 @@ public class AdminCoreCompetencyQuestionService {
 
 
     /**
-     * 옵션 전체 제거 후, 지정 개수로 재생성
-     * - orphanRemoval=true 설정 시, remove() 호출로 DB에서 자동 삭제됨
+     * 특정 그룹 내 문항들의 번호와 순서를 1부터 다시 부여합니다.
      */
-    private void resetOptions(CoreCompetencyQuestion q, int count) {
-        if (q.getResponseChoiceOptions() == null) {
-            q.setResponseChoiceOptions(new ArrayList<>());
-        } else {
-            Iterator<ResponseChoiceOption> it = q.getResponseChoiceOptions().iterator();
-            while (it.hasNext()) {
-                ResponseChoiceOption opt = it.next();
-                opt.setQuestion(null);
-                it.remove();
-            }
-        }
-        addOptionsByCount(q, count);
-    }
+    private void reorderQuestions(Long assessmentId, Long subCategoryId) {
+        List<CoreCompetencyQuestion> questionsToReorder =
+                coreCompetencyQuestionRepository.findByAssessment_IdAndSubCompetencyCategory_IdOrderByDisplayOrderAsc(assessmentId, subCategoryId);
 
-    /**
-     * 지정 개수만큼 옵션 생성
-     * - optionNo, 기본 라벨("옵션n"), 점수(no) 부여
-     */
-    private void addOptionsByCount(CoreCompetencyQuestion q, int count) {
-        if (q.getResponseChoiceOptions() == null) q.setResponseChoiceOptions(new ArrayList<>());
-        for (int no = 1; no <= count; no++) {
-            q.getResponseChoiceOptions().add(
-                    ResponseChoiceOption.builder()
-                            .question(q)
-                            .optionNo(no)
-                            .label("옵션" + no)
-                            .score(no) // 기본 점수 정책(필요 시 0으로)
-                            .build()
-            );
+        int order = 1;
+        for (CoreCompetencyQuestion question : questionsToReorder) {
+            question.setQuestionNo(order);
+            question.setDisplayOrder(order);
+            order++;
         }
     }
 
     /**
-     * 옵션 라벨/점수만 수정
-     * - 개수와 ID 동일성 검증
-     * - 추가/삭제 불가
+     * 요청된 개수만큼 기본 선택지를 생성하여 문항에 추가합니다.
      */
-    private void updateOptionLabelsAndScores(CoreCompetencyQuestion q, CoreCompetencyQuestionCreateRequestDto dto) {
-        List<ResponseChoiceOption> existing = q.getResponseChoiceOptions();
-        if (existing == null) throw new IllegalStateException("선택지 정보가 없습니다.");
-        if (dto.getOptions().size() != existing.size()) {
-            throw new IllegalArgumentException("선택지 개수는 변경할 수 없습니다.");
-        }
-
-        Map<Long, ResponseChoiceOption> byId = existing.stream()
-                .collect(Collectors.toMap(ResponseChoiceOption::getId, o -> o));
-
-        for (CoreCompetencyQuestionCreateRequestDto.ResponseChoiceOptionRequest odto : dto.getOptions()) {
-            Long oid = odto.getId();
-            if (oid == null || !byId.containsKey(oid)) {
-                throw new IllegalArgumentException("선택지 ID가 일치하지 않습니다.");
-            }
-            ResponseChoiceOption target = byId.get(oid);
-
-            // 라벨/점수만 수정
-            if (odto.getLabel() != null) target.setLabel(odto.getLabel());
-            if (odto.getScore() != null) target.setScore(odto.getScore());
-
-            // optionNo는 보통 변경 안 하지만, 서버-클라 정렬 맞춤 용도로만 선택적 반영
-            if (odto.getOptionNo() != null) target.setOptionNo(odto.getOptionNo());
+    private void generateDefaultOptions(CoreCompetencyQuestion question, int count) {
+        for (int i = 1; i <= count; i++) {
+            ResponseChoiceOption option = ResponseChoiceOption.builder()
+                    .question(question)
+                    .optionNo(i)
+                    .label("옵션 " + i)
+                    .score(i)
+                    .answerType("SINGLE") // 기본값 설정
+                    .build();
+            question.getResponseChoiceOptions().add(option);
         }
     }
 
+    /**
+     * 특정 평가에 속한 모든 문항 목록을 조회합니다.
+     */
+    public List<CoreCompetencyQuestion> getQuestionsByAssessmentId(Long assessmentId) {
+        return coreCompetencyQuestionRepository.findQuestionsByAssessmentIdWithChoices(assessmentId);
+    }
+
+    /**
+     * 특정 평가에 속한 모든 하위 역량 목록을 조회합니다.
+     */
+    public List<SubCompetencyCategory> getSubCategoriesByAssessmentId(Long assessmentId) {
+        // Fetch Join을 사용하는 메소드를 호출
+        List<CoreCompetencyCategory> coreCategories = coreCompetencyQuestionRepository.findCategoriesByAssessmentIdWithSubCategories(assessmentId);
+
+        // 조회된 핵심역량 목록에서 하위역량 목록만 추출하여 반환
+        return coreCategories.stream()
+                .flatMap(c -> c.getSubCompetencyCategories().stream())
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toMap(SubCompetencyCategory::getId, sc -> sc, (a,b)->a, LinkedHashMap::new),
+                        m -> new ArrayList<>(m.values())
+                ));
+    }
 }

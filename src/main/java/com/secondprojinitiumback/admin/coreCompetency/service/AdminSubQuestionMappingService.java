@@ -31,7 +31,7 @@ public class AdminSubQuestionMappingService {
                 .findBySubCompetencyCategory_IdOrderByDisplayOrderAscQuestionNoAsc(subCategoryId);
 
         // 3) DTO 매핑 (선택지 개수 포함)
-        List<AdminSubQuestionMappingDto.CoreCompetencyQuestionDto> questionDtos = questions.stream()
+        List<AdminSubQuestionMappingDto.CoreCompetencyQuestionDto> questionDto = questions.stream()
                 .map(q -> AdminSubQuestionMappingDto.CoreCompetencyQuestionDto.builder()
                         .id(q.getId())
                         .questionNo(q.getQuestionNo())
@@ -45,7 +45,7 @@ public class AdminSubQuestionMappingService {
         return AdminSubQuestionMappingDto.builder()
                 .subCategoryId(subCategory.getId())
                 .subCategoryName(subCategory.getSubCategoryName())
-                .questions(questionDtos)
+                .questions(questionDto)
                 .build();
     }
 }

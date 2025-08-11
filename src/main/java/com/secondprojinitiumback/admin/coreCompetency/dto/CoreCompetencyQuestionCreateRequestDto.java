@@ -19,6 +19,7 @@ public class CoreCompetencyQuestionCreateRequestDto {
     private String questionName;
     private String questionContent;
     private Integer displayOrder;
+    private Integer optionCount;             // 선택지 개수
     private Integer selectAllowCount ;        // 선택가능횟수 -> 단일로 고정
     private List<ResponseChoiceOptionRequest> options; // label, score, 답변문항구분
 

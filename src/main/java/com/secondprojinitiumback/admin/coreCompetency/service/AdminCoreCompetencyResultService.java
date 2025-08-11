@@ -56,12 +56,12 @@ public class AdminCoreCompetencyResultService {
             // 1~5점 선택 분포 카운트
             int[] counts = new int[5];
             for (CoreCompetencyResponse r : resps) {
-                int score = r.getResultScore();
+                int score = r.getSelectCount();
                 if (score >= 1 && score <= 5) counts[score - 1]++;
             }
 
             // 평균 점수 계산
-            double avg = resps.stream().mapToInt(CoreCompetencyResponse::getResultScore).average().orElse(0.0);
+            double avg = resps.stream().mapToInt(CoreCompetencyResponse::getSelectCount).average().orElse(0.0);
 
             // 총계표 DTO 생성
             result.add(QuestionStatisticsDto.builder()

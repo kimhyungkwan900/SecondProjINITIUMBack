@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.admin.coreCompetency.repository;
 
+import com.secondprojinitiumback.admin.coreCompetency.domain.CoreCompetencyQuestion;
 import com.secondprojinitiumback.admin.coreCompetency.domain.ResponseChoiceOption;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,4 +13,5 @@ public interface ResponseChoiceOptionRepository extends JpaRepository<ResponseCh
 
     Optional<ResponseChoiceOption> findByQuestionIdAndLabel(Long questionId, String label);
 
+    void deleteByQuestion(CoreCompetencyQuestion question);
 }

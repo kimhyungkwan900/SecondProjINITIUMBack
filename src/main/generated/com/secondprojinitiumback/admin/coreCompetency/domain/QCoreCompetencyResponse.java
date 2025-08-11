@@ -24,13 +24,13 @@ public class QCoreCompetencyResponse extends EntityPathBase<CoreCompetencyRespon
 
     public final QCoreCompetencyAssessment assessment;
 
+    public final StringPath choiceLabel = createString("choiceLabel");
+
     public final StringPath completeDate = createString("completeDate");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final QCoreCompetencyQuestion question;
-
-    public final NumberPath<Integer> resultScore = createNumber("resultScore", Integer.class);
 
     public final NumberPath<Integer> selectCount = createNumber("selectCount", Integer.class);
 

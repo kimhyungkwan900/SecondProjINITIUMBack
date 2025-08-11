@@ -17,6 +17,4 @@ public class DscsnApplyBaseDto {
 
     private String dscsnApplyCn;
 
-    private String dscsnOnlineYn;
-
 }

@@ -32,9 +32,6 @@ public class DscsnApply {
     @Column(name = "DSCSN_APLY_CN", nullable = true)
     private String dscsnApplyCn;
 
-    @Column(name = "DSCSN_OLN_YN", nullable = true, length = 1)
-    private String dscsnOnlineYn;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "STDNT_NO", foreignKey = @ForeignKey(name = "FK_STDNT_NO"))
     private Student student;

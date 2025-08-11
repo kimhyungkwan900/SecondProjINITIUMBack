@@ -31,6 +31,17 @@ public class DscsnScheduleController {
         }
     }
 
+    //--- 일정정보 단일 조회
+    @GetMapping("/api/consult/schedule/{dscsnDtId}")
+    public ResponseEntity<?> getScheduleById(@PathVariable String dscsnDtId) {
+        try {
+            DscsnScheduleResponseDto dscsnSchedule = dscsnScheduleService.getDscsnScheduleById(dscsnDtId);
+            return ResponseEntity.ok(dscsnSchedule);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("일정 조회 중 문제 발생");
+        }
+    }
+
     //--- 일정 조회
     @GetMapping({"/api/consult/schedule"})
     public ResponseEntity<?> getSchedule(@RequestParam String dscsnType, @RequestParam String empNo) {

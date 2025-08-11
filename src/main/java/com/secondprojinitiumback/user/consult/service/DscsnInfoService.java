@@ -127,7 +127,6 @@ public class DscsnInfoService {
                                         .dscsnApplyId(apply.getDscsnApplyId())
                                         .studentTelno(apply.getStudentTelno())
                                         .dscsnApplyCn(apply.getDscsnApplyCn())
-                                        .dscsnOnlineYn(apply.getDscsnOnlineYn())
 
                                         .studentDto(
                                                 (student == null) ? null :

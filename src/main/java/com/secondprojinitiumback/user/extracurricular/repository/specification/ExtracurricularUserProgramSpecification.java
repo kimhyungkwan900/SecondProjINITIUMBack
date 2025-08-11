@@ -17,7 +17,11 @@ public class ExtracurricularUserProgramSpecification {
     }
 
     public static Specification<ExtracurricularProgram> sttsNmNotRequested() {
-        return (root, query, builder) -> builder.notEqual(root.get("sttsNm"), SttsNm.REJECTED);
+        return (root, query, builder) ->
+                builder.and(
+                        builder.notEqual(root.get("sttsNm"), SttsNm.REQUESTED),
+                        builder.notEqual(root.get("sttsNm"), SttsNm.REJECTED)
+                );
     }
 
     public static Specification<ExtracurricularProgram> hasKeyword(String keyword) {

@@ -7,13 +7,14 @@ import com.secondprojinitiumback.user.student.domain.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ExtracurricularApplyRepository extends JpaRepository<ExtracurricularApply,Long> {
+public interface ExtracurricularApplyRepository extends JpaRepository<ExtracurricularApply,Long>, JpaSpecificationExecutor<ExtracurricularApply> {
 
     // 특정 학생이 특정 비교과 프로그램에 이미 신청했는지 여부 확인
     boolean existsBystudentAndExtracurricularProgram(Student student, ExtracurricularProgram extracurricularProgram);
@@ -42,4 +43,6 @@ public interface ExtracurricularApplyRepository extends JpaRepository<Extracurri
     List<ExtracurricularApply> findByExtracurricularProgram_EduMngId(Long extracurricularProgramEduMngId);
 
     Page<ExtracurricularApply> findByStudent_StudentNo(String studentNo, Pageable pageable);
+
+    Boolean existsBystudentAndExtracurricularProgram_EduMngId(Student student, Long extracurricularProgramEduMngId);
 }

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -27,4 +28,6 @@ public interface ExtracurricularAttendanceRepository extends JpaRepository<Extra
 """)
 // 특정 학생의 특정 비교과 프로그램에서의 출석률 계산 (출석한 횟수 / 전체 일정 횟수)
     Double calculateAttendanceRate(@Param("eduMngId") Long eduMngId, @Param("stdntNo") String stdntNo);
+
+    List<ExtracurricularAttendance> findByExtracurricularSchedule(ExtracurricularSchedule extracurricularSchedule);
 }

@@ -19,6 +19,7 @@ import com.secondprojinitiumback.user.employee.repository.EmployeeRepository;
 import com.secondprojinitiumback.user.extracurricular.domain.enums.AprySttsNm;
 import com.secondprojinitiumback.user.extracurricular.domain.ExtracurricularApply;
 import com.secondprojinitiumback.user.extracurricular.dto.AppliedExtracurricularProgramDTO;
+import com.secondprojinitiumback.user.extracurricular.dto.ApplyProgramDTO;
 import com.secondprojinitiumback.user.extracurricular.dto.ExtracurricularProgramDTO;
 import com.secondprojinitiumback.user.extracurricular.repository.ExtracurricularApplyRepository;
 import com.secondprojinitiumback.user.extracurricular.repository.specification.ExtracurricularUserProgramSpecification;
@@ -76,7 +77,10 @@ public class ExtracurricularProgramUserService {
         // statusFilter에 따라 추가 조건
         if ("available".equalsIgnoreCase(statusFilter)) {
             // 신청 마감일이 현재보다 미래인 (신청 가능한) 프로그램
-            spec = spec.and((root, query, builder) -> builder.greaterThanOrEqualTo(root.get("eduAplyEndDt"), now));
+            spec = spec.and((root, query, builder) -> builder.and(
+                    builder.lessThanOrEqualTo(root.get("eduAplyBgngDt"), now),
+                    builder.greaterThanOrEqualTo(root.get("eduAplyEndDt"), now)
+            ));
         } else if ("past".equalsIgnoreCase(statusFilter)) {
             // 신청 마감일이 현재보다 과거인 (신청 마감된) 프로그램
             spec = spec.and((root, query, builder) -> builder.lessThan(root.get("eduAplyEndDt"), now));
@@ -202,6 +206,54 @@ public class ExtracurricularProgramUserService {
                 .collect(Collectors.toList());
         // 만약 신청 내역이 없다면 빈 리스트를 반환
         return new PageImpl<>(dtoList, pageable, applies.getTotalElements());
+    }
+
+    public Page<ApplyProgramDTO> getApplyPrograms(
+            String stdfntNo,
+            String eduFnshYn,
+            String keyword,
+            Pageable pageable) {
+
+        Specification<ExtracurricularApply> spec = Specification.where(
+                (root, query, cb) -> cb.equal(root.get("student").get("studentNo"), stdfntNo)
+        );
+
+        if (eduFnshYn != null && !eduFnshYn.isBlank()) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("eduFnshYn"), eduFnshYn));
+        }
+
+        if (keyword != null && !keyword.isBlank()) {
+            spec = spec.and((root, query, cb) ->
+                    cb.like(root.get("extracurricularProgram").get("eduNm"), "%" + keyword + "%")
+            );
+        }
+
+        Page<ExtracurricularApply> applies = extracurricularApplyRepository.findAll(spec, pageable);
+
+
+        // 엔티티 -> DTO 매핑
+        return applies.map(apply -> {
+            ExtracurricularProgram program = apply.getExtracurricularProgram();
+
+            // 출석률 계산 예시 (출석 데이터가 있다면 직접 계산 필요)
+//            double attendanceRate = 0.0;
+//            if (apply.getAttendance() != null) {
+//                attendanceRate = apply.getAttendance();
+//            }
+
+            Boolean surveyYn = extracurricularApplyRepository.existsBystudentAndExtracurricularProgram_EduMngId(apply.getStudent() , program.getEduMngId() );
+
+            return ApplyProgramDTO.builder()
+                    .eduAplyId(apply.getEduAplyId())
+                    .eduNm(program.getEduNm())
+                    .eduEndYmd(program.getEduEndYmd())
+                    .cndCn(program.getCndCn())
+//                    .attendance(attendanceRate)
+                    .surveyYn(surveyYn)
+//                    .eduFnshId(apply.getEduFnshId())
+//                    .eduFnshYn(apply.getEduFnshYn())
+                    .build();
+        });
     }
 
 }

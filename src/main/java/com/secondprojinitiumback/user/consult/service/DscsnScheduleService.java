@@ -7,6 +7,7 @@ import com.secondprojinitiumback.user.consult.repository.DscsnScheduleRepository
 import com.secondprojinitiumback.user.consult.repository.TempEmployeeRepository;
 import com.secondprojinitiumback.user.employee.domain.Employee;
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -56,6 +57,23 @@ public class DscsnScheduleService {
         //등록한 상담일정 저장
         dscsnScheduleRepository.save(dscsnSchedule);
     }
+    //--- 상담사, 교수 일정 단일 조회
+    @Transactional(readOnly = true)
+    public DscsnScheduleResponseDto getDscsnScheduleById(String dscsnDtId) {
+        //상담일정 ID로 해당 상담일정 조회
+        DscsnSchedule dscsnSchedule = dscsnScheduleRepository.findById(dscsnDtId)
+                .orElseThrow(EntityExistsException::new);
+
+        return DscsnScheduleResponseDto.builder()
+                .dscsnDtId(dscsnSchedule.getDscsnDtId())
+                .empNo(dscsnSchedule.getEmployee().getEmpNo())
+                .empName(dscsnSchedule.getEmployee().getName())
+                .schoolSubject(dscsnSchedule.getEmployee().getSchoolSubject().getSubjectName())
+                .scheduleDate(dscsnSchedule.getPossibleDate())
+                .startTime(dscsnSchedule.getPossibleTime())
+                .dscsnYn(dscsnSchedule.getDscsnYn())
+                .build();
+    }
 
     //--- 상담사, 교수 상담일정 조회
     @Transactional(readOnly = true)
@@ -66,11 +84,13 @@ public class DscsnScheduleService {
         return dscsnSchedules.stream()
                 .map(dscsnSchedule ->
                 DscsnScheduleResponseDto.builder()
+                        .dscsnDtId(dscsnSchedule.getDscsnDtId())
                         .empNo(dscsnSchedule.getEmployee().getEmpNo())
                         .empName(dscsnSchedule.getEmployee().getName())
                         .schoolSubject(dscsnSchedule.getEmployee().getSchoolSubject().getSubjectName())
                         .scheduleDate(dscsnSchedule.getPossibleDate())
                         .startTime(dscsnSchedule.getPossibleTime())
+                        .dscsnYn(dscsnSchedule.getDscsnYn())
                         .build())
                 .toList();
     }

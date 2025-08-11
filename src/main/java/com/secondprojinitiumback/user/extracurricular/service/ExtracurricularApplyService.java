@@ -110,4 +110,5 @@ public class ExtracurricularApplyService {
         apply.setDelYn("Y"); // 논리 삭제 처리
         extracurricularApplyRepository.save(apply);
     }
+
 }

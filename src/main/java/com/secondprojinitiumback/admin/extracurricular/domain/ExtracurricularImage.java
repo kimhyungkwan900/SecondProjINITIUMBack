@@ -25,6 +25,7 @@ public class ExtracurricularImage {
     private String imgFilePathNm; // 이미지 파일 경로
 
     @Column(name = "img_type")
+    @Enumerated(EnumType.STRING)
     private ImgType imgType; // 이미지 타입
 
     @Column(name = "img_file_sz")

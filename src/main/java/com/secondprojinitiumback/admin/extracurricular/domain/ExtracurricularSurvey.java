@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -26,10 +29,10 @@ public class ExtracurricularSurvey {
     private String srvyQitemCn; // 설문 문항 내용
 
     @Column(name = "srvy_bgng_dt")
-    private String srvyBgngDt; // 설문 시작일
+    private LocalDate srvyBgngDt; // 설문 시작일
 
     @Column(name = "srvy_end_dt")
-    private String srvyEndDt; // 설문 종료일
+    private LocalDate srvyEndDt; // 설문 종료일
 
 
 }

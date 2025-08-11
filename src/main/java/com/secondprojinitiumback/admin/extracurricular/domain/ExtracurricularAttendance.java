@@ -24,11 +24,13 @@ public class ExtracurricularAttendance {
     private ExtracurricularSchedule extracurricularSchedule; // 비교과 일정 ID
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "")
+    @JoinColumn(name = "STDNT_NO")
     private Student student;
+
     @Column(name = "atndc_dt")
     private LocalDateTime atndcDt;
 
     @Column(name = "atndc_yn")
     private String atndcYn; // 출석 여부 (Y/N)
+
 }

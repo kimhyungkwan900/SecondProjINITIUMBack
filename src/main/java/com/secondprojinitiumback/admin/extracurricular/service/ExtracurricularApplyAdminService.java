@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 // 비교과 프로그램 신청 관리 서비스
@@ -29,15 +30,21 @@ public class ExtracurricularApplyAdminService {
                 .collect(Collectors.toList());
     }
 
-    // 비교과 프로그램 신청 상태 업데이트
-    public void updateExtracurricularApplyStatus(Long eduAplyId, AprySttsNm newStatus) {
-        // 신청 ID로 비교과 프로그램 신청을 조회
-        ExtracurricularApply extracurricularApply = extracurricularApplyRepository.findById(eduAplyId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 신청이 존재하지 않습니다. id=" + eduAplyId));
-        // 신청 상태 업데이트
-        extracurricularApply.setAprySttsNm(newStatus);
-        // 변경된 신청 정보를 저장
-        extracurricularApplyRepository.save(extracurricularApply);
+    public void updateExtracurricularApplyStatusBatch(List<ExtracurricularApplyUpdateDTO> dtos) {
+        List<Long> ids = dtos.stream().map(ExtracurricularApplyUpdateDTO::getEduAplyId).collect(Collectors.toList());
+        List<ExtracurricularApply> applies = extracurricularApplyRepository.findAllById(ids);
+
+        // DTO Map: id -> DTO
+        Map<Long, AprySttsNm> statusMap = dtos.stream()
+                .collect(Collectors.toMap(ExtracurricularApplyUpdateDTO::getEduAplyId, ExtracurricularApplyUpdateDTO::getAprySttsNm));
+
+        for (ExtracurricularApply apply : applies) {
+            AprySttsNm newStatus = statusMap.get(apply.getEduAplyId());
+            if (newStatus != null) {
+                apply.setAprySttsNm(newStatus);
+            }
+        }
+        extracurricularApplyRepository.saveAll(applies);
     }
 
 }

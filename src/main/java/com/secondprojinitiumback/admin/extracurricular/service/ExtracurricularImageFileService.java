@@ -34,7 +34,7 @@ public class ExtracurricularImageFileService {
             file.transferTo(destination.toFile());
 
             log.info("파일 저장 완료 (절대경로): {}", destination.toAbsolutePath());
-            // 💡 클라이언트가 접근 가능한 경로로 반환해야 함
+            // 💡 클라이언트가 접근 가능한 경로로 반환해야
             return "/images/" + filename;
 
         } catch (IOException e) {

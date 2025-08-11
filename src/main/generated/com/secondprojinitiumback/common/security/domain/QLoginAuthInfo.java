@@ -26,9 +26,9 @@ public class QLoginAuthInfo extends EntityPathBase<LoginAuthInfo> {
 
     public final DateTimePath<java.time.LocalDateTime> expiresAt = createDateTime("expiresAt", java.time.LocalDateTime.class);
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+    public final BooleanPath forcedLogout = createBoolean("forcedLogout");
 
-    public final BooleanPath isForcedLogout = createBoolean("isForcedLogout");
+    public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final DateTimePath<java.time.LocalDateTime> issuedAt = createDateTime("issuedAt", java.time.LocalDateTime.class);
 

@@ -34,9 +34,9 @@ public class SubCompetencyCategory {
     @JsonIgnore
     private CoreCompetencyCategory coreCompetencyCategory;
 
-    //양방향 설정
-    @OneToMany(mappedBy = "subCompetencyCategory", fetch = FetchType.LAZY)
-    private List<BehaviorIndicator> behaviorIndicators = new ArrayList<>();
+//    //양방향 설정
+//    @OneToMany(mappedBy = "subCompetencyCategory", fetch = FetchType.LAZY)
+//    private List<CoreCompetencyQuestion> coreCompetencyQuestions = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({

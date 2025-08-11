@@ -1,5 +1,8 @@
 package com.secondprojinitiumback.admin.coreCompetency.controller;
 
+import com.secondprojinitiumback.admin.coreCompetency.dto.CoreCompetencyCategoryDto;
+import com.secondprojinitiumback.admin.coreCompetency.dto.IdealTalentProfileDto;
+import com.secondprojinitiumback.admin.coreCompetency.dto.SubCompetencyCategoryDto;
 import com.secondprojinitiumback.admin.coreCompetency.dto.CompetencyCategoryDto;
 import com.secondprojinitiumback.admin.coreCompetency.domain.CoreCompetencyCategory;
 import com.secondprojinitiumback.admin.coreCompetency.domain.SubCompetencyCategory;
@@ -9,69 +12,119 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@RestController // REST API 컨트롤러임을 명시
-@RequestMapping("/api/admin/competencyCategory") // 기본 요청 경로 설정
-@RequiredArgsConstructor // 생성자 주입을 위한 롬복 어노테이션
+/**
+ * 관리자 페이지의 역량 카테고리(핵심/하위) 관련 API 요청을 처리하는 컨트롤러입니다.
+ */
+@RestController
+@RequestMapping("/api/admin/competencyCategory")
+@RequiredArgsConstructor
 public class AdminCompetencyCategoryController {
 
     private final AdminCompetencyCategoryService adminCompetencyCategoryService;
 
-    // 핵심역량 또는 하위역량 카테고리 등록 API
+    /**
+     * 등록된 모든 인재상 목록을 조회합니다.
+     */
+    @GetMapping("/ideal-talent-profiles")
+    public ResponseEntity<List<IdealTalentProfileDto>> getIdealTalentProfiles() {
+        return ResponseEntity.ok(adminCompetencyCategoryService.getAllIdealTalentProfiles());
+    }
+
+
+    // --- CUD (Create, Update, Delete) API ---
+
+    /**
+     * 새로운 역량 카테고리(핵심 또는 하위)를 생성합니다.
+     */
     @PostMapping("/create")
     public ResponseEntity<String> createCategory(@RequestBody CompetencyCategoryDto competencyCategoryDto) {
         adminCompetencyCategoryService.createCategory(competencyCategoryDto);
         return ResponseEntity.ok("등록 완료");
     }
 
-    // 핵심역량 또는 하위역량 카테고리 수정 API
+    /**
+     * 기존 역량 카테고리(핵심 또는 하위)를 수정합니다.
+     */
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateCategory(@PathVariable Long id, @RequestBody CompetencyCategoryDto competencyCategoryDto) {
         adminCompetencyCategoryService.updateCategory(id, competencyCategoryDto);
         return ResponseEntity.ok("수정 완료");
     }
 
-    // 핵심역량 또는 하위역량 카테고리 삭제 API
-    @DeleteMapping("/delete/{levelType}/{id}")
-    public ResponseEntity<String> deleteCategory(@PathVariable String levelType, @PathVariable Long id) {
-        adminCompetencyCategoryService.deleteCategory(levelType, id);
+    /**
+     * 기존 역량 카테고리(핵심 또는 하위)를 삭제합니다.
+     */
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteCategory(@PathVariable Long id, @RequestBody CompetencyCategoryDto competencyCategoryDto) {
+        adminCompetencyCategoryService.deleteCategory(id, competencyCategoryDto);
         return ResponseEntity.ok("삭제 완료");
     }
 
-    // 전체 핵심역량 카테고리 목록 조회 API
+    // --- Read API ---
+
+    /**
+     * 모든 핵심역량 카테고리 목록을 조회합니다.
+     */
     @GetMapping("/core")
-    public ResponseEntity<List<CoreCompetencyCategory>> getAllCore() {
-        return ResponseEntity.ok(adminCompetencyCategoryService.getAllCoreCompetencyCategories());
+    public ResponseEntity<List<CoreCompetencyCategoryDto>> getAllCore() {
+        List<CoreCompetencyCategory> categories = adminCompetencyCategoryService.getAllCoreCompetencyCategories();
+        // 서비스로부터 받은 엔티티 리스트를 DTO 리스트로 변환하여 반환합니다.
+        List<CoreCompetencyCategoryDto> dtoList = categories.stream()
+                .map(CoreCompetencyCategoryDto::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtoList);
     }
 
-    // 전체 하위역량 카테고리 목록 조회 API
+    /**
+     * 모든 하위역량 카테고리 목록을 조회합니다.
+     */
     @GetMapping("/sub")
-    public ResponseEntity<List<SubCompetencyCategory>> getAllSub() {
-        return ResponseEntity.ok(adminCompetencyCategoryService.getAllSubCompetencyCategories());
+    public ResponseEntity<List<SubCompetencyCategoryDto>> getAllSub() {
+        List<SubCompetencyCategory> subCategories = adminCompetencyCategoryService.getAllSubCompetencyCategories();
+        // 서비스로부터 받은 엔티티 리스트를 DTO 리스트로 변환하여 반환합니다.
+        List<SubCompetencyCategoryDto> dtoList = subCategories.stream()
+                .map(SubCompetencyCategoryDto::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtoList);
     }
 
-    // 단일 핵심역량 카테고리 조회 API
+    /**
+     * ID를 기준으로 특정 핵심역량 카테고리 하나를 조회합니다.
+     */
     @GetMapping("/core/{id}")
-    public ResponseEntity<CoreCompetencyCategory> getCore(@PathVariable Long id) {
-        return ResponseEntity.ok(adminCompetencyCategoryService.getCoreCategory(id));
+    public ResponseEntity<CoreCompetencyCategoryDto> getCore(@PathVariable Long id) {
+        CoreCompetencyCategory category = adminCompetencyCategoryService.getCoreCategory(id);
+        // 서비스로부터 받은 엔티티를 DTO로 변환하여 반환합니다.
+        return ResponseEntity.ok(CoreCompetencyCategoryDto.fromEntity(category));
     }
 
-    // 단일 하위역량 카테고리 조회 API
+    /**
+     * ID를 기준으로 특정 하위역량 카테고리 하나를 조회합니다.
+     */
     @GetMapping("/sub/{id}")
-    public ResponseEntity<SubCompetencyCategory> getSub(@PathVariable Long id) {
-        return ResponseEntity.ok(adminCompetencyCategoryService.getSubCategory(id));
+    public ResponseEntity<SubCompetencyCategoryDto> getSub(@PathVariable Long id) {
+        SubCompetencyCategory subCategory = adminCompetencyCategoryService.getSubCategory(id);
+        // 서비스로부터 받은 엔티티를 DTO로 변환하여 반환합니다.
+        return ResponseEntity.ok(SubCompetencyCategoryDto.fromEntity(subCategory));
     }
 
-    // 핵심역량 이름 중복 여부 확인 API
+    // --- 중복 체크 API ---
+
+    /**
+     * 새로운 핵심역량 카테고리 이름의 중복 여부를 확인합니다.
+     */
     @GetMapping("/check/core")
     public ResponseEntity<Boolean> checkCoreDuplicate(@RequestParam String name) {
         return ResponseEntity.ok(adminCompetencyCategoryService.isCoreCategoryNameDuplicate(name));
     }
 
-    // 하위역량 이름 중복 여부 확인 API
+    /**
+     * 특정 핵심역량 내에서 하위역량 카테고리 이름의 중복 여부를 확인합니다.
+     */
     @GetMapping("/check/sub")
     public ResponseEntity<Boolean> checkSubDuplicate(@RequestParam Long coreId, @RequestParam String name) {
         return ResponseEntity.ok(adminCompetencyCategoryService.isSubCategoryNameDuplicate(coreId, name));
     }
 }
-

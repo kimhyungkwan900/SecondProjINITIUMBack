@@ -24,13 +24,13 @@ public class QLoginHistory extends EntityPathBase<LoginHistory> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final BooleanPath isSuccessful = createBoolean("isSuccessful");
-
     public final DateTimePath<java.time.LocalDateTime> loginDateTime = createDateTime("loginDateTime", java.time.LocalDateTime.class);
 
     public final QLoginInfo loginInfo;
 
     public final StringPath loginIpAddress = createString("loginIpAddress");
+
+    public final BooleanPath loginSuccess = createBoolean("loginSuccess");
 
     public final DateTimePath<java.time.LocalDateTime> logoutDateTime = createDateTime("logoutDateTime", java.time.LocalDateTime.class);
 

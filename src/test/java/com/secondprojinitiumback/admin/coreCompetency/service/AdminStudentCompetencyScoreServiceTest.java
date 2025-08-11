@@ -66,16 +66,10 @@ class AdminStudentCompetencyScoreServiceTest {
                 .subCategoryName("의사소통 역량")
                 .build();
 
-        BehaviorIndicator behaviorIndicator = BehaviorIndicator.builder()
-                .id(1L)
-                .name("의사소통 능력")
-                .subCompetencyCategory(subCompetencyCategory)
-                .build();
-
         CoreCompetencyQuestion question = CoreCompetencyQuestion.builder()
                 .id(1L)
                 .description("문항1")
-                .behaviorIndicator(behaviorIndicator)
+                .subCompetencyCategory(subCompetencyCategory)
                 .build();
 
         // 응답한 선택지 (점수 포함)

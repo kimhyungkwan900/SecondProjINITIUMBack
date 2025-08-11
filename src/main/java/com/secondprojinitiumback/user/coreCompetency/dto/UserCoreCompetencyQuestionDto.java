@@ -25,6 +25,9 @@ public class UserCoreCompetencyQuestionDto {
     // 문항에 연결된 선택지 리스트 (보기 항목들)
     List<ResponseChoiceOptionDto> responseChoiceOptions;
 
+    //문항이 속해있는 진단 검사
+    private Long assessmentId;
+
     /**
      * CoreCompetencyQuestion 엔티티를 UserCoreCompetencyQuestionDto로 변환
      * - 선택지(responseChoiceOptions)도 DTO로 매핑

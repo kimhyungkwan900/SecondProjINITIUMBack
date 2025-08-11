@@ -28,6 +28,8 @@ public class QDiagnosticTest extends EntityPathBase<DiagnosticTest> {
 
     public final StringPath categoryValue = createString("categoryValue");
 
+    public final StringPath delYn = createString("delYn");
+
     public final StringPath description = createString("description");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);

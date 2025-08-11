@@ -11,7 +11,9 @@ import com.secondprojinitiumback.common.exception.ErrorCode;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,26 +33,40 @@ public class AuthController {
     private final TokenProvider tokenProvider;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+    public ResponseEntity<LoginResponseDto> login(
+            @Valid @RequestBody LoginRequestDto loginRequestDto,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
 
+        // 로그인 인증
         LoginInfo loginInfo = loginInfoService.authenticate(loginRequestDto.getLoginId(), loginRequestDto.getPassword());
 
+        // 계정 상태확인
         if (!"N".equals(loginInfo.getAccountStatusCode())) {
             throw new CustomException(ErrorCode.ACCOUNT_LOCKED);
         }
 
+        // 토큰 발급
         TokenInfoDto tokenInfo = tokenProvider.generateTokens(loginInfo.getLoginId(), loginInfo.getUserType());
 
         // CookieUtils를 사용하여 쿠키에 토큰 추가
         CookieUtils.addCookie(response, CookieConstants.ACCESS_TOKEN, tokenInfo.getAccessToken(), tokenProvider.getAccessTokenExpirySeconds());
         CookieUtils.addCookie(response, CookieConstants.REFRESH_TOKEN, tokenInfo.getRefreshToken(), tokenProvider.getRefreshTokenExpirySeconds());
 
+        // 로그인 인증 정보 저장
         loginInfoService.saveUserAuthInfo(loginInfo, tokenInfo);
-        loginInfoService.saveLoginHistory(loginInfo, loginRequestDto.getIpAddress());
+        // 로그인 이력 저장
+        String ip = resolveClientIp(request);
+        loginInfoService.saveLoginHistory(loginInfo, ip);
 
+        // 사용자 상세 정보 조회
         UserDetailDto userDetail = loginInfoService.loadUserDetail(loginInfo);
 
+        // 로그인 응답 DTO 생성
         LoginResponseDto loginResponse = new LoginResponseDto(userDetail);
+
+        // 로그인 성공 응답 반환
         return ResponseEntity.ok(loginResponse);
     }
 
@@ -91,7 +107,7 @@ public class AuthController {
     @PostMapping("/change-password")
     public ResponseEntity<Void> changePassword(
             @AuthenticationPrincipal UserDetails userDetails,
-            @RequestBody ChangePasswordRequestDto requestDto
+            @Valid @RequestBody ChangePasswordRequestDto requestDto
     ) {
         if (userDetails == null) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_ACCESS);
@@ -103,5 +119,19 @@ public class AuthController {
                 requestDto.getNewPassword()
         );
         return ResponseEntity.ok().build();
+    }
+
+    private String resolveClientIp(HttpServletRequest req) {
+        // 클라이언트 IP 주소를 헤더에서 추출
+        String[] headers = {"X-Forwarded-For", "X-Real-IP", "CF-Connecting-IP"};
+        for (String h : headers) {
+            // 헤더에서 IP 주소를 가져오고, 유효한 경우 반환
+            String v = req.getHeader(h);
+            // 헤더 값이 null, 비어있거나 "unknown"인 경우는 제외
+            if (v != null && !v.isBlank() && !"unknown".equalsIgnoreCase(v)) {
+                return v.split(",")[0].trim();
+            }
+        }
+        return req.getRemoteAddr();
     }
 }

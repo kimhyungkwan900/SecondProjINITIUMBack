@@ -2,6 +2,7 @@ package com.secondprojinitiumback.user.diagnostic.controller;
 
 import com.secondprojinitiumback.user.diagnostic.dto.DiagnosticTestDto;
 import com.secondprojinitiumback.user.diagnostic.service.DiagnosisService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,6 +51,25 @@ public class DiagnosisAdminController {
     public ResponseEntity<Void> deleteTest(@PathVariable Long id) {
         diagnosisService.deleteDiagnosticTest(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/tests/{id}")
+    public ResponseEntity<Map<String, Object>> updateTest(
+            @PathVariable Long id,
+            @RequestBody @Valid DiagnosticTestDto dto
+    ) {
+        Long updatedId = diagnosisService.updateDiagnosticTest(id, dto);
+        Map<String, Object> body = Map.of(
+                "testId", updatedId,
+                "message", "검사가 성공적으로 수정되었습니다."
+        );
+        return ResponseEntity.ok(body);
+    }
+
+    @GetMapping("/tests/{id}")
+    public ResponseEntity<DiagnosticTestDto> getTestById(@PathVariable Long id) {
+        DiagnosticTestDto dto = diagnosisService.getAdminTestForEdit(id);
+        return ResponseEntity.ok(dto);
     }
 }
 

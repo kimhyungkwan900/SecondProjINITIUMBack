@@ -1,5 +1,7 @@
 package com.secondprojinitiumback.user.student.controller;
 
+import com.secondprojinitiumback.common.exception.CustomException;
+import com.secondprojinitiumback.common.exception.ErrorCode;
 import com.secondprojinitiumback.user.student.dto.AdminUpdateStudentDto;
 import com.secondprojinitiumback.user.student.dto.EnrollStudentDto;
 import com.secondprojinitiumback.user.student.dto.StudentDto;
@@ -10,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import com.secondprojinitiumback.common.dto.request.StatusChangeRequest;
@@ -34,12 +38,18 @@ public class StudentController {
     }
 
     // 학생 정보 수정 (개인용)
-    @PutMapping("/{studentNo}/my-info") // 역할을 명확히 하는 URL
-    public ResponseEntity<StudentDto> updateMyInfo(@PathVariable String studentNo, @RequestBody UpdateStudentDto dto) {
-        // 학생 정보 수정 처리
-        StudentDto updatedStudent = studentService.updateMyInfo(studentNo, dto);
+    @PutMapping("/{studentNo}/my-info")
+    public ResponseEntity<StudentDto> updateMyInfo(
+            @PathVariable String studentNo,
+            @RequestBody UpdateStudentDto dto,
+            @AuthenticationPrincipal UserDetails userDetails // ← 추가 권장
+    ) {
+        // 본인만 수정 가능하도록 보호
+        if (userDetails == null || !studentNo.equals(userDetails.getUsername())) {
+            throw new CustomException(ErrorCode.ACCESS_DENIED);
+        }
 
-        // 수정된 학생 정보를 반환
+        StudentDto updatedStudent = studentService.updateMyInfo(studentNo, dto);
         return ResponseEntity.ok(updatedStudent);
     }
 

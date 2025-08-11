@@ -24,10 +24,10 @@ public class AdminCoreAssessmentService {
 
     // 1. 핵심 역량 진단 등록
     public CoreCompetencyAssessment createCoreCompetencyAssessment(CoreCompetencyAssessmentDto assessmentDto) {
-        CommonCode semesterCode = commonCodeRepository.findById_CodeAndId_CodeGroup(assessmentDto.getSemesterCode(), "SEMESTER")
+        CommonCode semesterCode = commonCodeRepository.findById_CodeAndId_CodeGroup(assessmentDto.getSemesterCode(), "SEMES")
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 학기 코드입니다."));
 
-        CommonCode onlineExecCode = commonCodeRepository.findById_CodeAndId_CodeGroup(assessmentDto.getOnlineYn(), "ONLINE_YN")
+        CommonCode onlineExecCode = commonCodeRepository.findById_CodeAndId_CodeGroup(assessmentDto.getOnlineYn(), "ONLYN")
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 온라인 여부 코드입니다."));
 
         SchoolSubject schoolSubject = schoolSubjectRepository.findBySubjectName(assessmentDto.getDepartmentName())
@@ -41,9 +41,7 @@ public class AdminCoreAssessmentService {
                 .registerDate(assessmentDto.getRegisterDate())
                 .academicYear(assessmentDto.getAcademicYear())
                 .semesterCode(semesterCode)
-                .semesterGroup(assessmentDto.getSemesterGroup()) // 중요
                 .onlineExecCode(onlineExecCode)
-                .onlineExecGroupCode(assessmentDto.getOnlineExecGroup()) // 중요
                 .guideContent(assessmentDto.getGuideContent())
                 .schoolSubject(schoolSubject)
                 .build();
@@ -55,10 +53,10 @@ public class AdminCoreAssessmentService {
     // 2. 핵심 역량 진단 수정
     public CoreCompetencyAssessment updateCoreCompetencyAssessment(Long assessmentId, CoreCompetencyAssessmentDto assessmentDto) {
 
-        CommonCode semesterCode = commonCodeRepository.findById_CodeAndId_CodeGroup(assessmentDto.getSemesterCode(), "SEMESTER")
+        CommonCode semesterCode = commonCodeRepository.findById_CodeAndId_CodeGroup(assessmentDto.getSemesterCode(), "SEMES")
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 학기 코드입니다."));
 
-        CommonCode onlineExecCode = commonCodeRepository.findById_CodeAndId_CodeGroup(assessmentDto.getOnlineYn(), "ONLINE_YN")
+        CommonCode onlineExecCode = commonCodeRepository.findById_CodeAndId_CodeGroup(assessmentDto.getOnlineYn(), "ONLYN")
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 온라인 여부 코드입니다."));
 
         SchoolSubject schoolSubject = schoolSubjectRepository.findBySubjectName(assessmentDto.getDepartmentName())
@@ -74,9 +72,7 @@ public class AdminCoreAssessmentService {
         existingAssessment.setRegisterDate(assessmentDto.getRegisterDate());
         existingAssessment.setAcademicYear(assessmentDto.getAcademicYear());
         existingAssessment.setSemesterCode(semesterCode);
-        existingAssessment.setSemesterGroup(assessmentDto.getSemesterGroup());
         existingAssessment.setOnlineExecCode(onlineExecCode);
-        existingAssessment.setOnlineExecGroupCode(assessmentDto.getOnlineExecGroup());
         existingAssessment.setGuideContent(assessmentDto.getGuideContent());
         existingAssessment.setSchoolSubject(schoolSubject);
 
@@ -101,6 +97,4 @@ public class AdminCoreAssessmentService {
     public List<CoreCompetencyAssessment> getAllCoreCompetencyAssessments() {
         return coreCompetencyAssessmentRepository.findAll();
     }
-
-    // 페이징 처리 (미구현)
 }

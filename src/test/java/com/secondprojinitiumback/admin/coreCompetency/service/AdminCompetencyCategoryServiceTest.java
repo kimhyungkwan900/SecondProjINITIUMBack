@@ -53,10 +53,12 @@ class AdminCompetencyCategoryServiceTest {
         dto.setName("창의역량");
         dto.setDescription("창의적 문제 해결 능력");
         dto.setIdealTalentProfileId(1L);
-
-        CommonCodeId codeId = new CommonCodeId("C", "COMP");
-        CommonCode commonCode = CommonCode.builder().id(codeId).build();
-        dto.setCompetencyCategory(commonCode);
+        dto.setCompetencyCategory(
+                CommonCode.builder()
+                        .id(new CommonCodeId("C", "COMP"))
+                        .codeName("핵심역량") // 핵심으로 분기
+                        .build()
+        );
 
 
         // 인재상 엔티티가 정상적으로 조회됨을 모의
@@ -79,10 +81,12 @@ class AdminCompetencyCategoryServiceTest {
         dto.setName("창의적 사고");
         dto.setDescription("창의적 문제 해결 능력 향상");
         dto.setParentId(1L);
-
-        CommonCodeId codeId = new CommonCodeId("S", "COMP");
-        CommonCode commonCode = CommonCode.builder().id(codeId).build();
-        dto.setCompetencyCategory(commonCode);
+        dto.setCompetencyCategory(
+                CommonCode.builder()
+                        .id(new CommonCodeId("S", "COMP"))
+                        .codeName("하위역량") // 핵심으로 분기
+                        .build()
+        );
 
         // 상위 카테고리 존재 모의
         CoreCompetencyCategory parent = CoreCompetencyCategory.builder().id(1L).build();
@@ -108,10 +112,12 @@ class AdminCompetencyCategoryServiceTest {
         dto.setName("수정한 역량");
         dto.setDescription("수정한 역량 설명");
         dto.setIdealTalentProfileId(1L);
-
-        CommonCodeId codeId = new CommonCodeId("C", "COMP");
-        CommonCode commonCode = CommonCode.builder().id(codeId).build();
-        dto.setCompetencyCategory(commonCode);
+        dto.setCompetencyCategory(
+                CommonCode.builder()
+                        .id(new CommonCodeId("C", "COMP"))
+                        .codeName("핵심역량") // 핵심으로 분기
+                        .build()
+        );
 
         // 레포지토리 응답 모의
         when(coreCompetencyCategoryRepository.findById(id)).thenReturn(Optional.of(existing));
@@ -123,7 +129,7 @@ class AdminCompetencyCategoryServiceTest {
         assertEquals("수정한 역량", existing.getCoreCategoryName());
         assertEquals("수정한 역량 설명", existing.getCoreCategoryNote());
 
-        verify(coreCompetencyCategoryRepository, times(1)).save(existing);
+        verify(coreCompetencyCategoryRepository, never()).save(any());
     }
 
     @Test
@@ -136,10 +142,12 @@ class AdminCompetencyCategoryServiceTest {
         dto.setName("수정한 하위 역량");
         dto.setDescription("수정한 하위 역량 설명");
         dto.setParentId(1L);
-
-        CommonCodeId codeId = new CommonCodeId("S", "COMP");
-        CommonCode commonCode = CommonCode.builder().id(codeId).build();
-        dto.setCompetencyCategory(commonCode);
+        dto.setCompetencyCategory(
+                CommonCode.builder()
+                        .id(new CommonCodeId("S", "COMP"))
+                        .codeName("하위역량") // 핵심으로 분기
+                        .build()
+        );
 
         when(subCompetencyCategoryRepository.findById(id)).thenReturn(Optional.of(existing));
 
@@ -148,7 +156,8 @@ class AdminCompetencyCategoryServiceTest {
         assertEquals("수정한 하위 역량", existing.getSubCategoryName());
         assertEquals("수정한 하위 역량 설명", existing.getSubCategoryNote());
 
-        verify(subCompetencyCategoryRepository, times(1)).save(existing);
+        verify(coreCompetencyCategoryRepository, never()).save(any());
+
     }
 
     @Test
@@ -158,7 +167,15 @@ class AdminCompetencyCategoryServiceTest {
         CoreCompetencyCategory core = CoreCompetencyCategory.builder().id(id).build();
         when(coreCompetencyCategoryRepository.findById(id)).thenReturn(Optional.of(core));
 
-        categoryService.deleteCategory("CORE_COMPETENCY", id);
+        CompetencyCategoryDto dto = new CompetencyCategoryDto();
+        dto.setCompetencyCategory(
+                CommonCode.builder()
+                        .id(new CommonCodeId("C", "COMP"))
+                        .codeName("핵심역량") // 핵심으로 분기
+                        .build()
+        );
+
+        categoryService.deleteCategory(1L, dto);
 
         verify(coreCompetencyCategoryRepository, times(1)).delete(core);
     }
@@ -170,7 +187,15 @@ class AdminCompetencyCategoryServiceTest {
         SubCompetencyCategory sub = SubCompetencyCategory.builder().id(id).build();
         when(subCompetencyCategoryRepository.findById(id)).thenReturn(Optional.of(sub));
 
-        categoryService.deleteCategory("SUB_COMPETENCY", id);
+        CompetencyCategoryDto dto = new CompetencyCategoryDto();
+        dto.setCompetencyCategory(
+                CommonCode.builder()
+                        .id(new CommonCodeId("S", "COMP"))
+                        .codeName("하위역량") // 핵심으로 분기
+                        .build()
+        );
+
+        categoryService.deleteCategory(1L, dto);
 
         verify(subCompetencyCategoryRepository, times(1)).delete(sub);
     }

@@ -15,6 +15,7 @@ public class SubCompetencyCategoryDto {
     private String description; // 하위 역량 카테고리 설명 (추가 가능성 있음)
     private String codeName; // 하위 역량 카테고리 코드
     private Long assessmentId; // 평가 ID (추가 가능성 있음)
+    private Long coreCategoryId;    //핵심역량 Id
 
     public static SubCompetencyCategoryDto fromEntity(SubCompetencyCategory subCompetencyCategory) {
         return SubCompetencyCategoryDto.builder()

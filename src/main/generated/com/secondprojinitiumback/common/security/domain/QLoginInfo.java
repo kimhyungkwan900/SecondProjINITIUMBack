@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -23,11 +24,15 @@ public class QLoginInfo extends EntityPathBase<LoginInfo> {
 
     public final StringPath accountStatusCode = createString("accountStatusCode");
 
+    public final ListPath<LoginAuthInfo, QLoginAuthInfo> authInfos = this.<LoginAuthInfo, QLoginAuthInfo>createList("authInfos", LoginAuthInfo.class, QLoginAuthInfo.class, PathInits.DIRECT2);
+
     public final DateTimePath<java.time.LocalDateTime> lastLoginDateTime = createDateTime("lastLoginDateTime", java.time.LocalDateTime.class);
 
     public final DateTimePath<java.time.LocalDateTime> lastPasswordChangeDateTime = createDateTime("lastPasswordChangeDateTime", java.time.LocalDateTime.class);
 
     public final NumberPath<Integer> loginFailCount = createNumber("loginFailCount", Integer.class);
+
+    public final ListPath<LoginHistory, QLoginHistory> loginHistories = this.<LoginHistory, QLoginHistory>createList("loginHistories", LoginHistory.class, QLoginHistory.class, PathInits.DIRECT2);
 
     public final StringPath loginId = createString("loginId");
 

@@ -20,8 +20,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -140,21 +141,49 @@ class AdminCompetencyCategoryControllerTest {
     @Test
     @DisplayName("핵심역량 삭제 테스트")
     void deleteCoreCategory() throws Exception {
-        doNothing().when(categoryService).deleteCategory("CORE_COMPETENCY", 1L);
+        Long id = 1L;
 
-        mockMvc.perform(delete("/api/admin/competencyCategory/delete/CORE_COMPETENCY/1"))
+        CompetencyCategoryDto dto = new CompetencyCategoryDto();
+        dto.setCompetencyCategory(
+                CommonCode.builder()
+                        .id(new CommonCodeId("C", "COMP"))
+                        .codeName("핵심역량")
+                        .build()
+        );
+
+        doNothing().when(categoryService).deleteCategory(eq(id), any(CompetencyCategoryDto.class));
+
+        mockMvc.perform(delete("/api/admin/competencyCategory/delete/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
                 .andExpect(content().string("삭제 완료"));
+
+        verify(categoryService, times(1)).deleteCategory(eq(id), any(CompetencyCategoryDto.class));
     }
 
     @Test
     @DisplayName("하위역량 삭제 테스트")
     void deleteSubCategory() throws Exception {
-        doNothing().when(categoryService).deleteCategory("SUB_COMPETENCY", 1L);
+        Long id = 1L;
 
-        mockMvc.perform(delete("/api/admin/competencyCategory/delete/SUB_COMPETENCY/1"))
+        CompetencyCategoryDto dto = new CompetencyCategoryDto();
+        dto.setCompetencyCategory(
+                CommonCode.builder()
+                        .id(new CommonCodeId("S", "COMP"))
+                        .codeName("하위역량")
+                        .build()
+        );
+
+        doNothing().when(categoryService).deleteCategory(eq(id), any(CompetencyCategoryDto.class));
+
+        mockMvc.perform(delete("/api/admin/competencyCategory/delete/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
                 .andExpect(content().string("삭제 완료"));
+
+        verify(categoryService, times(1)).deleteCategory(eq(id), any(CompetencyCategoryDto.class));
     }
 
     @Test

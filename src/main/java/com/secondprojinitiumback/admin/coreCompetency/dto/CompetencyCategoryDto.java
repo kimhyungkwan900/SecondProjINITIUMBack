@@ -15,4 +15,5 @@ public class CompetencyCategoryDto {
     private CommonCode competencyCategory ;        // "핵심역량" 또는 "하위역량"
     private Long parentId;           // 상위 카테고리 ID (하위역량일 경우 필수)
     private Long idealTalentProfileId; // 핵심역량일 경우 자동으로 인재상 ID 설정됨
+    private Long assessmentId;
 }

@@ -1,7 +1,7 @@
 package com.secondprojinitiumback.admin.coreCompetency.service;
 
 import com.secondprojinitiumback.admin.coreCompetency.domain.*;
-import com.secondprojinitiumback.admin.coreCompetency.dto.CoreCompetencyQuestionDto;
+import com.secondprojinitiumback.admin.coreCompetency.dto.CoreCompetencyQuestionCreateRequestDto;
 import com.secondprojinitiumback.admin.coreCompetency.repository.*;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
 import com.secondprojinitiumback.common.repository.SchoolSubjectRepository;
@@ -38,13 +38,12 @@ class AdminCoreCompetencyQuestionServiceTest {
         CoreCompetencyAssessment assessment = CoreCompetencyAssessment.builder().id(assessmentId).build();
         when(assessmentRepository.findById(assessmentId)).thenReturn(Optional.of(assessment));
 
-        CoreCompetencyQuestionDto dto = CoreCompetencyQuestionDto.builder()
+        CoreCompetencyQuestionCreateRequestDto dto = CoreCompetencyQuestionCreateRequestDto.builder()
                 .questionNo(1)
                 .questionName("질문")
                 .questionContent("내용")
                 .displayOrder(1)
-                .answerAllowCount(1)
-                .isCommonCode("Y")
+                .selectAllowCount(1)
                 .build();
 
         when(questionRepository.save(any(CoreCompetencyQuestion.class)))

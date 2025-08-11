@@ -42,15 +42,11 @@ public class QCoreCompetencyAssessment extends EntityPathBase<CoreCompetencyAsse
 
     public final com.secondprojinitiumback.common.domain.QCommonCode onlineExecCode;
 
-    public final StringPath onlineExecGroupCode = createString("onlineExecGroupCode");
-
     public final StringPath registerDate = createString("registerDate");
 
     public final com.secondprojinitiumback.common.domain.QSchoolSubject schoolSubject;
 
     public final com.secondprojinitiumback.common.domain.QCommonCode semesterCode;
-
-    public final StringPath semesterGroup = createString("semesterGroup");
 
     public final StringPath startDate = createString("startDate");
 

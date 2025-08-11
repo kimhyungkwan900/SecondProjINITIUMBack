@@ -26,4 +26,10 @@ public class ResponseChoiceOption {
 
     @Column(name = "OPT_SCR")
     private Integer score; // 해당 보기에 대한 점수
+
+    @Column(name="OPT_NO", nullable=false)   // 1..N
+    private Integer optionNo;   //답변문항구분
+
+    @Column(name="ANSR_TYPE", nullable=false, length=10)
+    private String answerType = "SINGLE"; // 답변방식, 단일문항답변으로 고정(결과 계산을 위해)
 }

@@ -79,10 +79,7 @@ public class AdminResponseChoiceOptionService {
         // question.id 기준으로 보기 목록 조회
         return responseChoiceOptionRepository.findByQuestion_Id(questionId)
                 .stream()
-                .map(option -> new ResponseChoiceOptionDto(
-                        option.getId(),
-                        option.getLabel(),
-                        option.getScore()))
+                .map(ResponseChoiceOptionDto::fromEntity) // 빌더/정적 팩토리 사용
                 .toList();
     }
 }

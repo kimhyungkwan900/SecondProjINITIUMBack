@@ -1,6 +1,7 @@
 package com.secondprojinitiumback.user.extracurricular.controller;
 
 import com.secondprojinitiumback.user.extracurricular.dto.AppliedExtracurricularProgramDTO;
+import com.secondprojinitiumback.user.extracurricular.dto.ApplyProgramDTO;
 import com.secondprojinitiumback.user.extracurricular.dto.ExtracurricularProgramDTO;
 import com.secondprojinitiumback.user.extracurricular.service.ExtracurricularProgramUserService;
 import lombok.RequiredArgsConstructor;
@@ -55,6 +56,25 @@ public class ExtracurricularUserProgramController {
         Page<AppliedExtracurricularProgramDTO> result = extracurricularProgramUserService.getAppliedPrograms(userId, pageable);
         return ResponseEntity.ok(result);
     }
+
+    @GetMapping("/program/mylist")
+    public ResponseEntity<Page<ApplyProgramDTO>> getMyProgramList(
+            @RequestParam String stdfntNo,
+            @RequestParam(required = false) String eduFnshYn,
+            @RequestParam(required = false) String keyword,
+            @PageableDefault(size = 10, sort = "eduMngId", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        // 필수 파라미터 체크
+        if (stdfntNo == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Page<ApplyProgramDTO> page = extracurricularProgramUserService.getApplyPrograms(
+                stdfntNo, eduFnshYn, keyword, pageable);
+
+        return ResponseEntity.ok(page);
+    }
+
 
 
 }

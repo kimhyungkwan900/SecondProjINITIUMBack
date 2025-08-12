@@ -13,4 +13,5 @@ public interface ExtracurricularSurveyRepository extends JpaRepository<Extracurr
     ExtracurricularSurvey findByExtracurricularProgram_EduMngId(Long eduMngId);
 
     void deleteByExtracurricularProgram_EduMngId(Long eduMngId);
+
 }

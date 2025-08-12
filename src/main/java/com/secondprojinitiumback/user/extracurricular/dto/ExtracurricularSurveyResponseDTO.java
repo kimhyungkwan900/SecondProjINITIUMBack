@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ExtracurricularSurveyResponseDTO {
     private Long srvyRspnsId; // 설문 응답 ID
-    private ExtracurricularSurvey extracurricularSurvey;  // 설문 정보
-    private Student student; // 학생 정보
+    private Long srvyId;  // 설문 정보
+    private String stdntNo; // 학생 정보
     private String srvyRspnsCn; // 설문 응답 내용
     private LocalDateTime srvyRspnsDt; // 설문 응답 일시
     private int srvyDgstfnScr; // 설문 응답 점수

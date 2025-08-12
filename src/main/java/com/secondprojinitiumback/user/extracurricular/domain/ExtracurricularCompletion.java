@@ -18,7 +18,7 @@ public class ExtracurricularCompletion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long eduFnshId; // 수료 여부 ID
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "edu_aply_id")
     private ExtracurricularApply extracurricularApply; // 해당 신청과의 관계 (읽기 전용)
 

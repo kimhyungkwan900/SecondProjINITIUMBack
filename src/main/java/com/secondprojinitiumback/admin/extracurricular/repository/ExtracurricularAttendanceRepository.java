@@ -30,4 +30,15 @@ public interface ExtracurricularAttendanceRepository extends JpaRepository<Extra
     Double calculateAttendanceRate(@Param("eduMngId") Long eduMngId, @Param("stdntNo") String stdntNo);
 
     List<ExtracurricularAttendance> findByExtracurricularSchedule(ExtracurricularSchedule extracurricularSchedule);
+
+    int countExtracurricularAttendanceByAtndcId(Long atndcId);
+
+
+    int countByAtndcIdAndAtndcYn(Long atndcId, String atndcYn);
+
+    int countByExtracurricularSchedule_ExtracurricularProgram_EduMngId(Long extracurricularScheduleExtracurricularProgramEduMngId);
+
+    int countByExtracurricularSchedule_ExtracurricularProgram_EduMngIdAndAtndcYn(Long extracurricularScheduleExtracurricularProgramEduMngId, String atndcYn);
+
+    int countByExtracurricularSchedule_ExtracurricularProgram_EduMngIdAndStudent_StudentNoAndAtndcYn(Long extracurricularScheduleExtracurricularProgramEduMngId, String studentStudentNo, String atndcYn);
 }

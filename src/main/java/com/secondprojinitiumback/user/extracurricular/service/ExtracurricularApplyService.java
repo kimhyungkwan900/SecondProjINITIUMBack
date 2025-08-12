@@ -11,6 +11,7 @@ import com.secondprojinitiumback.user.extracurricular.repository.Extracurricular
 import com.secondprojinitiumback.user.student.domain.Student;
 import com.secondprojinitiumback.user.student.repository.StudentRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -103,11 +104,23 @@ public class ExtracurricularApplyService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public void deleteApplyExtracurriculars(List<Long> eduAplyIds) {
+        List<ExtracurricularApply> applies = extracurricularApplyRepository.findAllById(eduAplyIds);
+        if (applies.size() != eduAplyIds.size()) {
+            throw new IllegalArgumentException("존재하지 않는 신청 내역이 포함되어 있습니다.");
+        }
+        for (ExtracurricularApply apply : applies) {
+            apply.setDelYn("Y");
+        }
+        extracurricularApplyRepository.saveAll(applies);
+    }
+
     // 신청 삭제 처리
     public void deleteApplyExtracurricular(Long eduAplyId) {
         ExtracurricularApply apply = extracurricularApplyRepository.findById(eduAplyId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 신청이 존재하지 않습니다: " + eduAplyId));
-        apply.setDelYn("Y"); // 논리 삭제 처리
+        apply.setDelYn("Y");
         extracurricularApplyRepository.save(apply);
     }
 

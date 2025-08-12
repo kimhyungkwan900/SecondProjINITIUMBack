@@ -1,16 +1,20 @@
-// CoreCompetencyResultService.java
+// AdminCoreCompetencyResultService.java
 package com.secondprojinitiumback.admin.coreCompetency.service;
 
-import com.secondprojinitiumback.admin.coreCompetency.domain.*;
-import com.secondprojinitiumback.admin.coreCompetency.dto.QuestionStatisticsDto;
-import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyAssessmentRepository;
+import com.secondprojinitiumback.admin.coreCompetency.domain.CoreCompetencyResponse;
+import com.secondprojinitiumback.admin.coreCompetency.domain.SubCompetencyCategory;
+import com.secondprojinitiumback.admin.coreCompetency.dto.StudentInfoDto;
+import com.secondprojinitiumback.admin.coreCompetency.dto.StudentResponseDetailDto;
+import com.secondprojinitiumback.admin.coreCompetency.dto.SubCompetencyAverageDto;
+import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyQuestionRepository;
 import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyResponseRepository;
+import com.secondprojinitiumback.admin.coreCompetency.repository.SubCompetencyCategoryRepository;
 import com.secondprojinitiumback.user.student.domain.Student;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -18,62 +22,103 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AdminCoreCompetencyResultService {
 
-    private final CoreCompetencyAssessmentRepository assessmentRepository;
     private final CoreCompetencyResponseRepository responseRepository;
+    private final CoreCompetencyQuestionRepository coreCompetencyQuestionRepository;
+    private final SubCompetencyCategoryRepository subCompetencyCategoryRepository;
 
     /**
-     * [학생 응답 결과] 학생이 평가에서 각 문항에 대해 어떤 선택지를 선택했는지 보여줌
+     * 특정 평가(assessmentNo)에 참여한 학생 기본정보 목록
+     * - 주의: 파라미터에 studentNo를 받지 않는다(전체 학생 목록이 목적이므로)
      */
-    public Map<Integer, String> getStudentResponseLabels(Student student, Long assessmentId) {
-        CoreCompetencyAssessment assessment = assessmentRepository.findById(assessmentId)
-                .orElseThrow(() -> new IllegalArgumentException("평가를 찾을 수 없습니다."));
+    public List<StudentInfoDto> getStudentListForAssessment(String assessmentNo) {
+        // 평가번호로 모든 응답 조회 → 학생 기준 그룹화
+        List<CoreCompetencyResponse> all =
+                responseRepository.findAllWithDetailsByAssessment_AssessmentNo(assessmentNo);
 
-        List<CoreCompetencyResponse> responses = responseRepository.findByStudentAndAssessment(student, assessment);
+        Map<Student, List<CoreCompetencyResponse>> byStudent =
+                all.stream().collect(Collectors.groupingBy(CoreCompetencyResponse::getStudent));
 
-        return responses.stream()
-                .collect(Collectors.toMap(
-                        r -> r.getQuestion().getQuestionNo(),           // 문항 번호
-                        r -> r.getSelectedOption().getLabel()          // 선택한 보기 라벨
-                ));
+        return byStudent.entrySet().stream()
+                .map(e -> {
+                    Student s = e.getKey();
+                    List<CoreCompetencyResponse> rs = e.getValue();
+                    // 첫 응답일(문자열 비교 최소값) — 형식이 yyyymmdd 또는 ISO라면 문제 없음
+                    String completeDate = rs.stream()
+                            .map(CoreCompetencyResponse::getCompleteDate)
+                            .filter(Objects::nonNull)
+                            .min(String::compareTo)
+                            .orElse(null);
+
+                    return StudentInfoDto.builder()
+                            .assessmentNo(assessmentNo)
+                            .studentNo(s.getStudentNo())
+                            .name(s.getName())
+                            .gender(s.getGender() != null ? s.getGender().getCodeName() : "")
+                            // DTO 필드명이 subjectCode지만 실제로 과명이라면 DTO를 subjectName으로 바꾸는 것을 권장
+                            .subjectCode(s.getSchoolSubject() != null ? s.getSchoolSubject().getSubjectName() : "")
+                            .schoolYear(String.valueOf(s.getGrade()))
+                            .status(s.getStudentStatus() != null ? s.getStudentStatus().getStudentStatusName() : "")
+                            .completeDate(completeDate)
+                            .build();
+                })
+                .sorted(Comparator.comparing(StudentInfoDto::getName, Comparator.nullsLast(String::compareTo)))
+                .collect(Collectors.toList());
     }
 
     /**
-     * [총계표 데이터 생성] 문항별로 응답자 수, 선택 분포(1~5), 평균 점수를 계산하여 반환
+     * 특정 학생의 문항별 선택 라벨 목록
      */
-    public List<QuestionStatisticsDto> getTotalQuestionStatistics(Long assessmentId) {
-        List<CoreCompetencyResponse> responses = responseRepository.findByAssessmentId(assessmentId);
+    public List<StudentResponseDetailDto> getStudentResponseDetails(String assessmentNo, String studentNo) {
+        List<CoreCompetencyResponse> rs =
+                responseRepository.findByStudent_StudentNoAndAssessment_AssessmentNo(studentNo, assessmentNo);
 
-        // 문항별로 응답 리스트 그룹핑
-        Map<CoreCompetencyQuestion, List<CoreCompetencyResponse>> grouped = responses.stream()
-                .collect(Collectors.groupingBy(CoreCompetencyResponse::getQuestion));
+        return rs.stream()
+                .map(r -> StudentResponseDetailDto.builder()
+                        .assessmentNo(assessmentNo)
+                        .studentNo(studentNo)
+                        .questionNo(r.getQuestion().getQuestionNo())
+                        .label(r.getSelectedOption() != null ? r.getSelectedOption().getLabel() : "선택 없음")
+                        .build())
+                .sorted(Comparator.comparing(StudentResponseDetailDto::getQuestionNo))
+                .collect(Collectors.toList());
+    }
 
-        List<QuestionStatisticsDto> result = new ArrayList<>();
+    /**
+     * 하위역량별 평균점수(모든 문항 필수 응답 가정)
+     */
+    public List<SubCompetencyAverageDto> getSubCompetencyAverages(String assessmentNo, String studentNo) {
+        List<CoreCompetencyResponse> responses =
+                responseRepository.findAllByAssessment_AssessmentNoAndStudent_StudentNo(assessmentNo, studentNo);
 
-        for (Map.Entry<CoreCompetencyQuestion, List<CoreCompetencyResponse>> entry : grouped.entrySet()) {
-            CoreCompetencyQuestion question = entry.getKey();
-            List<CoreCompetencyResponse> resps = entry.getValue();
+        // 하위역량별 합계/개수
+        Map<Long, DoubleSummaryStatistics> statBySubId = responses.stream()
+                .filter(r -> r.getQuestion() != null && r.getQuestion().getSubCompetencyCategory() != null)
+                .filter(r -> r.getSelectedOption() != null)
+                .collect(Collectors.groupingBy(
+                        r -> r.getQuestion().getSubCompetencyCategory().getId(),
+                        Collectors.summarizingDouble(r -> Optional.ofNullable(r.getSelectedOption().getScore()).orElse(0))
+                ));
 
-            // 1~5점 선택 분포 카운트
-            int[] counts = new int[5];
-            for (CoreCompetencyResponse r : resps) {
-                int score = r.getSelectCount();
-                if (score >= 1 && score <= 5) counts[score - 1]++;
-            }
+        // 응답에서 하위역량 목록(이름순) 추출
+        record SC(Long id, String name) {}
+        List<SC> subs = responses.stream()
+                .map(r -> r.getQuestion().getSubCompetencyCategory())
+                .filter(Objects::nonNull)
+                .map(sc -> new SC(sc.getId(), sc.getSubCategoryName()))
+                .distinct() // equals/hashCode가 id 기반 아니면 아래처럼 id로 중복 제거 권장
+                .sorted(Comparator.comparing(SC::name))
+                .toList();
 
-            // 평균 점수 계산
-            double avg = resps.stream().mapToInt(CoreCompetencyResponse::getSelectCount).average().orElse(0.0);
-
-            // 총계표 DTO 생성
-            result.add(QuestionStatisticsDto.builder()
-                    .questionNo(question.getQuestionNo())
-                    .questionName(question.getName())
-                    .subCategoryName(question.getSubCompetencyCategory().getSubCategoryName())
-                    .responseCount(resps.size())
-                    .choiceCounts(counts)
-                    .averageScore(BigDecimal.valueOf(avg).setScale(2, RoundingMode.HALF_UP))
-                    .build());
-        }
-
-        return result;
+        return subs.stream().map(sc -> {
+            DoubleSummaryStatistics s = statBySubId.get(sc.id());
+            double avg = (s != null && s.getCount() > 0) ? s.getAverage() : 0.0;
+            return SubCompetencyAverageDto.builder()
+                    .subCategoryId(sc.id())
+                    .subCategoryName(sc.name())
+                    .questionCount(s != null ? s.getCount() : 0)
+                    .totalScore(s != null ? s.getSum()   : 0.0)
+                    .average(Math.round(avg * 100.0) / 100.0)
+                    .build();
+        }).toList();
     }
 }

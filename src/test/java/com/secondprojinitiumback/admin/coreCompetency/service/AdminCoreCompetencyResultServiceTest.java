@@ -98,7 +98,7 @@ public class AdminCoreCompetencyResultServiceTest {
                 .thenReturn(List.of(response1, response2));
 
         // When: 서비스 호출
-        Map<Integer, String> result = adminCoreCompetencyResultService.getStudentResponseLabels(student, assessment.getId());
+        Map<Integer, String> result = adminCoreCompetencyResultService.getAssessmentResults(assessment.getId());
 
         // Then: 문항 번호 → 선택지 라벨 매핑 결과 검증
         assertEquals("매우그렇다", result.get(1));

@@ -20,6 +20,7 @@ public class UserCoreCompetencySubmitService {
     private final CoreCompetencyQuestionRepository coreCompetencyQuestionRepository;
     private final ResponseChoiceOptionRepository responseChoiceOptionRepository;
     private final CoreCompetencyResponseRepository coreCompetencyResponseRepository;
+    private final SubCompetencyCategoryRepository subCompetencyCategoryRepository;
 
     /**
      * 핵심역량 진단 응답 저장 서비스

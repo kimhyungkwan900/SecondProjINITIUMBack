@@ -16,5 +16,4 @@ public interface CoreCompetencyAssessmentRepository extends JpaRepository<CoreCo
     List<CoreCompetencyAssessment> findByConditions(@Param("year") String year,
                                                     @Param("semester") String semester,
                                                     @Param("assessmentNo") String assessmentNo);
-
 }

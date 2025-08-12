@@ -63,6 +63,7 @@ class AdminCoreCompetencyQuestionServiceTest {
     @DisplayName("문항 삭제 테스트")
     void deleteQuestion_success() {
         // Given
+        Long assessmentId = 1L;
         Long questionId = 11L;
         CoreCompetencyQuestion question = CoreCompetencyQuestion.builder().id(questionId).build();
         when(questionRepository.findById(questionId)).thenReturn(Optional.of(question));

@@ -35,6 +35,9 @@ public class ScorePolicy {
     @Column(name = "CRTN_DT")
     private LocalDateTime createdAt; // 등록일자
 
+    @Column(name="ATNDC_ID", nullable=false)
+    private Long attendanceId;
+
     // 비교과 프로그램 (외래키로 연결)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "EDU_MNG_ID")

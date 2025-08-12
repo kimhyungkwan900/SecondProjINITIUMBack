@@ -18,7 +18,12 @@ public class UserMileageHistoryDto {
     private LocalDateTime createdAt;
 
     // 지급 내역 변환
-    public static UserMileageHistoryDto from(MileagePerf perf, double totalScore) {
+    public static UserMileageHistoryDto from(MileagePerf perf, double totalScore
+
+
+
+
+       ) {
         return UserMileageHistoryDto.builder()
                 .type("지급")
                 .description(perf.getMileageItem().getProgram().getEduNm()) //비교과 프로그램명

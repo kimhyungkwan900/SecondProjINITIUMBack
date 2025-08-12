@@ -11,6 +11,5 @@ import org.springframework.data.domain.Page;
 @AllArgsConstructor
 public class DscsnInfoListDto {
     private Page<DscsnInfoResponseDto> dscsnInfos;
-    private Integer maxPage;
-    private Integer totalPage;
+
 }

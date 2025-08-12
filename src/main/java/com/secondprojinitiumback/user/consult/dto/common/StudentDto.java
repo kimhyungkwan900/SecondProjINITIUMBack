@@ -14,7 +14,7 @@ public class StudentDto {
 
     private String studentNo;
 
-    private SchoolSubject schoolSubject;
+    private String schoolSubject;
 
     private String name;
 }

@@ -26,18 +26,18 @@ public class DscsnInfoRepositoryCustomImpl implements DscsnInfoRepositoryCustom 
         // 동적 where절 조립
         BooleanBuilder builder = new BooleanBuilder();
 
-        // 사용자 유형에 따라 쿼리문 추가
-        switch(dscsnInfoSearchDto.getUserType()){
-            case "S":
-                builder.and(dscsnInfo.dscsnApply.student.studentNo.eq(dscsnInfoSearchDto.getEmpNo()));
-                break;
-            case "E":
-                builder.and(dscsnInfo.dscsnApply.dscsnDt.employee.empNo.eq(dscsnInfoSearchDto.getEmpNo()));
-                break;
-            case "A":
-                // 관리자는 모든 상담현황 조회 가능하므로 추가하는 쿼리문 X
-                break;
-        }
+        // 사용자 유형에 따라 쿼리문 추가(어차피 DscsnInfoController에서 유저 타입에 따라 항상 studentNo나 empNo에 값을 넣기 때문에 아래의 where절에서 조건이 추가된다.)
+//        switch(dscsnInfoSearchDto.getUserType()){
+//            case "S":   //학생
+//                builder.and(dscsnInfo.dscsnApply.student.studentNo.eq(dscsnInfoSearchDto.getStudentNo()));
+//                break;
+//            case "E":   //직원
+//                builder.and(dscsnInfo.dscsnApply.dscsnDt.employee.empNo.eq(dscsnInfoSearchDto.getEmpNo()));
+//                break;
+//            case "A":   //관리자
+//                // 관리자는 모든 상담현황 조회 가능하므로 추가하는 쿼리문 X
+//                break;
+//        }
 
         //상담분야
         if(StringUtils.hasText(dscsnInfoSearchDto.getDscsnType())){

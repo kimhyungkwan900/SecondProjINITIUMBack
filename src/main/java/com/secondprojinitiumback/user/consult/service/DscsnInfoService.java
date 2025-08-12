@@ -41,7 +41,7 @@ public class DscsnInfoService {
         //상담정보 엔티티 생성
         DscsnInfo dscsnInfo = DscsnInfo.builder()
                 .dscsnInfoId(dscsnInfoId)
-                .dscsnStatus("예약대기") // 초기 상태 설정
+                .dscsnStatus("Waiting") // 초기 상태 설정
                 .dscsnResultCn(null) // 상담 결과 내용 초기값
                 .dscsnReleaseYn("N") // 상담 결과 공개 여부 초기값
                 .dscsnApply(dscsnApply) // 상담 신청 ID
@@ -132,7 +132,7 @@ public class DscsnInfoService {
                                                 (student == null) ? null :
                                                         StudentDto.builder()
                                                                 .studentNo(student.getStudentNo())
-                                                                .schoolSubject(student.getSchoolSubject())
+                                                                .schoolSubject(student.getSchoolSubject().getSubjectName())
                                                                 .name(student.getName())
                                                                 .build()
                                         )

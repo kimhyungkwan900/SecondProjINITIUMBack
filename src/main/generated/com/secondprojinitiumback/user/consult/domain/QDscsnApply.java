@@ -30,8 +30,6 @@ public class QDscsnApply extends EntityPathBase<DscsnApply> {
 
     public final QDscsnKind dscsnKind;
 
-    public final StringPath dscsnOnlineYn = createString("dscsnOnlineYn");
-
     public final com.secondprojinitiumback.user.student.domain.QStudent student;
 
     public final StringPath studentTelno = createString("studentTelno");

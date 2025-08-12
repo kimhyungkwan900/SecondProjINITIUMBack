@@ -24,9 +24,9 @@ public class QExtracurricularSurvey extends EntityPathBase<ExtracurricularSurvey
 
     public final QExtracurricularProgram extracurricularProgram;
 
-    public final StringPath srvyBgngDt = createString("srvyBgngDt");
+    public final DatePath<java.time.LocalDate> srvyBgngDt = createDate("srvyBgngDt", java.time.LocalDate.class);
 
-    public final StringPath srvyEndDt = createString("srvyEndDt");
+    public final DatePath<java.time.LocalDate> srvyEndDt = createDate("srvyEndDt", java.time.LocalDate.class);
 
     public final NumberPath<Long> srvyId = createNumber("srvyId", Long.class);
 

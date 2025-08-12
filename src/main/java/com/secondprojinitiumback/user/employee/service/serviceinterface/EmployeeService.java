@@ -24,6 +24,8 @@ public interface EmployeeService {
     EmployeeDto getEmployee(String employeeNo);
     Page<EmployeeDto> getEmployeePage(EmployeeSearchDto employeeSearchDto, Pageable pageable);
 
+    List<EmployeeDto> findAllProfessors();
+
     // 퇴사 처리 (내부적으로는 상태 변경을 사용)
     void resignEmployee(String employeeNo);
 }

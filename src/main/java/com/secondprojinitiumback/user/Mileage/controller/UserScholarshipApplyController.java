@@ -26,8 +26,8 @@ public class UserScholarshipApplyController {
 
     // 은행 코드 목록 조회 (은행명 드롭다운용)
     @GetMapping("/banks")
-    public List<CommonCode> getBanks() {
-        return codeRepository.findAllById_CodeGroup("BK0001");
+    public List<UserScholarshipUserInfoDto.BankItem> getBanks() {
+        return applyService.getBankCodes();
     }
 
     // 장학금 신청

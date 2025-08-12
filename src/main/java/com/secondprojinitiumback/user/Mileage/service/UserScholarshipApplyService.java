@@ -17,11 +17,14 @@ import com.secondprojinitiumback.user.student.repository.StudentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserScholarshipApplyService {
 
     private final StudentRepository studentRepository;
@@ -30,31 +33,56 @@ public class UserScholarshipApplyService {
     private final BankAccountRepository bankAccountRepository;
     private final CommonCodeRepository codeRepository;
 
+    // ✅ 은행 목록 조회(공통코드 BK0001 그룹) — 서비스에 메서드 추가
+    public List<UserScholarshipUserInfoDto.BankItem> getBankCodes() {
+        return codeRepository
+                .findAllById_CodeGroupAndUseYnOrderBySortOrderAscCodeNameAsc("BK0001", "Y")
+                .stream()
+                .map(c -> new UserScholarshipUserInfoDto.BankItem(
+                        c.getId().getCode(),
+                        c.getCodeName()
+                ))
+                .toList();
+    }
 
     // 1. 사용자 정보 조회 (이름, 학번, 과목명, 총점수, 계좌번호)
+
     public UserScholarshipUserInfoDto getUserInfo(String studentNo) {
 
         Student student = studentRepository.findById(studentNo)
                 .orElseThrow(() -> new EntityNotFoundException("학생이 존재하지 않습니다."));
 
-        MileageTotal total = mileageTotalRepository.findByStudent(student)
-                .orElseThrow(() -> new EntityNotFoundException("마일리지 누계가 없습니다."));
+        MileageTotal total = mileageTotalRepository.findByStudent(student).orElse(null);
+        int totalScore = (total != null) ? (int) total.getTotalScore() : 0;
 
-        String accountNo = bankAccountRepository.findByOwnerId(student.getStudentNo())
-                .map(BankAccount::getAccountNo)
+        BankAccount account = bankAccountRepository
+                .findFirstByOwnerIdOrderByAccountNoDesc(student.getStudentNo())
                 .orElse(null);
+        String accountNo = (account != null) ? account.getAccountNo() : null;
+
+        String bankCode = (account != null && account.getBankCode()!=null)
+                ? account.getBankCode().getId().getCode() : null;
+
+        String bankName = (account != null && account.getBankCode()!=null)
+                ? account.getBankCode().getCodeName() : null;
+
+        List<UserScholarshipUserInfoDto.BankItem> banks = getBankCodes();
 
         //사용자 정보, 누적 점수 dto로 변환
         return UserScholarshipUserInfoDto.builder()
                 .name(student.getName())
                 .studentNo(student.getStudentNo())
-                .subjectName(student.getSchoolSubject().getSubjectName())
-                .totalScore(total.getTotalScore())
+                .subjectName(student.getSchoolSubject() != null ? student.getSchoolSubject().getSubjectName() : "")
+                .totalScore(totalScore)
                 .accountNo(accountNo)
+                .bankCode(bankCode)          // ✅ 자동 선택용
+                .bankName(bankName)
+                .banks(banks)                // ✅ 드롭다운용 목록
                 .build();
     }
 
     // 2. 장학금 신청 처리
+    @Transactional
     public void apply(UserScholarshipApplyRequestDto dto) {
 
         Student student = studentRepository.findById(dto.getStudentNo())

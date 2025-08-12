@@ -32,6 +32,12 @@ public interface ScholarshipApplyRepository extends JpaRepository<ScholarshipApp
             Pageable pageable
     );
 
+    // 1) 페이지네이션 버전
     Page<ScholarshipApply> findAllByStudent_StudentNo(String studentNo, Pageable pageable);
+
+    // 2) 전체 리스트 버전
+    List<ScholarshipApply> findAllByStudent_StudentNo(String studentNo);
+
+
 }
 

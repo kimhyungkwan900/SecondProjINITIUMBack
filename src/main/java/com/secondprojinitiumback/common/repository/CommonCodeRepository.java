@@ -13,5 +13,9 @@ import java.util.Optional;
 @Repository
 public interface CommonCodeRepository extends JpaRepository<CommonCode, CommonCodeId> {
     Optional<CommonCode> findById_CodeAndId_CodeGroup(String id, String semesterCode);
+
     List<CommonCode> findAllById_CodeGroup(String codeGroup); //목록 리스트로 가져오기
+    List<CommonCode> findAllById_CodeGroupAndUseYnOrderBySortOrderAscCodeNameAsc(
+            String codeGroup, String useYn
+    );
 }

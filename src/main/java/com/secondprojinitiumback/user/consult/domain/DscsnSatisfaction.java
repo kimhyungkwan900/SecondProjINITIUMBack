@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class DscsnSatisfaction {
 
     @Id
-    @Column(name = "DSCSN_DGSTFN_ID", nullable = false, length = 5)
+    @Column(name = "DSCSN_DGSTFN_ID", nullable = false, length = 6)
     private String dscsnSatisfyId; //상담 만족도 ID
 
     @Column(name = "DSCSN_DGSTFN_NM", nullable = false, length = 5)

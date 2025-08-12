@@ -12,7 +12,7 @@ import lombok.*;
 public class DscsnInfo {
 
     @Id
-    @Column(name = "DSCSN_INFO_ID", nullable = false, length = 5)
+    @Column(name = "DSCSN_INFO_ID", nullable = false, length = 6)
     private String dscsnInfoId; //상담일정 ID
 
     @Column(name = "DSCSN_STATUS", nullable = false)
@@ -21,7 +21,7 @@ public class DscsnInfo {
     @Column(name = "DSCSN_RSLT_CN", nullable = true)
     private String dscsnResultCn; //상담결과 내용
 
-    @Column(name = "DSCSN_RLS_YN", nullable = false, length = 1)
+    @Column(name = "DSCSN_RLS_YN", nullable = true, length = 1)
     private String dscsnReleaseYn; //상담결과 공개여부
 
     @OneToOne(fetch = FetchType.LAZY)

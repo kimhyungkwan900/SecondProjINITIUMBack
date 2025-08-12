@@ -16,14 +16,14 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name="DSCSN_APPLY")
+@Table(name="DSCSN_APLY")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class DscsnApply {
 
     @Id
-    @Column(name = "DSCSN_APLY_ID", nullable = false, length = 10)
+    @Column(name = "DSCSN_APLY_ID", nullable = false, length = 5)
     private String dscsnApplyId;
 
     @Column(name = "STDNT_TELNO", nullable = false, length = 11)

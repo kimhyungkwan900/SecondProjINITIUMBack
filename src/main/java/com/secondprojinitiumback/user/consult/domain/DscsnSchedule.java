@@ -13,7 +13,7 @@ import lombok.*;
 public class DscsnSchedule {
 
     @Id
-    @Column(name = "DSCSN_DT_ID", nullable = false, length = 5)
+    @Column(name = "DSCSN_DT_ID", nullable = false, length = 10)
     private String dscsnDtId; //상담일정 ID
 
     @Column(name = "DSCSN_PSBLTY_D", nullable = false, length = 8)

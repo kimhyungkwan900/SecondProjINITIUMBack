@@ -40,12 +40,15 @@ public class DscsnInfoController {
 
         // userType, serialNo을 강제로 덮어쓰기 (외부 파라미터 무시)
         dscsnInfoSearchDto.setUserType(userType);
-        dscsnInfoSearchDto.setEmpNo(serialNo);
+//        dscsnInfoSearchDto.setEmpNo(serialNo);
 
         // 권한별 추가 필드 강제 세팅
         if ("S".equals(userType)) {
             dscsnInfoSearchDto.setStudentNo(serialNo);
+        }else if("E".equals(userType)) {
+            dscsnInfoSearchDto.setEmpNo(serialNo);
         }
+        //관리자는 전체 조회 가능해서 별도로 처리하지 않았습니다.
 
         // 페이지 번호 설정
         int pageNo = page != null ? page : 0;
@@ -56,14 +59,29 @@ public class DscsnInfoController {
                 .descending())
                 : PageRequest.of(pageNo, size);
 
+        System.out.println("입력된 상담조건들: \n"
+                + "UserType: " + dscsnInfoSearchDto.getUserType() + "\n"
+                + "ConsultorType: " + dscsnInfoSearchDto.getConsultorType() + "\n"
+                + "EmpNo: " + dscsnInfoSearchDto.getEmpNo() + "\n"
+                + "DscsnType: " + dscsnInfoSearchDto.getDscsnType() + "\n"
+                + "StartDate: " + dscsnInfoSearchDto.getStartDate() + "\n"
+                + "EndDate: " + dscsnInfoSearchDto.getEndDate() + "\n"
+                + "DscsnStatus: " + dscsnInfoSearchDto.getDscsnStatus() + "\n"
+                + "Year: " + dscsnInfoSearchDto.getYear() + "\n"
+                + "StartMonth: " + dscsnInfoSearchDto.getStartMonth() + "\n"
+                + "EndMonth: " + dscsnInfoSearchDto.getEndMonth() + "\n"
+                + "DscsnKindId: " + dscsnInfoSearchDto.getDscsnKindId() + "\n"
+                + "StudentNo: " + dscsnInfoSearchDto.getStudentNo() + "\n"
+                + "StudentName: " + dscsnInfoSearchDto.getStudentName() + "\n"
+                + "StudentStatus: " + dscsnInfoSearchDto.getStudentStatus() + "\n"
+                + "Depart: " + dscsnInfoSearchDto.getDepart() + "\n"
+        );
         // 상담정보 조회
         Page<DscsnInfoResponseDto> dscsnInfos = dscsnInfoService.getDscsnInfo(dscsnInfoSearchDto, pageable);
 
         // 페이지 정보가 없을 경우 빈 리스트 반환
         DscsnInfoListDto body = DscsnInfoListDto.builder()
                 .dscsnInfos(dscsnInfos)
-                .maxPage(10)
-                .totalPage(dscsnInfos.getTotalPages())
                 .build();
 
         return ResponseEntity.ok(body);

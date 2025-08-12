@@ -13,6 +13,8 @@ import java.time.LocalDate;
 public class ApplyProgramDTO {
     private Long eduAplyId;
 
+    private Long eduMngId;
+
     private String eduNm; //  프로그램 이름
     private LocalDate eduEndYmd; // 교육 마지막 날
     private String cndCn; //프로그램 수료 조건

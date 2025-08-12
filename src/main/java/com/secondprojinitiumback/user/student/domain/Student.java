@@ -51,10 +51,6 @@ public class Student {
     @JoinColumn(name = "SCSBJT_NO", nullable = false)
     private SchoolSubject schoolSubject;
 
-    // 동아리 코드
-    @Column(name = "CLUB_NO", length = 5)
-    private String clubCode;
-
     // 학적 상태 정보
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
@@ -121,7 +117,6 @@ public class Student {
                     Employee advisor,
                     String grade,
                     BankAccount bankAccount,
-                    String clubCode,
                     StudentStatusInfo studentStatus) {
         this.studentNo = studentNo;
         this.loginInfo = loginInfo;
@@ -135,7 +130,6 @@ public class Student {
         this.advisor = advisor;
         this.grade = grade;
         this.bankAccount = bankAccount;
-        this.clubCode = clubCode;
         this.studentStatus = studentStatus;
     }
 
@@ -151,7 +145,6 @@ public class Student {
                                  Employee advisor,
                                  String grade,
                                  BankAccount bankAccount,
-                                 String clubCode,
                                  StudentStatusInfo initialStatus) {
         return Student.builder()
                 .studentNo(studentNo)
@@ -166,7 +159,6 @@ public class Student {
                 .advisor(advisor)
                 .grade(grade)
                 .bankAccount(bankAccount)
-                .clubCode(clubCode)
                 .studentStatus(initialStatus)
                 .build();
     }
@@ -192,16 +184,20 @@ public class Student {
                             Employee advisor,
                             BankAccount bankAccount,
                             StudentStatusInfo studentStatus,
-                            University school) {
+                            University school,
+                            LocalDate birthDate,
+                            LocalDate admissionDate) {
+        if (dto.getName() != null) this.name = dto.getName();
         if (dto.getEmail() != null) this.email = dto.getEmail();
-        if (dto.getClubCode() != null) this.clubCode = dto.getClubCode();
+        if (birthDate != null) this.birthDate = birthDate;
+        if (admissionDate != null) this.admissionDate = admissionDate;
         if (dto.getGrade() != null) this.grade = dto.getGrade();
+        if (school != null) this.school = school;
         if (schoolSubject != null) this.schoolSubject = schoolSubject;
-        if (gender != null) this.gender = gender;
         if (advisor != null) this.advisor = advisor;
         if (bankAccount != null) this.bankAccount = bankAccount;
         if (studentStatus != null) this.studentStatus = studentStatus;
-        if (school != null) this.school = school;
+        if (gender != null) this.gender = gender;
     }
 
 }

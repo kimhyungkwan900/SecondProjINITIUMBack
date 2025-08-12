@@ -41,5 +41,9 @@ public class ExtracurricularApply {
 
     @Column(name = "del_yn")
     private String delYn; // 삭제 여부 (Y/N) - 논리 삭제를 위한 필드
+
+    @OneToOne(mappedBy = "extracurricularApply", fetch = FetchType.LAZY)
+    private ExtracurricularCompletion extracurricularCompletion;
+
 }
 

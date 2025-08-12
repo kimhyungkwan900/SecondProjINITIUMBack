@@ -14,4 +14,8 @@ public interface ExtracurricularScheduleRepository extends JpaRepository<Extracu
     List<ExtracurricularSchedule> findExtracurricularSchedulesByExtracurricularProgram_EduMngId(Long extracurricularProgramEduMngId);
 
     List<ExtracurricularSchedule> findByExtracurricularProgram_EduMngId(Long extracurricularProgramEduMngId);
+
+    int countExtracurricularScheduleByExtracurricularProgram_EduMngId(Long extracurricularProgramEduMngId);
+
+    int countExtracurricularSchedulesByExtracurricularProgram_EduMngId(Long extracurricularProgramEduMngId);
 }

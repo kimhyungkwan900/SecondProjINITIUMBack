@@ -6,6 +6,7 @@ import com.secondprojinitiumback.admin.extracurricular.repository.Extracurricula
 import com.secondprojinitiumback.user.extracurricular.domain.ExtracurricularSurveyResponse;
 import com.secondprojinitiumback.user.extracurricular.dto.ExtracurricularSurveyResponseDTO;
 import com.secondprojinitiumback.user.extracurricular.repository.ExtracurricularSurveyResponseRepository;
+import com.secondprojinitiumback.user.student.domain.Student;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -23,21 +24,31 @@ public class ExtracurricularSurveyResponseService {
 
     // 비교과 프로그램 설문조사 응답 저장
     public void saveSurveyResponse(Long srvyId, ExtracurricularSurveyResponseDTO dto) {
-        // 설문 ID로 설문 정보 조회 후 DTO에 설정
-        dto.setExtracurricularSurvey(
-                extracurricularSurveyRepository.findById(srvyId)
-                        .orElseThrow(() -> new IllegalArgumentException("해당 설문조사가 존재하지 않습니다. ID: " + srvyId))
-        );
-        // 설문 응답 시간 설정 (현재 시간)
+        dto.setSrvyId(srvyId);
         dto.setSrvyRspnsDt(LocalDateTime.now());
-        // DTO를 실제 엔티티로 변환
-        ExtracurricularSurveyResponse surveyResponse = modelMapper.map(dto, ExtracurricularSurveyResponse.class);
-        // 설문 응답 저장
+
+        ExtracurricularSurveyResponse surveyResponse = new ExtracurricularSurveyResponse();
+
+        // DB에서 설문조사 엔티티를 반드시 조회
+        ExtracurricularSurvey survey = extracurricularSurveyRepository.findById(srvyId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 설문조사가 존재하지 않습니다. ID: " + srvyId));
+        surveyResponse.setExtracurricularSurvey(survey);
+
+        // Student 엔티티 생성 및 세팅 (혹은 조회)
+        Student student = Student.builder()
+                .studentNo(dto.getStdntNo())
+                .build();
+        surveyResponse.setStudent(student);
+
+        surveyResponse.setSurveyResponseContent(dto.getSrvyRspnsCn());
+        surveyResponse.setSurveyResponseDate(dto.getSrvyRspnsDt());
+        surveyResponse.setSrvyDgstfnScr(dto.getSrvyDgstfnScr());
+
         extracurricularSurveyResponseRepository.save(surveyResponse);
-        // 설문 응답 후 자동 수료 처리 호출
-        Long eduMngId = surveyResponse.getExtracurricularSurvey().getExtracurricularProgram().getEduMngId(); // 비교과 프로그램 ID
-        String studentNo = surveyResponse.getStudent().getStudentNo(); // 학생 번호
-        // 출석률 및 설문 기준 충족 시 자동 수료 처리
+
+        Long eduMngId = surveyResponse.getExtracurricularSurvey().getExtracurricularProgram().getEduMngId();
+        String studentNo = surveyResponse.getStudent().getStudentNo();
+
         extracurricularCompletionService.autoCompleteExtracurricularProgram(eduMngId, studentNo);
     }
 

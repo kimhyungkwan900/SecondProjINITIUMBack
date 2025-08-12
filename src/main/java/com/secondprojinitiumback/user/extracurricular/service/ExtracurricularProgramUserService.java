@@ -6,24 +6,26 @@ import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularPro
 import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularSchedule;
 import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularImageDTO;
 import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularScheduleDTO;
-import com.secondprojinitiumback.admin.extracurricular.repository.ExtracurricularCategoryRepository;
-import com.secondprojinitiumback.admin.extracurricular.repository.ExtracurricularImageRepository;
-import com.secondprojinitiumback.admin.extracurricular.repository.ExtracurricularProgramRepository;
-import com.secondprojinitiumback.admin.extracurricular.repository.ExtracurricularScheduleRepository;
+import com.secondprojinitiumback.admin.extracurricular.repository.*;
 import com.secondprojinitiumback.admin.extracurricular.service.ExtracurricularImageFileService;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
 import com.secondprojinitiumback.common.repository.SchoolSubjectRepository;
 import com.secondprojinitiumback.user.employee.domain.Employee;
 import com.secondprojinitiumback.user.employee.dto.EmployeeDto;
 import com.secondprojinitiumback.user.employee.repository.EmployeeRepository;
+import com.secondprojinitiumback.user.extracurricular.domain.ExtracurricularCompletion;
 import com.secondprojinitiumback.user.extracurricular.domain.enums.AprySttsNm;
 import com.secondprojinitiumback.user.extracurricular.domain.ExtracurricularApply;
 import com.secondprojinitiumback.user.extracurricular.dto.AppliedExtracurricularProgramDTO;
 import com.secondprojinitiumback.user.extracurricular.dto.ApplyProgramDTO;
 import com.secondprojinitiumback.user.extracurricular.dto.ExtracurricularProgramDTO;
 import com.secondprojinitiumback.user.extracurricular.repository.ExtracurricularApplyRepository;
+import com.secondprojinitiumback.user.extracurricular.repository.ExtracurricularCompletionRepository;
+import com.secondprojinitiumback.user.extracurricular.repository.ExtracurricularSurveyResponseRepository;
 import com.secondprojinitiumback.user.extracurricular.repository.specification.ExtracurricularUserProgramSpecification;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.*;
@@ -32,6 +34,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,18 +42,14 @@ import java.util.stream.Collectors;
 public class ExtracurricularProgramUserService {
 
     private final ExtracurricularProgramRepository extracurricularProgramRepository;
-
     private final ExtracurricularImageRepository extracurricularImageRepository;
-
-    private final EmployeeRepository employeeRepository;
     private final SchoolSubjectRepository schoolSubjectRepository;
-
-    private final ExtracurricularScheduleRepository extracurricularScheduleRepository;
-
     private final ExtracurricularApplyRepository extracurricularApplyRepository;
-    private final ExtracurricularCategoryRepository extracurricularCategoryRepository;
     private final ModelMapper modelMapper;
-
+    private final ExtracurricularScheduleRepository extracurricularScheduleRepository;
+    private final ExtracurricularAttendanceRepository extracurricularAttendanceRepository;
+    private final ExtracurricularSurveyResponseRepository extracurricularSurveyResponseRepository;
+    private final ExtracurricularCompletionRepository extracurricularCompletionRepository;
 
 
     public Page<ExtracurricularProgramDTO> findByFilters(
@@ -218,8 +217,21 @@ public class ExtracurricularProgramUserService {
                 (root, query, cb) -> cb.equal(root.get("student").get("studentNo"), stdfntNo)
         );
 
+        spec = spec.and((root, query, cb) -> cb.equal(root.get("delYn"), "N"));
+
         if (eduFnshYn != null && !eduFnshYn.isBlank()) {
-            spec = spec.and((root, query, cb) -> cb.equal(root.get("eduFnshYn"), eduFnshYn));
+            spec = spec.and((root, query, cb) -> {
+                Join<Object, Object> completionJoin = root.join("extracurricularCompletion", JoinType.LEFT);
+                if ("N".equalsIgnoreCase(eduFnshYn)) {
+                    return cb.or(
+                            cb.isNull(completionJoin.get("eduFnshYn")),
+                            cb.equal(completionJoin.get("eduFnshYn"), "N")
+                    );
+                } else if ("Y".equalsIgnoreCase(eduFnshYn)) {
+                    return cb.equal(completionJoin.get("eduFnshYn"), "Y");
+                }
+                return cb.conjunction(); // eduFnshYn 값이 N,Y 외에는 조건 안 걸기
+            });
         }
 
         if (keyword != null && !keyword.isBlank()) {
@@ -235,23 +247,41 @@ public class ExtracurricularProgramUserService {
         return applies.map(apply -> {
             ExtracurricularProgram program = apply.getExtracurricularProgram();
 
-            // 출석률 계산 예시 (출석 데이터가 있다면 직접 계산 필요)
-//            double attendanceRate = 0.0;
-//            if (apply.getAttendance() != null) {
-//                attendanceRate = apply.getAttendance();
-//            }
+            int totalAttendance = extracurricularScheduleRepository
+                    .countExtracurricularSchedulesByExtracurricularProgram_EduMngId(program.getEduMngId());
+            System.out.println("totalAttendance : "+totalAttendance);
+            int myAttendance = extracurricularAttendanceRepository
+                    .countByExtracurricularSchedule_ExtracurricularProgram_EduMngIdAndAtndcYn(
+                            program.getEduMngId(), "Y"
+                    );
+            System.out.println("myAttendance : "+myAttendance);
+            double attendanceRate = 0.0;
 
-            Boolean surveyYn = extracurricularApplyRepository.existsBystudentAndExtracurricularProgram_EduMngId(apply.getStudent() , program.getEduMngId() );
+            if (totalAttendance > 0) {
+                attendanceRate = (double) myAttendance / totalAttendance *100;
+            }
+
+            Boolean surveyYn = extracurricularSurveyResponseRepository.existsByEduMngIdAndStudent(program.getEduMngId() , apply.getStudent().getStudentNo());
+            System.out.println("surveyYn : " + surveyYn);
+
+            Optional<ExtracurricularCompletion> completionOpt = extracurricularCompletionRepository
+                    .findExtracurricularCompletionByExtracurricularApply_EduAplyId(apply.getEduAplyId());
+
+            String eduFnshYnValue = null;
+            if (completionOpt.isPresent()) {
+                eduFnshYnValue = completionOpt.get().getEduFnshYn();
+            }
 
             return ApplyProgramDTO.builder()
                     .eduAplyId(apply.getEduAplyId())
                     .eduNm(program.getEduNm())
+                    .eduMngId(program.getEduMngId())
                     .eduEndYmd(program.getEduEndYmd())
                     .cndCn(program.getCndCn())
-//                    .attendance(attendanceRate)
+                    .attendance(attendanceRate)
                     .surveyYn(surveyYn)
 //                    .eduFnshId(apply.getEduFnshId())
-//                    .eduFnshYn(apply.getEduFnshYn())
+                    .eduFnshYn(eduFnshYnValue)
                     .build();
         });
     }

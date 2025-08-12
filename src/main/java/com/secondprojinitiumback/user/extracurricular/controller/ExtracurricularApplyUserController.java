@@ -39,13 +39,16 @@ public class ExtracurricularApplyUserController {
         return ResponseEntity.ok("비교과 프로그램 신청이 취소되었습니다.");
     }
 
-    // 비교과 프로그램 신청 내역 삭제
+    // 비교과 프로그램 내역 삭제
     @PutMapping("/apply/delete")
     public ResponseEntity<?> deleteExtracurricularProgram(
-            @RequestParam("eduAplyId") Long eduAplyId
-    ){
-        extracurricularApplyService.deleteApplyExtracurricular(eduAplyId);
-        return ResponseEntity.ok("비교과 프로그램 신청 내역이 삭제되었습니다.");
+            @RequestParam("eduAplyIds") List<Long> eduAplyIds
+    ) {
+        for(Long id : eduAplyIds ){
+            System.out.println(id);
+        }
+        extracurricularApplyService.deleteApplyExtracurriculars(eduAplyIds);
+        return ResponseEntity.ok("비교과 프로그램 신청 내역들이 삭제되었습니다.");
     }
 
     // 비교과 프로그램 신청 목록 조회

@@ -40,5 +40,10 @@ public interface MileagePerfRepository extends JpaRepository<MileagePerf, Long> 
             "mileageItem.program",
             "scorePolicy"
     })
+
+    // 1) 페이지네이션 버전
     Page<MileagePerf> findAllByStudent_StudentNo(String studentNo, Pageable pageable);
+
+    // 2) 전체 리스트 버전
+    List<MileagePerf> findAllByStudent_StudentNo(String studentNo);
 }

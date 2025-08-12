@@ -28,14 +28,17 @@ public class PageResponseDto <E>{
         this.pageRequestDto = pageRequestDto; //페이지 요청 정보(몇 페이지, 한 페이지에 몇개)
         this.totalCount = (int)totalCount; //전체 데이터 개수
 
+        //페이지 번호 보정 (0 이하일 경우 1로 세팅)
+        int currentPage = Math.max(1, pageRequestDto.getPage());
+
         //1. 현재 페이지 그룹의 마지막 페이지
-        int end =   (int)(Math.ceil( pageRequestDto.getPage() / 10.0 )) *  10;
+        int end = (int) (Math.ceil(currentPage / 10.0)) * 10;
 
         //2. 시작페이지
-        int start = end - 9;
+        int start = Math.max(1, end - 9); // 음수 방어
 
-        //3. 전체 마지막 페이지
-        int last =  (int)(Math.ceil((totalCount/(double)pageRequestDto.getSize())));
+        // 3. 전체 마지막 페이지
+        int last = (int) Math.ceil(totalCount / (double) pageRequestDto.getSize());
         end = Math.min(end, last);
 
         //4. prev, next 버튼 여부
@@ -58,8 +61,8 @@ public class PageResponseDto <E>{
         }
 
         //7. 현재 위치
-        this.current = pageRequestDto.getPage(); //현재 페이지 번호
-        this.totalPage = this.pageNumList.size();  //페이지 개수
+        this.current = currentPage; //현재 페이지 번호
+        this.totalPage = last; //전체 페이지 개수
     }
 
 

@@ -1,5 +1,9 @@
 package com.secondprojinitiumback.user.employee.repository.Impl;
 
+import static com.secondprojinitiumback.user.employee.domain.QEmployee.employee;
+import static com.secondprojinitiumback.common.domain.QSchoolSubject.schoolSubject;
+import static com.secondprojinitiumback.user.employee.domain.QEmployeeStatusInfo.employeeStatusInfo;
+
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -23,6 +27,12 @@ public class EmployeeRepositoryImpl implements EmployeeRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
+    // Q-타입 인스턴스 선언
+    private final QEmployee qEmployee = employee;
+    private final QSchoolSubject qSchoolSubject = schoolSubject;
+    private final QEmployeeStatusInfo qEmployeeStatusInfo = employeeStatusInfo;
+    private final QCommonCode qGender = new QCommonCode("gender");
+
     @Override
     public List<Employee> search(EmployeeSearchDto searchDto) {
         return createBaseQuery(searchDto).fetch();
@@ -42,23 +52,18 @@ public class EmployeeRepositoryImpl implements EmployeeRepositoryCustom {
         // 전체 개수 조회 쿼리 생성
         JPAQuery<Long> countQuery = createCountQuery(searchDto);
         // 전체 개수 조회
-        long total = countQuery.fetchOne();
+        long total = countQuery.fetchOne() != null ? countQuery.fetchOne() : 0L;
 
         // Page 객체 생성
         return new PageImpl<>(content, pageable, total);
     }
 
     private JPAQuery<Employee> createBaseQuery(EmployeeSearchDto searchDto) {
-        QEmployee employee = QEmployee.employee;
-        QSchoolSubject schoolSubject = QSchoolSubject.schoolSubject;
-        QEmployeeStatusInfo employeeStatus = QEmployeeStatusInfo.employeeStatusInfo;
-        QCommonCode gender = new QCommonCode("gender");
-
         return queryFactory
-                .selectFrom(employee)
-                .leftJoin(employee.schoolSubject, schoolSubject).fetchJoin()
-                .leftJoin(employee.employeeStatus, employeeStatus).fetchJoin()
-                .leftJoin(employee.gender, gender).fetchJoin()
+                .selectFrom(qEmployee)
+                .leftJoin(qEmployee.schoolSubject, qSchoolSubject).fetchJoin()
+                .leftJoin(qEmployee.employeeStatus, qEmployeeStatusInfo).fetchJoin()
+                .leftJoin(qEmployee.gender, qGender).fetchJoin()
                 .where(
                         eqEmployeeNo(searchDto.getEmployeeNo()),
                         containsName(searchDto.getName()),
@@ -71,11 +76,9 @@ public class EmployeeRepositoryImpl implements EmployeeRepositoryCustom {
     }
 
     private JPAQuery<Long> createCountQuery(EmployeeSearchDto searchDto) {
-        QEmployee employee = QEmployee.employee;
-
         return queryFactory
-                .select(employee.count())
-                .from(employee)
+                .select(qEmployee.count())
+                .from(qEmployee)
                 .where(
                         eqEmployeeNo(searchDto.getEmployeeNo()),
                         containsName(searchDto.getName()),
@@ -91,36 +94,36 @@ public class EmployeeRepositoryImpl implements EmployeeRepositoryCustom {
 
     // 교번/사번 검색
     private BooleanExpression eqEmployeeNo(String employeeNo) {
-        return StringUtils.hasText(employeeNo) ? QEmployee.employee.empNo.eq(employeeNo) : null;
+        return StringUtils.hasText(employeeNo) ? qEmployee.empNo.eq(employeeNo) : null;
     }
 
     // 이름 검색
     private BooleanExpression containsName(String name) {
-        return StringUtils.hasText(name) ? QEmployee.employee.name.containsIgnoreCase(name) : null;
+        return StringUtils.hasText(name) ? qEmployee.name.containsIgnoreCase(name) : null;
     }
 
     // 담당 과목(부서) 코드 검색
     private BooleanExpression eqSchoolSubject(String schoolSubjectCode) {
-        return StringUtils.hasText(schoolSubjectCode) ? QEmployee.employee.schoolSubject.subjectCode.eq(schoolSubjectCode) : null;
+        return StringUtils.hasText(schoolSubjectCode) ? qSchoolSubject.subjectCode.eq(schoolSubjectCode) : null;
     }
 
     // 상태 코드 검색
     private BooleanExpression eqStatus(String statusCode) {
-        return StringUtils.hasText(statusCode) ? QEmployee.employee.employeeStatus.id.employeeStatusCode.eq(statusCode) : null;
+        return StringUtils.hasText(statusCode) ? qEmployeeStatusInfo.id.employeeStatusCode.eq(statusCode) : null;
     }
 
     // 성별 코드 검색
     private BooleanExpression eqGender(String genderCode) {
-        return StringUtils.hasText(genderCode) ? QEmployee.employee.gender.id.code.eq(genderCode) : null;
+        return StringUtils.hasText(genderCode) ? qGender.id.code.eq(genderCode) : null;
     }
 
     // 이메일 검색
     private BooleanExpression containsEmail(String email) {
-        return StringUtils.hasText(email) ? QEmployee.employee.email.containsIgnoreCase(email) : null;
+        return StringUtils.hasText(email) ? qEmployee.email.containsIgnoreCase(email) : null;
     }
 
     // 전화번호 검색
     private BooleanExpression eqTel(String tel) {
-        return StringUtils.hasText(tel) ? QEmployee.employee.tel.eq(tel) : null;
+        return StringUtils.hasText(tel) ? qEmployee.tel.eq(tel) : null;
     }
 }

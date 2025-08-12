@@ -27,6 +27,7 @@ public class UserScholarshipStatusService {
         // 학생 학번 기준으로 장학금 신청 정보를 페이징하여 가져오기
         Page<ScholarshipApply> result = scholarshipApplyRepository.findAllByStudent_StudentNo(studentNo, pageable);
 
+
         List<UserScholarshipStatusDto> dtoList = result.getContent().stream()
                 .map(UserScholarshipStatusDto::from)
                 .collect(Collectors.toList());

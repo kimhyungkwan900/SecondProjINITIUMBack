@@ -29,6 +29,7 @@ public class ExtracurricularSurveyResponseController {
             @RequestParam("srvyId") Long srvyId,
             @RequestBody ExtracurricularSurveyResponseDTO responseDTO
     ) {
+        System.out.println("123  " + srvyId);
         extracurricularSurveyResponseService.saveSurveyResponse(srvyId, responseDTO);
         return ResponseEntity.ok("설문 응답이 저장되었습니다."
         );

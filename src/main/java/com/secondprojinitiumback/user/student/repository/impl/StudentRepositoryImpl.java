@@ -21,10 +21,31 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.secondprojinitiumback.user.student.domain.QStudent.student;
+import static com.secondprojinitiumback.common.domain.QSchoolSubject.schoolSubject;
+import static com.secondprojinitiumback.common.domain.QUniversity.university;
+import static com.secondprojinitiumback.user.student.domain.QStudentStatusInfo.studentStatusInfo;
+import static com.secondprojinitiumback.user.employee.domain.QEmployee.employee;
+
 @RequiredArgsConstructor
 public class StudentRepositoryImpl implements StudentRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+
+    // 코드 상수 정의
+    private static final String DEPT_DIVISION_CODE_GROUP = "CO0003";
+    private static final String STUDENT_STATUS_CODE_GROUP = "SL0030";
+    private static final String GENDER_CODE_GROUP = "CO0001";
+
+    // Q-타입 인스턴스 선언
+    private final QStudent qStudent = student;
+    private final QSchoolSubject qSchoolSubject = schoolSubject;
+    private final QUniversity qUniversity = university;
+    private final QStudentStatusInfo qStudentStatusInfo = studentStatusInfo;
+    private final QEmployee qEmployee = employee;
+    private final QCommonCode qGender = new QCommonCode("gender");
+    private final QCommonCode qDeptDivision = new QCommonCode("deptDivision");
+
 
     @Override
     public List<Student> search(StudentSearchDto searchDto) {
@@ -43,48 +64,36 @@ public class StudentRepositoryImpl implements StudentRepositoryCustom {
 
         // 카운트 조회 쿼리
         JPAQuery<Long> countQuery = createCountQuery(searchDto);
-        long total = countQuery.fetchOne();
+        long total = countQuery.fetchOne() != null ? countQuery.fetchOne() : 0L;
 
         return new PageImpl<>(content, pageable, total);
     }
 
     // 기본 쿼리 생성 메서드
     private JPAQuery<Student> createBaseQuery(StudentSearchDto searchDto) {
-        QStudent student = QStudent.student;
-        QSchoolSubject schoolSubject = QSchoolSubject.schoolSubject;
-        QUniversity university = QUniversity.university;
-        QStudentStatusInfo studentStatus = QStudentStatusInfo.studentStatusInfo;
-        QEmployee advisor = QEmployee.employee;
-        QCommonCode gender = new QCommonCode("gender");
-
         JPAQuery<Student> query = queryFactory
-                .selectFrom(student)
-                .leftJoin(student.schoolSubject, schoolSubject).fetchJoin()
-                .leftJoin(student.school, university).fetchJoin()
-                .leftJoin(student.studentStatus, studentStatus).fetchJoin()
-                .leftJoin(student.advisor, advisor).fetchJoin()
-                .leftJoin(student.gender, gender).fetchJoin();
+                .selectFrom(qStudent)
+                .leftJoin(qStudent.schoolSubject, qSchoolSubject).fetchJoin()
+                .leftJoin(qSchoolSubject.deptDivision, qDeptDivision).fetchJoin()
+                .leftJoin(qStudent.school, qUniversity).fetchJoin()
+                .leftJoin(qStudent.studentStatus, qStudentStatusInfo).fetchJoin()
+                .leftJoin(qStudent.advisor, qEmployee).fetchJoin()
+                .leftJoin(qStudent.gender, qGender).fetchJoin();
 
         return applyConditions(query, searchDto);
     }
 
     // 전체 개수 조회 쿼리
     private JPAQuery<Long> createCountQuery(StudentSearchDto searchDto) {
-        QStudent student = QStudent.student;
-        QSchoolSubject schoolSubject = QSchoolSubject.schoolSubject;
-        QUniversity university = QUniversity.university;
-        QStudentStatusInfo studentStatus = QStudentStatusInfo.studentStatusInfo;
-        QEmployee advisor = QEmployee.employee;
-        QCommonCode gender = new QCommonCode("gender");
-
         JPAQuery<Long> query = queryFactory
-                .select(student.count())
-                .from(student)
-                .leftJoin(student.schoolSubject, schoolSubject)
-                .leftJoin(student.school, university)
-                .leftJoin(student.studentStatus, studentStatus)
-                .leftJoin(student.advisor, advisor)
-                .leftJoin(student.gender, gender);
+                .select(qStudent.count())
+                .from(qStudent)
+                .leftJoin(qStudent.schoolSubject, qSchoolSubject)
+                .leftJoin(qSchoolSubject.deptDivision, qDeptDivision)
+                .leftJoin(qStudent.school, qUniversity)
+                .leftJoin(qStudent.studentStatus, qStudentStatusInfo)
+                .leftJoin(qStudent.advisor, qEmployee)
+                .leftJoin(qStudent.gender, qGender);
 
         return applyConditions(query, searchDto);
     }
@@ -93,13 +102,12 @@ public class StudentRepositoryImpl implements StudentRepositoryCustom {
         return query.where(
                 eqStudentNo(searchDto.getStudentNo()),
                 containsName(searchDto.getName()),
-                eqUniversity(searchDto.getUniversityCode()),
-                eqSchoolSubject(searchDto.getSchoolSubjectCode()),
-                eqClub(searchDto.getClubCode()),
-                eqStatus(searchDto.getStudentStatusCode()),
+                containsUniversity(searchDto.getUniversityCode()),
+                eqSchoolSubject(searchDto.getSchoolSubjectCode(), searchDto.getSchoolSubjectCodeSe()),
+                containsStatus(searchDto.getStudentStatusCode(), searchDto.getStudentStatusCodeSe()),
                 eqGrade(searchDto.getGrade()),
-                eqGender(searchDto.getGenderCode()),
-                eqAdvisor(searchDto.getAdvisorId()),
+                containsGender(searchDto.getGenderCode(), searchDto.getGenderCodeSe()),
+                containsAdvisor(searchDto.getAdvisorId()),
                 containsEmail(searchDto.getEmail()),
                 betweenAdmissionDate(searchDto.getAdmissionDateFrom(), searchDto.getAdmissionDateTo())
         );
@@ -109,77 +117,120 @@ public class StudentRepositoryImpl implements StudentRepositoryCustom {
 
     // 학생번호 검색
     private BooleanExpression eqStudentNo(String studentNo) {
-        return StringUtils.hasText(studentNo) ? QStudent.student.studentNo.eq(studentNo) : null;
+        if (!StringUtils.hasText(studentNo)) {
+            return null;
+        }
+        return qStudent.studentNo.contains(studentNo);
     }
 
     // 이름 검색
     private BooleanExpression containsName(String name) {
-        return StringUtils.hasText(name) ? QStudent.student.name.containsIgnoreCase(name) : null;
+        return StringUtils.hasText(name) ? qStudent.name.containsIgnoreCase(name) : null;
     }
 
     // 대학 코드 검색
-    private BooleanExpression eqUniversity(String universityCode) {
-        return StringUtils.hasText(universityCode) ? QStudent.student.school.universityCode.eq(universityCode) : null;
+    private BooleanExpression containsUniversity(String universityCode) {
+        return StringUtils.hasText(universityCode) ? qStudent.school.universityCode.containsIgnoreCase(universityCode) : null;
     }
 
-    // 담당 학과 코드 검색
-    private BooleanExpression eqSchoolSubject(String schoolSubjectCode) {
+    // 담당 학과 코드 검색 - DTO에서 CodeSe 값 활용
+    private BooleanExpression eqSchoolSubject(String schoolSubjectCode, String schoolSubjectCodeSe) {
         if (!StringUtils.hasText(schoolSubjectCode)) {
             return null;
         }
-        return QStudent.student.schoolSubject.subjectCode.eq(schoolSubjectCode)
-                .and(QStudent.student.schoolSubject.deptDivision.id.codeGroup.eq("CO0003"));
+
+        BooleanExpression condition = qStudent.schoolSubject.subjectCode.eq(schoolSubjectCode);
+
+        // CodeSe가 제공되면 사용, 아니면 기본값
+        String codeGroup = StringUtils.hasText(schoolSubjectCodeSe) ? schoolSubjectCodeSe : DEPT_DIVISION_CODE_GROUP;
+        condition = condition.and(qDeptDivision.id.codeGroup.eq(codeGroup));
+
+        return condition;
     }
 
-    // 동아리 코드 검색
-    private BooleanExpression eqClub(String clubCode) {
-        return StringUtils.hasText(clubCode) ? QStudent.student.clubCode.eq(clubCode) : null;
-    }
-
-    // 학적 상태 코드 검색
-    private BooleanExpression eqStatus(String statusCode) {
+    // 학적 상태 코드 검색 - DTO에서 CodeSe 값 활용
+    private BooleanExpression containsStatus(String statusCode, String statusCodeSe) {
         if (!StringUtils.hasText(statusCode)) {
             return null;
         }
-        return QStudent.student.studentStatus.id.studentStatusCode.eq(statusCode)
-                .and(QStudent.student.studentStatus.id.studentStatusCodeSe.eq("SL0030"));
+
+        BooleanExpression condition = qStudentStatusInfo.id.studentStatusCode.containsIgnoreCase(statusCode);
+
+        // CodeSe가 제공되면 사용, 아니면 기본값
+        String codeGroup = StringUtils.hasText(statusCodeSe) ? statusCodeSe : STUDENT_STATUS_CODE_GROUP;
+        condition = condition.and(qStudentStatusInfo.id.studentStatusCodeSe.eq(codeGroup));
+
+        return condition;
     }
 
-    // 학년 검색
+    // 학년 검색 - 숫자 범위 검증 추가
     private BooleanExpression eqGrade(String grade) {
-        return StringUtils.hasText(grade) ? QStudent.student.grade.eq(grade) : null;
+        if (!StringUtils.hasText(grade)) {
+            return null;
+        }
+
+        // 학년이 숫자인지 검증
+        try {
+            int gradeNum = Integer.parseInt(grade);
+            if (gradeNum < 1 || gradeNum > 4) {
+                return null;
+            }
+            return qStudent.grade.eq(grade);
+        } catch (NumberFormatException e) {
+            return null; // 숫자가 아닌 경우 조건 무시
+        }
     }
 
-    // 성별 코드 검색
-    private BooleanExpression eqGender(String genderCode) {
+    // 성별 코드 검색 - DTO에서 CodeSe 값 활용
+    private BooleanExpression containsGender(String genderCode, String genderCodeSe) {
         if (!StringUtils.hasText(genderCode)) {
             return null;
         }
-        return QStudent.student.gender.id.code.eq(genderCode)
-                .and(QStudent.student.gender.id.codeGroup.eq("CO0001"));
+
+        BooleanExpression condition = qGender.id.code.containsIgnoreCase(genderCode);
+
+        // CodeSe가 제공되면 사용, 아니면 기본값
+        String codeGroup = StringUtils.hasText(genderCodeSe) ? genderCodeSe : GENDER_CODE_GROUP;
+        condition = condition.and(qGender.id.codeGroup.eq(codeGroup));
+
+        return condition;
     }
 
     // 지도교수 ID 검색
-    private BooleanExpression eqAdvisor(String advisorId) {
-        return StringUtils.hasText(advisorId) ? QStudent.student.advisor.empNo.eq(advisorId) : null;
+    private BooleanExpression containsAdvisor(String advisorId) {
+        return StringUtils.hasText(advisorId) ? qStudent.advisor.empNo.containsIgnoreCase(advisorId) : null;
     }
 
-    // 이메일 검색
+    // 이메일 검색 - 이메일 형식 간단 검증 추가
     private BooleanExpression containsEmail(String email) {
-        return StringUtils.hasText(email) ? QStudent.student.email.containsIgnoreCase(email) : null;
+        if (!StringUtils.hasText(email)) {
+            return null;
+        }
+
+        // 기본적인 이메일 형식 검증 (@ 포함 여부만 체크)
+        if (!email.contains("@")) {
+            return null;
+        }
+
+        return qStudent.email.containsIgnoreCase(email);
     }
 
-    // 입학일자 범위 검색
+    // 입학일자 범위 검색 - 유효성 검증 추가
     private BooleanExpression betweenAdmissionDate(LocalDate from, LocalDate to) {
         if (from == null && to == null) {
             return null;
         }
+
+        if (from != null && to != null && from.isAfter(to)) {
+            return null;
+        }
+
         if (from != null && to != null) {
-            return QStudent.student.admissionDate.between(from, to);
+            return qStudent.admissionDate.between(from, to);
         }
         if (from != null) {
-            return QStudent.student.admissionDate.goe(from);
+            return qStudent.admissionDate.goe(from);
         }
-        return QStudent.student.admissionDate.loe(to);
+        return qStudent.admissionDate.loe(to);
     }
 }

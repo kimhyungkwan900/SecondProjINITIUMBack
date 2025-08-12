@@ -2,7 +2,7 @@ package com.secondprojinitiumback.user.student.service.serviceImpl;
 
 import com.secondprojinitiumback.common.bank.Repository.BankAccountRepository;
 import com.secondprojinitiumback.common.bank.domain.BankAccount;
-
+import com.secondprojinitiumback.common.converter.LocalDateToChar8Converter;
 import com.secondprojinitiumback.common.domain.CommonCode;
 import com.secondprojinitiumback.common.domain.CommonCodeId;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
@@ -45,6 +45,7 @@ public class StudentServiceImpl implements StudentService {
     private final StudentStatusInfoRepository studentStatusInfoRepository;
     private final LoginInfoService loginInfoService;
     private final UniversityRepository universityRepository;
+    private final LocalDateToChar8Converter dateConverter;
 
     @Override
     public StudentDto enrollStudent(EnrollStudentDto dto) {
@@ -64,14 +65,14 @@ public class StudentServiceImpl implements StudentService {
         // 공통 코드, 교직원, 계좌 정보 조회
         CommonCode gender = findCommonCode(dto.getGender(), "CO0001");
         Employee advisor = findEmployeeById(dto.getAdvisorNo());
-        BankAccount bankAccount = findBankAccountByNoNullable(dto.getBankAccountNumber());
+        BankAccount bankAccount = findBankAccountByNoNullable(dto.getBankAccountNo());
         StudentStatusInfo initialStatus = findStudentStatusByCode(dto.getStudentStatusCode());
 
         // 학생 엔티티 생성 및 저장
         Student student = Student.create(
                 studentNo, loginInfo, university, schoolSubject, dto.getName(),
                 dto.getAdmissionDate(), dto.getBirthDate(), gender, dto.getEmail(),
-                advisor, dto.getGrade(), bankAccount, dto.getClubCode(), initialStatus
+                advisor, dto.getGrade(), bankAccount, initialStatus
         );
 
         // 학생 정보 저장
@@ -114,17 +115,21 @@ public class StudentServiceImpl implements StudentService {
     public StudentDto adminUpdateStudentInfo(String studentNo, AdminUpdateStudentDto dto) {
         // 학생, 학과, 교직원, 학적 상태, 계좌 정보 조회
         Student student = findStudentById(studentNo);
-        SchoolSubject schoolSubject = findSchoolSubjectByCode(dto.getSchoolSubjectCode());
-        Employee advisor = findEmployeeById(dto.getAdvisorNo());
-        StudentStatusInfo statusInfo = findStudentStatusByCode(dto.getStudentStatusCode());
+        SchoolSubject schoolSubject = findSchoolSubjectByCodeNullable(dto.getSchoolSubjectCode());
+        Employee advisor = findEmployeeByIdNullable(dto.getAdvisorNo());
+        StudentStatusInfo statusInfo = findStudentStatusByCodeNullable(dto.getStudentStatusCode());
         BankAccount bankAccount = findBankAccountByNoNullable(dto.getBankAccountNo());
         // 공통 코드 조회 (성별)
         CommonCode gender = findCommonCodeNullable(dto.getGender(), "CO0001");
         // 대학 정보 조회 (nullable 처리)
         University university = findUniversityByCodeNullable(dto.getUniversityCode());
+        
+        // 날짜 변환 (String -> LocalDate)
+        LocalDate birthDate = parseLocalDateNullable(dto.getBirthDate());
+        LocalDate admissionDate = parseLocalDateNullable(dto.getAdmissionDate());
 
         // 학생 정보 업데이트
-        student.adminUpdate(dto, schoolSubject, gender, advisor, bankAccount, statusInfo, university);
+        student.adminUpdate(dto, schoolSubject, gender, advisor, bankAccount, statusInfo, university, birthDate, admissionDate);
         // 학생 정보 저장
         return toStudentDto(student);
     }
@@ -202,6 +207,12 @@ public class StudentServiceImpl implements StudentService {
         return schoolSubjectRepository.findBySubjectCode(code)
                 .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PARAMETER));
     }
+    
+    // nullable 처리된 학과 코드로 학과 정보 조회
+    private SchoolSubject findSchoolSubjectByCodeNullable(String code) {
+        if (code == null || code.isBlank()) return null;
+        return findSchoolSubjectByCode(code);
+    }
 
     // 대학 코드로 대학 정보 조회
     private University findUniversityByCode(String code) {
@@ -219,6 +230,12 @@ public class StudentServiceImpl implements StudentService {
     private Employee findEmployeeById(String employeeNo) {
         return employeeRepository.findById(employeeNo)
                 .orElseThrow(() -> new CustomException(ErrorCode.EMPLOYEE_NOT_FOUND));
+    }
+    
+    // nullable 처리된 교직원 번호로 교직원 정보 조회
+    private Employee findEmployeeByIdNullable(String employeeNo) {
+        if (employeeNo == null || employeeNo.isBlank()) return null;
+        return findEmployeeById(employeeNo);
     }
 
     // 공통 코드 조회 (코드와 그룹 코드로)
@@ -245,6 +262,12 @@ public class StudentServiceImpl implements StudentService {
         return studentStatusInfoRepository.findByIdStudentStatusCodeAndIdStudentStatusCodeSe(code, "SL0030")
                 .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PARAMETER));
     }
+    
+    // nullable 처리된 학적 상태 코드로 학적 상태 정보 조회
+    private StudentStatusInfo findStudentStatusByCodeNullable(String code) {
+        if (code == null || code.isBlank()) return null;
+        return findStudentStatusByCode(code);
+    }
 
     // 은행 코드가 있다면 계좌에 적용
     private void applyBankCodeIfPresent(BankAccount acc, UpdateStudentDto dto) {
@@ -259,6 +282,17 @@ public class StudentServiceImpl implements StudentService {
         if (dto.getBankCd() == null) return null;
         return commonCodeRepository.findById(new CommonCodeId("CO0005", dto.getBankCd()))
                 .orElseThrow(() -> new CustomException(ErrorCode.COMMON_CODE_NOT_FOUND));
+    }
+    
+    // 날짜 문자열을 LocalDate로 변환 (nullable 처리)
+    private LocalDate parseLocalDateNullable(String dateStr) {
+        if (dateStr == null || dateStr.isBlank()) return null;
+        try {
+            // LocalDateToChar8Converter를 사용하여 문자열을 LocalDate로 변환
+            return dateConverter.convertToEntityAttribute(dateStr);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.INVALID_PARAMETER);
+        }
     }
     // 학번 생성 로직
     private String generateStudentNo(LocalDate admissionDate, String schoolSubjectCode) {
@@ -279,7 +313,6 @@ public class StudentServiceImpl implements StudentService {
                 .studentNo(student.getStudentNo())
                 .name(student.getName())
                 .email(student.getEmail())
-                .clubCode(student.getClubCode())
                 .admissionDate(student.getAdmissionDate())
                 .birthDate(student.getBirthDate())
                 .grade(student.getGrade())

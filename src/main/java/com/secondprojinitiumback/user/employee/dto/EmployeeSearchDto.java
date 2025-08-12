@@ -6,6 +6,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @ToString
 public class EmployeeSearchDto {
     private String employeeNo;          // 교직원 번호

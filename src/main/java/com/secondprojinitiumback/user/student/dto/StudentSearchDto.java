@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @ToString
 public class StudentSearchDto {
     private String studentNo;              // 학번(검색)
@@ -19,8 +20,6 @@ public class StudentSearchDto {
     // 학과 코드 (대분류/중분류)
     private String schoolSubjectCode;      // 학과 코드(검색) - 중분류
     private String schoolSubjectCodeSe;    // 학과 코드 그룹(검색) - 대분류 (기본값: CO0003)
-
-    private String clubCode;               // 동아리 코드(검색)
 
     // 학적 상태 코드 (대분류/중분류)
     private String studentStatusCode;      // 학적 상태 코드(검색) - 중분류
@@ -62,14 +61,14 @@ public class StudentSearchDto {
         return true;
     }
 
-    // 학년 유효성 검증 (1-6학년)
+    // 학년 유효성 검증 (1-4학년)
     public boolean isValidGrade() {
         if (!StringUtils.hasText(grade)) {
             return true; // null이나 빈 문자열은 검색조건 없음으로 간주
         }
         try {
             int gradeNum = Integer.parseInt(grade);
-            return gradeNum >= 1 && gradeNum <= 6;
+            return gradeNum >= 1 && gradeNum <= 4;
         } catch (NumberFormatException e) {
             return false;
         }
@@ -89,7 +88,6 @@ public class StudentSearchDto {
                 StringUtils.hasText(name) ||
                 StringUtils.hasText(universityCode) ||
                 StringUtils.hasText(schoolSubjectCode) ||
-                StringUtils.hasText(clubCode) ||
                 StringUtils.hasText(studentStatusCode) ||
                 StringUtils.hasText(grade) ||
                 StringUtils.hasText(genderCode) ||
@@ -110,7 +108,7 @@ public class StudentSearchDto {
             return "입학일자 범위가 올바르지 않습니다. 시작일이 종료일보다 늦을 수 없습니다.";
         }
         if (!isValidGrade()) {
-            return "학년은 1-6 사이의 숫자여야 합니다.";
+            return "학년은 1-4 사이의 숫자여야 합니다.";
         }
         if (!isValidEmail()) {
             return "이메일 형식이 올바르지 않습니다. '@'가 포함되어야 합니다.";

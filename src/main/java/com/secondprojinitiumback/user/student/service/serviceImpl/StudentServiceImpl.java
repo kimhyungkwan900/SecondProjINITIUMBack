@@ -72,7 +72,7 @@ public class StudentServiceImpl implements StudentService {
         Student student = Student.create(
                 studentNo, loginInfo, university, schoolSubject, dto.getName(),
                 dto.getAdmissionDate(), dto.getBirthDate(), gender, dto.getEmail(),
-                advisor, dto.getGrade(), bankAccount, dto.getClubCode(), initialStatus
+                advisor, dto.getGrade(), bankAccount, initialStatus
         );
 
         // 학생 정보 저장
@@ -313,7 +313,6 @@ public class StudentServiceImpl implements StudentService {
                 .studentNo(student.getStudentNo())
                 .name(student.getName())
                 .email(student.getEmail())
-                .clubCode(student.getClubCode())
                 .admissionDate(student.getAdmissionDate())
                 .birthDate(student.getBirthDate())
                 .grade(student.getGrade())

@@ -13,6 +13,7 @@ public enum ErrorCode {
     AUTH_CODE_MISMATCH(HttpStatus.BAD_REQUEST, "인증 코드가 일치하지 않습니다."),
     PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "현재 비밀번호가 일치하지 않습니다."),
     PASSWORD_TOO_SHORT(HttpStatus.BAD_REQUEST, "새 비밀번호는 최소 8자 이상이어야 합니다."),
+    INVALID_PASSWORD_FORMAT(HttpStatus.BAD_REQUEST, "비밀번호는 영문, 숫자, 특수문자를 포함하여 8자 이상이어야 합니다."),
     INVALID_CREDENTIALS(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
     UNKNOWN_USER_TYPE(HttpStatus.BAD_REQUEST, "알 수 없는 사용자 유형입니다."),
     BANK_ACCOUNT_INACTIVE(HttpStatus.BAD_REQUEST, "사용 중지된 계좌입니다."),

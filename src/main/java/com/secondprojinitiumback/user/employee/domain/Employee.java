@@ -115,7 +115,7 @@ public class Employee {
         return new Employee(empNo, loginInfo, schoolSubject, bankAccount, name, gender, birthDate, email, tel, employeeStatus);
     }
 
-    public void adminUpdate(AdminUpdateEmployeeDto dto, SchoolSubject schoolSubject, CommonCode gender, EmployeeStatusInfo employeeStatus) {
+    public void adminUpdate(AdminUpdateEmployeeDto dto, SchoolSubject schoolSubject, CommonCode gender, EmployeeStatusInfo employeeStatus, BankAccount bankAccount) {
         if (dto.getName() != null) this.name = dto.getName();
         if (dto.getBirthDate() != null) this.birthDate = dto.getBirthDate();
         if (gender != null) this.gender = gender;
@@ -123,6 +123,7 @@ public class Employee {
         if (dto.getTel() != null) this.tel = dto.getTel();
         if (schoolSubject != null) this.schoolSubject = schoolSubject;
         if (employeeStatus != null) this.employeeStatus = employeeStatus;
+        if (bankAccount != null) this.bankAccount = bankAccount;
     }
 
     public void updateMyInfo(EmployeeUpdateMyInfoDto dto, BankAccount bankAccount) {

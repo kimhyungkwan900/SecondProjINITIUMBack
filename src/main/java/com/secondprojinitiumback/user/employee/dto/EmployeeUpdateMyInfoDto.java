@@ -13,4 +13,5 @@ public class EmployeeUpdateMyInfoDto {
     private String email;
     private String tel;
     private String bankAccountNo;
+    private String bankCode;
 }

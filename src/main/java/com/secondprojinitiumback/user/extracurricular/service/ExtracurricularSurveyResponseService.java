@@ -1,6 +1,7 @@
 package com.secondprojinitiumback.user.extracurricular.service;
 
 import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularSurvey;
+import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularAdminSurveyResponseDTO;
 import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularSurveyDTO;
 import com.secondprojinitiumback.admin.extracurricular.repository.ExtracurricularSurveyRepository;
 import com.secondprojinitiumback.user.extracurricular.domain.ExtracurricularSurveyResponse;
@@ -9,6 +10,8 @@ import com.secondprojinitiumback.user.extracurricular.repository.Extracurricular
 import com.secondprojinitiumback.user.student.domain.Student;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -61,5 +64,19 @@ public class ExtracurricularSurveyResponseService {
             throw new IllegalArgumentException("해당 프로그램에 등록된 설문이 없습니다.");
         }
         return modelMapper.map(survey, ExtracurricularSurveyDTO.class);
+    }
+
+    //비교과 프로그램에 응답한 설문 확인 리스트
+    public Page<ExtracurricularAdminSurveyResponseDTO> getSurveyResponse(Long eduMngId, Pageable pageable) {
+        return extracurricularSurveyResponseRepository
+                .findExtracurricularSurveyResponsesByExtracurricularSurvey_ExtracurricularProgram_EduMngId(eduMngId, pageable)
+                .map(response -> ExtracurricularAdminSurveyResponseDTO.builder()
+                        .srvyRspnsId(response.getSrvyRspnsId()) // 응답 ID
+                        .srvyDgstfnScr(response.getSrvyDgstfnScr()) // 만족도 점수
+                        .studentNo(response.getStudent().getStudentNo()) // 학번
+                        .name(response.getStudent().getName()) // 이름
+                        .surveyResponseContent(response.getSurveyResponseContent()) // 설문 응답 내용
+                        .build()
+                );
     }
 }

@@ -2,6 +2,8 @@ package com.secondprojinitiumback.user.extracurricular.repository;
 
 import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularProgram;
 import com.secondprojinitiumback.user.extracurricular.domain.ExtracurricularSurveyResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,4 +26,8 @@ public interface ExtracurricularSurveyResponseRepository extends JpaRepository<E
         // 특정 학생이 특정 비교과 프로그램에 대한 설문 응답을 이미 제출했는지 여부를 확인
     boolean existsByEduMngIdAndStudent(@Param("eduMngId") Long eduMngId, @Param("stdntNo") String studentNo);
 
+    Page<ExtracurricularSurveyResponse>
+    findExtracurricularSurveyResponsesByExtracurricularSurvey_ExtracurricularProgram_EduMngId(Long eduMngId, Pageable pageable);
+
+    int countExtracurricularSurveyResponsesByExtracurricularSurvey_ExtracurricularProgram_EduMngId(Long extracurricularSurveyExtracurricularProgramEduMngId);
 }

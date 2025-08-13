@@ -89,8 +89,6 @@ public class ExtracurricularProgram {
     @Column(name = "cnd_cn")
     private String cndCn; //  수료 조건
 
-    @Column(name = "field")
-    private String field; // 예비 필드 (기타 정보 또는 내부 용도)
 
     @Column(name = "file_no")
     private String fileNo; // 첨부파일 참조 번호

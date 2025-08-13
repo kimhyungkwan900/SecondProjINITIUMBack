@@ -37,6 +37,7 @@ public class ExtracurricularApply {
     private LocalDateTime eduAplyDt;
 
     @Column(name = "aprv_stts_nm")
+    @Enumerated(EnumType.STRING)
     private AprySttsNm aprySttsNm;
 
     @Column(name = "del_yn")

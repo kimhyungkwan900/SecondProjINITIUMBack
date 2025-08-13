@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class DscsnScheduleRequestDto {
+    private String dscsnType;   //상담타입
 
     private String empNo; // 상담사, 교수 사번
 

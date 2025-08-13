@@ -62,4 +62,12 @@ public class DscsnSatisfactionService {
             return String.format("%04d", seqNum); // 4자리 문자열로 포맷팅
         }
     }
+
+    public Boolean isDscsnSatisfactionExist(String dscsnInfoId) {
+        //상담정보 ID로 만족도 설문 존재 여부 확인 후 결과 반환
+        return dscsnSatisfactionRepository.existsByDscsnInfo_DscsnInfoId(dscsnInfoId);
+    }
+
+//    public DscsnSatisfactionDto getDscsnSatisfaction(String dscsnInfoId) {
+//    }
 }

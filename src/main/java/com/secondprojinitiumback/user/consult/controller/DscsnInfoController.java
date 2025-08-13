@@ -40,7 +40,7 @@ public class DscsnInfoController {
 
         // userType, serialNo을 강제로 덮어쓰기 (외부 파라미터 무시)
         dscsnInfoSearchDto.setUserType(userType);
-//        dscsnInfoSearchDto.setEmpNo(serialNo);
+        //        dscsnInfoSearchDto.setEmpNo(serialNo);
 
         // 권한별 추가 필드 강제 세팅
         if ("S".equals(userType)) {

@@ -134,6 +134,7 @@ public class DscsnInfoService {
                                                                 .studentNo(student.getStudentNo())
                                                                 .schoolSubject(student.getSchoolSubject().getSubjectName())
                                                                 .name(student.getName())
+                                                                .email(student.getEmail())
                                                                 .build()
                                         )
 

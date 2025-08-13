@@ -21,7 +21,7 @@ public class DscsnSatisfaction {
     @Column(name = "DSCSN_DGSTFN_NM", nullable = false, length = 5)
     private String dscsnSatisfyScore; //만족도 지표
 
-    @Column(name = "DSCSN_DGSTFN_CN", nullable = false)
+    @Column(name = "DSCSN_DGSTFN_CN", nullable = true)
     private String dscsnImp; //개선점
 
     @OneToOne(fetch = FetchType.LAZY)

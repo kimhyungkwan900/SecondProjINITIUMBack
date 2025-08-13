@@ -83,6 +83,10 @@ public class AdminCoreCompetencyResultService {
                 .collect(Collectors.toList());
     }
 
+    // 절대평가 경계값(경계 포함하지 않음: >3.5 우수, <2.0 미흡, 그 외 보통)
+    private static final double ABS_EXCELLENT_GT = 3.5;
+    private static final double ABS_POOR_LT      = 2.0;
+
     /**
      * 하위역량별 평균점수(모든 문항 필수 응답 가정)
      */
@@ -99,26 +103,46 @@ public class AdminCoreCompetencyResultService {
                         Collectors.summarizingDouble(r -> Optional.ofNullable(r.getSelectedOption().getScore()).orElse(0))
                 ));
 
-        // 응답에서 하위역량 목록(이름순) 추출
-        record SC(Long id, String name) {}
+        // 응답에서 핵심, 하위역량 목록(이름순) 추출
+        record SC(Long coreId, String coreName, Long id, String name) {}
         List<SC> subs = responses.stream()
                 .map(r -> r.getQuestion().getSubCompetencyCategory())
                 .filter(Objects::nonNull)
-                .map(sc -> new SC(sc.getId(), sc.getSubCategoryName()))
+                .map(sc -> new SC(sc.getCoreCompetencyCategory().getId(), sc.getCoreCompetencyCategory().getCoreCategoryName(), sc.getId(), sc.getSubCategoryName()))
                 .distinct() // equals/hashCode가 id 기반 아니면 아래처럼 id로 중복 제거 권장
                 .sorted(Comparator.comparing(SC::name))
                 .toList();
 
         return subs.stream().map(sc -> {
             DoubleSummaryStatistics s = statBySubId.get(sc.id());
-            double avg = (s != null && s.getCount() > 0) ? s.getAverage() : 0.0;
+            long count = (s != null) ? s.getCount() : 0;
+            double sum  = (s != null) ? s.getSum()   : 0.0;
+            double avg  = (count > 0) ? s.getAverage() : 0.0;
+            double roundedAvg = round2(avg);
+            String level = (count == 0) ? "미흡" : classifyAbsolute(roundedAvg);
+
             return SubCompetencyAverageDto.builder()
+                    .coreCategoryId(sc.coreId())
+                    .coreCategoryName(sc.coreName())
                     .subCategoryId(sc.id())
                     .subCategoryName(sc.name())
-                    .questionCount(s != null ? s.getCount() : 0)
-                    .totalScore(s != null ? s.getSum()   : 0.0)
-                    .average(Math.round(avg * 100.0) / 100.0)
+                    .questionCount(count)
+                    .totalScore(sum)
+                    .average(roundedAvg)
+                    .level(level)
                     .build();
         }).toList();
+    }
+
+    /** 절대평가 분류: 경계를 포함하지 않음(>3.5 우수, <2.0 미흡, 나머지 보통) */
+    private String classifyAbsolute(double avg) {
+        if (avg > ABS_EXCELLENT_GT) return "우수";
+        if (avg < ABS_POOR_LT)      return "미흡";
+        return "보통";
+    }
+
+    /** 소수 둘째 자리 반올림 */
+    private static double round2(double v) {
+        return Math.round(v * 100.0) / 100.0;
     }
 }

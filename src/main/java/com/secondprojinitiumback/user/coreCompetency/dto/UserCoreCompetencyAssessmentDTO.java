@@ -12,6 +12,7 @@ import java.time.LocalDate;
 public class UserCoreCompetencyAssessmentDTO {
 
     private Long id;
+    private String assessmentNo;
     private String assessmentName; // 평가 이름
     private String startDate;      // 시작일
     private String endDate;        // 종료일

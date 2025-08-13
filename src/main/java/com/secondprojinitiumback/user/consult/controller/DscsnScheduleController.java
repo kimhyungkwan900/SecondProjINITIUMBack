@@ -21,10 +21,10 @@ public class DscsnScheduleController {
     private final DscsnScheduleService dscsnScheduleService;
 
     //--- 일정 등록
-    @PostMapping("/api/consult/schedule/{dscsnType}")
-    public ResponseEntity<?> createSchedule(@ModelAttribute DscsnScheduleRequestDto dscsnScheduleRequestDto, @PathVariable String dscsnType) {
+    @PostMapping("/api/consult/schedule/new")
+    public ResponseEntity<?> createSchedule(@RequestBody List<DscsnScheduleRequestDto> dscsnScheduleRequestDtos) {
         try{
-            dscsnScheduleService.saveDscsnSchedule(dscsnScheduleRequestDto, dscsnType);
+            dscsnScheduleService.saveDscsnSchedule(dscsnScheduleRequestDtos);
             return ResponseEntity.ok("일정 등록 완료");
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("일정 등록 중 문제가 발생했습니다.");
@@ -60,10 +60,10 @@ public class DscsnScheduleController {
     }
 
     //--- 일정 삭제
-    @DeleteMapping("/api/consult/schedule/{scheduleId}")
-    public ResponseEntity<?> deleteSchedule(@PathVariable String scheduleId) {
+    @DeleteMapping("/api/consult/schedule/delete")
+    public ResponseEntity<?> deleteSchedule(@RequestBody List<String> scheduleIds) {
         try {
-            dscsnScheduleService.deleteDscsnSchedule(scheduleId);
+            dscsnScheduleService.deleteDscsnSchedule(scheduleIds);
             return ResponseEntity.ok("일정 삭제 완료");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("일정 삭제 중 문제가 발생했습니다.");

@@ -22,7 +22,7 @@ public class StudentSearchDto {
     private String email;                  // 이메일(검색)
 
     // 학과 코드 (대분류/중분류)
-    private String schoolSubjectCode;      // 학과 코드(검색) - 중분류
+    private String subjectCode;      // 학과 코드(검색) - 중분류
     private String schoolSubjectCodeSe;    // 학과 코드 그룹(검색) - 대분류 (기본값: CO0003)
 
     // 학적 상태 코드 (대분류/중분류)
@@ -35,7 +35,7 @@ public class StudentSearchDto {
 
     // 기타 검색 조건
     private String grade;                  // 학년(검색) - 1~4학년
-    private String advisorId;              // 지도교수 ID(검색) - Employee 테이블의 EMP_ID
+    private String empNo;              // 지도교수 ID(검색) - Employee 테이블의 EMP_ID
 
     // 입학일자 기간 검색
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -107,12 +107,12 @@ public class StudentSearchDto {
     }
 
     // 지도교수 ID 형식 검증 (교수는 P로 시작)
-    public boolean isValidAdvisorId() {
-        if (!StringUtils.hasText(advisorId)) {
+    public boolean isValidEmpNo() {
+        if (!StringUtils.hasText(empNo)) {
             return true; // null이나 빈 문자열은 검색조건 없음으로 간주
         }
         // 교수 ID는 P로 시작해야 함
-        return advisorId.trim().startsWith("P") && advisorId.trim().matches("^P[0-9]+$");
+        return empNo.trim().startsWith("P") && empNo.trim().matches("^P[0-9]+$");
     }
 
 
@@ -121,11 +121,11 @@ public class StudentSearchDto {
         return StringUtils.hasText(studentNo) ||
                 StringUtils.hasText(name) ||
                 StringUtils.hasText(universityCode) ||
-                StringUtils.hasText(schoolSubjectCode) ||
+                StringUtils.hasText(subjectCode) ||
                 StringUtils.hasText(studentStatusCode) ||
                 StringUtils.hasText(grade) ||
                 StringUtils.hasText(genderCode) ||
-                StringUtils.hasText(advisorId) ||
+                StringUtils.hasText(empNo) ||
                 StringUtils.hasText(email) ||
                 admissionDateFrom != null ||
                 admissionDateTo != null;
@@ -138,7 +138,7 @@ public class StudentSearchDto {
                 isValidEmail() &&
                 isValidStudentNo() &&
                 isValidName() &&
-                isValidAdvisorId();
+                isValidEmpNo();
     }
 
     // 유효성 검증 실패 시 구체적인 오류 메시지 반환
@@ -158,7 +158,7 @@ public class StudentSearchDto {
         if (!isValidName()) {
             return "이름은 한글, 영문자만 입력 가능합니다.";
         }
-        if (!isValidAdvisorId()) {
+        if (!isValidEmpNo()) {
             return "지도교수 ID는 P로 시작하는 교수 번호여야 합니다.";
         }
         return null;
@@ -186,11 +186,11 @@ public class StudentSearchDto {
         this.name = null;
         this.universityCode = null;
         this.email = null;
-        this.schoolSubjectCode = null;
+        this.subjectCode = null;
         this.studentStatusCode = null;
         this.genderCode = null;
         this.grade = null;
-        this.advisorId = null;
+        this.empNo = null;
         this.admissionDateFrom = null;
         this.admissionDateTo = null;
     }
@@ -202,11 +202,11 @@ public class StudentSearchDto {
         if (StringUtils.hasText(studentNo)) conditions.append("학번: ").append(studentNo).append(", ");
         if (StringUtils.hasText(name)) conditions.append("이름: ").append(name).append(", ");
         if (StringUtils.hasText(universityCode)) conditions.append("대학코드: ").append(universityCode).append(", ");
-        if (StringUtils.hasText(schoolSubjectCode)) conditions.append("학과코드: ").append(schoolSubjectCode).append(", ");
+        if (StringUtils.hasText(subjectCode)) conditions.append("학과코드: ").append(subjectCode).append(", ");
         if (StringUtils.hasText(studentStatusCode)) conditions.append("학적상태: ").append(studentStatusCode).append(", ");
         if (StringUtils.hasText(grade)) conditions.append("학년: ").append(grade).append(", ");
         if (StringUtils.hasText(genderCode)) conditions.append("성별: ").append(genderCode).append(", ");
-        if (StringUtils.hasText(advisorId)) conditions.append("지도교수: ").append(advisorId).append(", ");
+        if (StringUtils.hasText(empNo)) conditions.append("지도교수: ").append(empNo).append(", ");
         if (StringUtils.hasText(email)) conditions.append("이메일: ").append(email).append(", ");
         if (admissionDateFrom != null) conditions.append("입학일시작: ").append(admissionDateFrom).append(", ");
         if (admissionDateTo != null) conditions.append("입학일끝: ").append(admissionDateTo).append(", ");

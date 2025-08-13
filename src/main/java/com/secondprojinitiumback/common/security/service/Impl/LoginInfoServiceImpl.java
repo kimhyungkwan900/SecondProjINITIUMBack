@@ -168,7 +168,7 @@ public class LoginInfoServiceImpl implements LoginInfoService {
                     .userType(userType)
                     .name(employee.getName())
                     .email(employee.getEmail())
-                    .employeeNo(employee.getEmpNo())
+                    .empNo(employee.getEmpNo())
                     .schoolSubject(employee.getSchoolSubject().getSubjectName())
                     .loginId(loginInfo.getLoginId())
                     .gender(employee.getGender().getId().getCode())

@@ -9,9 +9,9 @@ import lombok.*;
 @Setter
 @ToString
 public class EmployeeSearchDto {
-    private String employeeNo;          // 교직원 번호
+    private String empNo;               // 교직원 번호
     private String name;                // 이름
-    private String schoolSubjectCode;   // 담당 과목
+    private String subjectCode;         // 담당 과목
     private String employeeStatusCode;  // 상태 코드
     private String genderCode;          // 성별 코드
     private String email;               // 이메일

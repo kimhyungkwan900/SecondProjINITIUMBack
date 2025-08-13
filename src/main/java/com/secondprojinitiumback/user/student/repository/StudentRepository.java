@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, String>, StudentRepositoryCustom {
 
-    Optional<String> findTopByStudentNoStartingWithAndStudentNoContainingOrderByStudentNoDesc(String admissionYear, String departmentCode);
+    Optional<Student> findTopByStudentNoStartingWithAndStudentNoContainingOrderByStudentNoDesc(String admissionYear, String departmentCode);
 
     Optional<Student> findByLoginInfoLoginId(String loginId);
 

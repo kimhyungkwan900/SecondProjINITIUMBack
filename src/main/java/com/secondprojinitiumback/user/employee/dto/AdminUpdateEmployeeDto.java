@@ -18,5 +18,5 @@ public class AdminUpdateEmployeeDto {
     private String email;               // 이메일
     private String tel;                 // 전화번호
     private String empStatus;           // 교직원 상태 코드
-    private String schoolSubjectNo;     // 소속 센터, 부서, 학교 등
+    private String subjectCode;     // 소속 센터, 부서, 학교 등
 }

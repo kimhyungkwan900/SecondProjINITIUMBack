@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DscsnSatisfactionRepository extends JpaRepository<DscsnSatisfaction,String> {
     DscsnSatisfaction findTopByDscsnSatisfyIdStartingWithOrderByDscsnSatisfyIdDesc(String prefix);
+
+    boolean existsByDscsnInfo_DscsnInfoId(String dscsnInfoId);
 }

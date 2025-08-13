@@ -13,6 +13,7 @@ import com.secondprojinitiumback.user.extracurricular.domain.ExtracurricularSurv
 import com.secondprojinitiumback.user.extracurricular.domain.enums.AprySttsNm;
 import com.secondprojinitiumback.user.extracurricular.dto.ExtracurricularApplyDTO;
 import com.secondprojinitiumback.user.extracurricular.repository.ExtracurricularApplyRepository;
+import com.secondprojinitiumback.user.extracurricular.repository.ExtracurricularSurveyResponseRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -45,6 +46,8 @@ public class ExtracurricularProgramService {
     private final ExtracurricularSurveyRepository extracurricularSurveyRepository;
 
     private final ExtracurricularScheduleRepository extracurricularScheduleRepository;
+
+    private final ExtracurricularSurveyResponseRepository extracurricularSurveyResponseRepository;
     // 비교과 프로그램 등록 신청
 
 
@@ -93,6 +96,7 @@ public class ExtracurricularProgramService {
             // 3. 이미지 엔티티 저장 (별도의 Repository 필요)
             extracurricularImageRepository.save(image);
         }
+
         extracurricularScheduleService.registerSchedulesAutomatically(
                 program,
                 dto.getEduBgngYmd(),             // 교육 시작일
@@ -170,6 +174,9 @@ public class ExtracurricularProgramService {
                                 .build())
                         .toList();
                 dto.setScheduleList(scheduleDTOList);
+
+                int totalCount = extracurricularSurveyResponseRepository.countExtracurricularSurveyResponsesByExtracurricularSurvey_ExtracurricularProgram_EduMngId(program.getEduMngId());
+                dto.setTotalSurvey(totalCount);
 
             return dto;
         });

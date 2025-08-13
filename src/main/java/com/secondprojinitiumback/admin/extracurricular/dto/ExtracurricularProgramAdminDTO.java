@@ -34,6 +34,7 @@ public class ExtracurricularProgramAdminDTO {
 
     private int request;
     private int accept; // 참여 인원 반환
+    private int totalSurvey; // 등록된 설문 개수
 
     private String empNo;
     private String name;

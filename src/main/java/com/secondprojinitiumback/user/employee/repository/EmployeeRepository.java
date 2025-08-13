@@ -4,6 +4,7 @@ import com.secondprojinitiumback.user.employee.domain.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,4 +20,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, String>, Emp
 
     // 이메일로 조회
     Optional<Employee> findByEmail(String email);
+
+    List<Employee> findByEmpNoStartingWith(String empNoPrefix);
 }

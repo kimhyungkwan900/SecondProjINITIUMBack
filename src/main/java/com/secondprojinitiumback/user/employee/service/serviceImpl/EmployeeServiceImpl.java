@@ -122,6 +122,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeePage.map(this::toEmployeeDto);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<EmployeeDto> findAllProfessors() {
+        return employeeRepository.findByEmpNoStartingWith("P").stream()
+                .map(this::toEmployeeDto)
+                .toList();
+    }
+
     // Entity 조회 메소드들
 
     // 교번/사번으로 직원 조회

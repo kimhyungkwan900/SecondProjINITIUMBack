@@ -28,34 +28,37 @@ public class DscsnScheduleService {
     private final TempEmployeeRepository employeeRepository;
 
     //--- 상담사, 교수 일정 등록
-    public void saveDscsnSchedule(DscsnScheduleRequestDto dscsnScheduleRequestDto, String dscsnType) {
-        //상담일정 ID 생성
+    public void saveDscsnSchedule(List<DscsnScheduleRequestDto> dscsnScheduleRequestDtos) {
 
-        //1. 날짜정보 가져오기
-        String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd"));
-        String prefix = dscsnType + today; //dscsnType: 지도교수 상담은 A, 진로취업 상담은 C, 심리상담은 P, 학습상담은 L
+        for (DscsnScheduleRequestDto dto : dscsnScheduleRequestDtos) {
+            //상담일정 ID 생성
 
-        //2. 시퀀스 번호 생성
-        String seqNum = getNextScheduleSequence(dscsnType + today);
+            //1. 날짜정보 가져오기
+            String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd"));
+            String prefix = dto.getDscsnType() + today; //dscsnType: 지도교수 상담은 A, 진로취업 상담은 C, 심리상담은 P, 학습상담은 L
 
-        //3. ID 생성
-        String dscsnDtId = prefix + seqNum;
+            //2. 시퀀스 번호 생성
+            String seqNum = getNextScheduleSequence(dto.getDscsnType() + today);
 
-        //dscsnScheduleDto에서 empNo로 Employee 엔티티 조회(임시)
-        Employee employeeInfo = employeeRepository.findById(dscsnScheduleRequestDto.getEmpNo())
-                .orElseThrow(EntityExistsException::new);
+            //3. ID 생성
+            String dscsnDtId = prefix + seqNum;
 
-        // DscsnScheduleDto를 DscsnDate 엔티티로 변환
-        DscsnSchedule dscsnSchedule = DscsnSchedule.builder()
-                .dscsnDtId(dscsnDtId)
-                .possibleDate(dscsnScheduleRequestDto.getScheduleDate())
-                .possibleTime(dscsnScheduleRequestDto.getStartTime())
-                .dscsnYn("N")   // 예약 여부 초기값 N
-                .employee(employeeInfo)
-                .build();
+            //dscsnScheduleDto에서 empNo로 Employee 엔티티 조회(임시)
+            Employee employeeInfo = employeeRepository.findById(dto.getEmpNo())
+                    .orElseThrow(EntityExistsException::new);
 
-        //등록한 상담일정 저장
-        dscsnScheduleRepository.save(dscsnSchedule);
+            // DscsnScheduleDto를 DscsnDate 엔티티로 변환
+            DscsnSchedule dscsnSchedule = DscsnSchedule.builder()
+                    .dscsnDtId(dscsnDtId)
+                    .possibleDate(dto.getScheduleDate())
+                    .possibleTime(dto.getStartTime())
+                    .dscsnYn("N")   // 예약 여부 초기값 N
+                    .employee(employeeInfo)
+                    .build();
+
+            //등록한 상담일정 저장
+            dscsnScheduleRepository.save(dscsnSchedule);
+        }
     }
     //--- 상담사, 교수 일정 단일 조회
     @Transactional(readOnly = true)
@@ -96,10 +99,9 @@ public class DscsnScheduleService {
     }
 
     //--- 상담사, 교수 일정 삭제
-    public void deleteDscsnSchedule(String dscsnDtId) {
-
+    public void deleteDscsnSchedule(List<String> scheduleIds) {
         //상담일정 ID로 해당 상담일정 삭제
-        dscsnScheduleRepository.deleteById(dscsnDtId);
+        dscsnScheduleRepository.deleteAllById(scheduleIds);
     }
 
     //시퀀스 번호 생성 메소드

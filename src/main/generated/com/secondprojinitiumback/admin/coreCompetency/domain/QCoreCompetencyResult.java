@@ -24,6 +24,10 @@ public class QCoreCompetencyResult extends EntityPathBase<CoreCompetencyResult> 
 
     public final QCoreCompetencyAssessment assessment;
 
+    public final com.secondprojinitiumback.common.domain.QCommonCode classificationResult;
+
+    public final StringPath classificationResultGroup = createString("classificationResultGroup");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final QCoreCompetencyResponse response;
@@ -49,6 +53,7 @@ public class QCoreCompetencyResult extends EntityPathBase<CoreCompetencyResult> 
     public QCoreCompetencyResult(Class<? extends CoreCompetencyResult> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.assessment = inits.isInitialized("assessment") ? new QCoreCompetencyAssessment(forProperty("assessment"), inits.get("assessment")) : null;
+        this.classificationResult = inits.isInitialized("classificationResult") ? new com.secondprojinitiumback.common.domain.QCommonCode(forProperty("classificationResult"), inits.get("classificationResult")) : null;
         this.response = inits.isInitialized("response") ? new QCoreCompetencyResponse(forProperty("response"), inits.get("response")) : null;
         this.student = inits.isInitialized("student") ? new com.secondprojinitiumback.user.student.domain.QStudent(forProperty("student"), inits.get("student")) : null;
     }

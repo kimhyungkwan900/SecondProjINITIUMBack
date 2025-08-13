@@ -259,3 +259,9 @@ INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, USE_YN) VALUES
 INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, USE_YN) VALUES
                                                      ('COMP', 'C', '핵심역량', 'Y'),
                                                      ('COMP', 'S', '하위역량', 'Y');
+
+-- 응답 결과 분류 코드(우수/보통/미흡)
+INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, USE_YN) VALUES
+                                                     ('CLSF', '2', '우수', 'Y'),
+                                                     ('CLSF', '1', '보통', 'Y'),
+                                                     ('CLSF', '0', '미흡', 'Y');

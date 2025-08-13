@@ -32,6 +32,8 @@ public class QExtracurricularApply extends EntityPathBase<ExtracurricularApply> 
 
     public final NumberPath<Long> eduAplyId = createNumber("eduAplyId", Long.class);
 
+    public final QExtracurricularCompletion extracurricularCompletion;
+
     public final com.secondprojinitiumback.admin.extracurricular.domain.QExtracurricularProgram extracurricularProgram;
 
     public final com.secondprojinitiumback.user.student.domain.QStudent student;
@@ -54,6 +56,7 @@ public class QExtracurricularApply extends EntityPathBase<ExtracurricularApply> 
 
     public QExtracurricularApply(Class<? extends ExtracurricularApply> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.extracurricularCompletion = inits.isInitialized("extracurricularCompletion") ? new QExtracurricularCompletion(forProperty("extracurricularCompletion"), inits.get("extracurricularCompletion")) : null;
         this.extracurricularProgram = inits.isInitialized("extracurricularProgram") ? new com.secondprojinitiumback.admin.extracurricular.domain.QExtracurricularProgram(forProperty("extracurricularProgram"), inits.get("extracurricularProgram")) : null;
         this.student = inits.isInitialized("student") ? new com.secondprojinitiumback.user.student.domain.QStudent(forProperty("student"), inits.get("student")) : null;
     }

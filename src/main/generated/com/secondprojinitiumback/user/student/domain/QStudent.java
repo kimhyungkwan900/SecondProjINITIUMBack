@@ -30,8 +30,6 @@ public class QStudent extends EntityPathBase<Student> {
 
     public final DatePath<java.time.LocalDate> birthDate = createDate("birthDate", java.time.LocalDate.class);
 
-    public final StringPath clubCode = createString("clubCode");
-
     public final StringPath email = createString("email");
 
     public final com.secondprojinitiumback.common.domain.QCommonCode gender;

@@ -54,7 +54,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private EmployeeDto appointEmployee(EmployeeAppointDto dto, String rolePrefix, String userType) {
-        SchoolSubject schoolSubject = findSchoolSubjectById(dto.getSchoolSubjectNo());
+        SchoolSubject schoolSubject = findSchoolSubjectById(dto.getSubjectCode());
         String employeeNo = generateEmployeeNo(rolePrefix, schoolSubject.getSubjectCode());
         LoginInfo loginInfo = createLoginInfo(employeeNo, userType, dto.getBirthDate());
         BankAccount bankAccount = findBankAccountByIdNullable(dto.getBankAccountNo());
@@ -72,7 +72,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDto adminUpdateEmployeeInfo(String employeeNo, AdminUpdateEmployeeDto dto) {
         Employee employee = findEmployeeById(employeeNo);
-        SchoolSubject schoolSubject = findSchoolSubjectById(dto.getSchoolSubjectNo());
+        SchoolSubject schoolSubject = findSchoolSubjectById(dto.getSubjectCode());
         CommonCode gender = findGenderByCode(dto.getGender());
         EmployeeStatusInfo employeeStatus = findStatusByCode(dto.getEmpStatus());
         employee.adminUpdate(dto, schoolSubject, gender, employeeStatus);
@@ -200,7 +200,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (employee == null) {
             return null;
         }
-        String schoolSubjectNo = (employee.getSchoolSubject() != null)
+        String subjectCode = (employee.getSchoolSubject() != null)
                 ? employee.getSchoolSubject().getSubjectCode() : null;
         String employeeStatusCode = (employee.getEmployeeStatus() != null)
                 ? employee.getEmployeeStatus().getId().getEmployeeStatusCode() : null;
@@ -220,7 +220,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .email(employee.getEmail())
                 .tel(employee.getTel())
                 .birthDate(employee.getBirthDate())
-                .schoolSubjectNo(schoolSubjectNo)
+                .subjectCode(subjectCode)
                 .employeeStatusCode(employeeStatusCode)
                 .genderCode(genderCode)
                 .bankAccountNo(bankAccountNo)

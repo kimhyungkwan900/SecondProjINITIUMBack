@@ -15,7 +15,7 @@ public class UserDetailDto {
     private String name;
     private String email;
     private String studentNo;
-    private String employeeNo;
+    private String empNo;
     private String schoolSubject;
     private String gender;
     private String grade;

@@ -103,11 +103,11 @@ public class StudentRepositoryImpl implements StudentRepositoryCustom {
                 eqStudentNo(searchDto.getStudentNo()),
                 containsName(searchDto.getName()),
                 containsUniversity(searchDto.getUniversityCode()),
-                eqSchoolSubject(searchDto.getSchoolSubjectCode(), searchDto.getSchoolSubjectCodeSe()),
+                eqSchoolSubject(searchDto.getSubjectCode(), searchDto.getSchoolSubjectCodeSe()),
                 containsStatus(searchDto.getStudentStatusCode(), searchDto.getStudentStatusCodeSe()),
                 eqGrade(searchDto.getGrade()),
                 containsGender(searchDto.getGenderCode(), searchDto.getGenderCodeSe()),
-                containsAdvisor(searchDto.getAdvisorId()),
+                containsAdvisor(searchDto.getEmpNo()),
                 containsEmail(searchDto.getEmail()),
                 betweenAdmissionDate(searchDto.getAdmissionDateFrom(), searchDto.getAdmissionDateTo())
         );

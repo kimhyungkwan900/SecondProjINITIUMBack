@@ -1,24 +1,29 @@
 package com.secondprojinitiumback.user.consult.service;
 
 import com.secondprojinitiumback.user.consult.domain.DscsnApply;
+import com.secondprojinitiumback.user.consult.domain.DscsnInfo;
 import com.secondprojinitiumback.user.consult.domain.DscsnSchedule;
 import com.secondprojinitiumback.user.consult.domain.DscsnKind;
 import com.secondprojinitiumback.user.consult.dto.requestdto.DscsnApplyRequestDto;
 import com.secondprojinitiumback.user.consult.repository.DscsnApplyRepoistory;
+import com.secondprojinitiumback.user.consult.repository.DscsnInfoRepository;
 import com.secondprojinitiumback.user.consult.repository.DscsnKindRepository;
 import com.secondprojinitiumback.user.consult.repository.DscsnScheduleRepository;
 import com.secondprojinitiumback.user.student.domain.Student;
 import com.secondprojinitiumback.user.student.repository.StudentRepository;
 import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class DscsnApplyService {
     private final DscsnApplyRepoistory dscsnApplyRepoistory;
+    private final DscsnInfoRepository dscsnInfoRepository;
     private final DscsnScheduleRepository dscsnScheduleRepository;
     private final StudentRepository studentRepository;
     private final DscsnKindRepository dscsnKindRepository;
@@ -71,18 +76,25 @@ public class DscsnApplyService {
     }
 
     //--- 학생 상담신청 취소
-    public void cancelConsultation(String dscsnApplyId) {
+    public void cancelConsultation(String dscsnInfoId) {
 
-        //상담신청 ID로 상담신청 정보 조회
-        DscsnApply dscsnApply = dscsnApplyRepoistory.findById(dscsnApplyId)
-                .orElseThrow(EntityExistsException::new);
+        //상담정보 조회
+        DscsnInfo dscsnInfo = dscsnInfoRepository.findById(dscsnInfoId).orElseThrow(EntityExistsException::new);
+
+        //상담상태가 이미 완료인 경우 예외 처리
+        if(dscsnInfo.getDscsnStatus().equals("Completed")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 상담이 완료된 신청입니다.");
+        }//상담상태가 이미 취소된 경우 예외 처리
+        else if (dscsnInfo.getDscsnStatus().equals("Canceled")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 취소된 신청입니다.");
+        }
+
+        //상담정보 ID로 상담상태 상담취소로 변경
+        dscsnInfoService.updateDscsnStatus(dscsnInfoId, "Canceled");
 
         //상담일정 예약여부 변경
-        DscsnSchedule dscsnSchedule = dscsnApply.getDscsnDt();
+        DscsnSchedule dscsnSchedule = dscsnInfo.getDscsnApply().getDscsnDt();
         dscsnSchedule.updateDscsnYn();
-
-        //상담신청 ID로 신청정보 삭제
-        dscsnApplyRepoistory.deleteById(dscsnApplyId);
     }
 
     //시퀀스 번호 생성 메소드

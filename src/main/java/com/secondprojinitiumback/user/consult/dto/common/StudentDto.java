@@ -17,4 +17,6 @@ public class StudentDto {
     private String schoolSubject;
 
     private String name;
+
+    private String email;
 }

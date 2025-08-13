@@ -6,10 +6,7 @@ import com.secondprojinitiumback.user.student.domain.Student;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +22,12 @@ public class CoreCompetencyResponseController {
     ) {
         adminCoreCompetencyResponseService.saveResponsesByLabel(student, dto);
         return ResponseEntity.ok("응답 저장 완료");
+    }
+
+    @GetMapping("/check/{assessmentId}/{studentNo}")
+    public ResponseEntity<Void> checkDuplicate(@PathVariable Long assessmentId, @PathVariable String studentNo) {
+        adminCoreCompetencyResponseService.checkDuplicate(assessmentId, studentNo);
+        return ResponseEntity.noContent().build();
     }
 
 }

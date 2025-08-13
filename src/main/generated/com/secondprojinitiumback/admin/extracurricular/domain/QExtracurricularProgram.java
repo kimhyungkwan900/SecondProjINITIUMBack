@@ -60,8 +60,6 @@ public class QExtracurricularProgram extends EntityPathBase<ExtracurricularProgr
 
     public final QExtracurricularCategory extracurricularCategory;
 
-    public final StringPath field = createString("field");
-
     public final StringPath fileNo = createString("fileNo");
 
     public final DateTimePath<java.time.LocalDateTime> sttsChgDt = createDateTime("sttsChgDt", java.time.LocalDateTime.class);

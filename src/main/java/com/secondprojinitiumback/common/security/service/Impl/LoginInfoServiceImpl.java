@@ -68,9 +68,10 @@ public class LoginInfoServiceImpl implements LoginInfoService {
             throw new CustomException(ErrorCode.PASSWORD_MISMATCH);
         }
 
-        // 비밀번호 유효성검사 (최소 길이 8자)
-        if (newPassword == null || newPassword.length() < 8) {
-            throw new CustomException(ErrorCode.PASSWORD_TOO_SHORT);
+        // 비밀번호 유효성검사
+        final String PWD_REGEX = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$%*#?&])[A-Za-z\\d$@$%*#?&]{8,}$";
+        if (newPassword == null || !newPassword.matches(PWD_REGEX)) {
+            throw new CustomException(ErrorCode.INVALID_PASSWORD_FORMAT);
         }
 
         // 기존 비밀번호와 동일하다면 예외

@@ -57,7 +57,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         SchoolSubject schoolSubject = findSchoolSubjectById(dto.getSubjectCode());
         String employeeNo = generateEmployeeNo(rolePrefix, schoolSubject.getSubjectCode());
         LoginInfo loginInfo = createLoginInfo(employeeNo, userType, dto.getBirthDate());
-        BankAccount bankAccount = findBankAccountByIdNullable(dto.getBankAccountNo());
+        BankAccount bankAccount = findOrCreateBankAccount(dto.getBankAccountNo(), dto.getBankCode());
         CommonCode gender = findGenderByCode(dto.getGender());
         EmployeeStatusInfo employeeStatus = findStatusByCode(dto.getEmployeeStatus());
 
@@ -74,15 +74,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = findEmployeeById(employeeNo);
         SchoolSubject schoolSubject = findSchoolSubjectById(dto.getSubjectCode());
         CommonCode gender = findGenderByCode(dto.getGender());
-        EmployeeStatusInfo employeeStatus = findStatusByCode(dto.getEmpStatus());
-        employee.adminUpdate(dto, schoolSubject, gender, employeeStatus);
+        EmployeeStatusInfo employeeStatus = findStatusByCode(dto.getEmployeeStatus());
+        BankAccount bankAccount = findOrCreateBankAccount(dto.getBankAccountNo(), dto.getBankCode());
+        employee.adminUpdate(dto, schoolSubject, gender, employeeStatus, bankAccount);
         return toEmployeeDto(employee);
     }
 
     @Override
     public EmployeeDto updateMyInfo(String employeeNo, EmployeeUpdateMyInfoDto dto) {
         Employee employee = findEmployeeById(employeeNo);
-        BankAccount bankAccount = findBankAccountByIdNullable(dto.getBankAccountNo());
+        BankAccount bankAccount = findOrCreateBankAccount(dto.getBankAccountNo(), dto.getBankCode());
         employee.updateMyInfo(dto, bankAccount);
         return toEmployeeDto(employee);
     }
@@ -185,14 +186,46 @@ public class EmployeeServiceImpl implements EmployeeService {
     private String generateEmployeeNo(String role, String deptCode) {
         String prefix = role;
         String dept = String.format("%03d", Integer.parseInt(deptCode));
-        Optional<String> lastEmpNo = employeeRepository.findTopByEmpNoStartingWithOrderByEmpNoDesc(prefix + dept);
-        int seq = 1;
-        if (lastEmpNo.isPresent()) {
-            String lastSeq = lastEmpNo.get().substring(lastEmpNo.get().length() - 3);
-            seq = Integer.parseInt(lastSeq) + 1;
+        String lastEmpNo = employeeRepository.findTopByEmpNoStartingWithOrderByEmpNoDesc(prefix + dept)
+                .map(Employee::getEmpNo)
+                .orElse(null);
+
+        int nextSeq = 1;
+        if (lastEmpNo != null && lastEmpNo.length() >= 3) {
+            String lastSeqStr = lastEmpNo.substring(lastEmpNo.length() - 3);
+            if (lastSeqStr.chars().allMatch(Character::isDigit)) {
+                nextSeq = Integer.parseInt(lastSeqStr) + 1;
+            }
         }
-        String seqStr = String.format("%03d", seq);
+
+        if (nextSeq > 999) {
+            throw new IllegalStateException("해당 부서의 교번/사번 시퀀스가 999를 초과했습니다.");
+        }
+
+        String seqStr = String.format("%03d", nextSeq);
         return prefix + dept + seqStr;
+    }
+
+    // 계좌 번호와 은행 코드로 은행 계좌 조회 또는 생성
+    private BankAccount findOrCreateBankAccount(String accountNo, String bankCode) {
+        if (accountNo == null || accountNo.isBlank()) {
+            return null;
+        }
+        return bankAccountRepository.findById(accountNo)
+                .orElseGet(() -> {
+                    CommonCode bankCommonCode = findBankCodeByCode(bankCode);
+                    BankAccount newBankAccount = BankAccount.builder()
+                            .accountNo(accountNo)
+                            .bankCode(bankCommonCode)
+                            .build();
+                    return bankAccountRepository.save(newBankAccount);
+                });
+    }
+
+    // 은행 코드로 CommonCode 조회
+    private CommonCode findBankCodeByCode(String bankCode) {
+        return commonCodeRepository.findById_CodeAndId_CodeGroup(bankCode, "BA0001")
+                .orElseThrow(() -> new EntityNotFoundException("유효하지 않은 은행 코드: " + bankCode));
     }
 
     // Employee 객체를 EmployeeDto로 변환

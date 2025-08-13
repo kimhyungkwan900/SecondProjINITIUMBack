@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, String>, EmployeeRepositoryCustom {
     // 시퀸스용 번호조회
-    Optional<String> findTopByEmpNoStartingWithOrderByEmpNoDesc(String empNoPrefix);
+    Optional<Employee> findTopByEmpNoStartingWithOrderByEmpNoDesc(String empNoPrefix);
 
     // 사번/교번으로 조회
     Optional<Employee> findByEmpNo(String empNo);

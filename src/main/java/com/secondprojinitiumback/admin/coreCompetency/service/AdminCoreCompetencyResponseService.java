@@ -15,8 +15,11 @@ import com.secondprojinitiumback.user.student.repository.StudentRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+
+import static org.springframework.http.HttpStatus.CONFLICT;
 
 /**
  * 학생의 핵심역량 응답(CoreCompetencyResponse)을 저장하는 서비스 클래스
@@ -65,5 +68,12 @@ public class AdminCoreCompetencyResponseService {
 
             coreCompetencyResponseRepository.save(response);
         }
+    }
+
+    //진단에 응답한 학생여부확인
+    public void checkDuplicate(Long assessmentId, String studentNo) {
+        boolean exists = coreCompetencyResponseRepository
+                .existsByAssessment_IdAndStudent_StudentNo(assessmentId, studentNo);
+        if (exists) throw new ResponseStatusException(CONFLICT, "이미 응시한 진단입니다.");
     }
 }

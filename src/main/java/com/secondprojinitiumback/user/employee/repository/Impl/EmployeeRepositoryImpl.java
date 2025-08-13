@@ -65,9 +65,9 @@ public class EmployeeRepositoryImpl implements EmployeeRepositoryCustom {
                 .leftJoin(qEmployee.employeeStatus, qEmployeeStatusInfo).fetchJoin()
                 .leftJoin(qEmployee.gender, qGender).fetchJoin()
                 .where(
-                        eqEmployeeNo(searchDto.getEmployeeNo()),
+                        eqEmployeeNo(searchDto.getEmpNo()),
                         containsName(searchDto.getName()),
-                        eqSchoolSubject(searchDto.getSchoolSubjectCode()),
+                        eqSchoolSubject(searchDto.getSubjectCode()),
                         eqStatus(searchDto.getEmployeeStatusCode()),
                         eqGender(searchDto.getGenderCode()),
                         containsEmail(searchDto.getEmail()),
@@ -80,9 +80,9 @@ public class EmployeeRepositoryImpl implements EmployeeRepositoryCustom {
                 .select(qEmployee.count())
                 .from(qEmployee)
                 .where(
-                        eqEmployeeNo(searchDto.getEmployeeNo()),
+                        eqEmployeeNo(searchDto.getEmpNo()),
                         containsName(searchDto.getName()),
-                        eqSchoolSubject(searchDto.getSchoolSubjectCode()),
+                        eqSchoolSubject(searchDto.getSubjectCode()),
                         eqStatus(searchDto.getEmployeeStatusCode()),
                         eqGender(searchDto.getGenderCode()),
                         containsEmail(searchDto.getEmail()),

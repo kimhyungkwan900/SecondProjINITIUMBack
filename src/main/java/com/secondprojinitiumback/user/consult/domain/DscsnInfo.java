@@ -21,7 +21,7 @@ public class DscsnInfo {
     @Column(name = "DSCSN_RSLT_CN", nullable = true)
     private String dscsnResultCn; //상담결과 내용
 
-    @Column(name = "DSCSN_RLS_YN", nullable = true, length = 1)
+    @Column(name = "RSLT_RLS_YN", nullable = true, length = 1)
     private String dscsnReleaseYn; //상담결과 공개여부
 
     @OneToOne(fetch = FetchType.LAZY)

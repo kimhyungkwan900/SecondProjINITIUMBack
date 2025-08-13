@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
+import java.util.List;
+
 import com.secondprojinitiumback.common.dto.request.StatusChangeRequest;
 import jakarta.validation.Valid;
 
@@ -89,6 +91,12 @@ public class EmployeeController {
 
         // 조회된 교직원 정보를 반환
         return ResponseEntity.ok(employeeDto);
+    }
+
+    // 교수 목록 조회
+    @GetMapping("/professors")
+    public List<EmployeeDto> getProfessors() {
+        return employeeService.findAllProfessors();
     }
 
     // 교직원 상태 변경

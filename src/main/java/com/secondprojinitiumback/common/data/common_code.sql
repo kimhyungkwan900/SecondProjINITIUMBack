@@ -1,231 +1,231 @@
 -- 성별구분
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0001', '10', '남자', 1, 'Y', '성별구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0001', '20', '여자', 2, 'Y', '성별구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0001', '10', '남자', 1, 'Y', '성별구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0001', '20', '여자', 2, 'Y', '성별구분');
 
 -- 업무구분
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'AA', '회계', 1, 'Y', '업무구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'AB', '예산', 2, 'Y', '업무구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'AE', '시설', 3, 'Y', '업무구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'AM', '인사', 4, 'Y', '업무구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'AM1', '교원인사', 5, 'Y', '업무구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'AM2', '직원인사', 6, 'Y', '업무구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'AM3', '시간강사', 7, 'Y', '업무구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'AW', '교직원임용', 8, 'Y', '업무구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'CC', '상담', 9, 'Y', '업무구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'CO', '공통', 10, 'Y', '업무구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'CP', '학생이력', 11, 'Y', '업무구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'CS', '보안/개인정보', 12, 'Y', '업무구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'FW', '시스템업무', 13, 'Y', '업무구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'MQ', '설문조사', 14, 'Y', '업무구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'SH', '장학', 15, 'Y', '업무구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'SL', '학적', 16, 'Y', '업무구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'SP', '교직', 17, 'Y', '업무구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'SS', '학생', 18, 'Y', '업무구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'ML', '마일리지', 19, 'Y', '업무구분');
-INSERT INTO comm_code (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0002', 'NC', '진단검사', 20, 'Y', '업무구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0002', 'AA', '회계', 1, 'Y', '업무구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0002', 'AB', '예산', 2, 'Y', '업무구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0002', 'AE', '시설', 3, 'Y', '업무구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0002', 'AM', '인사', 4, 'Y', '업무구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0002', 'AM1', '교원인사', 5, 'Y', '업무구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0002', 'AM2', '직원인사', 6, 'Y', '업무구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0002', 'AM3', '시간강사', 7, 'Y', '업무구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0002', 'AW', '교직원임용', 8, 'Y', '업무구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0002', 'CC', '상담', 9, 'Y', '업무구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0002', 'CO', '공통', 10, 'Y', '업무구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0002', 'CP', '학생이력', 11, 'Y', '업무구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0002', 'CS', '보안/개인정보', 12, 'Y', '업무구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0002', 'FW', '시스템업무', 13, 'Y', '업무구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0002', 'MQ', '설문조사', 14, 'Y', '업무구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0002', 'SH', '장학', 15, 'Y', '업무구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0002', 'SL', '학적', 16, 'Y', '업무구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0002', 'SP', '교직', 17, 'Y', '업무구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0002', 'SS', '학생', 18, 'Y', '업무구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0002', 'ML', '마일리지', 19, 'Y', '업무구분');
+INSERT INTO comm_code (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0002', 'NC', '진단검사', 20, 'Y', '업무구분');
 
 -- 부서구분
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0003', '10', '본부', 1, 'Y', '부서구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0003', '11', '처, 실, 센터', 2, 'Y', '부서구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0003', '12', '행정부서', 3, 'Y', '부서구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0003', '21', '학과', 4, 'Y', '부서구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0003', '30', '부속기관', 5, 'Y', '부서구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0003', '10', '본부', 1, 'Y', '부서구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0003', '11', '처, 실, 센터', 2, 'Y', '부서구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0003', '12', '행정부서', 3, 'Y', '부서구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0003', '21', '학과', 4, 'Y', '부서구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0003', '30', '부속기관', 5, 'Y', '부서구분');
 
 -- 생일구분
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0004', '10', '양력', 1, 'Y', '생일구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0004', '20', '음력', 2, 'Y', '생일구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0004', '10', '양력', 1, 'Y', '생일구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0004', '20', '음력', 2, 'Y', '생일구분');
 
 -- 은행구분
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '000', '기타', 1, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '002', '한국산업은행', 2, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '003', '중소기업은행', 3, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '004', '국민은행', 4, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '005', '한국외환은행', 5, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '006', '주택은행', 6, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '007', '수협', 7, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '008', '수출입은행', 8, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '011', '농협', 9, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '012', '단위농협(축협)', 10, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '020', '우리은행', 11, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '021', '조흥은행', 12, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '023', 'SC제일은행', 13, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '024', '우리은행', 14, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '027', '한미은행', 15, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '031', '대구은행', 16, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '032', '부산은행', 17, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '034', '광주은행', 18, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '035', '제주은행', 19, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '037', '전북은행', 20, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '038', '강원은행', 21, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '039', '경남은행', 22, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '040', '충북은행', 23, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '045', '새마을금고', 24, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '048', '신용협동조합', 25, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '050', '상호저축은행', 26, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '053', '시티은행', 27, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '054', '홍콩상하이은행(HSBC)', 28, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '055', '도이치뱅크', 29, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '056', '에이비엔암로은행', 30, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '057', '제이피모간체이스은행', 31, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '064', '산림조합중앙회', 32, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '071', '우체국', 33, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '076', '신용보증기금', 34, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '077', '기술보증기금', 35, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '081', '하나은행', 36, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '088', '신한은행', 37, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '089', '케이뱅크', 38, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '090', '카카오뱅크', 39, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '209', '유안타증권', 40, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '218', 'KB증권', 41, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '222', '한양증권', 42, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '230', '미래에셋대우', 43, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '238', '미래에셋대우', 44, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '240', '삼성증권', 45, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '243', '한국투자증권', 46, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '247', 'NH투자증권', 47, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '262', '하이투자증권', 48, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '263', '현대차증권', 49, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '266', 'SK증권', 50, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '278', '신한금융투자', 51, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '288', '카카오페이증권', 52, 'Y', '은행구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0005', '289', 'NH투자증권', 53, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '000', '기타', 1, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '002', '한국산업은행', 2, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '003', '중소기업은행', 3, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '004', '국민은행', 4, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '005', '한국외환은행', 5, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '006', '주택은행', 6, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '007', '수협', 7, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '008', '수출입은행', 8, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '011', '농협', 9, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '012', '단위농협(축협)', 10, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '020', '우리은행', 11, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '021', '조흥은행', 12, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '023', 'SC제일은행', 13, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '024', '우리은행', 14, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '027', '한미은행', 15, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '031', '대구은행', 16, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '032', '부산은행', 17, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '034', '광주은행', 18, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '035', '제주은행', 19, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '037', '전북은행', 20, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '038', '강원은행', 21, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '039', '경남은행', 22, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '040', '충북은행', 23, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '045', '새마을금고', 24, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '048', '신용협동조합', 25, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '050', '상호저축은행', 26, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '053', '시티은행', 27, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '054', '홍콩상하이은행(HSBC)', 28, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '055', '도이치뱅크', 29, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '056', '에이비엔암로은행', 30, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '057', '제이피모간체이스은행', 31, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '064', '산림조합중앙회', 32, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '071', '우체국', 33, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '076', '신용보증기금', 34, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '077', '기술보증기금', 35, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '081', '하나은행', 36, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '088', '신한은행', 37, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '089', '케이뱅크', 38, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '090', '카카오뱅크', 39, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '209', '유안타증권', 40, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '218', 'KB증권', 41, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '222', '한양증권', 42, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '230', '미래에셋대우', 43, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '238', '미래에셋대우', 44, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '240', '삼성증권', 45, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '243', '한국투자증권', 46, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '247', 'NH투자증권', 47, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '262', '하이투자증권', 48, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '263', '현대차증권', 49, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '266', 'SK증권', 50, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '278', '신한금융투자', 51, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '288', '카카오페이증권', 52, 'Y', '은행구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0005', '289', 'NH투자증권', 53, 'Y', '은행구분');
 
 -- 데이터 범위 구분
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0006', 'R', '수정', 1, 'Y', '데이터범위구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0006', 'S', '조회', 2, 'Y', '데이터범위구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0006', 'R', '수정', 1, 'Y', '데이터범위구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0006', 'S', '조회', 2, 'Y', '데이터범위구분');
 
 -- 데이터 권한 구분
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0007', 'A', '담당', 1, 'Y', '데이터권한구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0007', 'D', '부서', 2, 'Y', '데이터권한구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0007', 'P', '개인', 3, 'Y', '데이터권한구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0007', 'A', '담당', 1, 'Y', '데이터권한구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0007', 'D', '부서', 2, 'Y', '데이터권한구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0007', 'P', '개인', 3, 'Y', '데이터권한구분');
 
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '01', '01:00:00', 1, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '02', '02:00:00', 2, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '03', '03:00:00', 3, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '04', '04:00:00', 4, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '05', '05:00:00', 5, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '06', '06:00:00', 6, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '07', '07:00:00', 7, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '08', '08:00:00', 8, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '09', '09:00:00', 9, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '10', '10:00:00', 10, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '11', '11:00:00', 11, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '12', '00:00:00', 12, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '13', '13:00:00', 13, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '14', '14:00:00', 14, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '15', '15:00:00', 15, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '16', '16:00:00', 16, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '17', '17:00:00', 17, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '18', '18:00:00', 18, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '19', '19:00:00', 19, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '20', '20:00:00', 20, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '21', '21:00:00', 21, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '22', '22:00:00', 22, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '23', '23:00:00', 23, 'Y', '시간구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0008', '24', '12:00:00', 24, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '01', '01:00:00', 1, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '02', '02:00:00', 2, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '03', '03:00:00', 3, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '04', '04:00:00', 4, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '05', '05:00:00', 5, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '06', '06:00:00', 6, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '07', '07:00:00', 7, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '08', '08:00:00', 8, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '09', '09:00:00', 9, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '10', '10:00:00', 10, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '11', '11:00:00', 11, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '12', '00:00:00', 12, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '13', '13:00:00', 13, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '14', '14:00:00', 14, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '15', '15:00:00', 15, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '16', '16:00:00', 16, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '17', '17:00:00', 17, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '18', '18:00:00', 18, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '19', '19:00:00', 19, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '20', '20:00:00', 20, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '21', '21:00:00', 21, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '22', '22:00:00', 22, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '23', '23:00:00', 23, 'Y', '시간구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0008', '24', '12:00:00', 24, 'Y', '시간구분');
 
 -- 시간분구분
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '00', '00분', 1, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '01', '01분', 2, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '02', '02분', 3, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '03', '03분', 4, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '04', '04분', 5, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '05', '05분', 6, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '06', '06분', 7, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '07', '07분', 8, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '08', '08분', 9, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '09', '09분', 10, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '10', '10분', 11, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '11', '11분', 12, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '12', '12분', 13, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '13', '13분', 14, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '14', '14분', 15, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '15', '15분', 16, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '16', '16분', 17, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '17', '17분', 18, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '18', '18분', 19, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '19', '19분', 20, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '20', '20분', 21, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '21', '21분', 22, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '22', '22분', 23, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '23', '23분', 24, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '24', '24분', 25, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '25', '25분', 26, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '26', '26분', 27, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '27', '27분', 28, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '28', '28분', 29, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '29', '29분', 30, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '30', '30분', 31, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '31', '31분', 32, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '32', '32분', 33, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '33', '33분', 34, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '34', '34분', 35, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '35', '35분', 36, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '36', '36분', 37, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '37', '37분', 38, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '38', '38분', 39, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '39', '39분', 40, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '40', '40분', 41, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '41', '41분', 42, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '42', '42분', 43, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '43', '43분', 44, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '44', '44분', 45, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '45', '45분', 46, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '46', '46분', 47, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '47', '47분', 48, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '48', '48분', 49, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '49', '49분', 50, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '50', '50분', 51, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '51', '51분', 52, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '52', '52분', 53, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '53', '53분', 54, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '54', '54분', 55, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '55', '55분', 56, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '56', '56분', 57, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '57', '57분', 58, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '58', '58분', 59, 'Y', '시간분구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0009', '59', '59분', 60, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '00', '00분', 1, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '01', '01분', 2, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '02', '02분', 3, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '03', '03분', 4, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '04', '04분', 5, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '05', '05분', 6, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '06', '06분', 7, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '07', '07분', 8, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '08', '08분', 9, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '09', '09분', 10, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '10', '10분', 11, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '11', '11분', 12, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '12', '12분', 13, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '13', '13분', 14, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '14', '14분', 15, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '15', '15분', 16, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '16', '16분', 17, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '17', '17분', 18, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '18', '18분', 19, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '19', '19분', 20, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '20', '20분', 21, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '21', '21분', 22, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '22', '22분', 23, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '23', '23분', 24, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '24', '24분', 25, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '25', '25분', 26, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '26', '26분', 27, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '27', '27분', 28, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '28', '28분', 29, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '29', '29분', 30, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '30', '30분', 31, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '31', '31분', 32, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '32', '32분', 33, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '33', '33분', 34, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '34', '34분', 35, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '35', '35분', 36, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '36', '36분', 37, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '37', '37분', 38, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '38', '38분', 39, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '39', '39분', 40, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '40', '40분', 41, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '41', '41분', 42, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '42', '42분', 43, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '43', '43분', 44, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '44', '44분', 45, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '45', '45분', 46, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '46', '46분', 47, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '47', '47분', 48, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '48', '48분', 49, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '49', '49분', 50, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '50', '50분', 51, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '51', '51분', 52, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '52', '52분', 53, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '53', '53분', 54, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '54', '54분', 55, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '55', '55분', 56, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '56', '56분', 57, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '57', '57분', 58, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '58', '58분', 59, 'Y', '시간분구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0009', '59', '59분', 60, 'Y', '시간분구분');
 
 -- 사용자 구분
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0010', 'S', '학생', 1, 'Y', '사용자구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0010', 'G', '졸업생', 2, 'Y', '사용자구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0010', 'P', '교원', 3, 'Y', '사용자구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0010', 'E', '직원', 4, 'Y', '사용자구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0010', 'D', '문서담당자', 5, 'Y', '사용자구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0010', 'M', '관리자', 6, 'Y', '사용자구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0010', 'O', '기타', 7, 'Y', '사용자구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0010', 'S', '학생', 1, 'Y', '사용자구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0010', 'G', '졸업생', 2, 'Y', '사용자구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0010', 'P', '교원', 3, 'Y', '사용자구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0010', 'E', '직원', 4, 'Y', '사용자구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0010', 'D', '문서담당자', 5, 'Y', '사용자구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0010', 'M', '관리자', 6, 'Y', '사용자구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0010', 'O', '기타', 7, 'Y', '사용자구분');
 
 -- 예금주관계구분
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0041', '10', '본인', 1, 'Y', '예금주관계구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0041', '20', '부모', 2, 'Y', '예금주관계구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0041', '10', '본인', 1, 'Y', '예금주관계구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0041', '20', '부모', 2, 'Y', '예금주관계구분');
 
 -- 데이터 변경 구분
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0085', '10', 'INSERT', 1, 'Y', '데이터변경구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0085', '20', 'UPDATE', 2, 'Y', '데이터변경구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0085', '30', 'DELETE', 3, 'Y', '데이터변경구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0085', '10', 'INSERT', 1, 'Y', '데이터변경구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0085', '20', 'UPDATE', 2, 'Y', '데이터변경구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0085', '30', 'DELETE', 3, 'Y', '데이터변경구분');
 
 -- 문항구분
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0090', '10', '객관식', 1, 'Y', '문항구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0090', '20', '객관식기타', 2, 'Y', '문항구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0090', '30', '주관식', 3, 'Y', '문항구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0090', '10', '객관식', 1, 'Y', '문항구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0090', '20', '객관식기타', 2, 'Y', '문항구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0090', '30', '주관식', 3, 'Y', '문항구분');
 
 -- 프로그램 운영 구분
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0103', '10', '데스크탑용', 1, 'Y', '프로그램운영구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0103', '20', '스마트폰용', 2, 'Y', '프로그램운영구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0103', '10', '데스크탑용', 1, 'Y', '프로그램운영구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0103', '20', '스마트폰용', 2, 'Y', '프로그램운영구분');
 
 -- 게시판 종류 구분
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0138', '10', '공지사항', 1, 'Y', '게시판종류구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0138', '20', '자료실', 2, 'Y', '게시판종류구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0138', '30', 'FAQ', 3, 'Y', '게시판종류구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0138', '10', '공지사항', 1, 'Y', '게시판종류구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0138', '20', '자료실', 2, 'Y', '게시판종류구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0138', '30', 'FAQ', 3, 'Y', '게시판종류구분');
 
 -- 게시판 조회 범위 구분
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0139', '10', '전체', 1, 'Y', '게시판조회범위구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0139', '20', '학생', 2, 'Y', '게시판조회범위구분');
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, SORT_ORDR, USE_YN, RMK) VALUES ('CO0139', '30', '교직원', 3, 'Y', '게시판조회범위구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0139', '10', '전체', 1, 'Y', '게시판조회범위구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0139', '20', '학생', 2, 'Y', '게시판조회범위구분');
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.SORT_ORDR, comm_code.USE_YN, comm_code.RMK) VALUES ('CO0139', '30', '교직원', 3, 'Y', '게시판조회범위구분');
 
 
 -- 학생 Status
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM) VALUES
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM) VALUES
                                              ('SL0030', '10', '재학'),
                                              ('SL0030', '20', '휴학'),
                                              ('SL0030', '30', '제적'),
@@ -233,29 +233,29 @@ INSERT INTO COMM_CODE (CD_SE, CD, CD_NM) VALUES
                                              ('SL0030', '50', '졸업');
 
 -- 교직원 Status
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM) VALUES
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM) VALUES
                                              ('AM0120', '10', '재직'),
                                              ('AM0120', '20', '휴직'),
                                              ('AM0120', '30', '퇴직');
 
 -- 마일리지 상태 코드
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM) VALUES
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM) VALUES
                                              ('ML0001', '1', '신청'),
                                              ('ML0001', '2', '승인'),
                                              ('ML0001', '3', '반려'),
                                              ('ML0001', '4', '지급');
 
 -- 학기 코드
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, USE_YN) VALUES
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.USE_YN) VALUES
                                             ('SEMES', '1', '1학기', 'Y'),
                                             ('SEMES', '2', '2학기', 'Y');
 
 -- 온라인/오프라인 코드
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, USE_YN) VALUES
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.USE_YN) VALUES
                                             ('ONLYN', 'Y', '온라인', 'Y'),
                                             ('ONLYN', 'N', '오프라인', 'Y');
 
 -- 핵심/하위역량 코드
-INSERT INTO COMM_CODE (CD_SE, CD, CD_NM, USE_YN) VALUES
+INSERT INTO COMM_CODE (comm_code.CD_SE, comm_code.CD, comm_code.CD_NM, comm_code.USE_YN) VALUES
                                                      ('COMP', 'C', '핵심역량', 'Y'),
                                                      ('COMP', 'S', '하위역량', 'Y');

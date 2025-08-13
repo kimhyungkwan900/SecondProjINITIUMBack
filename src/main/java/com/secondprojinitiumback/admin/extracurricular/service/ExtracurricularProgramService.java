@@ -93,6 +93,7 @@ public class ExtracurricularProgramService {
             // 3. 이미지 엔티티 저장 (별도의 Repository 필요)
             extracurricularImageRepository.save(image);
         }
+
         extracurricularScheduleService.registerSchedulesAutomatically(
                 program,
                 dto.getEduBgngYmd(),             // 교육 시작일

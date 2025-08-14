@@ -41,7 +41,7 @@ public class AdminCoreCompetencyQuestionService {
                 .description(dto.getQuestionContent())
                 .displayOrder(dto.getDisplayOrder())
                 .answerAllowCount(1) // 기본값 1
-                .optionCount(0) // 초기 옵션 개수 0
+                .optionCount(dto.getOptionCount())
                 .build();
 
         return coreCompetencyQuestionRepository.save(question);

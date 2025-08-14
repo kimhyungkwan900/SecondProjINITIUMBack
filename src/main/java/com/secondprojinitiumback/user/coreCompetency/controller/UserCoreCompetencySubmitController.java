@@ -23,9 +23,7 @@ public class UserCoreCompetencySubmitController {
      *  진단 응답 제출 API
      */
     @PostMapping
-    public ResponseEntity<Void> submitCoreCompetencyAssessment(
-            @RequestBody UserCoreCompetencySubmitDto dto,
-            @RequestParam("studentNo") String studentNo) {
+    public ResponseEntity<Void> submitCoreCompetencyAssessment(@RequestBody UserCoreCompetencySubmitDto dto, @RequestParam("studentNo") String studentNo) {
 
         // 응답 저장 처리 위임
         userCoreCompetencySubmitService.submitResponses(dto, studentNo);

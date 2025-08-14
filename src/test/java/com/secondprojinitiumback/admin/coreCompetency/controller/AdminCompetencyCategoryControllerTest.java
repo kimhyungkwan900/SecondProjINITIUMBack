@@ -151,7 +151,7 @@ class AdminCompetencyCategoryControllerTest {
                         .build()
         );
 
-        doNothing().when(categoryService).deleteCategory(eq(id), any(CompetencyCategoryDto.class));
+        doNothing().when(categoryService).deleteCoreCategory(id);
 
         mockMvc.perform(delete("/api/admin/competencyCategory/delete/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -159,7 +159,7 @@ class AdminCompetencyCategoryControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("삭제 완료"));
 
-        verify(categoryService, times(1)).deleteCategory(eq(id), any(CompetencyCategoryDto.class));
+        verify(categoryService, times(1)).deleteCoreCategory(id);
     }
 
     @Test
@@ -175,7 +175,7 @@ class AdminCompetencyCategoryControllerTest {
                         .build()
         );
 
-        doNothing().when(categoryService).deleteCategory(eq(id), any(CompetencyCategoryDto.class));
+        doNothing().when(categoryService).deleteCoreCategory(id);
 
         mockMvc.perform(delete("/api/admin/competencyCategory/delete/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -183,7 +183,7 @@ class AdminCompetencyCategoryControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("삭제 완료"));
 
-        verify(categoryService, times(1)).deleteCategory(eq(id), any(CompetencyCategoryDto.class));
+        verify(categoryService, times(1)).deleteCoreCategory(id);
     }
 
     @Test

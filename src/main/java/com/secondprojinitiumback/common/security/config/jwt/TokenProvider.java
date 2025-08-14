@@ -1,6 +1,6 @@
 package com.secondprojinitiumback.common.security.config.jwt;
 
-import com.secondprojinitiumback.common.security.dto.TokenInfoDto;
+import com.secondprojinitiumback.common.security.dto.Response.TokenInfoDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

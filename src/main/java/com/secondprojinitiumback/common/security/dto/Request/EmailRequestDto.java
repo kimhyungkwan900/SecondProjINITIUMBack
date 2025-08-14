@@ -1,4 +1,4 @@
-package com.secondprojinitiumback.common.security.dto;
+package com.secondprojinitiumback.common.security.dto.Request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

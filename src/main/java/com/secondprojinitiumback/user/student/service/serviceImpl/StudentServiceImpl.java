@@ -10,7 +10,7 @@ import com.secondprojinitiumback.common.domain.University;
 import com.secondprojinitiumback.common.exception.CustomException;
 import com.secondprojinitiumback.common.exception.ErrorCode;
 import com.secondprojinitiumback.common.security.domain.LoginInfo;
-import com.secondprojinitiumback.common.security.dto.CreateLoginDto;
+import com.secondprojinitiumback.common.security.dto.Request.CreateLoginDto;
 import com.secondprojinitiumback.common.security.service.LoginInfoService;
 import com.secondprojinitiumback.common.repository.CommonCodeRepository;
 import com.secondprojinitiumback.common.repository.SchoolSubjectRepository;

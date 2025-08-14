@@ -40,16 +40,4 @@ public interface CoreCompetencyResponseRepository extends JpaRepository<CoreComp
        """)
     List<CoreCompetencyAssessment> findRespondedAssessments(@Param("studentNo") String studentNo);
 
-    // 평가별 핵심역량 및 하위역량 평균
-    @Query("""
-        select sc.id, avg(coalesce(o.score,0))
-        from CoreCompetencyResponse r
-          join r.assessment a
-          join r.question q
-          join q.subCompetencyCategory sc
-          left join r.selectedOption o
-        where a.assessmentNo = :assessmentNo
-        group by sc.id
-        """)
-    List<Object[]> findCohortAverageByAssessment(@Param("assessmentNo") String assessmentNo);
 }

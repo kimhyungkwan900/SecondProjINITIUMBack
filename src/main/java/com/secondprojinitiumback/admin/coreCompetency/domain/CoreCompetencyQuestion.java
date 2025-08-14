@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -54,6 +55,12 @@ public class CoreCompetencyQuestion {
     @ManyToOne
     @JoinColumn(name = "STGR_ID", nullable = false)
     private SubCompetencyCategory subCompetencyCategory;
+
+    @Column(name = "DELETED_YN")
+    private String deletedYn;
+
+    @Column(name = "DELETED_AT")
+    private Date deletedAt;
 
 
 }

@@ -1,5 +1,11 @@
 package com.secondprojinitiumback.admin.extracurricular.service;
 
+import com.secondprojinitiumback.admin.coreCompetency.domain.CoreCompetencyCategory;
+import com.secondprojinitiumback.admin.coreCompetency.domain.SubCompetencyCategory;
+import com.secondprojinitiumback.admin.coreCompetency.dto.CoreCompetencyCategoryDto;
+import com.secondprojinitiumback.admin.coreCompetency.dto.SubCompetencyCategoryDto;
+import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyCategoryRepository;
+import com.secondprojinitiumback.admin.coreCompetency.repository.SubCompetencyCategoryRepository;
 import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularCategory;
 import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularCategoryDTO;
 import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularCategoryFormDTO;
@@ -29,6 +35,9 @@ public class ExtracurricularCategoryService {
     private final ModelMapper modelMapper;
     private final SchoolSubjectRepository schoolSubjectRepository;
     private final EmployeeRepository employeeRepository;
+
+    private final SubCompetencyCategoryRepository subCompetencyCategoryRepository;
+    private final CoreCompetencyCategoryRepository coreCompetencyCategoryRepository;
 
     // 비교과 카테고리 등록
     public void insertExtracurricularCategory(ExtracurricularCategoryFormDTO dto) {
@@ -101,21 +110,22 @@ public class ExtracurricularCategoryService {
                 .toList();
     }
 
+
+
     public List<ExtracurricularCategoryDTO> findByCategoryId(Long categoryId) {
         List<ExtracurricularCategory> entities = extracurricularCategoryRepository.findByStgrId(categoryId,Sort.by(Sort.Direction.DESC, "ctgryId"));
+
         return entities.stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
-    public List<ExtracurricularCategoryDTO> findByFilters(String programName, List<Integer> competencyIds, String departmentCode) {
-        if (competencyIds != null && competencyIds.isEmpty()) {
-            competencyIds = null;  // 빈 리스트일 땐 null로 변경
-        }
+    public List<ExtracurricularCategoryDTO> findByFilters(String programName, Long competencyId, String departmentCode) {
         Specification<ExtracurricularCategory> spec = ExtracurricularCategorySpecification.filterCategories(
-                competencyIds,
+                competencyId,
                 programName,
-                departmentCode
+                departmentCode,
+                subCompetencyCategoryRepository
         );
         List<ExtracurricularCategory> entities = extracurricularCategoryRepository.findAll(spec, Sort.by(Sort.Direction.DESC, "ctgryId"));
         return entities.stream()
@@ -124,6 +134,7 @@ public class ExtracurricularCategoryService {
     }
 
     private ExtracurricularCategoryDTO toDto(ExtracurricularCategory entity) {
+        SubCompetencyCategory subCategory = subCompetencyCategoryRepository.findSubCompetencyCategoryById(entity.getStgrId());
         return ExtracurricularCategoryDTO.builder()
                 .ctgryId(entity.getCtgryId())
                 .stgrId(entity.getStgrId())
@@ -132,6 +143,9 @@ public class ExtracurricularCategoryService {
                 .ctgryUseYn(entity.getCtgryUseYn())
                 .subjectCode(entity.getSchoolSubject() != null ? entity.getSchoolSubject().getSubjectCode() : null)
                 .subjectName(entity.getSchoolSubject() != null ? entity.getSchoolSubject().getSubjectName() : null)
+                .subCategory(subCategory.getSubCategoryName())
+                .coreCategory(subCategory.getCoreCompetencyCategory().getCoreCategoryName())
+                .coreCategoryId(subCategory.getCoreCompetencyCategory().getId())
                 .build();
     }
 
@@ -151,5 +165,19 @@ public class ExtracurricularCategoryService {
                 .filter(category -> "Y".equalsIgnoreCase(category.getCtgryUseYn()))  // useYn이 Y인 항목만 필터링
                 .map(this::toDto)
                 .collect(Collectors.toList());
+    }
+    // 핵심역량 불러오기
+    public List<CoreCompetencyCategoryDto> findAllCoreCategory() {
+        return coreCompetencyCategoryRepository.findAll()
+                .stream()
+                .map(entity -> modelMapper.map(entity, CoreCompetencyCategoryDto.class))
+                .toList();
+    }
+
+    public List<SubCompetencyCategoryDto> findSubCategory(Long coreCategoryId) {
+        return subCompetencyCategoryRepository.findByCoreCompetencyCategory_Id(coreCategoryId)
+                .stream()
+                .map(entity -> modelMapper.map(entity, SubCompetencyCategoryDto.class))
+                .toList();
     }
 }

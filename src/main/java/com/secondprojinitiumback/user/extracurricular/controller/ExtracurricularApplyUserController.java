@@ -1,9 +1,14 @@
 package com.secondprojinitiumback.user.extracurricular.controller;
 
+import com.secondprojinitiumback.user.extracurricular.domain.enums.AprySttsNm;
 import com.secondprojinitiumback.user.extracurricular.dto.ExtracurricularApplyDTO;
 import com.secondprojinitiumback.user.extracurricular.dto.ExtracurricularApplyFormDTO;
 import com.secondprojinitiumback.user.extracurricular.service.ExtracurricularApplyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,11 +57,13 @@ public class ExtracurricularApplyUserController {
     }
 
     // 비교과 프로그램 신청 목록 조회
-    @GetMapping("/apply/list")
-    public ResponseEntity<List<ExtracurricularApplyDTO>> getExtracurricularApplyList(
-            @RequestParam("stdfntNo") String stdfntNo
+    @GetMapping("/applies")
+    public Page<ExtracurricularApplyDTO> getApplyList(
+            @RequestParam String stdntNo,
+            @RequestParam(required = false) AprySttsNm aprySttsNm,
+            @RequestParam(required = false) String keyword,
+            @PageableDefault(size = 10, sort = "eduAplyDt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        List<ExtracurricularApplyDTO> list = extracurricularApplyService.findExtracurricularApplylist(stdfntNo);
-        return ResponseEntity.ok(list);
+        return extracurricularApplyService.findExtracurricularApplylist(stdntNo, aprySttsNm, keyword, pageable);
     }
 }

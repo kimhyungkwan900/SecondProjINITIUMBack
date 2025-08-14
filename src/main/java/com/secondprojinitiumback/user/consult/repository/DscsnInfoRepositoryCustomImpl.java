@@ -71,16 +71,16 @@ public class DscsnInfoRepositoryCustomImpl implements DscsnInfoRepositoryCustom 
             builder.and(dscsnInfo.dscsnApply.dscsnDt.employee.empNo.eq(dscsnInfoSearchDto.getEmpNo()));
         }
         //성명
-        if(StringUtils.hasText(dscsnInfoSearchDto.getStudentName())){
-            builder.and(dscsnInfo.dscsnApply.student.name.eq(dscsnInfoSearchDto.getStudentName()));
+        if(StringUtils.hasText(dscsnInfoSearchDto.getName())){
+            builder.and(dscsnInfo.dscsnApply.student.name.eq(dscsnInfoSearchDto.getName()));
         }
         //학적상태
         if(StringUtils.hasText(dscsnInfoSearchDto.getStudentStatus())){ //학적상태 코드 값이 어떻게 되는지 질문
             builder.and(dscsnInfo.dscsnApply.student.studentStatus.statusCode.codeName.eq(dscsnInfoSearchDto.getStudentStatus()));
         }
         //소속(학과)
-        if(StringUtils.hasText(dscsnInfoSearchDto.getDepart())){
-            builder.and(dscsnInfo.dscsnApply.student.schoolSubject.subjectCode.eq(dscsnInfoSearchDto.getDepart()));
+        if(StringUtils.hasText(dscsnInfoSearchDto.getSubjectCode())){
+            builder.and(dscsnInfo.dscsnApply.student.schoolSubject.subjectCode.eq(dscsnInfoSearchDto.getSubjectCode()));
         }
 
         //쿼리문 실행

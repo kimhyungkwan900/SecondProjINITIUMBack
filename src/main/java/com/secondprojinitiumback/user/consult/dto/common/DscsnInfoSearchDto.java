@@ -33,11 +33,9 @@ public class DscsnInfoSearchDto {
 
     String studentNo;       //학번
 
-    String studentName;     //성명
+    String name;     //성명
 
     String studentStatus;   //학적상태
 
-    //상담자(아이디): 일단 보류
-
-    String depart;          //소속(학과)
+    String subjectCode;          //학과코드
 }

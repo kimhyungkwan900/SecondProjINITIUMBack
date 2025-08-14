@@ -41,7 +41,7 @@ public class DscsnKindController {
 
     //--- 상담항목 조회
     @GetMapping({"/admin/consult/dscsnkind/", "/admin/consult/dscsnkind/{page}"})
-    public ResponseEntity<?> getDscsnKind(@ModelAttribute DscsnKindDto dscsnKindDto, @PathVariable int page) {
+    public ResponseEntity<?> getDscsnKind(@ModelAttribute DscsnKindDto dscsnKindDto, @PathVariable Integer page) {
 
         Pageable pageable = PageRequest.of(page, 10);
         Page<DscsnKindDto> dscsnKinds = dscsnKindService.getDscsnKind(dscsnKindDto, pageable);

@@ -48,7 +48,7 @@ public class DscsnInfoController {
         }else if("E".equals(userType)) {
             dscsnInfoSearchDto.setEmpNo(serialNo);
         }
-        //관리자는 전체 조회 가능해서 별도로 처리하지 않았습니다.
+        //관리자는 전체 조회 가능해서 별도로 처리X
 
         // 페이지 번호 설정
         int pageNo = page != null ? page : 0;
@@ -59,23 +59,6 @@ public class DscsnInfoController {
                 .descending())
                 : PageRequest.of(pageNo, size);
 
-        System.out.println("입력된 상담조건들: \n"
-                + "UserType: " + dscsnInfoSearchDto.getUserType() + "\n"
-                + "ConsultorType: " + dscsnInfoSearchDto.getConsultorType() + "\n"
-                + "EmpNo: " + dscsnInfoSearchDto.getEmpNo() + "\n"
-                + "DscsnType: " + dscsnInfoSearchDto.getDscsnType() + "\n"
-                + "StartDate: " + dscsnInfoSearchDto.getStartDate() + "\n"
-                + "EndDate: " + dscsnInfoSearchDto.getEndDate() + "\n"
-                + "DscsnStatus: " + dscsnInfoSearchDto.getDscsnStatus() + "\n"
-                + "Year: " + dscsnInfoSearchDto.getYear() + "\n"
-                + "StartMonth: " + dscsnInfoSearchDto.getStartMonth() + "\n"
-                + "EndMonth: " + dscsnInfoSearchDto.getEndMonth() + "\n"
-                + "DscsnKindId: " + dscsnInfoSearchDto.getDscsnKindId() + "\n"
-                + "StudentNo: " + dscsnInfoSearchDto.getStudentNo() + "\n"
-                + "StudentName: " + dscsnInfoSearchDto.getStudentName() + "\n"
-                + "StudentStatus: " + dscsnInfoSearchDto.getStudentStatus() + "\n"
-                + "Depart: " + dscsnInfoSearchDto.getDepart() + "\n"
-        );
         // 상담정보 조회
         Page<DscsnInfoResponseDto> dscsnInfos = dscsnInfoService.getDscsnInfo(dscsnInfoSearchDto, pageable);
 

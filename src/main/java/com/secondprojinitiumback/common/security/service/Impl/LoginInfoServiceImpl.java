@@ -3,9 +3,9 @@ package com.secondprojinitiumback.common.security.service.Impl;
 import com.secondprojinitiumback.common.security.domain.LoginAuthInfo;
 import com.secondprojinitiumback.common.security.domain.LoginHistory;
 import com.secondprojinitiumback.common.security.domain.LoginInfo;
-import com.secondprojinitiumback.common.security.dto.CreateLoginDto;
-import com.secondprojinitiumback.common.security.dto.TokenInfoDto;
-import com.secondprojinitiumback.common.security.dto.UserDetailDto;
+import com.secondprojinitiumback.common.security.dto.Request.CreateLoginDto;
+import com.secondprojinitiumback.common.security.dto.Response.TokenInfoDto;
+import com.secondprojinitiumback.common.security.dto.Response.UserDetailDto;
 import com.secondprojinitiumback.common.security.Repository.LoginAuthInfoRepository;
 import com.secondprojinitiumback.common.security.Repository.LoginHistoryRepository;
 import com.secondprojinitiumback.common.security.Repository.LoginInfoRepository;
@@ -94,10 +94,18 @@ public class LoginInfoServiceImpl implements LoginInfoService {
         loginInfoRepository.delete(loginInfo);
     }
 
-    // 비밀번호 일치 여부 확인 (현재 미사용)
     @Override
-    public boolean matchesRawPassword(String rawPassword, String encodedPassword) {
-        return passwordEncoder.matches(rawPassword, encodedPassword);
+    @Transactional(readOnly = true)
+    public void verifyCurrentPassword(String loginId, String currentPassword) {
+        // 로그인 ID로 사용자 정보를 조회
+        LoginInfo loginInfo = loginInfoRepository.findById(loginId)
+                .orElseThrow(() -> new CustomException(ErrorCode.LOGIN_INFO_NOT_FOUND));
+
+        // 입력된 비밀번호와 DB에 저장된 암호화된 비밀번호를 비교
+        if (!passwordEncoder.matches(currentPassword, loginInfo.getPassword())) {
+            //일치하지 않으면 예외를 발생
+            throw new CustomException(ErrorCode.PASSWORD_MISMATCH);
+        }
     }
 
     @Override

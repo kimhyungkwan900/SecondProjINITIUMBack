@@ -1,8 +1,8 @@
 package com.secondprojinitiumback.common.security.controller;
 
-import com.secondprojinitiumback.common.security.dto.EmailRequestDto;
-import com.secondprojinitiumback.common.security.dto.EmailVerifyRequestDto;
-import com.secondprojinitiumback.common.security.dto.ResetPasswordRequestDto;
+import com.secondprojinitiumback.common.security.dto.Request.EmailRequestDto;
+import com.secondprojinitiumback.common.security.dto.Request.EmailVerifyRequestDto;
+import com.secondprojinitiumback.common.security.dto.Request.ResetPasswordRequestDto;
 import com.secondprojinitiumback.common.security.service.Impl.AccountRecoverService;
 import com.secondprojinitiumback.common.security.service.EmailAuthService;
 import jakarta.validation.Valid;

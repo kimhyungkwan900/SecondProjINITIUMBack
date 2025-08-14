@@ -1,9 +1,9 @@
 package com.secondprojinitiumback.common.security.service;
 
 import com.secondprojinitiumback.common.security.domain.LoginInfo;
-import com.secondprojinitiumback.common.security.dto.CreateLoginDto;
-import com.secondprojinitiumback.common.security.dto.TokenInfoDto;
-import com.secondprojinitiumback.common.security.dto.UserDetailDto;
+import com.secondprojinitiumback.common.security.dto.Request.CreateLoginDto;
+import com.secondprojinitiumback.common.security.dto.Response.TokenInfoDto;
+import com.secondprojinitiumback.common.security.dto.Response.UserDetailDto;
 
 public interface LoginInfoService {
 
@@ -15,8 +15,8 @@ public interface LoginInfoService {
 
     void deleteLoginInfo(String loginId);
 
-    // 비밀번호 일치 여부 확인 (현재 미사용)
-    boolean matchesRawPassword(String rawPassword, String encodedPassword);
+    // 비밀번호 확인 메서드
+    void verifyCurrentPassword(String loginId, String currentPassword);
 
     // 로그인 인증
     LoginInfo authenticate(String loginId, String rawPassword);

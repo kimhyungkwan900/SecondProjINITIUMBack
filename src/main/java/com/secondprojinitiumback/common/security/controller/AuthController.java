@@ -1,7 +1,12 @@
 package com.secondprojinitiumback.common.security.controller;
 
 import com.secondprojinitiumback.common.security.domain.LoginInfo;
-import com.secondprojinitiumback.common.security.dto.*;
+import com.secondprojinitiumback.common.security.dto.Request.ChangePasswordRequestDto;
+import com.secondprojinitiumback.common.security.dto.Request.LoginRequestDto;
+import com.secondprojinitiumback.common.security.dto.Request.VerifyPasswordRequestDto;
+import com.secondprojinitiumback.common.security.dto.Response.LoginResponseDto;
+import com.secondprojinitiumback.common.security.dto.Response.TokenInfoDto;
+import com.secondprojinitiumback.common.security.dto.Response.UserDetailDto;
 import com.secondprojinitiumback.common.security.service.LoginInfoService;
 import com.secondprojinitiumback.common.security.config.jwt.TokenProvider;
 import com.secondprojinitiumback.common.security.utils.CookieConstants;
@@ -13,8 +18,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -118,6 +121,22 @@ public class AuthController {
                 requestDto.getCurrentPassword(),
                 requestDto.getNewPassword()
         );
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/verify-password")
+    public ResponseEntity<Void> verifyPassword(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @RequestBody VerifyPasswordRequestDto requestDto
+    ) {
+        if (userDetails == null) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_ACCESS);
+        }
+
+        // 서비스 호출하여 비밀번호 검증 수행
+        loginInfoService.verifyCurrentPassword(userDetails.getUsername(), requestDto.getPassword());
+
+        // 검증 성공 시 HTTP 200 OK 응답 반환
         return ResponseEntity.ok().build();
     }
 

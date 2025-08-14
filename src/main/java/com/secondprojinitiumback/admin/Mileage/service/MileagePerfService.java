@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,51 +52,65 @@ public class MileagePerfService {
     }
 
     // 2. 실적 등록
+    @Transactional
     public MileagePerfResponseDto register(MileagePerfRequestDto dto) {
 
-        // 학번으로 학생 객체 가져오기
-        Student student = studentRepository.findById(dto.getStudentNo())
+        //학번은 반드시 trim (CHAR(10) 패딩/공백 이슈 방지)
+        final String stdNo = dto.getStudentNo().trim();
+
+        // 중복 방지
+        if (mileagePerfRepository.existsByStudent_StudentNoAndMileageItem_Id(stdNo, dto.getMileageItemId())) {
+            throw new IllegalStateException("이미 해당 항목으로 적립된 학생입니다.");
+        }
+
+        // 1) 학생/항목 조회
+        Student student = studentRepository.findById(stdNo)
                 .orElseThrow(() -> new EntityNotFoundException("학생 정보를 찾을 수 없습니다."));
 
-        // 마일리지 항목 가져오기
         MileageItem mileageItem = mileageItemRepository.findById(dto.getMileageItemId())
                 .orElseThrow(() -> new EntityNotFoundException("마일리지 항목을 찾을 수 없습니다."));
 
-        // 배점 정책 가져오기
-        ScorePolicy scorePolicy = scorePolicyRepository.findById(dto.getScorePolicyId())
-                .orElseThrow(() -> new EntityNotFoundException("배점 정책을 찾을 수 없습니다."));
+        // 2) 점수 계산
+        int calculatedMileage;
+        ScorePolicy scorePolicy = null;
 
-        // 배점 정책을 바탕으로 적립 마일리지 계산
-        int baseMileage = mileageItem.getProgram().getEduMlg(); //기본 마일리지
-        int calculatedMileage = (int) (baseMileage * scorePolicy.getScoreRate()); //배점 비율 적용
+        if (dto.getScorePolicyId() != null) {
+            scorePolicy = scorePolicyRepository.findById(dto.getScorePolicyId())
+                    .orElseThrow(() -> new EntityNotFoundException("배점 정책을 찾을 수 없습니다."));
+            int base = mileageItem.getProgram().getEduMlg();
+            calculatedMileage = (int) (base * scorePolicy.getScoreRate());
+        } else {
+            calculatedMileage = (dto.getAccMlg() == null)
+                    ? mileageItem.getProgram().getEduMlg()
+                    : dto.getAccMlg();
+        }
 
-        // 실적 등록
+        // 3) 실적 저장
         MileagePerf perf = MileagePerf.builder()
                 .student(student)
                 .mileageItem(mileageItem)
-                .scorePolicy(scorePolicy)
+                .scorePolicy(scorePolicy) // null 허용
                 .accMlg(calculatedMileage)
                 .createdAt(LocalDateTime.now())
                 .build();
-
-        // 실적 저장
         mileagePerfRepository.save(perf);
 
-        // 마일리지 누계 업데이트
-        MileageTotal total = mileageTotalRepository.findById(student.getStudentNo())
-                .orElseGet(() -> MileageTotal.builder()
-                        .student(student)
-                        .totalScore(0) // 없으면 0점으로 시작
-                        .build()
-                );
+        // 4) 누계 처리 — 존재하면 사용, 없으면 생성(INSERT) 후 가산
+        MileageTotal total = mileageTotalRepository.findByStudent_StudentNo(stdNo).orElse(null);
 
-        // 기존 점수에 계산된 마일리지 추가
+        if (total == null) {
+            // Persistable<String> 구현 + @MapsId 사용 전제
+            total = MileageTotal.builder()
+                    .studentNo(stdNo)     // PK
+                    .student(student)     // @MapsId 로 PK 동기화
+                    .totalScore(0)
+                    .build();             // isNew=true → save() == INSERT
+            mileageTotalRepository.save(total);
+        }
+
+        // 더티체킹으로 UPDATE
         total.add(calculatedMileage);
 
-        // 누계 저장
-        mileageTotalRepository.save(total);
-
-        // 응답 DTO로 변환하여 반환
         return MileagePerfResponseDto.from(perf);
     }
 
@@ -107,25 +122,22 @@ public class MileagePerfService {
     }
 
     // 4. 실적 삭제
+    @Transactional
     public void deleteAll(List<Long> ids) {
         for (Long id : ids) {
-            // 실적 조회
             MileagePerf perf = mileagePerfRepository.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException("해당 실적이 존재하지 않습니다."));
 
-            Student student = perf.getStudent();         // 실적 주인 : 학생
-            int score = perf.getAccMlg();                // 적립된 마일리지
+            final String stdNo = perf.getStudent().getStudentNo().trim();
+            final int score = perf.getAccMlg();
 
-            // 누계 점수 가져오기 (없으면 새로 생성, but 실제로는 존재해야 함)
-            MileageTotal total = mileageTotalRepository.findById(student.getStudentNo())
-                    .orElseThrow(() -> new EntityNotFoundException("누계 정보가 없습니다."));
+            // ✅ 관계경로 조회(CHAR(10) 패딩 문제 회피) + 없으면 차감 스킵
+            MileageTotal total = mileageTotalRepository.findByStudent_StudentNo(stdNo).orElse(null);
+            if (total != null) {
+                total.subtract(score); // 더티체킹으로 UPDATE
+            }
 
-            // 점수 차감
-            total.subtract(score);
-            mileageTotalRepository.save(total);
-
-            // 실적 삭제
-            mileagePerfRepository.deleteById(id);
+            mileagePerfRepository.delete(perf);
         }
     }
 }

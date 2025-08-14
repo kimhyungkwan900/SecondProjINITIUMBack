@@ -14,6 +14,8 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -93,15 +95,28 @@ public class ExtracurricularApplyService {
     }
 
     // 신청 목록 조회
-    public List<ExtracurricularApplyDTO> findExtracurricularApplylist(String stdntNo){
-        Student student = studentRepository.findById(stdntNo)
+    public Page<ExtracurricularApplyDTO> findExtracurricularApplylist(
+            String stdntNo,
+            AprySttsNm aprySttsNm,
+            String keyword,
+            Pageable pageable
+    ) {
+        studentRepository.findById(stdntNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 학생 없음: " + stdntNo));
-        List<ExtracurricularApply> applyList =
-                extracurricularApplyRepository.findByStudent_StudentNoAndDelYn(stdntNo, "N");
 
-        return applyList.stream()
-                .map(apply -> modelMapper.map(apply, ExtracurricularApplyDTO.class))
-                .collect(Collectors.toList());
+        Page<ExtracurricularApply> applyPage = extracurricularApplyRepository.findApplyWithFilters(
+                stdntNo, aprySttsNm, keyword, pageable
+        );
+
+        return applyPage.map(apply -> ExtracurricularApplyDTO.builder()
+                .eduAplyId(apply.getEduAplyId())
+                .eduAplyCn(apply.getEduAplyCn())
+                .aprySttsNm(apply.getAprySttsNm())
+                .eduAplyDt(apply.getEduAplyDt())
+                .programNm(apply.getExtracurricularProgram().getEduNm())
+                .categoryNm(apply.getExtracurricularProgram().getExtracurricularCategory().getCtgryNm())
+                .build()
+        );
     }
 
     @Transactional

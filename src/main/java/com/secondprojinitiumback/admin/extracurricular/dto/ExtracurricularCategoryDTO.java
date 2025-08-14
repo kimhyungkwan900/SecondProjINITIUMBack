@@ -21,4 +21,8 @@ public class ExtracurricularCategoryDTO {
 
     private String subjectCode;  // SchoolSubject.subjectCode
     private String subjectName;  // SchoolSubject.subjectName
+
+    private String subCategory; // 상위역량 이름
+    private String coreCategory; // 핵심역량  이름
+    private Long coreCategoryId; //핵심역량 ID;
 }

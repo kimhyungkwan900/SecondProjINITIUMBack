@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,12 +25,13 @@ public interface ExtracurricularApplyRepository extends JpaRepository<Extracurri
     long countByExtracurricularProgramAndAprySttsNm(ExtracurricularProgram extracurricularProgram, AprySttsNm aprySttsNm);
 
     // 학생 번호와 삭제 여부를 기준으로 해당 학생의 신청 내역 조회 (삭제된 내역 포함 여부 판단 가능)
-    List<ExtracurricularApply> findByStudent_StudentNoAndDelYn(String studentNo, String delYn);
+    Page<ExtracurricularApply> findByStudent_StudentNoAndDelYn(String stdntNo, String delYn, Pageable pageable);
+
 
     List<ExtracurricularApply> findByStudent_StudentNo(String studentNo);
 
-    // 신청 상태(AprySttsNm)를 기준으로 신청 내역 조회 (예: 승인됨, 반려됨 등)
-    List<ExtracurricularApply> findByAprySttsNm(AprySttsNm aprySttsNm);
+
+    Page<ExtracurricularApply> findByStudent_StudentNoAndAprySttsNmAndDelYn(String studentStudentNo, AprySttsNm aprySttsNm, String delYn,  Pageable pageable);
 
     // 비교과 프로그램 ID와 신청 상태를 기준으로 신청 내역 조회 (특정 프로그램의 승인자/대기자 등 필터링 가능)
     List<ExtracurricularApply> findByExtracurricularProgram_EduMngIdAndAprySttsNm(Long eduMngId, AprySttsNm aprySttsNm);
@@ -45,4 +48,20 @@ public interface ExtracurricularApplyRepository extends JpaRepository<Extracurri
     Page<ExtracurricularApply> findByStudent_StudentNo(String studentNo, Pageable pageable);
 
     Boolean existsBystudentAndExtracurricularProgram_EduMngId(Student student, Long extracurricularProgramEduMngId);
+
+    @Query("""
+        select e from ExtracurricularApply e
+        join e.extracurricularProgram p
+        join p.extracurricularCategory c
+        where e.student.studentNo = :stdntNo
+          and e.delYn = 'N'
+          and (:aprySttsNm is null or e.aprySttsNm = :aprySttsNm)
+          and (:keyword is null or p.eduNm like %:keyword% or c.ctgryNm like %:keyword%)
+        """)
+    Page<ExtracurricularApply> findApplyWithFilters(
+            @Param("stdntNo") String stdntNo,
+            @Param("aprySttsNm") AprySttsNm aprySttsNm,
+            @Param("keyword") String keyword,
+            Pageable pageable
+    );
 }

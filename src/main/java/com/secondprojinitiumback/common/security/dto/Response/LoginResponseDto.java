@@ -1,4 +1,4 @@
-package com.secondprojinitiumback.common.security.dto;
+package com.secondprojinitiumback.common.security.dto.Response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

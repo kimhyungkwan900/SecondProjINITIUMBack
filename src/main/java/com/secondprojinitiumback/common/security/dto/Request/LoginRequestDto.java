@@ -1,7 +1,6 @@
-package com.secondprojinitiumback.common.security.dto;
+package com.secondprojinitiumback.common.security.dto.Request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

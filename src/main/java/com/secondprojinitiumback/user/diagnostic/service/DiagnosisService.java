@@ -14,9 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -305,7 +303,7 @@ public class DiagnosisService {
 
     @Transactional
     public Long updateDiagnosticTest(Long testId, DiagnosticTestDto dto) {
-        // 1) 테스트 + 자식들 로드
+        // 1) 테스트 + 자식들 로드 (answers, scoreLevels까지 fetch하는 findWithChildrenById 가정)
         DiagnosticTest test = testRepository.findWithChildrenById(testId)
                 .orElseThrow(() -> new IllegalArgumentException("수정할 검사가 존재하지 않습니다. id=" + testId));
 
@@ -313,43 +311,124 @@ public class DiagnosisService {
             throw new IllegalArgumentException("삭제(숨김) 상태의 검사는 수정할 수 없습니다.");
         }
 
-        // 2) 기본 필드 수정
+        // 2) 기본 필드
         if (dto.getName() != null) test.setName(dto.getName());
         if (dto.getDescription() != null) test.setDescription(dto.getDescription());
-        // (선택) categoryGroup/categoryValue 수정 허용 시 여기에 반영
 
-        // 3) 자식 컬렉션 전체 교체 — 질문/보기
-        test.getQuestions().clear(); // orphanRemoval=true 라서 기존 문항/보기 삭제됨
+        // 3) 기존 질문 맵
+        Map<Long, DiagnosticQuestion> existQMap = test.getQuestions().stream()
+                .filter(q -> q.getId() != null)
+                .collect(Collectors.toMap(DiagnosticQuestion::getId, q -> q));
+
+        Set<Long> incomingQIds = new HashSet<>();         // 요청에 살아있는 기존 질문 id
+        List<DiagnosticQuestion> newQuestions = new ArrayList<>(); // 신규 질문 모음
+
         if (dto.getQuestions() != null) {
             for (DiagnosticQuestionDto qdto : dto.getQuestions()) {
-                DiagnosticQuestion q = DiagnosticQuestion.builder()
-                        .test(test)
-                        .content(qdto.getContent())
-                        .order(qdto.getOrder())
-                        .answerType(qdto.getAnswerType() != null
-                                ? AnswerType.valueOf(qdto.getAnswerType())
-                                : null)
-                        .build();
+                if (qdto.getId() != null && existQMap.containsKey(qdto.getId())) {
+                    // ==== 기존 질문 '제자리 수정' ====
+                    DiagnosticQuestion q = existQMap.get(qdto.getId());
+                    incomingQIds.add(q.getId());
 
-                // 보기들
-                List<DiagnosticAnswer> answers = (qdto.getAnswers() == null ? List.<DiagnosticAnswer>of() :
-                        qdto.getAnswers().stream()
-                                .map(adto -> DiagnosticAnswer.builder()
+                    q.setContent(qdto.getContent());
+                    q.setOrder(qdto.getOrder());
+                    q.setAnswerType(qdto.getAnswerType() != null
+                            ? AnswerType.valueOf(qdto.getAnswerType())
+                            : null);
+
+                    // ---- 보기 diff ----
+                    Map<Long, DiagnosticAnswer> existAMap = q.getAnswers().stream()
+                            .filter(a -> a.getId() != null)
+                            .collect(Collectors.toMap(DiagnosticAnswer::getId, a -> a));
+
+                    Set<Long> incomingAIds = new HashSet<>();
+                    List<DiagnosticAnswer> rebuiltAnswers = new ArrayList<>();
+
+                    if (qdto.getAnswers() != null) {
+                        for (DiagnosticAnswerDto adto : qdto.getAnswers()) {
+                            if (adto.getId() != null && existAMap.containsKey(adto.getId())) {
+                                // 기존 보기 수정
+                                DiagnosticAnswer a = existAMap.get(adto.getId());
+                                incomingAIds.add(a.getId());
+                                a.setContent(adto.getContent());
+                                a.setScore(adto.getScore());
+                                a.setSelectValue(adto.getSelectValue());
+                                rebuiltAnswers.add(a);
+                            } else {
+                                // 신규 보기
+                                DiagnosticAnswer a = DiagnosticAnswer.builder()
                                         .question(q)
                                         .content(adto.getContent())
                                         .score(adto.getScore())
                                         .selectValue(adto.getSelectValue())
-                                        .build())
-                                .toList()
-                );
+                                        .build();
+                                rebuiltAnswers.add(a);
+                            }
+                        }
+                    }
 
-                q.setAnswers(answers);
-                test.getQuestions().add(q);
+                    // 제거될 보기들
+                    List<DiagnosticAnswer> toRemoveAnswers = q.getAnswers().stream()
+                            .filter(a -> a.getId() != null && !incomingAIds.contains(a.getId()))
+                            .toList();
+                    toRemoveAnswers.forEach(q::removeAnswer);
+
+                    // 최종 보기 재구성
+                    // (기존 리스트 clear 후 add로 구성해도 되고, set 기반으로 맞춰도 됨)
+                    q.getAnswers().clear();
+                    rebuiltAnswers.forEach(q::addAnswer);
+
+                } else {
+                    // ==== 신규 질문 ====
+                    DiagnosticQuestion q = DiagnosticQuestion.builder()
+                            .test(test)
+                            .content(qdto.getContent())
+                            .order(qdto.getOrder())
+                            .answerType(qdto.getAnswerType() != null
+                                    ? AnswerType.valueOf(qdto.getAnswerType())
+                                    : null)
+                            .build();
+
+                    if (qdto.getAnswers() != null) {
+                        for (DiagnosticAnswerDto adto : qdto.getAnswers()) {
+                            DiagnosticAnswer a = DiagnosticAnswer.builder()
+                                    .question(q)
+                                    .content(adto.getContent())
+                                    .score(adto.getScore())
+                                    .selectValue(adto.getSelectValue())
+                                    .build();
+                            q.addAnswer(a);
+                        }
+                    }
+                    newQuestions.add(q);
+                }
             }
         }
 
-        // 4) 자식 컬렉션 전체 교체 — 점수 레벨
-        test.getScoreLevels().clear(); // orphanRemoval=true
+        // 4) 요청에서 사라진 기존 질문 후보
+        List<DiagnosticQuestion> removeCandidates = test.getQuestions().stream()
+                .filter(q -> q.getId() != null && (dto.getQuestions() == null || !incomingQIds.contains(q.getId())))
+                .toList();
+
+        // 4-1) 참조 확인 후 안전한 것만 제거
+        for (DiagnosticQuestion q : removeCandidates) {
+            long ref = resultDetailRepository.countByQuestion_Id(q.getId());
+            if (ref > 0) {
+                // ✅ 과거 응답이 존재 → 삭제 금지 (그대로 두면 됨; 필요시 q.setUseYn("N") 등 소프트 숨김)
+                // 예: q.setUseYn("N"); // 컬럼 있으면 사용
+            } else {
+                // ✅ 참조 없음 → 안전 삭제
+                test.removeQuestion(q);
+            }
+        }
+
+        // 4-2) 신규 질문 추가
+        for (DiagnosticQuestion qNew : newQuestions) {
+            test.addQuestion(qNew);
+        }
+
+        // 5) 점수 레벨은 참조가 없으므로 전체 갈아끼우기 허용
+        test.getScoreLevels().clear();
         if (dto.getScoreLevels() != null) {
             for (ScoreLevelDto s : dto.getScoreLevels()) {
                 DiagnosticScoreLevel lvl = DiagnosticScoreLevel.builder()
@@ -363,9 +442,10 @@ public class DiagnosisService {
             }
         }
 
-        // 5) Dirty Checking으로 반영
+        // 6) flush 시점에 dirty checking 반영
         return test.getId();
     }
+
 
     @Transactional(readOnly = true)
     public DiagnosticTestDto getAdminTestForEdit(Long testId) {

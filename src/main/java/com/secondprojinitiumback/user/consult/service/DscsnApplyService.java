@@ -82,15 +82,15 @@ public class DscsnApplyService {
         DscsnInfo dscsnInfo = dscsnInfoRepository.findById(dscsnInfoId).orElseThrow(EntityExistsException::new);
 
         //상담상태가 이미 완료인 경우 예외 처리
-        if(dscsnInfo.getDscsnStatus().equals("Completed")) {
+        if(dscsnInfo.getDscsnStatus().equals("상담완료")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 상담이 완료된 신청입니다.");
         }//상담상태가 이미 취소된 경우 예외 처리
-        else if (dscsnInfo.getDscsnStatus().equals("Canceled")) {
+        else if (dscsnInfo.getDscsnStatus().equals("상담취소")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 취소된 신청입니다.");
         }
 
         //상담정보 ID로 상담상태 상담취소로 변경
-        dscsnInfoService.updateDscsnStatus(dscsnInfoId, "Canceled");
+        dscsnInfoService.updateDscsnStatus(dscsnInfoId, "상담취소");
 
         //상담일정 예약여부 변경
         DscsnSchedule dscsnSchedule = dscsnInfo.getDscsnApply().getDscsnDt();

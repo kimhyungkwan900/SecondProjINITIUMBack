@@ -5,7 +5,7 @@ import com.secondprojinitiumback.common.bank.Repository.BankAccountRepository;
 import com.secondprojinitiumback.common.domain.CommonCode;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
 import com.secondprojinitiumback.common.security.domain.LoginInfo;
-import com.secondprojinitiumback.common.security.dto.CreateLoginDto;
+import com.secondprojinitiumback.common.security.dto.Request.CreateLoginDto;
 import com.secondprojinitiumback.common.security.service.LoginInfoService;
 import com.secondprojinitiumback.common.repository.CommonCodeRepository;
 import com.secondprojinitiumback.common.repository.SchoolSubjectRepository;

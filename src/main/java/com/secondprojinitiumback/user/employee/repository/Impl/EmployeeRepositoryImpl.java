@@ -65,13 +65,13 @@ public class EmployeeRepositoryImpl implements EmployeeRepositoryCustom {
                 .leftJoin(qEmployee.employeeStatus, qEmployeeStatusInfo).fetchJoin()
                 .leftJoin(qEmployee.gender, qGender).fetchJoin()
                 .where(
-                        eqEmployeeNo(searchDto.getEmpNo()),
+                        containsEmployeeNo(searchDto.getEmpNo()),
                         containsName(searchDto.getName()),
                         eqSchoolSubject(searchDto.getSubjectCode()),
                         eqStatus(searchDto.getEmployeeStatusCode()),
                         eqGender(searchDto.getGenderCode()),
                         containsEmail(searchDto.getEmail()),
-                        eqTel(searchDto.getTel())
+                        containsTel(searchDto.getTel())
                 );
     }
 
@@ -80,21 +80,21 @@ public class EmployeeRepositoryImpl implements EmployeeRepositoryCustom {
                 .select(qEmployee.count())
                 .from(qEmployee)
                 .where(
-                        eqEmployeeNo(searchDto.getEmpNo()),
+                        containsEmployeeNo(searchDto.getEmpNo()),
                         containsName(searchDto.getName()),
                         eqSchoolSubject(searchDto.getSubjectCode()),
                         eqStatus(searchDto.getEmployeeStatusCode()),
                         eqGender(searchDto.getGenderCode()),
                         containsEmail(searchDto.getEmail()),
-                        eqTel(searchDto.getTel())
+                        containsTel(searchDto.getTel())
                 );
     }
 
     // === 검색 조건 메서드들 (BooleanExpression) ===
 
     // 교번/사번 검색
-    private BooleanExpression eqEmployeeNo(String employeeNo) {
-        return StringUtils.hasText(employeeNo) ? qEmployee.empNo.eq(employeeNo) : null;
+    private BooleanExpression containsEmployeeNo(String employeeNo) {
+        return StringUtils.hasText(employeeNo) ? qEmployee.empNo.containsIgnoreCase(employeeNo) : null;
     }
 
     // 이름 검색
@@ -123,7 +123,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepositoryCustom {
     }
 
     // 전화번호 검색
-    private BooleanExpression eqTel(String tel) {
-        return StringUtils.hasText(tel) ? qEmployee.tel.eq(tel) : null;
+    private BooleanExpression containsTel(String tel) {
+        return StringUtils.hasText(tel) ? qEmployee.tel.containsIgnoreCase(tel) : null;
     }
 }

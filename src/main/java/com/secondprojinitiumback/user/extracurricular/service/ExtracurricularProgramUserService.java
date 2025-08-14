@@ -207,6 +207,8 @@ public class ExtracurricularProgramUserService {
         return new PageImpl<>(dtoList, pageable, applies.getTotalElements());
     }
 
+
+
     public Page<ApplyProgramDTO> getApplyPrograms(
             String stdfntNo,
             String eduFnshYn,
@@ -218,7 +220,7 @@ public class ExtracurricularProgramUserService {
         );
 
         spec = spec.and((root, query, cb) -> cb.equal(root.get("delYn"), "N"));
-
+        spec = spec.and((root, query, cb) -> cb.equal(root.get("aprySttsNm"), AprySttsNm.ACCEPT));
         if (eduFnshYn != null && !eduFnshYn.isBlank()) {
             spec = spec.and((root, query, cb) -> {
                 Join<Object, Object> completionJoin = root.join("extracurricularCompletion", JoinType.LEFT);

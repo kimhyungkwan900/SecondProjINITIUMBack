@@ -36,8 +36,8 @@ public class MileagePerf {
     @JoinColumn(name = "MLG_ALTCL_ID", nullable = false)
     private MileageItem mileageItem; // 마일리지 항목
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MLG_SCOR_PLCY_ID", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "MLG_SCOR_PLCY_ID", nullable = true)
     private ScorePolicy scorePolicy; // 배점 정책
 
     @ManyToOne(fetch = FetchType.LAZY)

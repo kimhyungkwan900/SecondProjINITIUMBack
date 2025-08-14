@@ -63,5 +63,15 @@ public class DiagnosticTest {
     @Builder.Default
     private List<DiagnosticScoreLevel> scoreLevels = new ArrayList<>();
 
+    public void addQuestion(DiagnosticQuestion q) {
+        questions.add(q);
+        q.setTest(this);
+    }
+
+    public void removeQuestion(DiagnosticQuestion q) {
+        questions.remove(q);
+        q.setTest(null);
+    }
+
 }
 

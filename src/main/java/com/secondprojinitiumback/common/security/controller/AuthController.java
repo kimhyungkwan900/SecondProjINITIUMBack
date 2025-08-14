@@ -67,7 +67,7 @@ public class AuthController {
         UserDetailDto userDetail = loginInfoService.loadUserDetail(loginInfo);
 
         // 로그인 응답 DTO 생성
-        LoginResponseDto loginResponse = new LoginResponseDto(userDetail);
+        LoginResponseDto loginResponse = LoginResponseDto.builder().userInfo(userDetail).accessTokenExpiresIn(tokenInfo.getAccessTokenExpiresIn()).build();
 
         // 로그인 성공 응답 반환
         return ResponseEntity.ok(loginResponse);

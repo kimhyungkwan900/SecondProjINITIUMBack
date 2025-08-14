@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LoginResponseDto {
     private UserDetailDto userInfo;
+    private Long accessTokenExpiresIn;
 }

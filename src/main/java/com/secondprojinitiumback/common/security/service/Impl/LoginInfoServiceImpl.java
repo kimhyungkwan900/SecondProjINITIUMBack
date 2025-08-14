@@ -116,7 +116,22 @@ public class LoginInfoServiceImpl implements LoginInfoService {
         
         // 비밀번호 검증
         if (!passwordEncoder.matches(rawPassword, loginInfo.getPassword())) {
+            loginInfo.increaseLoginFailCount();
+            loginInfoRepository.save(loginInfo); // 실패 횟수 저장
+
+            if (loginInfo.getLoginFailCount() >= 5) {
+                loginInfo.lockAccount(); // 계정 잠금
+                loginInfoRepository.save(loginInfo); // 잠금 상태 저장
+                throw new CustomException(ErrorCode.ACCOUNT_LOCKED); // 계정 잠금 예외
+            }
             throw new CustomException(ErrorCode.INVALID_CREDENTIALS);
+        }
+
+        // 로그인 성공 시 실패 횟수 초기화 및 계정 잠금 해제
+        if (loginInfo.getLoginFailCount() > 0 || "L".equals(loginInfo.getAccountStatusCode())) {
+            loginInfo.resetLoginFailCount();
+            loginInfo.unlockAccount();
+            loginInfoRepository.save(loginInfo);
         }
 
         // 로그인 정보 반환
@@ -169,6 +184,8 @@ public class LoginInfoServiceImpl implements LoginInfoService {
                     .loginId(loginInfo.getLoginId())
                     .gender(student.getGender().getId().getCode())
                     .grade(student.getGrade())
+                    .passwordChangeRequired(loginInfo.getPasswordChangeRequired())
+                    .loginFailCount(loginInfo.getLoginFailCount())
                     .build();
         } else if ("E".equalsIgnoreCase(userType) || "A".equalsIgnoreCase(userType)) {
             Employee employee = employeeRepository.findByLoginInfoLoginId(loginId)
@@ -182,6 +199,8 @@ public class LoginInfoServiceImpl implements LoginInfoService {
                     .loginId(loginInfo.getLoginId())
                     .gender(employee.getGender().getId().getCode())
                     .grade(null)
+                    .passwordChangeRequired(loginInfo.getPasswordChangeRequired())
+                    .loginFailCount(loginInfo.getLoginFailCount())
                     .build();
         } else {
             throw new CustomException(ErrorCode.UNKNOWN_USER_TYPE);

@@ -63,4 +63,14 @@ public class DiagnosticQuestion {
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<DiagnosticAnswer> answers = new ArrayList<>();
+
+    public void addAnswer(DiagnosticAnswer a) {
+        answers.add(a);
+        a.setQuestion(this);
+    }
+
+    public void removeAnswer(DiagnosticAnswer a) {
+        answers.remove(a);
+        a.setQuestion(null);
+    }
 }

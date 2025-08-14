@@ -48,8 +48,8 @@ public class MileagePerfResponseDto {
                 .mileageItemCode(perf.getMileageItem().getItemCode())
                 .eduNm(perf.getMileageItem().getProgram().getEduNm())
 
-                .scorePolicyId(perf.getScorePolicy().getId())
-                .scoreCriteria(perf.getScorePolicy().getScoreCriteria())
+                .scorePolicyId(perf.getScorePolicy() != null ? perf.getScorePolicy().getId() : null)
+                .scoreCriteria(perf.getScorePolicy() != null ? perf.getScorePolicy().getScoreCriteria() : null)
 
 //                TODO: 현재 Entitiy에서 주석처리되었음으로 주석처리 설계의도에 맞게 변경 필요
 //                .scholarshipApplyId(perf.getScholarshipApply() != null ? perf.getScholarshipApply().getId() : null)

@@ -1,5 +1,7 @@
 package com.secondprojinitiumback.admin.extracurricular.controller;
 
+import com.secondprojinitiumback.admin.coreCompetency.dto.CoreCompetencyCategoryDto;
+import com.secondprojinitiumback.admin.coreCompetency.dto.SubCompetencyCategoryDto;
 import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularCategoryDTO;
 import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularCategoryFormDTO;
 import com.secondprojinitiumback.admin.extracurricular.dto.SchoolSubjectDTO;
@@ -52,7 +54,7 @@ public class ExtracurricularCategoryController {
     public ResponseEntity<List<ExtracurricularCategoryDTO>> getCategories(
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) String programName,
-            @RequestParam(required = false) List<Integer> competencyIds,
+            @RequestParam(required = false) Long competencyId,
             @RequestParam(required = false) String departmentCode) {
 
         List<ExtracurricularCategoryDTO> list;
@@ -62,7 +64,7 @@ public class ExtracurricularCategoryController {
             list = extracurricularCategoryService.findByCategoryId(categoryId);
         } else {
             // 2) 필터 조건 조회
-            list = extracurricularCategoryService.findByFilters(programName, competencyIds, departmentCode);
+            list = extracurricularCategoryService.findByFilters(programName, competencyId, departmentCode);
         }
 
         return ResponseEntity.ok(list);
@@ -80,6 +82,22 @@ public class ExtracurricularCategoryController {
     @GetMapping("/category/list")
     public ResponseEntity<List<ExtracurricularCategoryDTO>> getCategoryList(@RequestParam String empId){
         List<ExtracurricularCategoryDTO> list = extracurricularCategoryService.findByEmpNo(empId);
+        return ResponseEntity.ok(list);
+    }
+
+    // 핵심역량 받아오기
+    @GetMapping("/core/category")
+    public ResponseEntity<List<CoreCompetencyCategoryDto>> getCoreCategoryList() {
+        List<CoreCompetencyCategoryDto> list = extracurricularCategoryService.findAllCoreCategory();
+        return ResponseEntity.ok(list);
+    }
+
+    // 핵심역량 하위 역량 받아오기
+    @GetMapping("/sub/category")
+    public ResponseEntity<List<SubCompetencyCategoryDto>> getSubCategoryList(
+            @RequestParam Long id
+    ) {
+        List<SubCompetencyCategoryDto> list = extracurricularCategoryService.findSubCategory(id);
         return ResponseEntity.ok(list);
     }
 }

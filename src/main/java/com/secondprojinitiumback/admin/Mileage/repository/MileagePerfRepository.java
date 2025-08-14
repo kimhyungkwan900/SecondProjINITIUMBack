@@ -46,4 +46,6 @@ public interface MileagePerfRepository extends JpaRepository<MileagePerf, Long> 
 
     // 2) 전체 리스트 버전
     List<MileagePerf> findAllByStudent_StudentNo(String studentNo);
+
+    boolean existsByStudent_StudentNoAndMileageItem_Id(String studentNo, Long mileageItemId);
 }

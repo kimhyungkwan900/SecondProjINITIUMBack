@@ -52,11 +52,6 @@ public class CoreCompetencyCategory {
     @Column(name = "COMP_GRP", insertable = false, updatable = false)
     private String competencyCategoryGroup = "COMP";
 
-    @Column(name = "DELETED_YN")
-    private String deletedYn;
-
-    @Column(name = "DELETED_AT")
-    private Date deletedAt;
 
 }
 

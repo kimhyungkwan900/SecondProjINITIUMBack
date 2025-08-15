@@ -34,10 +34,6 @@ public class QCoreCompetencyAssessment extends EntityPathBase<CoreCompetencyAsse
 
     public final ListPath<CoreCompetencyCategory, QCoreCompetencyCategory> coreCompetencyCategories = this.<CoreCompetencyCategory, QCoreCompetencyCategory>createList("coreCompetencyCategories", CoreCompetencyCategory.class, QCoreCompetencyCategory.class, PathInits.DIRECT2);
 
-    public final DateTimePath<java.time.LocalDateTime> deletedAt = createDateTime("deletedAt", java.time.LocalDateTime.class);
-
-    public final StringPath deletedYn = createString("deletedYn");
-
     public final StringPath endDate = createString("endDate");
 
     public final StringPath guideContent = createString("guideContent");

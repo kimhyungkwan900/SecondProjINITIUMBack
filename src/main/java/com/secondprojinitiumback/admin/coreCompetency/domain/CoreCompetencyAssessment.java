@@ -18,8 +18,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "core_competency_assessment")
-@SQLDelete(sql = "UPDATE core_competency_assessment SET DELETED_YN='Y', DELETED_AT=NOW() WHERE ASMT_ID=?")
-@Where(clause = "DELETED_YN = 'N'") // 기본 조회에서 삭제된 행 제외
+
 public class CoreCompetencyAssessment {
 
     @Id
@@ -77,10 +76,6 @@ public class CoreCompetencyAssessment {
     @OneToMany(mappedBy = "assessment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CoreCompetencyCategory> coreCompetencyCategories = new ArrayList<>();
 
-    //물리적 삭제 대신 소프트 삭제를 위함 - 진단이 삭제돼도 응답 결과를 확인하기 위함
-    // 진단 삭제는 플래그만 올리고, 조회 API에서만 숨김처리하도록
-    @Column(name="DELETED_YN", nullable=false) private String deletedYn = "N";
-    @Column(name="DELETED_AT") private LocalDateTime deletedAt;
 
 
 }

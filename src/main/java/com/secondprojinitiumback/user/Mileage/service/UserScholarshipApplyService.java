@@ -1,6 +1,5 @@
 package com.secondprojinitiumback.user.Mileage.service;
 
-
 import com.secondprojinitiumback.admin.Mileage.constants.ScholarshipState;
 import com.secondprojinitiumback.admin.Mileage.domain.MileageTotal;
 import com.secondprojinitiumback.admin.Mileage.domain.ScholarshipApply;
@@ -27,13 +26,16 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class UserScholarshipApplyService {
 
+    // 정책 상수 (원하면 여기 숫자만 바꾸면 됨)
+    private static final int MIN_MILEAGE_FOR_APPLY = 60; // ✅ 최소 신청 점수
+
     private final StudentRepository studentRepository;
     private final MileageTotalRepository mileageTotalRepository;
     private final ScholarshipApplyRepository scholarshipApplyRepository;
     private final BankAccountRepository bankAccountRepository;
     private final CommonCodeRepository codeRepository;
 
-    // ✅ 은행 목록 조회(공통코드 BK0001 그룹) — 서비스에 메서드 추가
+    // 은행 목록 조회(공통코드 BK0001)
     public List<UserScholarshipUserInfoDto.BankItem> getBankCodes() {
         return codeRepository
                 .findAllById_CodeGroupAndUseYnOrderBySortOrderAscCodeNameAsc("BK0001", "Y")
@@ -45,9 +47,10 @@ public class UserScholarshipApplyService {
                 .toList();
     }
 
-    // 1. 사용자 정보 조회 (이름, 학번, 과목명, 총점수, 계좌번호)
+    // 사용자 정보 조회
+    public UserScholarshipUserInfoDto getUserInfo(String studentNoRaw) {
 
-    public UserScholarshipUserInfoDto getUserInfo(String studentNo) {
+        final String studentNo = studentNoRaw.trim();
 
         Student student = studentRepository.findById(studentNo)
                 .orElseThrow(() -> new EntityNotFoundException("학생이 존재하지 않습니다."));
@@ -68,42 +71,43 @@ public class UserScholarshipApplyService {
 
         List<UserScholarshipUserInfoDto.BankItem> banks = getBankCodes();
 
-        //사용자 정보, 누적 점수 dto로 변환
         return UserScholarshipUserInfoDto.builder()
                 .name(student.getName())
                 .studentNo(student.getStudentNo())
                 .subjectName(student.getSchoolSubject() != null ? student.getSchoolSubject().getSubjectName() : "")
                 .totalScore(totalScore)
                 .accountNo(accountNo)
-                .bankCode(bankCode)          // ✅ 자동 선택용
+                .bankCode(bankCode)
                 .bankName(bankName)
-                .banks(banks)                // ✅ 드롭다운용 목록
+                .banks(banks)
                 .build();
     }
 
-    // 2. 장학금 신청 처리
+    // 장학금 신청
     @Transactional
     public void apply(UserScholarshipApplyRequestDto dto) {
 
-        Student student = studentRepository.findById(dto.getStudentNo())
+        final String stdNo = dto.getStudentNo().trim();
+
+        Student student = studentRepository.findById(stdNo)
                 .orElseThrow(() -> new EntityNotFoundException("학생이 존재하지 않습니다."));
         MileageTotal total = mileageTotalRepository.findByStudent(student)
                 .orElseThrow(() -> new EntityNotFoundException("마일리지 누계가 없습니다."));
 
-        //누적 점수가 50점 미만이면 예외 발생 → 신청 불가
-        if (total.getTotalScore() < 50) {
-            throw new IllegalStateException("총 마일리지가 50점 이상일 경우에만 신청이 가능합니다.");
+        // ✅ 최소 신청 점수 체크 (60점)
+        if (total.getTotalScore() < MIN_MILEAGE_FOR_APPLY) {
+            throw new IllegalStateException("총 마일리지가 " + MIN_MILEAGE_FOR_APPLY + "점 이상일 경우에만 신청이 가능합니다.");
         }
 
         // 계좌 유효성 체크
         bankAccountRepository.findById(dto.getAccountNo())
                 .orElseThrow(() -> new EntityNotFoundException("계좌가 존재하지 않습니다."));
 
-        // 상태 코드 "신청" APPLY 가져오기
+        // 상태 코드 "신청" APPLY
         CommonCode applyState = codeRepository.findById(ScholarshipState.APPLY.toCommonCodeId())
                 .orElseThrow(() -> new EntityNotFoundException("신청 상태 코드 없음"));
 
-        // 신청 엔티티 생성
+        // 신청 엔티티 생성 (현 시점의 총점 기준으로 신청 마일리지 기록)
         ScholarshipApply apply = ScholarshipApply.builder()
                 .student(student)
                 .bankAccount(bankAccountRepository.getReferenceById(dto.getAccountNo()))
@@ -115,4 +119,3 @@ public class UserScholarshipApplyService {
         scholarshipApplyRepository.save(apply);
     }
 }
-

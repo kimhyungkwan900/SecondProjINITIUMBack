@@ -1,7 +1,5 @@
 package com.secondprojinitiumback.user.Mileage.controller;
 
-import com.secondprojinitiumback.common.domain.CommonCode;
-import com.secondprojinitiumback.common.repository.CommonCodeRepository;
 import com.secondprojinitiumback.user.Mileage.dto.UserScholarshipApplyRequestDto;
 import com.secondprojinitiumback.user.Mileage.dto.UserScholarshipUserInfoDto;
 import com.secondprojinitiumback.user.Mileage.service.UserScholarshipApplyService;
@@ -11,12 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/user/scholarship")
+@RequestMapping("/api/user/scholarship") // ← 슬래시 추가
 @RequiredArgsConstructor
 public class UserScholarshipApplyController {
 
     private final UserScholarshipApplyService applyService;
-    private final CommonCodeRepository codeRepository;
 
     // 사용자 기본 정보 + 마일리지 점수 조회
     @GetMapping("/info/{studentNo}")
@@ -36,4 +33,3 @@ public class UserScholarshipApplyController {
         applyService.apply(dto);
     }
 }
-

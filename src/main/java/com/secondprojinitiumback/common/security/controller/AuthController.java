@@ -41,15 +41,12 @@ public class AuthController {
             HttpServletRequest request,
             HttpServletResponse response
     ) {
-
-        // 로그인 인증
-        LoginInfo loginInfo = loginInfoService.authenticate(loginRequestDto.getLoginId(), loginRequestDto.getPassword());
-
-        // 계정 상태확인
-        if (!"N".equals(loginInfo.getAccountStatusCode())) {
-            throw new CustomException(ErrorCode.ACCOUNT_LOCKED);
-        }
-
+        // 로그인인증 호출
+        LoginInfo loginInfo = loginInfoService.authenticate(
+                loginRequestDto.getLoginId(),
+                loginRequestDto.getPassword()
+        );
+        
         // 토큰 발급
         TokenInfoDto tokenInfo = tokenProvider.generateTokens(loginInfo.getLoginId(), loginInfo.getUserType());
 
@@ -67,7 +64,7 @@ public class AuthController {
         UserDetailDto userDetail = loginInfoService.loadUserDetail(loginInfo);
 
         // 로그인 응답 DTO 생성
-        LoginResponseDto loginResponse = new LoginResponseDto(userDetail);
+        LoginResponseDto loginResponse = LoginResponseDto.builder().userInfo(userDetail).accessTokenExpiresIn(tokenInfo.getAccessTokenExpiresIn()).build();
 
         // 로그인 성공 응답 반환
         return ResponseEntity.ok(loginResponse);

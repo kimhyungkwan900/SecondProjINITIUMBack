@@ -7,6 +7,8 @@ import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyA
 import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyResponseRepository;
 import com.secondprojinitiumback.common.domain.CommonCode;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
+import com.secondprojinitiumback.common.exception.CustomException;
+import com.secondprojinitiumback.common.exception.ErrorCode;
 import com.secondprojinitiumback.common.repository.CommonCodeRepository;
 import com.secondprojinitiumback.common.repository.SchoolSubjectRepository;
 import com.secondprojinitiumback.user.student.domain.Student;
@@ -32,13 +34,13 @@ public class AdminCoreAssessmentService {
     // 1. 핵심 역량 진단 등록
     public CoreCompetencyAssessment createCoreCompetencyAssessment(CoreCompetencyAssessmentDto assessmentDto) {
         CommonCode semesterCode = commonCodeRepository.findById_CodeAndId_CodeGroup(assessmentDto.getSemesterCode(), "SEMES")
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 학기 코드입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.COMMON_CODE_NOT_FOUND));
 
         CommonCode onlineExecCode = commonCodeRepository.findById_CodeAndId_CodeGroup(assessmentDto.getOnlineYn(), "ONLYN")
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 온라인 여부 코드입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.COMMON_CODE_NOT_FOUND));
 
         SchoolSubject schoolSubject = schoolSubjectRepository.findBySubjectName(assessmentDto.getDepartmentName())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부서 코드입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.SCHOOL_SUBJECT_NOT_FOUND));
 
         CoreCompetencyAssessment assessment = CoreCompetencyAssessment.builder()
                 .assessmentNo(assessmentDto.getAssessmentNo())
@@ -61,16 +63,16 @@ public class AdminCoreAssessmentService {
     public CoreCompetencyAssessment updateCoreCompetencyAssessment(Long assessmentId, CoreCompetencyAssessmentDto assessmentDto) {
 
         CommonCode semesterCode = commonCodeRepository.findById_CodeAndId_CodeGroup(assessmentDto.getSemesterCode(), "SEMES")
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 학기 코드입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.COMMON_CODE_NOT_FOUND));
 
         CommonCode onlineExecCode = commonCodeRepository.findById_CodeAndId_CodeGroup(assessmentDto.getOnlineYn(), "ONLYN")
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 온라인 여부 코드입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.COMMON_CODE_NOT_FOUND));
 
         SchoolSubject schoolSubject = schoolSubjectRepository.findBySubjectName(assessmentDto.getDepartmentName())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 부서 코드입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.SCHOOL_SUBJECT_NOT_FOUND));
 
         CoreCompetencyAssessment existingAssessment = coreCompetencyAssessmentRepository.findById(assessmentId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 핵심 역량 진단입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.ASSESSMENT_NOT_FOUND));
 
         existingAssessment.setAssessmentNo(assessmentDto.getAssessmentNo());
         existingAssessment.setAssessmentName(assessmentDto.getAssessmentName());
@@ -90,14 +92,14 @@ public class AdminCoreAssessmentService {
     // 3. 핵심 역량 진단 삭제
     public void deleteCoreCompetencyAssessment(Long assessmentId) {
         CoreCompetencyAssessment assessment = coreCompetencyAssessmentRepository.findById(assessmentId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 핵심 역량 진단입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.ASSESSMENT_NOT_FOUND));
         coreCompetencyAssessmentRepository.delete(assessment);
     }
 
     // 4. 핵심 역량 진단 조회
     public CoreCompetencyAssessment getCoreCompetencyAssessment(Long assessmentId) {
         return coreCompetencyAssessmentRepository.findById(assessmentId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 핵심 역량 진단입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.ASSESSMENT_NOT_FOUND));
     }
 
     // 5. 핵심 역량 진단 목록 전체 조회
@@ -110,7 +112,7 @@ public class AdminCoreAssessmentService {
     public List<AssessmentListResponseDto> findAssessmentsForStudent(String studentNo) {
         // 1. 현재 학생 엔티티를 조회합니다.
         Student student = studentRepository.findByStudentNo(studentNo)
-                .orElseThrow(() -> new IllegalArgumentException("학생 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.STUDENT_NOT_FOUND));
 
         // 2. 모든 활성화된 평가 목록을 가져옵니다.
         List<CoreCompetencyAssessment> assessments = coreCompetencyAssessmentRepository.findAll(); // findAllByIsActive(true) 등
@@ -125,3 +127,4 @@ public class AdminCoreAssessmentService {
         }).collect(Collectors.toList());
     }
 }
+

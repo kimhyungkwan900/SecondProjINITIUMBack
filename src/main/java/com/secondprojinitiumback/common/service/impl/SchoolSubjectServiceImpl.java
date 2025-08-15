@@ -4,6 +4,8 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.secondprojinitiumback.common.domain.QSchoolSubject;
 import com.secondprojinitiumback.common.domain.SchoolSubject;
+import com.secondprojinitiumback.common.exception.CustomException;
+import com.secondprojinitiumback.common.exception.ErrorCode;
 import com.secondprojinitiumback.common.repository.SchoolSubjectRepository;
 import com.secondprojinitiumback.common.service.SchoolSubjectService;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +66,8 @@ public class SchoolSubjectServiceImpl implements SchoolSubjectService {
     }
 
     @Override
-    public Optional<SchoolSubject> findByCode(String subjectCode) {
-        return repository.findBySubjectCode(subjectCode);
+    public SchoolSubject findByCode(String subjectCode) {
+        return repository.findBySubjectCode(subjectCode)
+                .orElseThrow(() -> new CustomException(ErrorCode.SCHOOL_SUBJECT_NOT_FOUND));
     }
 }

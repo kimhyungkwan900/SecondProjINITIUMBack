@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.common.controller;
 
+import com.secondprojinitiumback.common.domain.SchoolSubject;
 import com.secondprojinitiumback.common.dto.response.SchoolSubjectResponse;
 import com.secondprojinitiumback.common.service.SchoolSubjectService;
 import lombok.RequiredArgsConstructor;
@@ -30,10 +31,8 @@ public class SchoolSubjectController {
     // 단건 조회
     @GetMapping("/{subjectCode}")
     public ResponseEntity<SchoolSubjectResponse> getOne(@PathVariable String subjectCode) {
-        return schoolSubjectService.findByCode(subjectCode)
-                .map(SchoolSubjectResponse::from)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        SchoolSubject schoolSubject = schoolSubjectService.findByCode(subjectCode);
+        return ResponseEntity.ok(SchoolSubjectResponse.from(schoolSubject));
     }
 
     // 셀렉트박스용 경량 목록

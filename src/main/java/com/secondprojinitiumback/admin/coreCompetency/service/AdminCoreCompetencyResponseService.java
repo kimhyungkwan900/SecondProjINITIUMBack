@@ -8,6 +8,8 @@ import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyA
 import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyQuestionRepository;
 import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyResponseRepository;
 import com.secondprojinitiumback.admin.coreCompetency.repository.ResponseChoiceOptionRepository;
+import com.secondprojinitiumback.common.exception.CustomException;
+import com.secondprojinitiumback.common.exception.ErrorCode;
 import com.secondprojinitiumback.user.coreCompetency.dto.UserResponseBulkRequestDto;
 import com.secondprojinitiumback.user.coreCompetency.dto.UserResponseRequestDto;
 import com.secondprojinitiumback.user.student.domain.Student;
@@ -41,19 +43,19 @@ public class AdminCoreCompetencyResponseService {
     @Transactional
     public void saveResponsesByLabel(Student student, UserResponseBulkRequestDto dto) {
         CoreCompetencyAssessment assessment = coreCompetencyAssessmentRepository.findById(dto.getAssessmentId())
-                .orElseThrow(() -> new IllegalArgumentException("평가 없음"));
+                .orElseThrow(() -> new CustomException(ErrorCode.ASSESSMENT_NOT_FOUND));
 
         for (UserResponseRequestDto responseDto : dto.getResponses()) {
 
            student = studentRepository.findByStudentNo(student.getStudentNo())
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 학생입니다."));
+                    .orElseThrow(() -> new CustomException(ErrorCode.STUDENT_NOT_FOUND));
 
             CoreCompetencyQuestion question = coreCompetencyQuestionRepository.findById(responseDto.getQuestionId())
-                    .orElseThrow(() -> new IllegalArgumentException("문항 없음"));
+                    .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
 
             ResponseChoiceOption selectedOption = responseChoiceOptionRepository
                     .findByQuestionIdAndLabel(question.getId(), responseDto.getLabel())
-                    .orElseThrow(() -> new IllegalArgumentException("해당 보기 없음"));
+                    .orElseThrow(() -> new CustomException(ErrorCode.RESPONSE_OPTION_NOT_FOUND));
 
             CoreCompetencyResponse response = CoreCompetencyResponse.builder()
                     .student(student)
@@ -74,6 +76,7 @@ public class AdminCoreCompetencyResponseService {
     public void checkDuplicate(Long assessmentId, String studentNo) {
         boolean exists = coreCompetencyResponseRepository
                 .existsByAssessment_IdAndStudent_StudentNo(assessmentId, studentNo);
-        if (exists) throw new ResponseStatusException(CONFLICT, "이미 응시한 진단입니다.");
+        if (exists) throw new CustomException(ErrorCode.ASSESSMENT_ALREADY_RESPONDED);
     }
 }
+

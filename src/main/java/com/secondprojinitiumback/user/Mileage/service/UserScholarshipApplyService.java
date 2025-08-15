@@ -9,6 +9,8 @@ import com.secondprojinitiumback.common.bank.Repository.BankAccountRepository;
 import com.secondprojinitiumback.common.bank.domain.BankAccount;
 import com.secondprojinitiumback.common.domain.CommonCode;
 import com.secondprojinitiumback.common.repository.CommonCodeRepository;
+import com.secondprojinitiumback.common.exception.CustomException;
+import com.secondprojinitiumback.common.exception.ErrorCode;
 import com.secondprojinitiumback.user.Mileage.dto.UserScholarshipApplyRequestDto;
 import com.secondprojinitiumback.user.Mileage.dto.UserScholarshipUserInfoDto;
 import com.secondprojinitiumback.user.student.domain.Student;
@@ -53,7 +55,7 @@ public class UserScholarshipApplyService {
         final String studentNo = studentNoRaw.trim();
 
         Student student = studentRepository.findById(studentNo)
-                .orElseThrow(() -> new EntityNotFoundException("학생이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.STUDENT_NOT_FOUND));
 
         MileageTotal total = mileageTotalRepository.findByStudent(student).orElse(null);
         int totalScore = (total != null) ? (int) total.getTotalScore() : 0;
@@ -87,25 +89,23 @@ public class UserScholarshipApplyService {
     @Transactional
     public void apply(UserScholarshipApplyRequestDto dto) {
 
-        final String stdNo = dto.getStudentNo().trim();
-
-        Student student = studentRepository.findById(stdNo)
-                .orElseThrow(() -> new EntityNotFoundException("학생이 존재하지 않습니다."));
+        Student student = studentRepository.findById(dto.getStudentNo())
+                .orElseThrow(() -> new CustomException(ErrorCode.STUDENT_NOT_FOUND));
         MileageTotal total = mileageTotalRepository.findByStudent(student)
-                .orElseThrow(() -> new EntityNotFoundException("마일리지 누계가 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.INSUFFICIENT_MILEAGE_SCORE));
 
-        // ✅ 최소 신청 점수 체크 (60점)
-        if (total.getTotalScore() < MIN_MILEAGE_FOR_APPLY) {
-            throw new IllegalStateException("총 마일리지가 " + MIN_MILEAGE_FOR_APPLY + "점 이상일 경우에만 신청이 가능합니다.");
+        //누적 점수가 50점 미만이면 예외 발생 → 신청 불가
+        if (total.getTotalScore() < 50) {
+            throw new CustomException(ErrorCode.INSUFFICIENT_MILEAGE_SCORE);
         }
 
         // 계좌 유효성 체크
         bankAccountRepository.findById(dto.getAccountNo())
-                .orElseThrow(() -> new EntityNotFoundException("계좌가 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.BANK_ACCOUNT_NOT_FOUND));
 
         // 상태 코드 "신청" APPLY
         CommonCode applyState = codeRepository.findById(ScholarshipState.APPLY.toCommonCodeId())
-                .orElseThrow(() -> new EntityNotFoundException("신청 상태 코드 없음"));
+                .orElseThrow(() -> new CustomException(ErrorCode.COMMON_CODE_NOT_FOUND));
 
         // 신청 엔티티 생성 (현 시점의 총점 기준으로 신청 마일리지 기록)
         ScholarshipApply apply = ScholarshipApply.builder()

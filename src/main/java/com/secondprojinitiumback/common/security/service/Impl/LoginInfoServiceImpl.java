@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.common.security.service.Impl;
 
+import com.secondprojinitiumback.common.security.constant.Role;
 import com.secondprojinitiumback.common.security.domain.LoginAuthInfo;
 import com.secondprojinitiumback.common.security.domain.LoginHistory;
 import com.secondprojinitiumback.common.security.domain.LoginInfo;
@@ -36,6 +37,8 @@ public class LoginInfoServiceImpl implements LoginInfoService {
     private final StudentRepository studentRepository;
     private final EmployeeRepository employeeRepository;
 
+    private static final String PWD_REGEX = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$%*#?&])[A-Za-z\\d$@$%*#?&]{8,}$";
+
     @Override
     public LoginInfo createLoginInfo(CreateLoginDto createLoginDto) {
         // 로그인 ID 중복 체크
@@ -69,7 +72,6 @@ public class LoginInfoServiceImpl implements LoginInfoService {
         }
 
         // 비밀번호 유효성검사
-        final String PWD_REGEX = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$%*#?&])[A-Za-z\\d$@$%*#?&]{8,}$";
         if (newPassword == null || !newPassword.matches(PWD_REGEX)) {
             throw new CustomException(ErrorCode.INVALID_PASSWORD_FORMAT);
         }
@@ -109,19 +111,40 @@ public class LoginInfoServiceImpl implements LoginInfoService {
     }
 
     @Override
+    @Transactional(noRollbackFor = CustomException.class)
     public LoginInfo authenticate(String loginId, String rawPassword) {
-        // 로그인 ID로 사용자 정보 조회
         LoginInfo loginInfo = loginInfoRepository.findById(loginId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        
+
+        // 계정 상태 확인 (잠금 or 비활성화 시 로그인 불가)
+        if ("L".equals(loginInfo.getAccountStatusCode())) {
+            throw new CustomException(ErrorCode.ACCOUNT_LOCKED);
+        }
+        if ("D".equals(loginInfo.getAccountStatusCode())) {
+            throw new CustomException(ErrorCode.ACCOUNT_DISABLED);
+        }
+
         // 비밀번호 검증
         if (!passwordEncoder.matches(rawPassword, loginInfo.getPassword())) {
+            loginInfo.increaseLoginFailCount();
+
+            if (loginInfo.getLoginFailCount() >= 5) {
+                loginInfo.lockAccount(); // 잠금 처리
+            }
+
+            loginInfoRepository.save(loginInfo);
             throw new CustomException(ErrorCode.INVALID_CREDENTIALS);
         }
 
-        // 로그인 정보 반환
+        // 로그인 성공 시 실패 횟수 초기화
+        if (loginInfo.getLoginFailCount() > 0) {
+            loginInfo.resetLoginFailCount();
+            loginInfoRepository.save(loginInfo);
+        }
+
         return loginInfo;
     }
+
 
     @Override
     @Transactional
@@ -157,7 +180,7 @@ public class LoginInfoServiceImpl implements LoginInfoService {
         String loginId = loginInfo.getLoginId();
 
         // 사용자 유형에 따라 학생 또는 직원 정보 조회
-        if ("S".equalsIgnoreCase(userType)) {
+        if (Role.STUDENT.getUserType().equalsIgnoreCase(userType)) {
             Student student = studentRepository.findByLoginInfoLoginId(loginId)
                     .orElseThrow(() -> new CustomException(ErrorCode.STUDENT_NOT_FOUND));
             return UserDetailDto.builder()
@@ -169,8 +192,10 @@ public class LoginInfoServiceImpl implements LoginInfoService {
                     .loginId(loginInfo.getLoginId())
                     .gender(student.getGender().getId().getCode())
                     .grade(student.getGrade())
+                    .passwordChangeRequired(loginInfo.getPasswordChangeRequired())
+                    .loginFailCount(loginInfo.getLoginFailCount())
                     .build();
-        } else if ("E".equalsIgnoreCase(userType) || "A".equalsIgnoreCase(userType)) {
+        } else if (Role.EMPLOYEE.getUserType().equalsIgnoreCase(userType) || Role.ADMIN.getUserType().equalsIgnoreCase(userType)) {
             Employee employee = employeeRepository.findByLoginInfoLoginId(loginId)
                     .orElseThrow(() -> new CustomException(ErrorCode.EMPLOYEE_NOT_FOUND));
             return UserDetailDto.builder()
@@ -182,6 +207,8 @@ public class LoginInfoServiceImpl implements LoginInfoService {
                     .loginId(loginInfo.getLoginId())
                     .gender(employee.getGender().getId().getCode())
                     .grade(null)
+                    .passwordChangeRequired(loginInfo.getPasswordChangeRequired())
+                    .loginFailCount(loginInfo.getLoginFailCount())
                     .build();
         } else {
             throw new CustomException(ErrorCode.UNKNOWN_USER_TYPE);

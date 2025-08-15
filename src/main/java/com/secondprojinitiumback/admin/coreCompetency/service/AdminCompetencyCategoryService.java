@@ -11,6 +11,8 @@ import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyC
 import com.secondprojinitiumback.admin.coreCompetency.repository.IdealTalentProfileRepository;
 import com.secondprojinitiumback.admin.coreCompetency.repository.SubCompetencyCategoryRepository;
 import com.secondprojinitiumback.common.domain.CommonCode;
+import com.secondprojinitiumback.common.exception.CustomException;
+import com.secondprojinitiumback.common.exception.ErrorCode;
 import com.secondprojinitiumback.common.repository.CommonCodeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -44,16 +46,16 @@ public class AdminCompetencyCategoryService {
         if (dto.getCompetencyCategory().getCodeName().equalsIgnoreCase("핵심역량")) {
             // 핵심역량 등록
             IdealTalentProfile idealTalentProfile = idealTalentProfileRepository.findById(dto.getIdealTalentProfileId())
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 인재상입니다."));
+                    .orElseThrow(() -> new CustomException(ErrorCode.IDEAL_TALENT_PROFILE_NOT_FOUND));
 
             if (dto.getAssessmentId() == null) {
-                throw new IllegalArgumentException("진단평가 ID가 필요합니다.");
+                throw new CustomException(ErrorCode.ASSESSMENT_ID_REQUIRED);
             }
             CoreCompetencyAssessment assessment = coreCompetencyAssessmentRepository.findById(dto.getAssessmentId())
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 진단평가입니다."));
+                    .orElseThrow(() -> new CustomException(ErrorCode.ASSESSMENT_NOT_FOUND));
 
             CommonCode coreCompCode = commonCodeRepository.findById_CodeAndId_CodeGroup("C", "COMP")
-                    .orElseThrow(() -> new IllegalArgumentException("핵심역량 공통 코드를 찾을 수 없습니다."));
+                    .orElseThrow(() -> new CustomException(ErrorCode.COMMON_CODE_NOT_FOUND));
 
             CoreCompetencyCategory core = CoreCompetencyCategory.builder()
                     .coreCategoryName(dto.getName())
@@ -68,10 +70,10 @@ public class AdminCompetencyCategoryService {
         } else {
             // 하위역량 등록
             CoreCompetencyCategory parent = coreCompetencyCategoryRepository.findById(dto.getParentId())
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 핵심역량 카테고리입니다."));
+                    .orElseThrow(() -> new CustomException(ErrorCode.CORE_COMPETENCY_NOT_FOUND));
 
             CommonCode coreCompCode = commonCodeRepository.findById_CodeAndId_CodeGroup("S", "COMP")
-                    .orElseThrow(() -> new IllegalArgumentException("하위역량 공통 코드를 찾을 수 없습니다."));
+                    .orElseThrow(() -> new CustomException(ErrorCode.COMMON_CODE_NOT_FOUND));
 
             SubCompetencyCategory sub = SubCompetencyCategory.builder()
                     .subCategoryName(dto.getName())
@@ -91,16 +93,16 @@ public class AdminCompetencyCategoryService {
         if (dto.getCompetencyCategory().getCodeName().equalsIgnoreCase("핵심역량")) {
             // 핵심역량 수정
             CoreCompetencyCategory core = coreCompetencyCategoryRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 핵심역량 카테고리입니다."));
+                    .orElseThrow(() -> new CustomException(ErrorCode.CORE_COMPETENCY_NOT_FOUND));
 
             IdealTalentProfile idealTalentProfile = idealTalentProfileRepository.findById(dto.getIdealTalentProfileId())
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 인재상입니다."));
+                    .orElseThrow(() -> new CustomException(ErrorCode.IDEAL_TALENT_PROFILE_NOT_FOUND));
 
             if (dto.getAssessmentId() == null) {
-                throw new IllegalArgumentException("진단평가 ID가 필요합니다.");
+                throw new CustomException(ErrorCode.ASSESSMENT_ID_REQUIRED);
             }
             CoreCompetencyAssessment assessment = coreCompetencyAssessmentRepository.findById(dto.getAssessmentId())
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 진단평가입니다."));
+                    .orElseThrow(() -> new CustomException(ErrorCode.ASSESSMENT_NOT_FOUND));
 
             core.setCoreCategoryName(dto.getName());
             core.setCoreCategoryNote(dto.getDescription());
@@ -112,7 +114,7 @@ public class AdminCompetencyCategoryService {
         } else {
             // 하위역량 수정
             SubCompetencyCategory sub = subCompetencyCategoryRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 하위 역량 카테고리입니다."));
+                    .orElseThrow(() -> new CustomException(ErrorCode.SUB_COMPETENCY_NOT_FOUND));
 
             sub.setSubCategoryName(dto.getName());
             sub.setSubCategoryNote(dto.getDescription());
@@ -126,11 +128,11 @@ public class AdminCompetencyCategoryService {
     public void deleteCategory(Long id, CompetencyCategoryDto dto) {
         if (dto.getCompetencyCategory().getCodeName().equalsIgnoreCase("핵심역량")) {
             CoreCompetencyCategory core = coreCompetencyCategoryRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("핵심역량 없음"));
+                    .orElseThrow(() -> new CustomException(ErrorCode.CORE_COMPETENCY_NOT_FOUND));
             coreCompetencyCategoryRepository.delete(core);
         } else {
             SubCompetencyCategory sub = subCompetencyCategoryRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("하위역량 없음"));
+                    .orElseThrow(() -> new CustomException(ErrorCode.SUB_COMPETENCY_NOT_FOUND));
             subCompetencyCategoryRepository.delete(sub);
         }
     }
@@ -146,11 +148,11 @@ public class AdminCompetencyCategoryService {
     // 5. 상세 조회
     public CoreCompetencyCategory getCoreCategory(Long id) {
         return coreCompetencyCategoryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("핵심역량 없음"));
+                .orElseThrow(() -> new CustomException(ErrorCode.CORE_COMPETENCY_NOT_FOUND));
     }
     public SubCompetencyCategory getSubCategory(Long id) {
         return subCompetencyCategoryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("하위역량 없음"));
+                .orElseThrow(() -> new CustomException(ErrorCode.SUB_COMPETENCY_NOT_FOUND));
     }
 
     // 6. 중복 체크

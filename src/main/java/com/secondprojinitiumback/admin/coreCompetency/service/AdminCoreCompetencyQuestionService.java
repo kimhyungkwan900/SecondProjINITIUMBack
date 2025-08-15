@@ -3,6 +3,8 @@ package com.secondprojinitiumback.admin.coreCompetency.service;
 import com.secondprojinitiumback.admin.coreCompetency.domain.*;
 import com.secondprojinitiumback.admin.coreCompetency.dto.CoreCompetencyQuestionCreateRequestDto;
 import com.secondprojinitiumback.admin.coreCompetency.repository.*;
+import com.secondprojinitiumback.common.exception.CustomException;
+import com.secondprojinitiumback.common.exception.ErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,10 +30,10 @@ public class AdminCoreCompetencyQuestionService {
     public CoreCompetencyQuestion createCoreCompetencyQuestion(Long assessmentId, CoreCompetencyQuestionCreateRequestDto dto) {
 
         CoreCompetencyAssessment assessment = coreCompetencyAssessmentRepository.findById(assessmentId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 평가입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.ASSESSMENT_NOT_FOUND));
 
         SubCompetencyCategory subCategory = subCompetencyCategoryRepository.findById(dto.getSubCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 하위역량입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.SUB_COMPETENCY_NOT_FOUND));
 
         CoreCompetencyQuestion question = CoreCompetencyQuestion.builder()
                 .assessment(assessment)
@@ -58,7 +60,7 @@ public class AdminCoreCompetencyQuestionService {
     @Transactional
     public CoreCompetencyQuestion updateCoreCompetencyQuestion(Long questionId, CoreCompetencyQuestionCreateRequestDto dto) {
         CoreCompetencyQuestion question = coreCompetencyQuestionRepository.findById(questionId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 문항입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
 
         // 기본 정보 수정
         question.setName(dto.getQuestionName());
@@ -73,7 +75,7 @@ public class AdminCoreCompetencyQuestionService {
         // 하위역량 변경
         if (dto.getSubCategoryId() != null) {
             SubCompetencyCategory subCategory = subCompetencyCategoryRepository.findById(dto.getSubCategoryId())
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 하위역량입니다."));
+                    .orElseThrow(() -> new CustomException(ErrorCode.SUB_COMPETENCY_NOT_FOUND));
             question.setSubCompetencyCategory(subCategory);
         }
 
@@ -107,11 +109,11 @@ public class AdminCoreCompetencyQuestionService {
     @Transactional
     public CoreCompetencyQuestion setOptionCount(Long questionId, int newCount) {
         if (newCount < 1) {
-            throw new IllegalArgumentException("옵션 개수는 1 이상이어야 합니다.");
+            throw new CustomException(ErrorCode.INVALID_OPTION_COUNT);
         }
 
         CoreCompetencyQuestion question = coreCompetencyQuestionRepository.findById(questionId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 문항입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
 
         question.getResponseChoiceOptions().clear();
         generateDefaultOptions(question, newCount);
@@ -130,7 +132,7 @@ public class AdminCoreCompetencyQuestionService {
     @Transactional
     public void deleteCoreCompetencyQuestion(Long questionId) {
         CoreCompetencyQuestion questionToDelete = coreCompetencyQuestionRepository.findById(questionId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 문항입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
 
         Long assessmentId = questionToDelete.getAssessment().getId();
         Long subCategoryId = questionToDelete.getSubCompetencyCategory().getId();
@@ -144,7 +146,7 @@ public class AdminCoreCompetencyQuestionService {
     /** [문항 단건 조회] */
     public CoreCompetencyQuestion getCoreCompetencyQuestion(Long questionId) {
         return coreCompetencyQuestionRepository.findById(questionId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 문항입니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.QUESTION_NOT_FOUND));
     }
 
     /** [전체 문항 조회] */
@@ -207,3 +209,4 @@ public class AdminCoreCompetencyQuestionService {
                 ));
     }
 }
+

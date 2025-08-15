@@ -3,6 +3,8 @@ package com.secondprojinitiumback.user.consult.service;
 import com.secondprojinitiumback.user.consult.domain.DscsnKind;
 import com.secondprojinitiumback.user.consult.dto.common.DscsnKindDto;
 import com.secondprojinitiumback.user.consult.repository.DscsnKindRepository;
+import com.secondprojinitiumback.common.exception.CustomException;
+import com.secondprojinitiumback.common.exception.ErrorCode;
 import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -52,7 +54,7 @@ public class DscsnKindService {
 
         // 입력한 상담항목 ID로 DscsnKind 엔티티 조회
         DscsnKind dscsnKind = dscsnKindRepository.findById(dscsnKindDto.getDscsnKindId())
-                .orElseThrow(EntityExistsException::new);
+                .orElseThrow(() -> new CustomException(ErrorCode.CONSULTATION_KIND_NOT_FOUND));
 
         // DscsnKind 엔티티의 필드 업데이트
         dscsnKind.updateDscsnKindName(dscsnKindDto.getDscsnKindName());
@@ -79,3 +81,4 @@ public class DscsnKindService {
                 .toList();
     }
 }
+

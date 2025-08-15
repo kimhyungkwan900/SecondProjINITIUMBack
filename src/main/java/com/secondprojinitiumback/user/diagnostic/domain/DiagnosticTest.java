@@ -32,9 +32,6 @@ public class DiagnosticTest {
     @Builder.Default
     private String delYn = "N";
 
-    @Column(name = "USE_YN", length = 1)
-    private String useYn;
-
     /**
      * 공통코드 참조 (업무구분: NC)
      * CD_SE = 업무구분 그룹 (예: "CO0002")

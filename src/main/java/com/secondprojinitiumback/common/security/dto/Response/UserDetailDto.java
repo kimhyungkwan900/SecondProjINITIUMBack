@@ -19,4 +19,6 @@ public class UserDetailDto {
     private String schoolSubject;
     private String gender;
     private String grade;
+    private Boolean passwordChangeRequired;
+    private Integer loginFailCount;
 }

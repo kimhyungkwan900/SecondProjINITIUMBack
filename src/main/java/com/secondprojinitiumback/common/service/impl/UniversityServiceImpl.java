@@ -32,7 +32,7 @@ public class UniversityServiceImpl implements Universityservice {
     @Override
     public UniversityResponse findByCode(String code) {
         University u = repository.findById(code)
-                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PARAMETER));
+                .orElseThrow(() -> new CustomException(ErrorCode.UNIVERSITY_NOT_FOUND));
         return new UniversityResponse(rtrim(u.getUniversityCode()), rtrim(u.getUniversityName()));
     }
 
@@ -40,7 +40,7 @@ public class UniversityServiceImpl implements Universityservice {
     public String findNameByCode(String code) {
         return repository.findNameByCode(code)
                 .map(this::rtrim)
-                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PARAMETER));
+                .orElseThrow(() -> new CustomException(ErrorCode.UNIVERSITY_NOT_FOUND));
     }
 
     // UNIV_CD가 CHAR(8)인 스키마이므로 공백 패딩 제거 안전장치

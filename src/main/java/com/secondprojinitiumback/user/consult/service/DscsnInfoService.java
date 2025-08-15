@@ -11,6 +11,8 @@ import com.secondprojinitiumback.user.consult.dto.responsedto.DscsnApplyResponse
 import com.secondprojinitiumback.user.consult.dto.responsedto.DscsnInfoResponseDto;
 import com.secondprojinitiumback.user.consult.dto.responsedto.DscsnScheduleResponseDto;
 import com.secondprojinitiumback.user.consult.repository.DscsnInfoRepository;
+import com.secondprojinitiumback.common.exception.CustomException;
+import com.secondprojinitiumback.common.exception.ErrorCode;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -68,7 +70,7 @@ public class DscsnInfoService {
 
         // 상담정보 가져오기
         DscsnInfo dscsnInfo = dscsnInfoRepository.findById(dscsnInfoId)
-                .orElseThrow(EntityExistsException::new);
+                .orElseThrow(() -> new CustomException(ErrorCode.CONSULTATION_INFO_NOT_FOUND));
 
         // 상담 상태 업데이트
         dscsnInfo.updateDscsnStatus(status);
@@ -79,7 +81,7 @@ public class DscsnInfoService {
 
         // 상담정보 가져오기
         DscsnInfo dscsnInfo = dscsnInfoRepository.findById(dscsnResultDto.getDscsnInfoId())
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(() -> new CustomException(ErrorCode.CONSULTATION_INFO_NOT_FOUND));
 
         // 상담 결과 공개여부 등록
         dscsnInfo.updateDscsnReleaseYn(dscsnResultDto.getReleaseYn());
@@ -163,3 +165,4 @@ public class DscsnInfoService {
                 .build();
     }
 }
+

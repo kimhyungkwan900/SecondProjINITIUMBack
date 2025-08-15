@@ -1,6 +1,8 @@
 package com.secondprojinitiumback.user.diagnostic.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.secondprojinitiumback.common.exception.CustomException;
+import com.secondprojinitiumback.common.exception.ErrorCode;
 import com.secondprojinitiumback.user.diagnostic.domain.ExternalDiagnosticResult;
 import com.secondprojinitiumback.user.diagnostic.domain.ExternalDiagnosticTest;
 import com.secondprojinitiumback.user.diagnostic.dto.ExternalDiagnosisRequestDto;
@@ -124,7 +126,7 @@ public class ExternalDiagnosisService {
 
         // 응답 코드 검증
         if (!response.getStatusCode().is2xxSuccessful()) {
-            throw new RuntimeException("CareerNet API 호출 실패 - 상태코드: " + response.getStatusCode());
+            throw new CustomException(ErrorCode.EXTERNAL_DIAGNOSIS_API_ERROR);
         }
 
         // JSON → Map 변환
@@ -132,7 +134,7 @@ public class ExternalDiagnosisService {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(response.getBody(), Map.class);
         } catch (Exception e) {
-            throw new RuntimeException("CareerNet API 응답 파싱 실패: " + e.getMessage(), e);
+            throw new CustomException(ErrorCode.EXTERNAL_DIAGNOSIS_API_ERROR);
         }
     }
 
@@ -150,10 +152,7 @@ public class ExternalDiagnosisService {
         // RESULT 배열 가져오기
         List<Map<String, Object>> resultList = Optional.ofNullable((List<Map<String, Object>>) raw.get("RESULT"))
                 .filter(list -> !list.isEmpty())
-                .orElseThrow(() -> {
-                    log.error("CareerNet API 응답에 RESULT 데이터가 없음. qestrnSeq={}, raw={}", qestrnSeq, raw);
-                    return new RuntimeException("CareerNet API에서 질문 데이터를 가져오지 못했습니다.");
-                });
+                .orElseThrow(() -> new CustomException(ErrorCode.EXTERNAL_DIAGNOSIS_API_ERROR));
 
         // 문항 파싱
         List<ExternalQuestionResponseDto.QuestionItem> questions = resultList.stream()
@@ -220,7 +219,7 @@ public class ExternalDiagnosisService {
 
             Map<String, Object> bodyMap = response.getBody();
             if (bodyMap == null || !bodyMap.containsKey("RESULT")) {
-                throw new RuntimeException("검사 결과 파싱 실패: RESULT 키 없음");
+                throw new CustomException(ErrorCode.EXTERNAL_DIAGNOSIS_API_ERROR);
             }
 
             // 5) CareerNet 응답에서 결과 URL, 검사 코드 추출
@@ -230,10 +229,10 @@ public class ExternalDiagnosisService {
 
             // 6) DB 저장
             Student student = studentRepository.findByStudentNo(dto.getStudentNo())
-                    .orElseThrow(() -> new IllegalArgumentException("학생을 찾을 수 없습니다: " + dto.getStudentNo()));
+                    .orElseThrow(() -> new CustomException(ErrorCode.STUDENT_NOT_FOUND));
 
             ExternalDiagnosticTest test = testRepository.findByQuestionApiCode(dto.getQestrnSeq())
-                    .orElseThrow(() -> new IllegalArgumentException("검사를 찾을 수 없습니다: qestrnSeq=" + dto.getQestrnSeq()));
+                    .orElseThrow(() -> new CustomException(ErrorCode.DIAGNOSTIC_TEST_NOT_FOUND));
 
             ExternalDiagnosticResult saved = resultRepository.save(
                     ExternalDiagnosticResult.builder()

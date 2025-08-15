@@ -1,5 +1,7 @@
 package com.secondprojinitiumback.user.diagnostic.service;
 
+import com.secondprojinitiumback.common.exception.CustomException;
+import com.secondprojinitiumback.common.exception.ErrorCode;
 import com.secondprojinitiumback.common.security.domain.LoginInfo;
 import com.secondprojinitiumback.user.diagnostic.domain.*;
 import com.secondprojinitiumback.user.diagnostic.dto.*;
@@ -90,7 +92,7 @@ public class DiagnosisService {
      */
     public void deleteDiagnosticTest(Long id) {
         DiagnosticTest test = testRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("삭제할 검사가 존재하지 않습니다. id=" + id));
+                .orElseThrow(() -> new CustomException(ErrorCode.DIAGNOSTIC_TEST_NOT_FOUND));
         test.setDelYn("Y"); // 물리삭제 금지
         testRepository.save(test);
     }
@@ -128,7 +130,7 @@ public class DiagnosisService {
     @Transactional(readOnly = true)
     public List<DiagnosticQuestionDto> getQuestionsByTestId(Long testId) {
         if (!testRepository.existsByIdAndDelYn(testId, "N")) {
-            throw new IllegalArgumentException("삭제되었거나 존재하지 않는 검사입니다.");
+            throw new CustomException(ErrorCode.DIAGNOSTIC_TEST_NOT_FOUND);
         }
 
         return questionRepository.findByTest_IdOrderByOrderAsc(testId).stream()
@@ -173,14 +175,14 @@ public class DiagnosisService {
      */
     public Long submitDiagnosis(DiagnosisSubmitRequestDto request, LoginInfo loginInfo) {
         DiagnosticTest test = testRepository.findById(request.getTestId())
-                .orElseThrow(() -> new IllegalArgumentException("검사를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.DIAGNOSTIC_TEST_NOT_FOUND));
 
         if ("Y".equals(test.getDelYn())) {
-            throw new IllegalArgumentException("삭제된 검사에는 응시할 수 없습니다.");
+            throw new CustomException(ErrorCode.DIAGNOSTIC_TEST_NOT_FOUND);
         }
 
         Student student = studentRepository.findByLoginInfoLoginId(loginInfo.getLoginId())
-                .orElseThrow(() -> new IllegalArgumentException("학생을 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.STUDENT_NOT_FOUND));
 
         DiagnosticResult result = DiagnosticResult.builder()
                 .test(test)
@@ -193,12 +195,12 @@ public class DiagnosisService {
         List<DiagnosticResultDetail> details = request.getAnswers().stream()
                 .map(ans -> {
                     DiagnosticQuestion q = questionRepository.findById(ans.getQuestionId())
-                            .orElseThrow(() -> new IllegalArgumentException("문항을 찾을 수 없습니다."));
+                            .orElseThrow(() -> new CustomException(ErrorCode.DIAGNOSTIC_QUESTION_NOT_FOUND));
 
                     // ✅ 정확히 매칭
                     DiagnosticAnswer selected = answerRepository
                             .findByQuestion_IdAndSelectValue(q.getId(), ans.getSelectedValue())
-                            .orElseThrow(() -> new IllegalArgumentException("응답이 유효하지 않습니다."));
+                            .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PARAMETER));
 
                     return DiagnosticResultDetail.builder()
                             .result(result)
@@ -223,7 +225,7 @@ public class DiagnosisService {
     @Transactional(readOnly = true)
     public DiagnosticResultDto getResultWithStudentCheck(Long resultId, String loginId) {
         DiagnosticResult result = resultRepository.findById(resultId)
-                .orElseThrow(() -> new IllegalArgumentException("검사 결과가 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.DIAGNOSTIC_RESULT_NOT_FOUND));
 
         String ownerLoginId = (result.getLoginInfo() != null)
                 ? result.getLoginInfo().getLoginId()
@@ -231,7 +233,7 @@ public class DiagnosisService {
                 ? result.getStudent().getLoginInfo().getLoginId()
                 : null);
         if (!Objects.equals(ownerLoginId, loginId)) {
-            throw new AccessDeniedException("본인의 검사 결과만 조회할 수 있습니다.");
+            throw new CustomException(ErrorCode.ACCESS_DENIED);
         }
 
         String interpreted = scoreService.interpretScore(result.getTest().getId(), result.getTotalScore());
@@ -247,7 +249,7 @@ public class DiagnosisService {
      */
     public DiagnosticResultDto getResultSummary(Long resultId) {
         DiagnosticResult result = resultRepository.findById(resultId)
-                .orElseThrow(() -> new IllegalArgumentException("결과 없음"));
+                .orElseThrow(() -> new CustomException(ErrorCode.DIAGNOSTIC_RESULT_NOT_FOUND));
 
         String interpreted = scoreService.interpretScore(result.getTest().getId(), result.getTotalScore());
 
@@ -305,10 +307,10 @@ public class DiagnosisService {
     public Long updateDiagnosticTest(Long testId, DiagnosticTestDto dto) {
         // 1) 테스트 + 자식들 로드 (answers, scoreLevels까지 fetch하는 findWithChildrenById 가정)
         DiagnosticTest test = testRepository.findWithChildrenById(testId)
-                .orElseThrow(() -> new IllegalArgumentException("수정할 검사가 존재하지 않습니다. id=" + testId));
+                .orElseThrow(() -> new CustomException(ErrorCode.DIAGNOSTIC_TEST_NOT_FOUND));
 
         if ("Y".equals(test.getDelYn())) {
-            throw new IllegalArgumentException("삭제(숨김) 상태의 검사는 수정할 수 없습니다.");
+            throw new CustomException(ErrorCode.DIAGNOSTIC_TEST_NOT_FOUND);
         }
 
         // 2) 기본 필드
@@ -450,7 +452,7 @@ public class DiagnosisService {
     @Transactional(readOnly = true)
     public DiagnosticTestDto getAdminTestForEdit(Long testId) {
         var test = testRepository.findWithChildrenById(testId)
-                .orElseThrow(() -> new IllegalArgumentException("검사를 찾을 수 없습니다. id=" + testId));
+                .orElseThrow(() -> new CustomException(ErrorCode.DIAGNOSTIC_TEST_NOT_FOUND));
 
         questionRepository.findByTest_IdOrderByOrderAsc(testId);
 

@@ -3,6 +3,8 @@ package com.secondprojinitiumback.admin.coreCompetency.controller;
 import com.secondprojinitiumback.admin.coreCompetency.domain.CoreCompetencyResult;
 import com.secondprojinitiumback.admin.coreCompetency.service.AdminStudentCompetencyScoreService;
 import com.secondprojinitiumback.admin.coreCompetency.repository.CoreCompetencyResultRepository;
+import com.secondprojinitiumback.common.exception.CustomException;
+import com.secondprojinitiumback.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +22,7 @@ public class StudentScoreController {
     @PostMapping("/{resultId}/save")
     public String saveStudentScore(@PathVariable Long resultId) {
         CoreCompetencyResult result = resultRepository.findById(resultId)
-                .orElseThrow(() -> new IllegalArgumentException("진단 결과를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.DIAGNOSTIC_RESULT_NOT_FOUND));
 
         scoreService.saveStudentScoreBySubCompetency(result);
         return "학생 점수 저장 완료";

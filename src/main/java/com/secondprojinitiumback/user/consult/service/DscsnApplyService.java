@@ -11,7 +11,8 @@ import com.secondprojinitiumback.user.consult.repository.DscsnKindRepository;
 import com.secondprojinitiumback.user.consult.repository.DscsnScheduleRepository;
 import com.secondprojinitiumback.user.student.domain.Student;
 import com.secondprojinitiumback.user.student.repository.StudentRepository;
-import jakarta.persistence.EntityExistsException;
+import com.secondprojinitiumback.common.exception.CustomException;
+import com.secondprojinitiumback.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -35,18 +36,18 @@ public class DscsnApplyService {
 
         //선택한 날짜 정보 가져오기
         DscsnSchedule applyDate = dscsnScheduleRepository.findById(dscsnApplyRequestDto.getDscsnDtId())
-                .orElseThrow(EntityExistsException::new);
+                .orElseThrow(() -> new CustomException(ErrorCode.CONSULTATION_SCHEDULE_NOT_FOUND));
 
         //선택한 날짜의 예약여부 변경
         applyDate.updateDscsnYn();
 
         //학생정보 가져오기
         Student student = studentRepository.findById(dscsnApplyRequestDto.getStudentNo())
-                .orElseThrow(EntityExistsException::new);
+                .orElseThrow(() -> new CustomException(ErrorCode.STUDENT_NOT_FOUND));
 
         //상담항목 가져오기
         DscsnKind dscsnKind = dscsnKindRepository.findById(dscsnApplyRequestDto.getDscsnKindId())
-                .orElseThrow(EntityExistsException::new);
+                .orElseThrow(() -> new CustomException(ErrorCode.CONSULTATION_KIND_NOT_FOUND));
 
         //상담신청 ID 생성
         //지도교수 상담은 A, 진로취업 상담은 C, 심리상담은 P, 학습상담은 L
@@ -79,14 +80,14 @@ public class DscsnApplyService {
     public void cancelConsultation(String dscsnInfoId) {
 
         //상담정보 조회
-        DscsnInfo dscsnInfo = dscsnInfoRepository.findById(dscsnInfoId).orElseThrow(EntityExistsException::new);
+        DscsnInfo dscsnInfo = dscsnInfoRepository.findById(dscsnInfoId).orElseThrow(() -> new CustomException(ErrorCode.CONSULTATION_INFO_NOT_FOUND));
 
         //상담상태가 이미 완료인 경우 예외 처리
         if(dscsnInfo.getDscsnStatus().equals("상담완료")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 상담이 완료된 신청입니다.");
+            throw new CustomException(ErrorCode.CONSULTATION_ALREADY_COMPLETED);
         }//상담상태가 이미 취소된 경우 예외 처리
         else if (dscsnInfo.getDscsnStatus().equals("상담취소")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 취소된 신청입니다.");
+            throw new CustomException(ErrorCode.CONSULTATION_ALREADY_CANCELLED);
         }
 
         //상담정보 ID로 상담상태 상담취소로 변경
@@ -113,3 +114,4 @@ public class DscsnApplyService {
         }
     }
 }
+

@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface SchoolSubjectService {
     Page<SchoolSubject> search(String q, String divisionCodeSe, String divisionCode, Pageable pageable);
-    Optional<SchoolSubject> findByCode(String subjectCode);
+    SchoolSubject findByCode(String subjectCode);
 }

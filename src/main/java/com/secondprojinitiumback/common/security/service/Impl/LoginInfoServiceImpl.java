@@ -1,5 +1,6 @@
 package com.secondprojinitiumback.common.security.service.Impl;
 
+import com.secondprojinitiumback.common.security.constant.Role;
 import com.secondprojinitiumback.common.security.domain.LoginAuthInfo;
 import com.secondprojinitiumback.common.security.domain.LoginHistory;
 import com.secondprojinitiumback.common.security.domain.LoginInfo;
@@ -36,6 +37,8 @@ public class LoginInfoServiceImpl implements LoginInfoService {
     private final StudentRepository studentRepository;
     private final EmployeeRepository employeeRepository;
 
+    private static final String PWD_REGEX = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$%*#?&])[A-Za-z\\d$@$%*#?&]{8,}$";
+
     @Override
     public LoginInfo createLoginInfo(CreateLoginDto createLoginDto) {
         // 로그인 ID 중복 체크
@@ -69,7 +72,6 @@ public class LoginInfoServiceImpl implements LoginInfoService {
         }
 
         // 비밀번호 유효성검사
-        final String PWD_REGEX = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$%*#?&])[A-Za-z\\d$@$%*#?&]{8,}$";
         if (newPassword == null || !newPassword.matches(PWD_REGEX)) {
             throw new CustomException(ErrorCode.INVALID_PASSWORD_FORMAT);
         }
@@ -172,7 +174,7 @@ public class LoginInfoServiceImpl implements LoginInfoService {
         String loginId = loginInfo.getLoginId();
 
         // 사용자 유형에 따라 학생 또는 직원 정보 조회
-        if ("S".equalsIgnoreCase(userType)) {
+        if (Role.STUDENT.getUserType().equalsIgnoreCase(userType)) {
             Student student = studentRepository.findByLoginInfoLoginId(loginId)
                     .orElseThrow(() -> new CustomException(ErrorCode.STUDENT_NOT_FOUND));
             return UserDetailDto.builder()
@@ -187,7 +189,7 @@ public class LoginInfoServiceImpl implements LoginInfoService {
                     .passwordChangeRequired(loginInfo.getPasswordChangeRequired())
                     .loginFailCount(loginInfo.getLoginFailCount())
                     .build();
-        } else if ("E".equalsIgnoreCase(userType) || "A".equalsIgnoreCase(userType)) {
+        } else if (Role.EMPLOYEE.getUserType().equalsIgnoreCase(userType) || Role.ADMIN.getUserType().equalsIgnoreCase(userType)) {
             Employee employee = employeeRepository.findByLoginInfoLoginId(loginId)
                     .orElseThrow(() -> new CustomException(ErrorCode.EMPLOYEE_NOT_FOUND));
             return UserDetailDto.builder()

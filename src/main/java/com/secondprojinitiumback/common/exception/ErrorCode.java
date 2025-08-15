@@ -24,6 +24,7 @@ public enum ErrorCode {
 
     // 403 FORBIDDEN
     ACCOUNT_LOCKED(HttpStatus.FORBIDDEN, "계정이 잠겨있습니다."),
+    ACCOUNT_DISABLED(HttpStatus.FORBIDDEN, "비활성화된 계정입니다."),
     // ↓ 추가
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
     BANK_ACCOUNT_OWNER_MISMATCH(HttpStatus.FORBIDDEN, "본인 계좌만 등록할 수 있습니다."),

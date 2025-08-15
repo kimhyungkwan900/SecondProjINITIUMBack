@@ -64,4 +64,14 @@ public interface ExtracurricularApplyRepository extends JpaRepository<Extracurri
             @Param("keyword") String keyword,
             Pageable pageable
     );
+
+    @Query("""
+    select a.extracurricularProgram.eduMngId, count(a)
+    from ExtracurricularApply a
+    where a.extracurricularProgram.eduMngId in :programIds
+      and a.aprySttsNm = com.secondprojinitiumback.user.extracurricular.domain.enums.AprySttsNm.ACCEPT
+      and a.delYn = 'N'
+    group by a.extracurricularProgram.eduMngId
+""")
+    List<Object[]> countAcceptedByProgramIds(@Param("programIds") List<Long> programIds);
 }

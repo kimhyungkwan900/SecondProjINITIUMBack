@@ -41,13 +41,15 @@ public class AuthController {
             HttpServletRequest request,
             HttpServletResponse response
     ) {
-
         // 로그인 인증
         LoginInfo loginInfo = loginInfoService.authenticate(loginRequestDto.getLoginId(), loginRequestDto.getPassword());
 
         // 계정 상태확인
-        if (!"N".equals(loginInfo.getAccountStatusCode())) {
+        if ("L".equals(loginInfo.getAccountStatusCode())) {
             throw new CustomException(ErrorCode.ACCOUNT_LOCKED);
+        }
+        if("D".equals(loginInfo.getAccountStatusCode())) {
+            throw new CustomException(ErrorCode.ACCOUNT_DISABLED);
         }
 
         // 토큰 발급

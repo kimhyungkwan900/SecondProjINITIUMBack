@@ -28,9 +28,6 @@ public class SecurityConfig implements WebMvcConfigurer {
 
     private final TokenAuthenticationFilter tokenAuthenticationFilter;
 
-    @Value("${extracurricularImage}")
-    private String extracurricularImage;
-
     public SecurityConfig(TokenAuthenticationFilter tokenAuthenticationFilter) {
         this.tokenAuthenticationFilter = tokenAuthenticationFilter;
     }
@@ -42,8 +39,7 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // CSRF 보호 비활성화 개발 후 활성화
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 // CORS 설정
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 // 기본 로그인 폼 비활성화
@@ -53,15 +49,14 @@ public class SecurityConfig implements WebMvcConfigurer {
                 // 세션을 사용하지 않으므로 STATELESS로 설정
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // 로그인 API는 인증 없이 접근 허용
-                        .requestMatchers("/**").permitAll()
+                        // 로그인, 회원가입 등 인증 관련 API 및 이미지 리소스는 인증 없이 접근 허용
+                        .requestMatchers("/api/auth/**", "/images/**").permitAll()
                         // OPTIONS 요청은 항상 허용
-                        .requestMatchers("/images/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        // /admin/** 경로는 ADMIN 권한이 있는 사용자만 접근 가능
-//                        .requestMatchers("/api/admin/**").hasRole("A")
+                        // /api/admin/** 경로는 ADMIN 권한(UserType 'A')이 있는 사용자만 접근 가능
+                        .requestMatchers("/api/admin/**").hasRole("A")
                         // 나머지 API 요청은 인증된 사용자만 접근 가능
-//                        .anyRequest().authenticated()
+                        .anyRequest().authenticated()
                 )
                 // UsernamePasswordAuthenticationFilter 앞에 직접 만든 필터 추가
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -72,9 +67,8 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5173/"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-//        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With","Accept","Origin", "X-CSRF-Token"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("Authorization"));
         configuration.setAllowCredentials(true);

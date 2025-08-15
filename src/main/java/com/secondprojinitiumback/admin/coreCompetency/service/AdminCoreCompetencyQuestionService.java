@@ -42,7 +42,7 @@ public class AdminCoreCompetencyQuestionService {
                 .name(dto.getQuestionName())
                 .description(dto.getQuestionContent())
                 .displayOrder(dto.getDisplayOrder())
-                .answerAllowCount(1) // 기본값 1
+                .answerAllowCount(dto.getSelectAllowCount())
                 .optionCount(dto.getOptionCount())
                 .build();
 

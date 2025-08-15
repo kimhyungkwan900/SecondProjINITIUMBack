@@ -28,7 +28,7 @@ public class CoreCompetencyResponse {
     private CoreCompetencyQuestion question; // 응답된 문항
 
     @ManyToOne
-    @JoinColumn(name = "ASMT_ID", nullable = false) // ✅ 추가된 필드
+    @JoinColumn(name = "ASMT_ID", nullable = false)
     private CoreCompetencyAssessment assessment;
 
     @OneToOne

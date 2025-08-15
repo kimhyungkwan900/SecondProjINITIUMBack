@@ -33,8 +33,4 @@ public class ResponseChoiceOption {
     @Column(name="ANSR_TYPE", nullable=false, length=10)
     private String answerType = "SINGLE"; // 답변방식, 단일문항답변으로 고정(결과 계산을 위해)
 
-    public void updateDetails(String label, Integer score) {
-        this.label = label;
-        this.score = score;
-    }
 }

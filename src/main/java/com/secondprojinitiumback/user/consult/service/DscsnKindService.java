@@ -5,7 +5,6 @@ import com.secondprojinitiumback.user.consult.dto.common.DscsnKindDto;
 import com.secondprojinitiumback.user.consult.repository.DscsnKindRepository;
 import com.secondprojinitiumback.common.exception.CustomException;
 import com.secondprojinitiumback.common.exception.ErrorCode;
-import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -6,15 +6,12 @@ import com.secondprojinitiumback.user.consult.dto.common.DscsnInfoSearchDto;
 import com.secondprojinitiumback.user.consult.dto.common.DscsnKindDto;
 import com.secondprojinitiumback.user.consult.dto.common.DscsnResultDto;
 import com.secondprojinitiumback.user.consult.dto.common.StudentDto;
-import com.secondprojinitiumback.user.consult.dto.requestdto.DscsnInfoRequestDto;
 import com.secondprojinitiumback.user.consult.dto.responsedto.DscsnApplyResponseDto;
 import com.secondprojinitiumback.user.consult.dto.responsedto.DscsnInfoResponseDto;
 import com.secondprojinitiumback.user.consult.dto.responsedto.DscsnScheduleResponseDto;
 import com.secondprojinitiumback.user.consult.repository.DscsnInfoRepository;
 import com.secondprojinitiumback.common.exception.CustomException;
 import com.secondprojinitiumback.common.exception.ErrorCode;
-import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -62,11 +59,10 @@ public class DscsnInfoService {
                 dscsnInfoRepository.getDscsnInfoPageByCondition(dscsnInfoSearchDto, pageable);
 
         Page<DscsnInfoResponseDto> dscsnInfoPageDto = dscsnInfoPage.map(this::toResponseDtoSafe);
-        System.out.println("응답DTO: " + dscsnInfoPageDto);
 
-        return null;
+//        return null;
 //        // 상담정보를 DscsnInfoResponseDto로 변환하여 반환
-//        return dscsnInfoPage.map(this::toResponseDtoSafe);
+        return dscsnInfoPage.map(this::toResponseDtoSafe);
     }
 
     //--- 상담상태 변경

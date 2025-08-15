@@ -1,7 +1,6 @@
 package com.secondprojinitiumback.user.consult.controller;
 
 import com.secondprojinitiumback.user.consult.dto.common.DscsnSatisfactionDto;
-import com.secondprojinitiumback.user.consult.dto.requestdto.DscsnApplyRequestDto;
 import com.secondprojinitiumback.user.consult.service.DscsnSatisfactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,14 +32,4 @@ public class DscsnSatisfactionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("만족도 설문 조회 중 에러 발생");
         }
     }
-
-//    @GetMapping("/api/consult/satisfaction/{dscsnInfoId}")
-//    public ResponseEntity<?> getSatisfaction(@PathVariable String dscsnInfoId) {
-//        try {
-//            DscsnSatisfactionDto satisfactionDto = dscsnSatisfactionService.getDscsnSatisfaction(dscsnInfoId);
-//            return ResponseEntity.ok(satisfactionDto);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("만족도 설문 조회 중 에러 발생");
-//        }
-//    }
 }

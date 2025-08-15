@@ -14,10 +14,8 @@ import com.secondprojinitiumback.user.student.repository.StudentRepository;
 import com.secondprojinitiumback.common.exception.CustomException;
 import com.secondprojinitiumback.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @Transactional

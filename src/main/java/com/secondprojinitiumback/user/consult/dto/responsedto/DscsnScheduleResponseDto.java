@@ -1,10 +1,5 @@
 package com.secondprojinitiumback.user.consult.dto.responsedto;
 
-import com.secondprojinitiumback.user.employee.domain.Employee;
-import jakarta.persistence.Column;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

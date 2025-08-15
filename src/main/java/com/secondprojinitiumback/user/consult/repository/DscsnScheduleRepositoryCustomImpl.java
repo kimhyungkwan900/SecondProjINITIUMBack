@@ -2,7 +2,6 @@ package com.secondprojinitiumback.user.consult.repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.secondprojinitiumback.user.consult.domain.DscsnKind;
 import com.secondprojinitiumback.user.consult.domain.DscsnSchedule;
 import com.secondprojinitiumback.user.consult.domain.QDscsnSchedule;
 import lombok.RequiredArgsConstructor;

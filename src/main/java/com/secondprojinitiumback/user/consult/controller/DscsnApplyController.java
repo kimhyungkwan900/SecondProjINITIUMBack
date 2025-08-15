@@ -2,7 +2,6 @@ package com.secondprojinitiumback.user.consult.controller;
 
 import com.secondprojinitiumback.user.consult.dto.requestdto.DscsnApplyRequestDto;
 import com.secondprojinitiumback.user.consult.service.DscsnApplyService;
-import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

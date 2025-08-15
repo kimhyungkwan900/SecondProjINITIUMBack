@@ -111,6 +111,7 @@ public class LoginInfoServiceImpl implements LoginInfoService {
     }
 
     @Override
+    @Transactional(noRollbackFor = CustomException.class)
     public LoginInfo authenticate(String loginId, String rawPassword) {
         LoginInfo loginInfo = loginInfoRepository.findById(loginId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));

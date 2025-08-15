@@ -87,7 +87,7 @@ public enum ErrorCode {
     SCHOLARSHIP_ALREADY_PROCESSED(HttpStatus.CONFLICT, "이미 처리된 장학금 신청입니다."),
     SCHOLARSHIP_ALREADY_APPLIED_THIS_SEMESTER(HttpStatus.CONFLICT, "이번 학기에 이미 장학금을 신청했습니다."),
 
-    // 400 BAD_REQUEST (추가)
+    // 400 BAD_REQUEST
     ASSESSMENT_ID_REQUIRED(HttpStatus.BAD_REQUEST, "진단평가 ID가 필요합니다."),
     INVALID_OPTION_COUNT(HttpStatus.BAD_REQUEST, "옵션 개수는 1 이상이어야 합니다."),
 
@@ -107,10 +107,9 @@ public enum ErrorCode {
     EMAIL_SEND_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "이메일 발송에 실패했습니다."),
     TEMPORARY_PASSWORD_ISSUE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "임시 비밀번호 발급에 실패했습니다."),
 
-    // == Diagnostic (여기에 배치해야 함) ==
+    // == Diagnostic ==
     DIAGNOSTIC_TEST_NOT_FOUND(HttpStatus.NOT_FOUND, "진단 검사를 찾을 수 없습니다."),
     DIAGNOSTIC_QUESTION_NOT_FOUND(HttpStatus.NOT_FOUND, "진단 문항을 찾을 수 없습니다."),
-    // 선택: 필요 시 사용
     DIAGNOSTIC_ANSWER_NOT_FOUND(HttpStatus.NOT_FOUND, "진단 보기(답항)를 찾을 수 없습니다."),
     EXTERNAL_DIAGNOSIS_API_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "외부 진단 API 호출 중 오류가 발생했습니다.");
 

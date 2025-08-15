@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -37,15 +38,22 @@ public class UserRecommendationService {
             }
             if (poorSubIds.isEmpty()) return List.of();
 
-            // 2) 하위역량(STGR_ID)로 프로그램 직접 조회 (RecommendedProgram 안 거침)
+            // 2) 하위역량으로 프로그램 조회
             List<ExtracurricularProgram> programs =
                     programRepository.findProgramsBySubIds(poorSubIds);
 
+            // 2-1) 모집 마감(LocalDateTime) 오름차순, null은 뒤로
+            programs.sort(Comparator.comparing(
+                    ExtracurricularProgram::getEduAplyEndDt,
+                    Comparator.nullsLast(Comparator.reverseOrder())
+            ));
+
+            // 2-2) 개수 제한
             if (limit > 0 && programs.size() > limit) {
                 programs = programs.subList(0, limit);
             }
 
-            // 3) DTO 변환
+            // 3) DTO 변환 (DTO도 LocalDateTime)
             return programs.stream()
                     .map(prog -> UserRecommendProgramDto.builder()
                             .programId(prog.getEduMngId())
@@ -53,18 +61,16 @@ public class UserRecommendationService {
                             .assessmentNo(assessmentNo)
                             .eduNm(prog.getEduNm())
                             .eduMlg(prog.getEduMlg())
-                            // 카테고리 → 하위역량 ID
                             .subCategoryId(
-                                    prog.getExtracurricularCategory().getStgrId() /* A안 */
-                                    // 또는 prog.getExtracurricularCategory().getSubCompetency().getId()  /* B안 */
+                                    prog.getExtracurricularCategory().getStgrId()
+                                    // 또는 prog.getExtracurricularCategory().getSubCompetency().getId()
                             )
                             .eduAplyBgngDt(prog.getEduAplyBgngDt())
-                            .eduAplyEndDt(prog.getEduAplyEndDt())
+                            .eduAplyEndDt(prog.getEduAplyEndDt())   // LocalDateTime 그대로 매핑
                             .eduBgngYmd(prog.getEduBgngYmd())
                             .eduEndYmd(prog.getEduEndYmd())
                             .build())
-                    .collect(java.util.stream.Collectors.toList());
+                    .toList();
         }
-
 
 }

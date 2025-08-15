@@ -56,11 +56,4 @@ public class CoreCompetencyQuestion {
     @JoinColumn(name = "STGR_ID", nullable = false)
     private SubCompetencyCategory subCompetencyCategory;
 
-    @Column(name = "DELETED_YN")
-    private String deletedYn;
-
-    @Column(name = "DELETED_AT")
-    private Date deletedAt;
-
-
 }

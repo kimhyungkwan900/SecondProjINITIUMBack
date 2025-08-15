@@ -26,10 +26,6 @@ public class QCoreCompetencyQuestion extends EntityPathBase<CoreCompetencyQuesti
 
     public final QCoreCompetencyAssessment assessment;
 
-    public final DateTimePath<java.util.Date> deletedAt = createDateTime("deletedAt", java.util.Date.class);
-
-    public final StringPath deletedYn = createString("deletedYn");
-
     public final StringPath description = createString("description");
 
     public final NumberPath<Integer> displayOrder = createNumber("displayOrder", Integer.class);

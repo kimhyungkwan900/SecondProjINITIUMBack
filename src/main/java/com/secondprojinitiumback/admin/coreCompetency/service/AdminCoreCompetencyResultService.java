@@ -42,7 +42,7 @@ public class AdminCoreCompetencyResultService {
                 .map(e -> {
                     Student s = e.getKey();
                     List<CoreCompetencyResponse> rs = e.getValue();
-                    // 첫 응답일(문자열 비교 최소값) — 형식이 yyyymmdd 또는 ISO라면 문제 없음
+                    // 첫 응답일(문자열 비교 최소값) — 형식이 yyyymmdd 또는 ISO라면 문제 없음S
                     String completeDate = rs.stream()
                             .map(CoreCompetencyResponse::getCompleteDate)
                             .filter(Objects::nonNull)

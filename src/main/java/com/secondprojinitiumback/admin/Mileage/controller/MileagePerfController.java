@@ -1,13 +1,13 @@
 package com.secondprojinitiumback.admin.Mileage.controller;
 
-import com.secondprojinitiumback.admin.Mileage.dto.MileagePerfRequestDto;
-import com.secondprojinitiumback.admin.Mileage.dto.MileagePerfResponseDto;
-import com.secondprojinitiumback.admin.Mileage.dto.PageRequestDto;
-import com.secondprojinitiumback.admin.Mileage.dto.PageResponseDto;
+import com.secondprojinitiumback.admin.Mileage.dto.*;
 import com.secondprojinitiumback.admin.Mileage.service.MileagePerfService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -46,5 +46,10 @@ public class MileagePerfController {
     public ResponseEntity<Void> deletePerformances(@RequestBody List<Long> ids) {
         mileagePerfService.deleteAll(ids);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/student/{studentNo}/eligible-items")
+    public ResponseEntity<List<EligibleMileageItemDto>> eligible(@PathVariable String studentNo) {
+        return ResponseEntity.ok(mileagePerfService.getEligibleItems(studentNo));
     }
 }

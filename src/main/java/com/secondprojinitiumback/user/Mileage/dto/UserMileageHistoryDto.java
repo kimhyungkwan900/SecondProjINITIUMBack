@@ -11,37 +11,33 @@ import java.time.LocalDateTime;
 @Builder
 public class UserMileageHistoryDto {
 
-    private String type; // 지급 or 차감
-    private String description; // 비교과명 또는 장학금 신청
-    private String change; // 마일리지 변화량 (ex : +30 / -40)
-    private double totalScore; // 해당 시점 누적 점수
+    private String type;           // 지급 or 차감
+    private String description;    // 비교과명 또는 장학금 신청
+    private String change;         // +30 / -40
+    private double totalScore;     // 해당 시점 누적 점수(현재 총점 표시용)
     private LocalDateTime createdAt;
 
-    // 지급 내역 변환
-    public static UserMileageHistoryDto from(MileagePerf perf, double totalScore
-
-
-
-
-       ) {
+    // ✅ 지급 내역 변환
+    public static UserMileageHistoryDto from(MileagePerf perf, double totalScore) {
         return UserMileageHistoryDto.builder()
                 .type("지급")
-                .description(perf.getMileageItem().getProgram().getEduNm()) //비교과 프로그램명
-                .change("+" + perf.getAccMlg()) //지급된 마일리지
+                .description(perf.getMileageItem() != null
+                        ? perf.getMileageItem().getProgram().getEduNm()
+                        : "비교과 지급")
+                .change("+" + perf.getAccMlg())
                 .totalScore(totalScore)
                 .createdAt(perf.getCreatedAt())
                 .build();
     }
 
-    // 차감 내역 변환
+    // 차감 내역 변환 (장학금 신청 기준)
     public static UserMileageHistoryDto from(ScholarshipApply apply, double totalScore) {
         return UserMileageHistoryDto.builder()
                 .type("차감")
                 .description("장학금 신청")
-                .change("-" + apply.getAccumulatedMileage()) //차감된 마일리지
+                .change("-" + apply.getAccumulatedMileage())
                 .totalScore(totalScore)
                 .createdAt(apply.getApplyDate())
                 .build();
     }
 }
-

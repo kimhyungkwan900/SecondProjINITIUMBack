@@ -50,7 +50,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // 로그인, 회원가입 등 인증 관련 API 및 이미지 리소스는 인증 없이 접근 허용
-                        .requestMatchers("/api/auth/**", "/images/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/images/**","/login","/api/**").permitAll()
                         // OPTIONS 요청은 항상 허용
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // /api/admin/** 경로는 ADMIN 권한(UserType 'A')이 있는 사용자만 접근 가능

@@ -32,10 +32,6 @@ public class QCoreCompetencyCategory extends EntityPathBase<CoreCompetencyCatego
 
     public final StringPath coreCategoryNote = createString("coreCategoryNote");
 
-    public final DateTimePath<java.util.Date> deletedAt = createDateTime("deletedAt", java.util.Date.class);
-
-    public final StringPath deletedYn = createString("deletedYn");
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final QIdealTalentProfile idealTalentProfile;

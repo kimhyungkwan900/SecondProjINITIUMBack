@@ -40,8 +40,6 @@ public class QDiagnosticTest extends EntityPathBase<DiagnosticTest> {
 
     public final ListPath<DiagnosticScoreLevel, QDiagnosticScoreLevel> scoreLevels = this.<DiagnosticScoreLevel, QDiagnosticScoreLevel>createList("scoreLevels", DiagnosticScoreLevel.class, QDiagnosticScoreLevel.class, PathInits.DIRECT2);
 
-    public final StringPath useYn = createString("useYn");
-
     public QDiagnosticTest(String variable) {
         this(DiagnosticTest.class, forVariable(variable), INITS);
     }

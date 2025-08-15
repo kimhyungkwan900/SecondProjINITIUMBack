@@ -32,16 +32,6 @@ public class CoreCompetencyResult {
     @JoinColumn(name = "ASMT_RSPNS_ID")
     private CoreCompetencyResponse response; // 해당 평가에서 학생의 응답
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumns({
-            @JoinColumn(name = "CLSF_CD", referencedColumnName = "CD"),
-            @JoinColumn(name = "CLSF_GRP", referencedColumnName = "CD_SE")
-    })
-    private CommonCode classificationResult;
-
-    @Builder.Default
-    @Column(name = "CLSF_GRP", insertable = false, updatable = false)
-    private String classificationResultGroup = "CLSF";
 
 }
 

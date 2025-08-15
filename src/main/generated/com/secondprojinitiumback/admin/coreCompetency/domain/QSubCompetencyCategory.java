@@ -28,10 +28,6 @@ public class QSubCompetencyCategory extends EntityPathBase<SubCompetencyCategory
 
     public final QCoreCompetencyCategory coreCompetencyCategory;
 
-    public final DateTimePath<java.util.Date> deletedAt = createDateTime("deletedAt", java.util.Date.class);
-
-    public final StringPath deletedYn = createString("deletedYn");
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath subCategoryName = createString("subCategoryName");

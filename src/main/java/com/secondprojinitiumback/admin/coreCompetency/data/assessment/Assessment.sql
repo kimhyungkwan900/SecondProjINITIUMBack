@@ -1,7 +1,7 @@
 INSERT INTO CORE_COMPETENCY_ASSESSMENT (
     SCSBJT_NO, ASMT_NO, ASMT_NM, ASMT_STRT_DT, ASMT_END_DT,
     RGST_DT, ACAD_YR, STERM_CD, ONLNE_EXEC_CD,
-    STERM_GRP, ONLNE_EXEC_GRP, GUID_CN,CAHRT_TP,ALYS_TP,DELETED_YN, DELETED_AT
+    STERM_GRP, ONLNE_EXEC_GRP, GUID_CN,CAHRT_TP,ALYS_TP
 ) VALUES (
              '107',                      -- 학생복지처
              'ASMT2025-01',              -- 평가번호
@@ -16,15 +16,13 @@ INSERT INTO CORE_COMPETENCY_ASSESSMENT (
              'ONLYN',                -- 온라인 여부 그룹 코드
              '2025학년도 1학기 핵심역량 진단을 시작합니다.', -- 안내문
              '개인별+전체',              -- 핵심역량 진단 차트 유형
-             '평균' ,                 -- 핵심역량 진단 분석 유형
-             'N',
-             NULL
+             '평균'                -- 핵심역량 진단 분석 유형
          );
 
 INSERT INTO CORE_COMPETENCY_ASSESSMENT (
     SCSBJT_NO, ASMT_NO, ASMT_NM, ASMT_STRT_DT, ASMT_END_DT,
     RGST_DT, ACAD_YR, STERM_CD, ONLNE_EXEC_CD,
-    STERM_GRP, ONLNE_EXEC_GRP, GUID_CN,CAHRT_TP,ALYS_TP,DELETED_YN, DELETED_AT
+    STERM_GRP, ONLNE_EXEC_GRP, GUID_CN,CAHRT_TP,ALYS_TP
 ) VALUES (
              '104',                      -- 학사지원처
              'ASMT2024-01',              -- 평가번호
@@ -39,15 +37,14 @@ INSERT INTO CORE_COMPETENCY_ASSESSMENT (
              'ONLYN',                -- 온라인 여부 그룹 코드
              '2025학년도 1학기 핵심역량 진단을 시작합니다.', -- 안내문
              '개인별+전체',              -- 핵심역량 진단 차트 유형
-             '평균',                   -- 핵심역량 진단 분석 유형
-             'N',
-             NULL
+             '평균'                   -- 핵심역량 진단 분석 유형
+
          );
 
 INSERT INTO CORE_COMPETENCY_ASSESSMENT (
     SCSBJT_NO, ASMT_NO, ASMT_NM, ASMT_STRT_DT, ASMT_END_DT,
     RGST_DT, ACAD_YR, STERM_CD, ONLNE_EXEC_CD,
-    STERM_GRP, ONLNE_EXEC_GRP, GUID_CN,CAHRT_TP,ALYS_TP,DELETED_YN, DELETED_AT
+    STERM_GRP, ONLNE_EXEC_GRP, GUID_CN,CAHRT_TP,ALYS_TP
 ) VALUES (
              '104',                      -- 학사지원처
              'ASMT2025-02',              -- 평가번호
@@ -62,15 +59,13 @@ INSERT INTO CORE_COMPETENCY_ASSESSMENT (
              'ONLYN',                -- 온라인 여부 그룹 코드
              '2025학년도 2학기 핵심역량 진단을 시작합니다.', -- 안내문
              '개인별+전체',              -- 핵심역량 진단 차트 유형
-             '평균',                   -- 핵심역량 진단 분석 유형
-             'N',
-             NULL
+             '평균'                   -- 핵심역량 진단 분석 유형
          );
 
 INSERT INTO CORE_COMPETENCY_ASSESSMENT (
     SCSBJT_NO, ASMT_NO, ASMT_NM, ASMT_STRT_DT, ASMT_END_DT,
     RGST_DT, ACAD_YR, STERM_CD, ONLNE_EXEC_CD,
-    STERM_GRP, ONLNE_EXEC_GRP, GUID_CN,CAHRT_TP,ALYS_TP,DELETED_YN, DELETED_AT
+    STERM_GRP, ONLNE_EXEC_GRP, GUID_CN,CAHRT_TP,ALYS_TP
 ) VALUES (
              '107',                      -- 학사지원처
              'ASMT2023-02',              -- 평가번호
@@ -85,15 +80,14 @@ INSERT INTO CORE_COMPETENCY_ASSESSMENT (
              'ONLYN',                -- 온라인 여부 그룹 코드
              '2025학년도 2학기 핵심역량 진단을 시작합니다.', -- 안내문
              '개인별+전체',              -- 핵심역량 진단 차트 유형
-             '평균',                   -- 핵심역량 진단 분석 유형
-             'N',
-             NULL
+             '평균'                   -- 핵심역량 진단 분석 유형
+
          );
 
 INSERT INTO CORE_COMPETENCY_ASSESSMENT (
     SCSBJT_NO, ASMT_NO, ASMT_NM, ASMT_STRT_DT, ASMT_END_DT,
     RGST_DT, ACAD_YR, STERM_CD, ONLNE_EXEC_CD,
-    STERM_GRP, ONLNE_EXEC_GRP, GUID_CN,CAHRT_TP,ALYS_TP,DELETED_YN, DELETED_AT
+    STERM_GRP, ONLNE_EXEC_GRP, GUID_CN,CAHRT_TP,ALYS_TP
 ) VALUES (
              '107',                      -- 학사지원처
              'ASMT2023-01',              -- 평가번호
@@ -108,15 +102,14 @@ INSERT INTO CORE_COMPETENCY_ASSESSMENT (
              'ONLYN',                -- 온라인 여부 그룹 코드
              '2023학년도 1학기 핵심역량 진단을 시작합니다.', -- 안내문,
              '개인별+전체',              -- 핵심역량 진단 차트 유형
-             '평균',                   -- 핵심역량 진단 분석 유형
-             'N',
-             NULL
+             '평균'                   -- 핵심역량 진단 분석 유형
+
          );
 
 INSERT INTO CORE_COMPETENCY_ASSESSMENT (
     SCSBJT_NO, ASMT_NO, ASMT_NM, ASMT_STRT_DT, ASMT_END_DT,
     RGST_DT, ACAD_YR, STERM_CD, ONLNE_EXEC_CD,
-    STERM_GRP, ONLNE_EXEC_GRP, GUID_CN,CAHRT_TP,ALYS_TP,DELETED_YN, DELETED_AT
+    STERM_GRP, ONLNE_EXEC_GRP, GUID_CN,CAHRT_TP,ALYS_TP
 ) VALUES (
              '107',                      -- 학사지원처
              'ASMT2022-01',              -- 평가번호
@@ -131,8 +124,7 @@ INSERT INTO CORE_COMPETENCY_ASSESSMENT (
              'ONLYN',                -- 온라인 여부 그룹 코드
              '2022학년도 1학기 핵심역량 진단을 시작합니다.', -- 안내문,
              '개인별+전체',              -- 핵심역량 진단 차트 유형
-             '평균',                   -- 핵심역량 진단 분석 유형
-             'N',
-            NULL
+             '평균'                   -- 핵심역량 진단 분석 유형
+
          );
 

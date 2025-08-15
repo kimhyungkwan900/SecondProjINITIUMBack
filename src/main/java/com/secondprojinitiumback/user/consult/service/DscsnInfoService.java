@@ -59,8 +59,12 @@ public class DscsnInfoService {
         Page<DscsnInfo> dscsnInfoPage =
                 dscsnInfoRepository.getDscsnInfoPageByCondition(dscsnInfoSearchDto, pageable);
 
-        // 상담정보를 DscsnInfoResponseDto로 변환하여 반환
-        return dscsnInfoPage.map(this::toResponseDtoSafe);
+        Page<DscsnInfoResponseDto> dscsnInfoPageDto = dscsnInfoPage.map(this::toResponseDtoSafe);
+        System.out.println("응답DTO: " + dscsnInfoPageDto);
+
+        return null;
+//        // 상담정보를 DscsnInfoResponseDto로 변환하여 반환
+//        return dscsnInfoPage.map(this::toResponseDtoSafe);
     }
 
     //--- 상담상태 변경

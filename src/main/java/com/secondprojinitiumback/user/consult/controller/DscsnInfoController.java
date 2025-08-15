@@ -36,6 +36,8 @@ public class DscsnInfoController {
                 .findFirst()
                 .orElse("S");
 
+        System.out.println("유저타입: " + userType);
+
         String serialNo = userDetails.getUsername(); // 학생이면 학번, 상담사면 사번
 
         // userType, serialNo을 강제로 덮어쓰기 (외부 파라미터 무시)
@@ -49,6 +51,8 @@ public class DscsnInfoController {
             dscsnInfoSearchDto.setEmpNo(serialNo);
         }
         //관리자는 전체 조회 가능해서 별도로 처리X
+
+        System.out.println("교원번호: " + dscsnInfoSearchDto.getEmpNo());
 
         // 페이지 번호 설정
         int pageNo = page != null ? page : 0;

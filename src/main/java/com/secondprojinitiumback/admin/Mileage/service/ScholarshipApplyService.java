@@ -12,6 +12,8 @@ import com.secondprojinitiumback.common.bank.Repository.BankAccountRepository;
 import com.secondprojinitiumback.common.bank.domain.BankAccount;
 import com.secondprojinitiumback.common.domain.CommonCode;
 import com.secondprojinitiumback.common.domain.CommonCodeId;
+import com.secondprojinitiumback.common.exception.CustomException;
+import com.secondprojinitiumback.common.exception.ErrorCode;
 import com.secondprojinitiumback.common.repository.CommonCodeRepository;
 import com.secondprojinitiumback.user.student.domain.Student;
 import com.secondprojinitiumback.user.student.repository.StudentRepository;
@@ -69,26 +71,29 @@ public class ScholarshipApplyService {
     // 2. 신청 상세 조회
     public ScholarshipApplyResponseDto getDetail(Long id) {
         ScholarshipApply apply = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 신청이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.SCHOLARSHIP_APPLICATION_NOT_FOUND));
+
         return ScholarshipApplyResponseDto.from(apply);
     }
 
     // 3. 장학금 신청 (언제든 가능, 단 누적 마일리지 ≥ MIN_MILEAGE)
     @Transactional
     public void register(ScholarshipApplyRequestDto dto) {
-        final String stdNo = dto.getStudentNo().trim();
-
-        Student student = studentRepository.findById(stdNo)
-                .orElseThrow(() -> new EntityNotFoundException("학생이 존재하지 않습니다."));
+        Student student = studentRepository.findById(dto.getStudentNo())
+                .orElseThrow(() -> new CustomException(ErrorCode.STUDENT_NOT_FOUND));
         BankAccount account = bankAccountRepository.findById(dto.getAccountNo())
-                .orElseThrow(() -> new EntityNotFoundException("계좌가 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.BANK_ACCOUNT_NOT_FOUND));
+        CommonCode code = codeRepository.findById(new CommonCodeId(dto.getCodeSe(), dto.getCode()))
+                .orElseThrow(() -> new CustomException(ErrorCode.COMMON_CODE_NOT_FOUND));
 
-        // 현재 누적 마일리지
-        MileageTotal total = mileageTotalRepository.findByStudent_StudentNo(stdNo)
-                .orElseThrow(() -> new EntityNotFoundException("누적 마일리지가 존재하지 않습니다."));
+        //학생의 마일리지 누계 조회
+        MileageTotal total = mileageTotalRepository.findByStudent_StudentNo(dto.getStudentNo())
+                .orElseThrow(() -> new CustomException(ErrorCode.INSUFFICIENT_MILEAGE_SCORE));
 
-        if (total.getTotalScore() < MIN_MILEAGE) {
-            throw new IllegalStateException(MIN_MILEAGE + "점 이상의 누적 마일리지가 있어야 신청할 수 있습니다.");
+        //마일리지 기준 조건 체크  : 요구사항 기능 명세서에 작성할 것 (얼마 이상 이어야지 신청이 가능하다라고)
+        //
+        if (total.getTotalScore() < 100) {
+            throw new CustomException(ErrorCode.INSUFFICIENT_MILEAGE_SCORE);
         }
 
         // 상태는 무조건 '신청(APPLY)'
@@ -110,10 +115,10 @@ public class ScholarshipApplyService {
     @Transactional
     public void updateStatus(Long id, String newCode) {
         ScholarshipApply apply = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("신청 내역이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.SCHOLARSHIP_APPLICATION_NOT_FOUND));
 
         CommonCode newStatus = codeRepository.findById(new CommonCodeId(ScholarshipState.CODE_GROUP, newCode))
-                .orElseThrow(() -> new EntityNotFoundException("상태코드를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.COMMON_CODE_NOT_FOUND));
 
         apply.setStateCode(newStatus);
     }
@@ -122,7 +127,8 @@ public class ScholarshipApplyService {
     @Transactional
     public void updateRejectReason(Long id, String reason) {
         ScholarshipApply apply = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("신청 내역이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.SCHOLARSHIP_APPLICATION_NOT_FOUND));
+
         apply.setRejectReason(reason);
     }
 
@@ -130,11 +136,11 @@ public class ScholarshipApplyService {
     @Transactional
     public void processPayment(Long id) {
         ScholarshipApply apply = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("신청 없음"));
+                .orElseThrow(() -> new CustomException(ErrorCode.SCHOLARSHIP_APPLICATION_NOT_FOUND));
 
         CommonCodeId currentStateId = apply.getStateCode() != null ? apply.getStateCode().getId() : null;
         if (!ScholarshipState.APPROVE.matches(currentStateId)) {
-            throw new IllegalStateException("승인 상태가 아니면 지급할 수 없습니다.");
+            throw new CustomException(ErrorCode.SCHOLARSHIP_ALREADY_PROCESSED);
         }
 
         // 이번 지급 예정 금액 = (신청 당시 누적점수) × 환산율
@@ -164,13 +170,13 @@ public class ScholarshipApplyService {
 
         // 누계 차감
         MileageTotal total = mileageTotalRepository.findByStudent(student)
-                .orElseThrow(() -> new EntityNotFoundException("누적 마일리지가 없습니다."));
-        total.subtract((int) baseMileage);
-        // 트랜잭션 더티체킹으로 반영됨
+                .orElseThrow(() -> new CustomException(ErrorCode.INSUFFICIENT_MILEAGE_SCORE));
+        total.subtract(usedMileage);
+        mileageTotalRepository.save(total);
 
         // 상태코드 → 지급완료
         CommonCode paidStatus = codeRepository.findById(ScholarshipState.PAYMENT.toCommonCodeId())
-                .orElseThrow(() -> new EntityNotFoundException("지급 상태코드를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.COMMON_CODE_NOT_FOUND));
         apply.setStateCode(paidStatus);
 
         // 지급일/금액 설정
@@ -181,10 +187,10 @@ public class ScholarshipApplyService {
     // 7. 마일리지 누계 확인
     public MileageTotalResponseDto getMileageTotal(String studentNo) {
         Student student = studentRepository.findById(studentNo)
-                .orElseThrow(() -> new EntityNotFoundException("학생 없음"));
+                .orElseThrow(() -> new CustomException(ErrorCode.STUDENT_NOT_FOUND));
 
         MileageTotal total = mileageTotalRepository.findByStudent(student)
-                .orElseThrow(() -> new EntityNotFoundException("마일리지 없음"));
+                .orElseThrow(() -> new CustomException(ErrorCode.INSUFFICIENT_MILEAGE_SCORE));
 
         return MileageTotalResponseDto.builder()
                 .studentNo(student.getStudentNo())
@@ -192,3 +198,5 @@ public class ScholarshipApplyService {
                 .build();
     }
 }
+
+

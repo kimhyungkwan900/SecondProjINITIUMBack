@@ -6,6 +6,8 @@ import com.secondprojinitiumback.admin.extracurricular.dto.*;
 import com.secondprojinitiumback.admin.extracurricular.repository.*;
 import com.secondprojinitiumback.admin.extracurricular.repository.specification.ExtracurricularProgramSpecification;
 import com.secondprojinitiumback.admin.extracurricular.repository.specification.ProgramFilterRequest;
+import com.secondprojinitiumback.common.exception.CustomException;
+import com.secondprojinitiumback.common.exception.ErrorCode;
 import com.secondprojinitiumback.user.employee.domain.Employee;
 import com.secondprojinitiumback.user.employee.repository.EmployeeRepository;
 import com.secondprojinitiumback.user.extracurricular.domain.ExtracurricularApply;
@@ -53,9 +55,10 @@ public class ExtracurricularProgramService {
 
     public void insertExtracurricularProgram(ExtracurricularProgramFormDTO dto, String empId, MultipartFile imageFile) {
         Employee employee = employeeRepository.findById(empId)
-                .orElseThrow(() -> new IllegalArgumentException("직원이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.EMPLOYEE_NOT_FOUND));
 
-        ExtracurricularCategory category = categoryRepository.findById(dto.getCtgryId()).orElseThrow();
+        ExtracurricularCategory category = categoryRepository.findById(dto.getCtgryId())
+                .orElseThrow(() -> new CustomException(ErrorCode.COMMON_CODE_NOT_FOUND)); // Assuming ctgryId refers to a common code for category
 
         System.out.println(imageFile);
 
@@ -185,7 +188,7 @@ public class ExtracurricularProgramService {
     //비교과 프로그램 등록 승인 및 반려 수정
     @Transactional
     public void updateExtracurricularProgram(ExtracurricularProgramUpdateFormDTO dto, ExtracurricularSurveyDTO surveyDTO) {
-        ExtracurricularProgram program = extracurricularProgramRepository.findById(dto.getEduMngId()).orElseThrow();
+        ExtracurricularProgram program = extracurricularProgramRepository.findById(dto.getEduMngId()).orElseThrow(() -> new CustomException(ErrorCode.PROGRAM_NOT_FOUND));
         program.setSttsNm(dto.getSttsNm());
         program.setEduMlg(dto.getEduMlg());
         program.setSttsChgDt(LocalDateTime.now());
@@ -207,7 +210,7 @@ public class ExtracurricularProgramService {
     // 비교과 프로그램 삭제
     public void deleteExtracurricularProgram(Long eduMngId) {
         ExtracurricularProgram program = extracurricularProgramRepository.findById(eduMngId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 프로그램이 존재하지 않습니다. ID: " + eduMngId));
+                .orElseThrow(() -> new CustomException(ErrorCode.PROGRAM_NOT_FOUND));
         extracurricularProgramRepository.delete(program);
     }
 
@@ -245,3 +248,4 @@ public class ExtracurricularProgramService {
 
 
 }
+

@@ -4,6 +4,8 @@ import com.secondprojinitiumback.admin.extracurricular.domain.ExtracurricularSur
 import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularAdminSurveyResponseDTO;
 import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularSurveyDTO;
 import com.secondprojinitiumback.admin.extracurricular.repository.ExtracurricularSurveyRepository;
+import com.secondprojinitiumback.common.exception.CustomException;
+import com.secondprojinitiumback.common.exception.ErrorCode;
 import com.secondprojinitiumback.user.extracurricular.domain.ExtracurricularSurveyResponse;
 import com.secondprojinitiumback.user.extracurricular.dto.ExtracurricularSurveyResponseDTO;
 import com.secondprojinitiumback.user.extracurricular.repository.ExtracurricularSurveyResponseRepository;
@@ -34,7 +36,7 @@ public class ExtracurricularSurveyResponseService {
 
         // DB에서 설문조사 엔티티를 반드시 조회
         ExtracurricularSurvey survey = extracurricularSurveyRepository.findById(srvyId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 설문조사가 존재하지 않습니다. ID: " + srvyId));
+                .orElseThrow(() -> new CustomException(ErrorCode.SURVEY_NOT_FOUND));
         surveyResponse.setExtracurricularSurvey(survey);
 
         // Student 엔티티 생성 및 세팅 (혹은 조회)
@@ -61,7 +63,7 @@ public class ExtracurricularSurveyResponseService {
                 .findByExtracurricularProgram_EduMngId(eduMngId);
 
         if (survey == null) {
-            throw new IllegalArgumentException("해당 프로그램에 등록된 설문이 없습니다.");
+            throw new CustomException(ErrorCode.PROGRAM_NOT_FOUND);
         }
         return modelMapper.map(survey, ExtracurricularSurveyDTO.class);
     }
@@ -80,3 +82,4 @@ public class ExtracurricularSurveyResponseService {
                 );
     }
 }
+

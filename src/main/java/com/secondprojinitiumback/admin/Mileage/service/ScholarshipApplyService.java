@@ -167,12 +167,10 @@ public class ScholarshipApplyService {
                 .scholarshipApply(apply)            // 연동
                 .build();
         mileagePerfRepository.save(perf);
-
         // 누계 차감
         MileageTotal total = mileageTotalRepository.findByStudent(student)
-                .orElseThrow(() -> new CustomException(ErrorCode.INSUFFICIENT_MILEAGE_SCORE));
-        total.subtract(usedMileage);
-        mileageTotalRepository.save(total);
+                .orElseThrow(() -> new EntityNotFoundException("누적 마일리지가 없습니다."));
+        total.subtract((int) baseMileage);
 
         // 상태코드 → 지급완료
         CommonCode paidStatus = codeRepository.findById(ScholarshipState.PAYMENT.toCommonCodeId())

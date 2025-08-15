@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ScholarshipApplyRepository extends JpaRepository<ScholarshipApply, Long> {
@@ -38,6 +39,14 @@ public interface ScholarshipApplyRepository extends JpaRepository<ScholarshipApp
     // 2) 전체 리스트 버전
     List<ScholarshipApply> findAllByStudent_StudentNo(String studentNo);
 
+    @Query("""
+        select coalesce(sum(s.paymentAmount), 0)
+        from ScholarshipApply s
+        where s.student.studentNo = :studentNo
+          and s.stateCode.id.code = :paidCode
+    """)
+    BigDecimal sumPaidAmountByStudent(@Param("studentNo") String studentNo,
+                                      @Param("paidCode") String paidCode);
 
 }
 

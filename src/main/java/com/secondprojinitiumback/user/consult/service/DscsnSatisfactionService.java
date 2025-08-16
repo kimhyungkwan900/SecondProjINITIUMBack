@@ -67,7 +67,4 @@ public class DscsnSatisfactionService {
         //상담정보 ID로 만족도 설문 존재 여부 확인 후 결과 반환
         return dscsnSatisfactionRepository.existsByDscsnInfo_DscsnInfoId(dscsnInfoId);
     }
-
-//    public DscsnSatisfactionDto getDscsnSatisfaction(String dscsnInfoId) {
-//    }
 }

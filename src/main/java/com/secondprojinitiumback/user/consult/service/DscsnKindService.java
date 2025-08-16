@@ -5,7 +5,6 @@ import com.secondprojinitiumback.user.consult.dto.common.DscsnKindDto;
 import com.secondprojinitiumback.user.consult.repository.DscsnKindRepository;
 import com.secondprojinitiumback.common.exception.CustomException;
 import com.secondprojinitiumback.common.exception.ErrorCode;
-import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,19 +32,6 @@ public class DscsnKindService {
                         .dscsnTypeName(dscsnKind.getDscsnTypeName())
                         .build()
         );
-    }
-
-    //--- 상담신청 페이지 상담항목 가져오기
-    public List<DscsnKindDto> getDscsnKindByPrefix(String prefix) {
-        List<DscsnKind> dscsnKinds = dscsnKindRepository.findByDscsnKindIdStartingWith(prefix);
-
-        return dscsnKinds.stream()
-                .map(dscsnKind -> DscsnKindDto.builder()
-                        .dscsnKindId(dscsnKind.getDscsnKindId())
-                        .dscsnKindName(dscsnKind.getDscsnKindName())
-                        .dscsnTypeName(dscsnKind.getDscsnTypeName())
-                        .build())
-                .toList();
     }
 
     //--- 상담 항목 등록
@@ -79,6 +65,19 @@ public class DscsnKindService {
 
         //받아온 상담항목 코드로 항목 삭제
         dscsnKindRepository.deleteAllById(dscsnKindIds);
+    }
+
+    //--- 상담신청 페이지 상담항목 가져오기
+    public List<DscsnKindDto> getDscsnKindByPrefix(String prefix) {
+        List<DscsnKind> dscsnKinds = dscsnKindRepository.findByDscsnKindIdStartingWith(prefix);
+
+        return dscsnKinds.stream()
+                .map(dscsnKind -> DscsnKindDto.builder()
+                        .dscsnKindId(dscsnKind.getDscsnKindId())
+                        .dscsnKindName(dscsnKind.getDscsnKindName())
+                        .dscsnTypeName(dscsnKind.getDscsnTypeName())
+                        .build())
+                .toList();
     }
 }
 

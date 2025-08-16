@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Objects;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -81,51 +82,102 @@ public class MileagePerfService {
         return attendedY == total;
     }
 
-    /* ------------------------------
-     * 실적 등록 (수료자만 허용)
-     * ------------------------------ */
+//    //실적 등록
+//    @Transactional
+//    public MileagePerfResponseDto register(MileagePerfRequestDto dto) {
+//        final String stdNo = dto.getStudentNo().trim();
+//
+//        // 중복 방지
+//        if (mileagePerfRepository.existsByStudent_StudentNoAndMileageItem_Id(stdNo, dto.getMileageItemId())) {
+//            throw new IllegalStateException("이미 해당 항목으로 적립된 학생입니다.");
+//        }
+//
+//        // 학생/항목 조회
+//        Student student = studentRepository.findById(stdNo)
+//                .orElseThrow(() -> new EntityNotFoundException("학생 정보를 찾을 수 없습니다."));
+//
+//        MileageItem mileageItem = mileageItemRepository.findById(dto.getMileageItemId())
+//                .orElseThrow(() -> new EntityNotFoundException("마일리지 항목을 찾을 수 없습니다."));
+//
+//        // 수료 검증 (항목이 매핑된 프로그램 기준)
+//        Long eduMngId = mileageItem.getProgram().getEduMngId();
+//        if (!hasCompletedAllSessions(stdNo, eduMngId)) {
+//            throw new IllegalStateException("수료 이력이 없는 비교과입니다. 수료한 학생만 적립할 수 있습니다.");
+//        }
+//
+//        // 점수 계산: 정책 있으면 정책, 없으면 accMlg(없으면 기본점수)
+//        int calculatedMileage;
+//        ScorePolicy scorePolicy = null;
+//
+//        if (dto.getScorePolicyId() != null) {
+//            scorePolicy = scorePolicyRepository.findById(dto.getScorePolicyId())
+//                    .orElseThrow(() -> new EntityNotFoundException("배점 정책을 찾을 수 없습니다."));
+//            int base = mileageItem.getProgram().getEduMlg();
+//            calculatedMileage = (int) (base * scorePolicy.getScoreRate());
+//        } else {
+//            calculatedMileage = (dto.getAccMlg() == null)
+//                    ? mileageItem.getProgram().getEduMlg()
+//                    : dto.getAccMlg();
+//        }
+//
+//        // 실적 저장
+//        MileagePerf perf = MileagePerf.builder()
+//                .student(student)
+//                .mileageItem(mileageItem)
+//                .scorePolicy(scorePolicy)
+//                .accMlg(calculatedMileage)
+//                .createdAt(LocalDateTime.now())
+//                .build();
+//        mileagePerfRepository.save(perf);
+//
+//        // 누계 처리 — 존재하면 가산, 없으면 생성 후 가산
+//        MileageTotal total = mileageTotalRepository.findByStudent_StudentNo(stdNo).orElse(null);
+//        if (total == null) {
+//            total = MileageTotal.builder()
+//                    .studentNo(stdNo)
+//                    .student(student)
+//                    .totalScore(0)
+//                    .build();
+//            mileageTotalRepository.save(total);
+//        }
+//        total.add(calculatedMileage); // 누계 증가
+//
+//        return MileagePerfResponseDto.from(perf);
+//    }
+
+    // 실적 등록
     @Transactional
     public MileagePerfResponseDto register(MileagePerfRequestDto dto) {
         final String stdNo = dto.getStudentNo().trim();
 
-        // 중복 방지: 같은 학생이 같은 항목으로 이미 적립했는지
+        // 중복 방지
         if (mileagePerfRepository.existsByStudent_StudentNoAndMileageItem_Id(stdNo, dto.getMileageItemId())) {
             throw new IllegalStateException("이미 해당 항목으로 적립된 학생입니다.");
         }
 
-        // 학생/항목 조회
+        // 학생 조회
         Student student = studentRepository.findById(stdNo)
                 .orElseThrow(() -> new EntityNotFoundException("학생 정보를 찾을 수 없습니다."));
 
+        // 항목 조회
         MileageItem mileageItem = mileageItemRepository.findById(dto.getMileageItemId())
                 .orElseThrow(() -> new EntityNotFoundException("마일리지 항목을 찾을 수 없습니다."));
 
-        // ✅ 수료 검증 (항목이 매핑된 프로그램 기준)
+        // 수료 검증
         Long eduMngId = mileageItem.getProgram().getEduMngId();
         if (!hasCompletedAllSessions(stdNo, eduMngId)) {
             throw new IllegalStateException("수료 이력이 없는 비교과입니다. 수료한 학생만 적립할 수 있습니다.");
         }
 
-        // 점수 계산: 정책 있으면 정책, 없으면 accMlg(없으면 기본점수)
-        int calculatedMileage;
-        ScorePolicy scorePolicy = null;
-
-        if (dto.getScorePolicyId() != null) {
-            scorePolicy = scorePolicyRepository.findById(dto.getScorePolicyId())
-                    .orElseThrow(() -> new EntityNotFoundException("배점 정책을 찾을 수 없습니다."));
-            int base = mileageItem.getProgram().getEduMlg();
-            calculatedMileage = (int) (base * scorePolicy.getScoreRate());
-        } else {
-            calculatedMileage = (dto.getAccMlg() == null)
-                    ? mileageItem.getProgram().getEduMlg()
-                    : dto.getAccMlg();
-        }
+        // 점수 계산: 프로그램 기본 점수 사용
+        int calculatedMileage = (dto.getAccMlg() == null)
+                ? mileageItem.getProgram().getEduMlg()
+                : dto.getAccMlg();
 
         // 실적 저장
         MileagePerf perf = MileagePerf.builder()
                 .student(student)
                 .mileageItem(mileageItem)
-                .scorePolicy(scorePolicy) // null 허용
                 .accMlg(calculatedMileage)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -135,30 +187,33 @@ public class MileagePerfService {
         MileageTotal total = mileageTotalRepository.findByStudent_StudentNo(stdNo).orElse(null);
         if (total == null) {
             total = MileageTotal.builder()
-                    .studentNo(stdNo)     // PK
-                    .student(student)     // @MapsId 로 PK 동기화
+                    .studentNo(stdNo)
+                    .student(student)
                     .totalScore(0)
                     .build();
             mileageTotalRepository.save(total);
         }
-        total.add(calculatedMileage); // 더티 체킹으로 UPDATE
+        total.add(calculatedMileage); // 누계 증가
 
         return MileagePerfResponseDto.from(perf);
     }
 
-    /* ------------------------------
-     * (선택) 수료한 비교과에 매핑된 "적립 가능 항목" 목록
-     *  - 이미 적립한 항목은 granted=true 로 표기
-     * ------------------------------ */
+
+
+
     public List<EligibleMileageItemDto> getEligibleItems(String studentNo) {
         final String stdNo = studentNo.trim();
 
         // 전체 항목 조회 (필요시 조건 검색으로 대체 가능)
         List<MileageItem> allItems = mileageItemRepository.findAll();
 
+
         // 이미 적립한 항목 id 세트
         Set<Long> grantedIds = mileagePerfRepository.findAllByStudent_StudentNo(stdNo).stream()
-                .map(p -> p.getMileageItem().getId())
+                .map(MileagePerf::getMileageItem)   // perf -> mileageItem
+                .filter(Objects::nonNull)           // null이면 제외
+                .map(MileageItem::getId)            // item -> id
+                .filter(Objects::nonNull)           // 혹시 모를 null id도 제외
                 .collect(Collectors.toSet());
 
         // “수료한 프로그램”에 연결된 항목만 걸러서 반환

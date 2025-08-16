@@ -32,7 +32,6 @@ public enum ScholarshipState {
         return new CommonCodeId(CODE_GROUP, code);
     }
 
-    // 코드 비교용 유틸
     public boolean matches(CommonCodeId id) {
         return id != null &&
                 CODE_GROUP.equals(id.getCodeGroup()) &&

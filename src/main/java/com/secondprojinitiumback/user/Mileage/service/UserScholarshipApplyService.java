@@ -26,8 +26,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class UserScholarshipApplyService {
 
-    // 정책 상수 (원하면 여기 숫자만 바꾸면 됨)
-    private static final int MIN_MILEAGE_FOR_APPLY = 60; // ✅ 최소 신청 점수
+//    private static final int MIN_MILEAGE_FOR_APPLY = 60; // 최소 신청 점수
 
     private final StudentRepository studentRepository;
     private final MileageTotalRepository mileageTotalRepository;
@@ -82,6 +81,7 @@ public class UserScholarshipApplyService {
                 .banks(banks)
                 .build();
     }
+    private static final int MIN_MILEAGE_FOR_APPLY = 60; // 최소 신청 점수
 
     // 장학금 신청
     @Transactional
@@ -94,16 +94,16 @@ public class UserScholarshipApplyService {
         MileageTotal total = mileageTotalRepository.findByStudent(student)
                 .orElseThrow(() -> new EntityNotFoundException("마일리지 누계가 없습니다."));
 
-        // ✅ 최소 신청 점수 체크 (60점)
+        // 1. 최소 신청 점수 체크 (60점)
         if (total.getTotalScore() < MIN_MILEAGE_FOR_APPLY) {
             throw new IllegalStateException("총 마일리지가 " + MIN_MILEAGE_FOR_APPLY + "점 이상일 경우에만 신청이 가능합니다.");
         }
 
-        // 계좌 유효성 체크
+        // 2. 계좌 유효성 체크
         bankAccountRepository.findById(dto.getAccountNo())
                 .orElseThrow(() -> new EntityNotFoundException("계좌가 존재하지 않습니다."));
 
-        // 상태 코드 "신청" APPLY
+        // 3. 상태 코드 "신청" APPLY
         CommonCode applyState = codeRepository.findById(ScholarshipState.APPLY.toCommonCodeId())
                 .orElseThrow(() -> new EntityNotFoundException("신청 상태 코드 없음"));
 

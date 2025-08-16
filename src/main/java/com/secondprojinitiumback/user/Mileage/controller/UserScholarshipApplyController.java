@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/user/scholarship") // ← 슬래시 추가
+@RequestMapping("/api/user/scholarship")
 @RequiredArgsConstructor
 public class UserScholarshipApplyController {
 

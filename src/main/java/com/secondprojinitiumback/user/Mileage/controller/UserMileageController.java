@@ -13,12 +13,6 @@ public class UserMileageController {
 
     private final UserMileageHistoryService userMileageHistoryService;
 
-    /**
-     * 마일리지 총점 및 지급/차감 내역 조회
-     * @param studentNo 학번
-     * @param pageRequestDto 페이지 번호 및 사이즈
-     * @return UserMileageSummaryDto (총점 + 내역 리스트)
-     */
     @GetMapping("/summary")
     public UserMileageSummaryDto getMileageSummary(
             @RequestParam String studentNo,

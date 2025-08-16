@@ -17,7 +17,7 @@ public class UserMileageHistoryDto {
     private double totalScore;     // 해당 시점 누적 점수(현재 총점 표시용)
     private LocalDateTime createdAt;
 
-    // ✅ 지급 내역 변환
+    // 지급 내역 변환
     public static UserMileageHistoryDto from(MileagePerf perf, double totalScore) {
         return UserMileageHistoryDto.builder()
                 .type("지급")

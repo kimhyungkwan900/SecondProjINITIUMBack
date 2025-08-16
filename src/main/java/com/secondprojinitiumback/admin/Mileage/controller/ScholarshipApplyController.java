@@ -29,25 +29,26 @@ public class ScholarshipApplyController {
         return service.getDetail(id);
     }
 
-    // 신청 등록
-    @PostMapping
-    public void register(@RequestBody ScholarshipApplyRequestDto dto) {
-
-        service.register(dto);
-    }
-
-    // 상태 변경
-    @PutMapping("/{id}/status")
-    public void updateStatus(@PathVariable Long id,
-                             @RequestParam String newCode) {
-        service.updateStatus(id, newCode);
-    }
 
     // 반려 사유 입력
     @PutMapping("/{id}/reject-reason")
     public void updateRejectReason(@PathVariable Long id,
                                    @RequestBody String reason) {
         service.updateRejectReason(id, reason);
+    }
+
+
+    // 신청 등록
+    @PostMapping
+    public void register(@RequestBody ScholarshipApplyRequestDto dto) {
+
+        service.register(dto);
+    }
+    // 상태 변경
+    @PutMapping("/{id}/status")
+    public void updateStatus(@PathVariable Long id,
+                             @RequestParam String newCode) {
+        service.updateStatus(id, newCode);
     }
 
     // 지급 처리

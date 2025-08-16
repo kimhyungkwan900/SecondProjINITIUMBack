@@ -36,8 +36,7 @@ public class AdminSubQuestionMappingService {
                         .id(q.getId())
                         .questionNo(q.getQuestionNo())
                         .questionName(q.getName())
-                        .choiceCount(Optional.ofNullable(q.getResponseChoiceOptions())
-                                .map(List::size).orElse(0))
+                        .choiceCount(q.getOptionCount())
                         .build())
                 .toList();
 

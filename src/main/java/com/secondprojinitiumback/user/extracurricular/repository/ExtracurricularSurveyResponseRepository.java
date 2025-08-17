@@ -30,4 +30,7 @@ public interface ExtracurricularSurveyResponseRepository extends JpaRepository<E
     findExtracurricularSurveyResponsesByExtracurricularSurvey_ExtracurricularProgram_EduMngId(Long eduMngId, Pageable pageable);
 
     int countExtracurricularSurveyResponsesByExtracurricularSurvey_ExtracurricularProgram_EduMngId(Long extracurricularSurveyExtracurricularProgramEduMngId);
+
+    @Query("SELECT COUNT(DISTINCT esr.student.studentNo) FROM ExtracurricularSurveyResponse esr WHERE esr.extracurricularSurvey.srvyId = :srvyId")
+    int countDistinctStudentByExtracurricularSurvey_SrvyId(@Param("srvyId") Long srvyId);
 }

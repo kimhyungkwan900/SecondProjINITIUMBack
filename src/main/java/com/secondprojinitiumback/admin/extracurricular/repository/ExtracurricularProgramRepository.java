@@ -47,4 +47,7 @@ public interface ExtracurricularProgramRepository extends JpaRepository<Extracur
             @Param("subIds") Collection<Long> subIds,
             Pageable pageable
     );
+
+    // empNo 기반으로 담당중인 비교과프로그램 목록 조회
+    List<ExtracurricularProgram> findByEmployee_EmpNo(String empNo);
 }

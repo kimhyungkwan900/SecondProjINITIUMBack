@@ -27,7 +27,7 @@ public class EmailAuth {
     @Column(name = "EXPIRE_DT", nullable = false)
     private java.time.LocalDateTime expireDt;
 
-    @Column(name = "IS_VERIFIED", length = 1, nullable = false)
+    @Column(name = "IS_VERIFIED", length = 1, nullable = false, columnDefinition = "VARCHAR(1) DEFAULT 'N'")
     @Builder.Default
     private String isVerified = "N"; // 인증 전: N, 인증 성공: Y
 

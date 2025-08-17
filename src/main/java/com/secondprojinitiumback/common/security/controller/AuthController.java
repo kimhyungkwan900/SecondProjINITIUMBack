@@ -137,6 +137,25 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/refresh")
+    public ResponseEntity<Void> refreshToken(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        // Refresh Token 추출
+        String refreshToken = CookieUtils.getCookie(request, CookieConstants.REFRESH_TOKEN)
+                .map(Cookie::getValue)
+                .orElseThrow(() -> new CustomException(ErrorCode.REFRESH_TOKEN_NOT_FOUND));
+
+        // Refresh Token 검증 및 새로운 Access Token 발급
+        TokenInfoDto newTokenInfo = loginInfoService.refreshAccessToken(refreshToken);
+
+        // 새로운 Access Token을 쿠키에 저장
+        CookieUtils.addCookie(response, CookieConstants.ACCESS_TOKEN, newTokenInfo.getAccessToken(), tokenProvider.getAccessTokenExpirySeconds());
+
+        return ResponseEntity.ok().build();
+    }
+
     private String resolveClientIp(HttpServletRequest req) {
         // 클라이언트 IP 주소를 헤더에서 추출
         String[] headers = {"X-Forwarded-For", "X-Real-IP", "CF-Connecting-IP"};

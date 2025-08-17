@@ -10,6 +10,7 @@ import com.secondprojinitiumback.common.security.dto.Response.UserDetailDto;
 import com.secondprojinitiumback.common.security.Repository.LoginAuthInfoRepository;
 import com.secondprojinitiumback.common.security.Repository.LoginHistoryRepository;
 import com.secondprojinitiumback.common.security.Repository.LoginInfoRepository;
+import com.secondprojinitiumback.common.security.config.jwt.TokenProvider;
 import com.secondprojinitiumback.common.security.service.LoginInfoService;
 import com.secondprojinitiumback.user.employee.domain.Employee;
 import com.secondprojinitiumback.user.employee.repository.EmployeeRepository;
@@ -36,6 +37,7 @@ public class LoginInfoServiceImpl implements LoginInfoService {
     private final LoginHistoryRepository loginHistoryRepository;
     private final StudentRepository studentRepository;
     private final EmployeeRepository employeeRepository;
+    private final TokenProvider tokenProvider;
 
     private static final String PWD_REGEX = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$%*#?&])[A-Za-z\\d$@$%*#?&]{8,}$";
 
@@ -142,6 +144,9 @@ public class LoginInfoServiceImpl implements LoginInfoService {
             loginInfoRepository.save(loginInfo);
         }
 
+        // 임시 비밀번호 사용자인 경우 (T 상태) 체크 - 로그인은 허용하되 제한된 기능만 사용 가능
+        // T 상태는 TokenAuthenticationFilter에서 비밀번호 변경 API 외 모든 접근을 차단함
+
         return loginInfo;
     }
 
@@ -194,6 +199,7 @@ public class LoginInfoServiceImpl implements LoginInfoService {
                     .grade(student.getGrade())
                     .passwordChangeRequired(loginInfo.getPasswordChangeRequired())
                     .loginFailCount(loginInfo.getLoginFailCount())
+                    .accountStatusCode(loginInfo.getAccountStatusCode())
                     .build();
         } else if (Role.EMPLOYEE.getUserType().equalsIgnoreCase(userType) || Role.ADMIN.getUserType().equalsIgnoreCase(userType)) {
             Employee employee = employeeRepository.findByLoginInfoLoginId(loginId)
@@ -209,6 +215,7 @@ public class LoginInfoServiceImpl implements LoginInfoService {
                     .grade(null)
                     .passwordChangeRequired(loginInfo.getPasswordChangeRequired())
                     .loginFailCount(loginInfo.getLoginFailCount())
+                    .accountStatusCode(loginInfo.getAccountStatusCode())
                     .build();
         } else {
             throw new CustomException(ErrorCode.UNKNOWN_USER_TYPE);
@@ -232,5 +239,43 @@ public class LoginInfoServiceImpl implements LoginInfoService {
         // 리프레시 토큰으로 인증 정보 조회 및 삭제
         loginAuthInfoRepository.findByRefreshToken(refreshToken)
                 .ifPresent(loginAuthInfoRepository::delete);
+    }
+
+    @Override
+    @Transactional
+    public TokenInfoDto refreshAccessToken(String refreshToken) {
+        // Refresh Token 유효성 검증
+        if (!tokenProvider.validateToken(refreshToken)) {
+            throw new CustomException(ErrorCode.REFRESH_TOKEN_NOT_FOUND);
+        }
+
+        // Refresh Token으로 인증 정보 조회
+        LoginAuthInfo authInfo = loginAuthInfoRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> new CustomException(ErrorCode.REFRESH_TOKEN_NOT_FOUND));
+
+        // 만료된 Refresh Token인지 확인
+        if (authInfo.isRefreshTokenExpired()) {
+            loginAuthInfoRepository.delete(authInfo);
+            throw new CustomException(ErrorCode.REFRESH_TOKEN_NOT_FOUND);
+        }
+
+        // 새로운 Access Token 발급
+        LoginInfo loginInfo = authInfo.getLoginInfo();
+        String newAccessToken = tokenProvider.generateAccessToken(
+                loginInfo.getLoginId(), 
+                loginInfo.getUserType()
+        );
+
+        // 기존 인증 정보의 Access Token 업데이트
+        authInfo.updateAccessToken(newAccessToken);
+        authInfo.markUsed(LocalDateTime.now());
+
+        return TokenInfoDto.builder()
+                .grantType("Bearer")
+                .accessToken(newAccessToken)
+                .refreshToken(refreshToken) // 기존 Refresh Token 유지
+                .accessTokenExpiresIn((long)tokenProvider.getAccessTokenExpirySeconds())
+                .refreshTokenExpiresIn((long)tokenProvider.getRefreshTokenExpirySeconds())
+                .build();
     }
 }

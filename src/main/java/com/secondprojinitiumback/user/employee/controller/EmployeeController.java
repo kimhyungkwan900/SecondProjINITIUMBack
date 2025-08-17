@@ -1,5 +1,7 @@
 package com.secondprojinitiumback.user.employee.controller;
 
+import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularProgramByEmpDTO;
+import com.secondprojinitiumback.admin.extracurricular.service.ExtracurricularProgramService;
 import com.secondprojinitiumback.user.employee.dto.*;
 import com.secondprojinitiumback.user.employee.service.serviceinterface.EmployeeService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import jakarta.validation.Valid;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+    private final ExtracurricularProgramService extracurricularProgramService;
 
     // 교직원 임용 (신규 등록)
     @PostMapping("/appoint/professor")
@@ -109,5 +112,16 @@ public class EmployeeController {
 
         // 상태 변경된 교직원 정보를 반환
         return ResponseEntity.ok(updatedEmployee);
+    }
+
+    // empNo를 기반으로 담당중인 비교과프로그램 목록 조회
+    @GetMapping("/program/my-programs")
+    public ResponseEntity<List<ExtracurricularProgramByEmpDTO>> getProgramsByEmpNo(@RequestParam String empNo) {
+        try {
+            List<ExtracurricularProgramByEmpDTO> result = extracurricularProgramService.getProgramsByEmpNo(empNo);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

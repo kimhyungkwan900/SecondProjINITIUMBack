@@ -246,6 +246,47 @@ public class ExtracurricularProgramService {
         extracurricularProgramRepository.saveAll(programsToStart);
     }
 
+    // empNo를 기반으로 담당중인 비교과프로그램 목록 반환
+    public List<ExtracurricularProgramByEmpDTO> getProgramsByEmpNo(String empNo) {
+        List<ExtracurricularProgram> programs = extracurricularProgramRepository.findByEmployee_EmpNo(empNo);
+        
+        return programs.stream()
+                .map(program -> {
+                    ExtracurricularProgramByEmpDTO dto = new ExtracurricularProgramByEmpDTO();
+                    dto.setEduMngId(program.getEduMngId());
+                    dto.setEduNm(program.getEduNm());
+                    dto.setEduType(program.getEduType());
+                    dto.setEduTrgtLmt(program.getEduTrgtLmt());
+                    dto.setEduGndrLmt(program.getEduGndrLmt());
+                    dto.setEduSlctnType(program.getEduSlctnType());
+                    dto.setEduPtcpNope(program.getEduPtcpNope());
+                    dto.setEduPrps(program.getEduPrps());
+                    dto.setEduDtlCn(program.getEduDtlCn());
+                    dto.setEduAplyBgngDt(program.getEduAplyBgngDt());
+                    dto.setEduAplyEndDt(program.getEduAplyEndDt());
+                    dto.setEduBgngYmd(program.getEduBgngYmd());
+                    dto.setEduEndYmd(program.getEduEndYmd());
+                    dto.setEduPlcNm(program.getEduPlcNm());
+                    dto.setEduAplyDt(program.getEduAplyDt());
+                    dto.setSttsNm(program.getSttsNm());
+                    dto.setEduMlg(program.getEduMlg());
+                    dto.setSttsChgDt(program.getSttsChgDt());
+                    dto.setCndCn(program.getCndCn());
+                    
+                    // 카테고리 정보
+                    if (program.getExtracurricularCategory() != null) {
+                        dto.setCtgryNm(program.getExtracurricularCategory().getCtgryNm());
+                    }
+                    
+                    // 신청/참여 현황
+                    dto.setRequest(extracurricularApplyRepository.countByExtracurricularProgram_EduMngIdAndAprySttsNm(program.getEduMngId(), AprySttsNm.APPLY));
+                    dto.setAccept(extracurricularApplyRepository.countByExtracurricularProgram_EduMngIdAndAprySttsNm(program.getEduMngId(), AprySttsNm.ACCEPT));
+                    
+                    return dto;
+                })
+                .toList();
+    }
+
 
 }
 

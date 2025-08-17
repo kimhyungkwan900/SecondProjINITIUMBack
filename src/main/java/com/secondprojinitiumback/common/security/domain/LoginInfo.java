@@ -31,7 +31,7 @@ public class LoginInfo {
     @Pattern(regexp = "S|E|A", message = "USER_TYPE은 S/E/A 중 하나여야 합니다.")
     private String userType;
 
-    // N(정상)/L(잠김)/D(삭제)
+    // N(정상)/L(잠김)/D(삭제)/T(임시비밀번호)
     @Column(name = "ACNT_STTS_CD", length = 1, nullable = false)
     private String accountStatusCode;
 
@@ -94,6 +94,7 @@ public class LoginInfo {
         this.passwordChangeRequired = Boolean.FALSE;
         this.lastPasswordChangeDateTime = LocalDateTime.now();
         this.loginFailCount = 0;
+        this.accountStatusCode = "N"; // 비밀번호 변경 후 정상 상태로 변경
     }
 
     // 임시 비밀번호 발급
@@ -102,7 +103,7 @@ public class LoginInfo {
         this.passwordChangeRequired = Boolean.TRUE;
         this.lastPasswordChangeDateTime = LocalDateTime.now();
         this.loginFailCount = 0;
-        this.accountStatusCode = "L"; // 잠김 상태로 변경
+        this.accountStatusCode = "T"; // 임시비밀번호 상태로 설정
     }
 
     // 계정 상태 변경

@@ -28,7 +28,7 @@ public class TokenProvider {
     private static final String KEY_ID = "id";
     private static final String KEY_ROLE = "role";
 
-    private static final Duration ACCESS_TOKEN_DURATION = Duration.ofMinutes(30);
+    private static final Duration ACCESS_TOKEN_DURATION = Duration.ofHours(2);
     private static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(30);
 
     @PostConstruct
@@ -148,5 +148,10 @@ public class TokenProvider {
 
     public Duration getAccessTokenDuration() {
         return ACCESS_TOKEN_DURATION;
+    }
+
+    // Access Token만 생성하는 메서드
+    public String generateAccessToken(String userId, String role) {
+        return generateToken(userId, role, ACCESS_TOKEN_DURATION);
     }
 }

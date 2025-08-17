@@ -92,6 +92,19 @@ public class LoginAuthInfo {
         this.lastUsedAt = LocalDateTime.now();
     }
 
+    // Refresh Token 만료 여부 확인
+    public boolean isRefreshTokenExpired() {
+        return this.expiresAt != null && this.expiresAt.isBefore(LocalDateTime.now());
+    }
+
+    // Access Token만 업데이트
+    public void updateAccessToken(String newAccessToken) {
+        if (newAccessToken == null) {
+            throw new IllegalArgumentException("새 Access Token이 필요합니다.");
+        }
+        this.accessToken = newAccessToken;
+    }
+
     /* 양방향 내부 세터 (외부 공개 금지) */
     void setLoginInfoInternal(LoginInfo loginInfo) {
         this.loginInfo = loginInfo;

@@ -3,6 +3,7 @@ package com.secondprojinitiumback.user.consult.service;
 import com.secondprojinitiumback.user.consult.domain.DscsnSchedule;
 import com.secondprojinitiumback.user.consult.dto.requestdto.DscsnScheduleRequestDto;
 import com.secondprojinitiumback.user.consult.dto.responsedto.DscsnScheduleResponseDto;
+import com.secondprojinitiumback.user.consult.dto.responsedto.DscsnInfoResponseDto;
 import com.secondprojinitiumback.user.consult.repository.DscsnScheduleRepository;
 import com.secondprojinitiumback.user.consult.repository.TempEmployeeRepository;
 import com.secondprojinitiumback.user.employee.domain.Employee;
@@ -99,6 +100,21 @@ public class DscsnScheduleService {
     public void deleteDscsnSchedule(List<String> scheduleIds) {
         //상담일정 ID로 해당 상담일정 삭제
         dscsnScheduleRepository.deleteAllById(scheduleIds);
+    }
+
+    //--- empNo 기반으로 상담내역 조회 (DscsnSchedule 사용)
+    @Transactional(readOnly = true)
+    public List<DscsnInfoResponseDto> getDscsnInfoByEmpNo(String empNo) {
+        List<DscsnSchedule> dscsnSchedules = dscsnScheduleRepository.findByEmployee_EmpNoAndDscsnYn(empNo, "Y");
+        
+        return dscsnSchedules.stream()
+                .map(schedule -> DscsnInfoResponseDto.builder()
+                        .dscsnInfoId(schedule.getDscsnDtId())
+                        .dscsnStatus("예약완료")
+                        .dscsnResultCn("")
+                        .dscsnReleaseYn("N")
+                        .build())
+                .toList();
     }
 
     //시퀀스 번호 생성 메소드

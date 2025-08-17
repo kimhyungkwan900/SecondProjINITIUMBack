@@ -35,4 +35,7 @@ public interface LoginInfoService {
 
     // 로그아웃 처리
     void logout(String accessToken, String refreshToken);
+
+    // Refresh Token으로 새로운 Access Token 발급
+    TokenInfoDto refreshAccessToken(String refreshToken);
 }

@@ -2,6 +2,7 @@ package com.secondprojinitiumback.user.consult.controller;
 
 import com.secondprojinitiumback.user.consult.dto.requestdto.DscsnScheduleRequestDto;
 import com.secondprojinitiumback.user.consult.dto.responsedto.DscsnScheduleResponseDto;
+import com.secondprojinitiumback.user.consult.dto.responsedto.DscsnInfoResponseDto;
 import com.secondprojinitiumback.user.consult.service.DscsnScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -67,6 +68,17 @@ public class DscsnScheduleController {
             return ResponseEntity.ok("일정 삭제 완료");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("일정 삭제 중 문제가 발생했습니다.");
+        }
+    }
+
+    //--- empNo 기반으로 상담내역 조회
+    @GetMapping("/api/consult/schedule/by-emp")
+    public ResponseEntity<?> getDscsnInfoByEmpNo(@RequestParam String empNo) {
+        try {
+            List<DscsnInfoResponseDto> result = dscsnScheduleService.getDscsnInfoByEmpNo(empNo);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("상담내역 조회 중 오류 발생");
         }
     }
 }

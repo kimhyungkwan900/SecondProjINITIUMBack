@@ -36,7 +36,9 @@ public class EmailAuthServiceImpl implements EmailAuthService {
         // 인증 코드의 만료 시간을 설정
         LocalDateTime expiryDate = LocalDateTime.now().plusMinutes(5);
 
-        // 기존 인증 코드가 있다면 삭제
+        // 기존 인증 코드가 있다면 삭제 후 새로 생성
+        emailAuthRepository.deleteByEmail(toEmail);
+        
         EmailAuth emailAuth = EmailAuth.builder()
                 .email(toEmail)
                 .authCode(authCode)

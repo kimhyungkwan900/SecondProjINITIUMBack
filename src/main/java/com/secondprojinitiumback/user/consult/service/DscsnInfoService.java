@@ -18,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -163,6 +165,16 @@ public class DscsnInfoService {
                                         .build()
                 )
                 .build();
+    }
+
+    //--- empNo 기반으로 상담내역 조회
+    @Transactional(readOnly = true)
+    public List<DscsnInfoResponseDto> getDscsnInfoByEmpNo(String empNo) {
+        List<DscsnInfo> dscsnInfoList = dscsnInfoRepository.findByEmpNo(empNo);
+        
+        return dscsnInfoList.stream()
+                .map(this::toResponseDtoSafe)
+                .toList();
     }
 }
 

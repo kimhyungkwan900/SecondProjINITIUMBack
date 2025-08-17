@@ -42,7 +42,7 @@ public class Student {
     private LoginInfo loginInfo;
 
     // 학교 정보
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "UNIV_CD", referencedColumnName = "UNIV_CD", nullable = false)
     private University school;
 

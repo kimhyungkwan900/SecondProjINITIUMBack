@@ -18,6 +18,7 @@ public enum ErrorCode {
     UNKNOWN_USER_TYPE(HttpStatus.BAD_REQUEST, "알 수 없는 사용자 유형입니다."),
     BANK_ACCOUNT_INACTIVE(HttpStatus.BAD_REQUEST, "사용 중지된 계좌입니다."),
     INVALID_ACCOUNT_TYPE(HttpStatus.BAD_REQUEST, "허용되지 않는 계좌 유형입니다."),
+    PASSWORD_CHANGE_REQUIRED(HttpStatus.BAD_REQUEST, "비밀번호 변경이 필요합니다."),
 
     // 401 UNAUTHORIZED
     UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "인증되지 않은 접근입니다."),
@@ -37,6 +38,7 @@ public enum ErrorCode {
     ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
     AUTH_CODE_NOT_FOUND(HttpStatus.NOT_FOUND, "인증 정보를 찾을 수 없습니다."),
     AUTH_CODE_EXPIRED(HttpStatus.NOT_FOUND, "인증 코드가 만료되었습니다."),
+    REFRESH_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "리프레시 토큰을 찾을 수 없습니다."),
     STUDENT_NOT_FOUND(HttpStatus.NOT_FOUND, "학생 정보를 찾을 수 없습니다."),
     EMPLOYEE_NOT_FOUND(HttpStatus.NOT_FOUND, "직원 정보를 찾을 수 없습니다."),
     BANK_ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "계좌 정보를 찾을 수 없습니다."),

@@ -58,6 +58,11 @@ public class AccountRecoverService {
                 .or(() -> employeeRepository.findByLoginInfoLoginId(loginId).map(Employee::getEmail))
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
+
+    @Transactional(readOnly = true)
+    public String getEmailByLoginId(String loginId) {
+        return findEmailByLoginId(loginId);
+    }
 }
 
 

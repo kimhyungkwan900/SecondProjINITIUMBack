@@ -29,12 +29,34 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwt = resolveToken(request);
 
-        if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-            Authentication authentication = tokenProvider.getAuthentication(jwt);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        if (StringUtils.hasText(jwt)) {
+            if (tokenProvider.validateToken(jwt)) {
+                Authentication authentication = tokenProvider.getAuthentication(jwt);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } else {
+                // Access Token이 만료된 경우, Refresh Token으로 갱신 시도
+                tryRefreshToken(request, response);
+            }
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private void tryRefreshToken(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            Optional<Cookie> refreshCookie = CookieUtils.getCookie(request, CookieConstants.REFRESH_TOKEN);
+            if (refreshCookie.isPresent()) {
+                String refreshToken = refreshCookie.get().getValue();
+                if (tokenProvider.validateToken(refreshToken)) {
+                    // Refresh Token이 유효한 경우, 새로운 Access Token 발급
+                    // 이 부분은 실제로는 서비스 레이어에서 처리해야 하지만, 
+                    // 필터에서는 간단히 처리
+                    response.setHeader("X-Token-Expired", "true");
+                }
+            }
+        } catch (Exception e) {
+            // 토큰 갱신 실패 시 무시하고 계속 진행
+        }
     }
 
     private String resolveToken(HttpServletRequest request) {

@@ -21,4 +21,5 @@ public class UserDetailDto {
     private String grade;
     private Boolean passwordChangeRequired;
     private Integer loginFailCount;
+    private String accountStatusCode;
 }

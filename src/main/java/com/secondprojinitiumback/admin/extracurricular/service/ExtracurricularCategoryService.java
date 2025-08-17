@@ -166,6 +166,7 @@ public class ExtracurricularCategoryService {
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
+
     // 핵심역량 불러오기
     public List<CoreCompetencyCategoryDto> findAllCoreCategory() {
         return coreCompetencyCategoryRepository.findAll()

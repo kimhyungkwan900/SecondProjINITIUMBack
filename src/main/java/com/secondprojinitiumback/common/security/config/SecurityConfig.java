@@ -49,16 +49,13 @@ public class SecurityConfig implements WebMvcConfigurer {
                 // 세션을 사용하지 않으므로 STATELESS로 설정
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // 로그인, 회원가입 등 인증 관련 API 및 이미지 리소스는 인증 없이 접근 허용
-                        .requestMatchers("/api/auth/**", "/images/**","/login","/api/**").permitAll()
-                        // OPTIONS 요청은 항상 허용
+                        .requestMatchers("/api/**", "/api/auth/refresh", "/api/auth/**", "/images/**", "/login").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // /api/admin/** 경로는 ADMIN 권한(UserType 'A')이 있는 사용자만 접근 가능
-                        .requestMatchers("/api/admin/**").hasRole("A")
+                        .requestMatchers("/api/admin/**").hasAuthority("A")
                         // 나머지 API 요청은 인증된 사용자만 접근 가능
                         .anyRequest().authenticated()
                 )
-                // UsernamePasswordAuthenticationFilter 앞에 직접 만든 필터 추가
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

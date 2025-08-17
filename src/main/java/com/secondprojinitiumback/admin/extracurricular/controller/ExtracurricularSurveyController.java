@@ -2,13 +2,13 @@ package com.secondprojinitiumback.admin.extracurricular.controller;
 
 
 import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularAdminSurveyResponseDTO;
+import com.secondprojinitiumback.admin.extracurricular.dto.ExtracurricularSurveyParticipationStatusDTO;
 import com.secondprojinitiumback.user.extracurricular.service.ExtracurricularSurveyResponseService;
-import jakarta.persistence.Id;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,4 +31,11 @@ public class ExtracurricularSurveyController {
         return extracurricularSurveyResponseService.getSurveyResponse(eduMngId, pageable);
     }
 
+    @GetMapping("/participation-status")
+    public ResponseEntity<ExtracurricularSurveyParticipationStatusDTO> getSurveyParticipationStatus(
+            @RequestParam Long eduMngId
+    ) {
+        ExtracurricularSurveyParticipationStatusDTO status = extracurricularSurveyResponseService.getSurveyParticipationStatus(eduMngId);
+        return ResponseEntity.ok(status);
+    }
 }

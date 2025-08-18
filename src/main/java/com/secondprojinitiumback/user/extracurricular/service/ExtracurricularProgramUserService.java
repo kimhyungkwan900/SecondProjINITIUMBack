@@ -129,6 +129,7 @@ public class ExtracurricularProgramUserService {
         dto.setEduMngId(program.getEduMngId());
         dto.setEduNm(program.getEduNm());
         dto.setEduDtlCn(program.getEduDtlCn());
+        dto.setEduSlctnType(program.getEduSlctnType());
         dto.setEduTrgtLmt(program.getEduTrgtLmt());
         dto.setEduGndrLmt(program.getEduGndrLmt());
         dto.setEduAplyBgngDt(program.getEduAplyBgngDt());

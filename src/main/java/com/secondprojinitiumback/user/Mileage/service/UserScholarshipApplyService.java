@@ -29,7 +29,7 @@ import java.util.List;
 public class UserScholarshipApplyService {
 
     // 정책 상수 (원하면 여기 숫자만 바꾸면 됨)
-    private static final int MIN_MILEAGE_FOR_APPLY = 60; // ✅ 최소 신청 점수
+    private static final int MIN_MILEAGE_FOR_APPLY = 60; //최소 신청 점수
 
     private final StudentRepository studentRepository;
     private final MileageTotalRepository mileageTotalRepository;
@@ -94,16 +94,16 @@ public class UserScholarshipApplyService {
         MileageTotal total = mileageTotalRepository.findByStudent(student)
                 .orElseThrow(() -> new CustomException(ErrorCode.INSUFFICIENT_MILEAGE_SCORE));
 
-        //누적 점수가 50점 미만이면 예외 발생 → 신청 불가
+        // 1. 최소 신청 점수 체크 (60점)
         if (total.getTotalScore() < 50) {
             throw new CustomException(ErrorCode.INSUFFICIENT_MILEAGE_SCORE);
         }
 
-        // 계좌 유효성 체크
+        // 2. 계좌 유효성 체크
         bankAccountRepository.findById(dto.getAccountNo())
                 .orElseThrow(() -> new CustomException(ErrorCode.BANK_ACCOUNT_NOT_FOUND));
 
-        // 상태 코드 "신청" APPLY
+        // 3. 상태 코드 "신청" APPLY
         CommonCode applyState = codeRepository.findById(ScholarshipState.APPLY.toCommonCodeId())
                 .orElseThrow(() -> new CustomException(ErrorCode.COMMON_CODE_NOT_FOUND));
 

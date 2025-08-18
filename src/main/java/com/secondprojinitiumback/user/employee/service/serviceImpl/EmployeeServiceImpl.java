@@ -59,7 +59,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         LoginInfo loginInfo = createLoginInfo(employeeNo, userType, dto.getBirthDate());
         BankAccount bankAccount = findOrCreateBankAccount(dto.getBankAccountNo(), dto.getBankCode());
         CommonCode gender = findGenderByCode(dto.getGender());
-        EmployeeStatusInfo employeeStatus = findStatusByCode(dto.getEmployeeStatus());
+        EmployeeStatusInfo employeeStatus = findStatusByCode(dto.getEmployeeStatusCode());
 
         Employee employee = Employee.create(
                 employeeNo, loginInfo, schoolSubject, bankAccount, dto.getName(),

@@ -52,7 +52,8 @@ INSERT INTO EMP_INFO
 (EMP_NO, LGN_ID, SCSBJT_NO, ACTNO, EMP_NM, GNDR_CD_SE, GNDR_CD, EMP_BRDT, EMP_EMAIL, EMP_TEL, EMP_STTS_CD_SE, EMP_STTS_CD)
 VALUES
     ('S133001', 'S133001', '133', NULL, '정보화센터직원1', 'CO0001', '10', '19880101', 'staff13301@univ.ac.kr', '01013330001', 'AM0120', '10'),
-    ('S133002', 'S133002', '133', NULL, '정보화센터직원2', 'CO0001', '20', '19880102', 'staff13302@univ.ac.kr', '01013330002', 'AM0120', '10');
+    ('S133002', 'S133002', '133', NULL, '정보화센터직원2', 'CO0001', '20',
+     '19880102', 'staff13302@univ.ac.kr', '01013330002', 'AM0120', '10');
 
 -- 핵심역량센터(141) : 직원2 + 강사2
 INSERT INTO EMP_INFO

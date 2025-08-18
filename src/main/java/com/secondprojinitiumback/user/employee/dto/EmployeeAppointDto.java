@@ -18,5 +18,5 @@ public class EmployeeAppointDto {
     private String subjectCode;     // 소속 센터, 부서, 학교 등
     private String bankAccountNo;   // 계좌번호
     private String bankCode;        // 은행 코드
-    private String employeeStatus;  // 교직원 상태 코드
+    private String employeeStatusCode;  // 교직원 상태 코드
 }

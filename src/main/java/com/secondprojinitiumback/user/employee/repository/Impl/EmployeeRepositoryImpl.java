@@ -1,17 +1,10 @@
 package com.secondprojinitiumback.user.employee.repository.Impl;
 
-import static com.secondprojinitiumback.user.employee.domain.QEmployee.employee;
-import static com.secondprojinitiumback.common.domain.QSchoolSubject.schoolSubject;
-import static com.secondprojinitiumback.user.employee.domain.QEmployeeStatusInfo.employeeStatusInfo;
-
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.secondprojinitiumback.common.domain.QCommonCode;
-import com.secondprojinitiumback.common.domain.QSchoolSubject;
 import com.secondprojinitiumback.user.employee.domain.Employee;
-import com.secondprojinitiumback.user.employee.domain.QEmployee;
-import com.secondprojinitiumback.user.employee.domain.QEmployeeStatusInfo;
 import com.secondprojinitiumback.user.employee.dto.EmployeeSearchDto;
 import com.secondprojinitiumback.user.employee.repository.EmployeeRepositoryCustom;
 import lombok.RequiredArgsConstructor;
@@ -22,15 +15,20 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+import static com.secondprojinitiumback.common.domain.QSchoolSubject.schoolSubject;
+import static com.secondprojinitiumback.user.employee.domain.QEmployee.employee;
+import static com.secondprojinitiumback.user.employee.domain.QEmployeeStatusInfo.employeeStatusInfo;
+
 @RequiredArgsConstructor
 public class EmployeeRepositoryImpl implements EmployeeRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
+    // 코드 그룹 상수
+    private static final String EMPLOYEE_STATUS_CODE_GROUP = "AM0120";
+    private static final String GENDER_CODE_GROUP = "CO0001";
+
     // Q-타입 인스턴스 선언
-    private final QEmployee qEmployee = employee;
-    private final QSchoolSubject qSchoolSubject = schoolSubject;
-    private final QEmployeeStatusInfo qEmployeeStatusInfo = employeeStatusInfo;
     private final QCommonCode qGender = new QCommonCode("gender");
 
     @Override
@@ -40,90 +38,83 @@ public class EmployeeRepositoryImpl implements EmployeeRepositoryCustom {
 
     @Override
     public Page<Employee> searchPage(EmployeeSearchDto searchDto, Pageable pageable) {
-        // 기본 쿼리 생성
         JPAQuery<Employee> baseQuery = createBaseQuery(searchDto);
 
-        // 페이징 처리
         List<Employee> content = baseQuery
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        // 전체 개수 조회 쿼리 생성
         JPAQuery<Long> countQuery = createCountQuery(searchDto);
-        // 전체 개수 조회
         long total = countQuery.fetchOne() != null ? countQuery.fetchOne() : 0L;
 
-        // Page 객체 생성
         return new PageImpl<>(content, pageable, total);
     }
 
     private JPAQuery<Employee> createBaseQuery(EmployeeSearchDto searchDto) {
-        return queryFactory
-                .selectFrom(qEmployee)
-                .leftJoin(qEmployee.schoolSubject, qSchoolSubject).fetchJoin()
-                .leftJoin(qEmployee.employeeStatus, qEmployeeStatusInfo).fetchJoin()
-                .leftJoin(qEmployee.gender, qGender).fetchJoin()
-                .where(
-                        containsEmployeeNo(searchDto.getEmpNo()),
-                        containsName(searchDto.getName()),
-                        eqSchoolSubject(searchDto.getSubjectCode()),
-                        eqStatus(searchDto.getEmployeeStatusCode()),
-                        eqGender(searchDto.getGenderCode()),
-                        containsEmail(searchDto.getEmail()),
-                        containsTel(searchDto.getTel())
-                );
+        JPAQuery<Employee> query = queryFactory
+                .selectFrom(employee)
+                .leftJoin(employee.schoolSubject, schoolSubject).fetchJoin()
+                .leftJoin(employee.employeeStatus, employeeStatusInfo).fetchJoin()
+                .leftJoin(employee.gender, qGender).fetchJoin();
+        return applyConditions(query, searchDto);
     }
 
     private JPAQuery<Long> createCountQuery(EmployeeSearchDto searchDto) {
-        return queryFactory
-                .select(qEmployee.count())
-                .from(qEmployee)
-                .where(
-                        containsEmployeeNo(searchDto.getEmpNo()),
-                        containsName(searchDto.getName()),
-                        eqSchoolSubject(searchDto.getSubjectCode()),
-                        eqStatus(searchDto.getEmployeeStatusCode()),
-                        eqGender(searchDto.getGenderCode()),
-                        containsEmail(searchDto.getEmail()),
-                        containsTel(searchDto.getTel())
-                );
+        JPAQuery<Long> query = queryFactory
+                .select(employee.count())
+                .from(employee)
+                .leftJoin(employee.schoolSubject, schoolSubject)
+                .leftJoin(employee.employeeStatus, employeeStatusInfo)
+                .leftJoin(employee.gender, qGender);
+        return applyConditions(query, searchDto);
     }
 
-    // === 검색 조건 메서드들 (BooleanExpression) ===
+    private <T> JPAQuery<T> applyConditions(JPAQuery<T> query, EmployeeSearchDto searchDto) {
+        return query.where(
+                containsEmployeeNo(searchDto.getEmpNo()),
+                containsName(searchDto.getName()),
+                eqSchoolSubject(searchDto.getSubjectCode()),
+                containsStatus(searchDto.getEmployeeStatusCode()),
+                containsGender(searchDto.getGenderCode()),
+                containsEmail(searchDto.getEmail()),
+                containsTel(searchDto.getTel())
+        );
+    }
 
-    // 교번/사번 검색
     private BooleanExpression containsEmployeeNo(String employeeNo) {
-        return StringUtils.hasText(employeeNo) ? qEmployee.empNo.containsIgnoreCase(employeeNo) : null;
+        return StringUtils.hasText(employeeNo) ? employee.empNo.containsIgnoreCase(employeeNo) : null;
     }
 
-    // 이름 검색
     private BooleanExpression containsName(String name) {
-        return StringUtils.hasText(name) ? qEmployee.name.containsIgnoreCase(name) : null;
+        return StringUtils.hasText(name) ? employee.name.containsIgnoreCase(name) : null;
     }
 
-    // 담당 과목(부서) 코드 검색
     private BooleanExpression eqSchoolSubject(String schoolSubjectCode) {
-        return StringUtils.hasText(schoolSubjectCode) ? qSchoolSubject.subjectCode.eq(schoolSubjectCode) : null;
+        return StringUtils.hasText(schoolSubjectCode) ? schoolSubject.subjectCode.eq(schoolSubjectCode) : null;
     }
 
-    // 상태 코드 검색
-    private BooleanExpression eqStatus(String statusCode) {
-        return StringUtils.hasText(statusCode) ? qEmployeeStatusInfo.id.employeeStatusCode.eq(statusCode) : null;
+    private BooleanExpression containsStatus(String statusCode) {
+        if (!StringUtils.hasText(statusCode)) {
+            return null;
+        }
+        return employeeStatusInfo.id.employeeStatusCode.containsIgnoreCase(statusCode)
+                .and(employeeStatusInfo.id.employeeStatusCodeSe.eq(EMPLOYEE_STATUS_CODE_GROUP));
     }
 
-    // 성별 코드 검색
-    private BooleanExpression eqGender(String genderCode) {
-        return StringUtils.hasText(genderCode) ? qGender.id.code.eq(genderCode) : null;
+    private BooleanExpression containsGender(String genderCode) {
+        if (!StringUtils.hasText(genderCode)) {
+            return null;
+        }
+        return qGender.id.code.containsIgnoreCase(genderCode)
+                .and(qGender.id.codeGroup.eq(GENDER_CODE_GROUP));
     }
 
-    // 이메일 검색
     private BooleanExpression containsEmail(String email) {
-        return StringUtils.hasText(email) ? qEmployee.email.containsIgnoreCase(email) : null;
+        return StringUtils.hasText(email) ? employee.email.containsIgnoreCase(email) : null;
     }
 
-    // 전화번호 검색
     private BooleanExpression containsTel(String tel) {
-        return StringUtils.hasText(tel) ? qEmployee.tel.containsIgnoreCase(tel) : null;
+        return StringUtils.hasText(tel) ? employee.tel.containsIgnoreCase(tel) : null;
     }
 }

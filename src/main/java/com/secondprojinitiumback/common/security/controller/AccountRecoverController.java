@@ -50,7 +50,7 @@ public class AccountRecoverController {
         return ResponseEntity.ok(Collections.singletonMap("message", "임시 비밀번호가 이메일로 발송되었습니다."));
     }
 
-    // ⬇⬇ 새로 추가: loginId → 이메일 조회
+    // loginId → 이메일 조회
     @PostMapping("/user-email")
     public ResponseEntity<EmailResponseDto> findUserEmailByLoginId(@Valid @RequestBody LoginIdRequestDto req) {
         String email = accountRecoverService.getEmailByLoginId(req.getLoginId());

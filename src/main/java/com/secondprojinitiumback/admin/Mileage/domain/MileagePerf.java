@@ -35,7 +35,7 @@ public class MileagePerf {
     private String cancelReason; // 취소사유
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "MLG_ALTCL_ID", nullable = false)
+    @JoinColumn(name = "MLG_ALTCL_ID", nullable = true)
     private MileageItem mileageItem; // 마일리지 항목
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)

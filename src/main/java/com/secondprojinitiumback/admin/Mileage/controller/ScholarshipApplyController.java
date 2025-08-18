@@ -56,6 +56,7 @@ public class ScholarshipApplyController {
         service.processPayment(id);
     }
 
+
     // 마일리지 확인
     @GetMapping("/{studentNo}/mileage")
     public MileageTotalResponseDto getMileageTotal(@PathVariable String studentNo) {

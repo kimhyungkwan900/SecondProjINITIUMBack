@@ -26,62 +26,88 @@ import java.util.List;
 public class UserMileageHistoryService {
 
     private final MileagePerfRepository mileagePerfRepository;
-    private final ScholarshipApplyRepository scholarshipApplyRepository;
     private final MileageTotalRepository mileageTotalRepository;
 
     public UserMileageSummaryDto getMileageSummary(String studentNo, PageRequestDto pageRequestDto) {
 
-        // 1) 총점
-        double totalScore = mileageTotalRepository.findByStudent_StudentNo(studentNo)
+        // 1) 상단 총점 (없으면 0)
+        double headerTotal = mileageTotalRepository.findByStudent_StudentNo(studentNo)
                 .map(MileageTotal::getTotalScore)
                 .orElse(0);
 
-        Pageable pageable = pageRequestDto.toPageable();
+        // 2) 전체 히스토리 변동 → 시간순 정렬
+        List<MileagePerf> perfs = mileagePerfRepository.findAllByStudent_StudentNo(studentNo);
 
-        // 2) 전체 지급 내역 조회 (페이징 X)
-        List<UserMileageHistoryDto> perfList = mileagePerfRepository
-                .findAllByStudent_StudentNo(studentNo)
-                .stream()
-                .map(perf -> UserMileageHistoryDto.from(perf, totalScore))
-                .toList();
+        // 3) createdAt 오름차순(시간 흐름대로) 정렬
+        perfs.sort(Comparator
+                .comparing(MileagePerf::getCreatedAt)
+                .thenComparing(MileagePerf::getId));
 
+        // 4) prefix sum으로 누적 계산
+        List<UserMileageHistoryDto> computed = new ArrayList<>(perfs.size());
+        double running = 0d;
+        for (MileagePerf perf : perfs) {
+            int delta = safe(perf.getAccMlg()); // +지급 / -차감
+            running += delta;
 
-        // 2-1) 전체 차감 내역 조회 (페이징 X)
-        List<UserMileageHistoryDto> applyList = scholarshipApplyRepository
-                .findAllByStudent_StudentNo(studentNo)
-                .stream()
-                .map(apply -> UserMileageHistoryDto.from(apply, totalScore))
-                .toList();
+            UserMileageHistoryDto row = UserMileageHistoryDto.builder()
+                    .type(delta >= 0 ? "지급" : "차감")
+                    .description(perf.getMileageItem() != null
+                            ? perf.getMileageItem().getProgram().getEduNm()
+                            : (delta >= 0 ? "비교과 지급" : "장학금 차감"))
+                    .change((delta >= 0 ? "+" : "") + delta)
+                    .totalScore(running)                 // 시간순으로 누적 반영
+                    .createdAt(perf.getCreatedAt())
+                    .build();
 
-        // 3) 합치기
-        List<UserMileageHistoryDto> all = new ArrayList<>();
-        all.addAll(perfList);
-        all.addAll(applyList);
+            computed.add(row);
+        }
 
-        // 4) 최신순 정렬
-        all.sort(Comparator.comparing(UserMileageHistoryDto::getCreatedAt).reversed());
+        // 5) (선택) 누적 합과 headerTotal 불일치 시 보정
+        //    - 운영정책상 headerTotal이 ‘정답’이면 아래 보정 on
+        //    - 보정하지 않으려면 이 블록 제거
+        if (!computed.isEmpty()) {
+            double last = computed.get(computed.size() - 1).getTotalScore();
+            double offset = headerTotal - last; // 마지막 누적을 headerTotal에 맞추는 오프셋
+            if (Math.abs(offset) > 1e-9) {
+                for (int i = 0; i < computed.size(); i++) {
+                    UserMileageHistoryDto r = computed.get(i);
+                    computed.set(i, UserMileageHistoryDto.builder()
+                            .type(r.getType())
+                            .description(r.getDescription())
+                            .change(r.getChange())
+                            .totalScore(r.getTotalScore() + offset) // 전 구간에 동일 오프셋
+                            .createdAt(r.getCreatedAt())
+                            .build());
+                }
+            }
+        }
 
-        // 5) 수동 페이징
-        int currentPage = Math.max(1, pageRequestDto.getPage());
+        // 6) 화면은 최신순(내림차순)으로 표시하되, 누적은 위에서 계산된 걸 그대로 사용
+        computed.sort(Comparator.comparing(UserMileageHistoryDto::getCreatedAt).reversed());
+
+        // 7) 페이지네이션은 "계산 끝난 리스트"에 적용
+        int page = Math.max(1, pageRequestDto.getPage());
         int size = Math.max(1, pageRequestDto.getSize());
+        int start = Math.min((page - 1) * size, computed.size());
+        int end = Math.min(start + size, computed.size());
+        List<UserMileageHistoryDto> slice = computed.subList(start, end);
 
-        int start = Math.min((currentPage - 1) * size, all.size());
-        int end = Math.min(start + size, all.size());
-
-
-        List<UserMileageHistoryDto> pageList = all.subList(start, end);
 
         PageResponseDto<UserMileageHistoryDto> pageResponse =
                 PageResponseDto.<UserMileageHistoryDto>withAll()
-                        .dtoList(pageList)
+                        .dtoList(slice)
                         .pageRequestDto(pageRequestDto)
-                        .totalCount(all.size())
+                        .totalCount(computed.size())
                         .build();
 
         return UserMileageSummaryDto.builder()
-                .totalScore(totalScore)
-                .history(pageResponse)
+                .totalScore(headerTotal)      // 상단 총점
+                .history(pageResponse)        // 표 데이터
                 .build();
     }
+
+    private int safe(Integer v) { return v == null ? 0 : v; }
 }
+
 

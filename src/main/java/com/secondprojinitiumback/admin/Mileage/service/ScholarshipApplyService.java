@@ -38,12 +38,10 @@ public class ScholarshipApplyService {
     private final CommonCodeRepository codeRepository;
     private final MileagePerfRepository mileagePerfRepository;
 
-    // =========================================
-    // 🔧 정책 상수(프로퍼티 없이 고정값으로 사용)
-    // =========================================
+
     private static final int  MIN_MILEAGE = 60;        // 최소 신청 요건 (누적 마일리지 점수)
     private static final long MONEY_RATE  = 100L;      // 1점당 금액(원)
-    private static final long MAX_PAYOUT  = 500_000L;  // 학생별 총 지급 상한(원) - 전체기간 기준
+    private static final long MAX_PAYOUT  = 500_000L;  // 학생별 총 지급  - 전체기간 기준
 
     // 1. 전체 목록 조회 (검색 + 페이징)
     public PageResponseDto<ScholarshipApplyResponseDto> getList(PageRequestDto requestDto,
@@ -76,7 +74,7 @@ public class ScholarshipApplyService {
         return ScholarshipApplyResponseDto.from(apply);
     }
 
-    // 3. 장학금 신청 (언제든 가능, 단 누적 마일리지 ≥ MIN_MILEAGE)
+    // 3. 장학금 신청
     @Transactional
     public void register(ScholarshipApplyRequestDto dto) {
         Student student = studentRepository.findById(dto.getStudentNo())
@@ -104,14 +102,14 @@ public class ScholarshipApplyService {
                 .student(student)
                 .bankAccount(account)
                 .stateCode(applyCode)
-                .accumulatedMileage(total.getTotalScore()) // 신청 시점 스냅샷(원하면 제거 가능)
+                .accumulatedMileage(total.getTotalScore())
                 .applyDate(LocalDateTime.now())
                 .build();
 
         repository.save(apply);
     }
 
-    // 4. 상태 변경 (임의 상태 전환)
+    // 4. 상태 변경
     @Transactional
     public void updateStatus(Long id, String newCode) {
         ScholarshipApply apply = repository.findById(id)
@@ -157,7 +155,7 @@ public class ScholarshipApplyService {
                     "지급 상한(" + MAX_PAYOUT + "원) 초과: 현재 누적 " + alreadyPaid + "원, 이번 " + currentAmount + "원");
         }
 
-        // (옵션) 마일리지 차감 실적 기록: 음수로 저장 권장
+        // 마일리지 차감 실적 기록: 음수로 저장
         Student student = apply.getStudent();
 
         MileagePerf perf = MileagePerf.builder()

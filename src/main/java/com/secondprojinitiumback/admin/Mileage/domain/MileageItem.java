@@ -39,6 +39,7 @@ public class MileageItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "EDU_MNG_ID", nullable = false)
     private ExtracurricularProgram program; //비교과 프로그램 ID
+    //...
 
 
 }

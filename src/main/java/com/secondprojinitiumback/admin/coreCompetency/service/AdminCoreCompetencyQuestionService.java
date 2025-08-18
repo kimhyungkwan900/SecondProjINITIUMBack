@@ -27,7 +27,8 @@ public class AdminCoreCompetencyQuestionService {
      * - 생성 시점에는 선택지가 없으며, 옵션 개수 설정 API를 통해 추가됩니다.
      */
     @Transactional
-    public CoreCompetencyQuestion createCoreCompetencyQuestion(Long assessmentId, CoreCompetencyQuestionCreateRequestDto dto) {
+    public CoreCompetencyQuestion createCoreCompetencyQuestion(
+            Long assessmentId, CoreCompetencyQuestionCreateRequestDto dto) {
 
         CoreCompetencyAssessment assessment = coreCompetencyAssessmentRepository.findById(assessmentId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ASSESSMENT_NOT_FOUND));
@@ -35,6 +36,7 @@ public class AdminCoreCompetencyQuestionService {
         SubCompetencyCategory subCategory = subCompetencyCategoryRepository.findById(dto.getSubCategoryId())
                 .orElseThrow(() -> new CustomException(ErrorCode.SUB_COMPETENCY_NOT_FOUND));
 
+        // 1) 문항 엔티티 저장(식별자 확보)
         CoreCompetencyQuestion question = CoreCompetencyQuestion.builder()
                 .assessment(assessment)
                 .subCompetencyCategory(subCategory)
@@ -46,9 +48,33 @@ public class AdminCoreCompetencyQuestionService {
                 .optionCount(dto.getOptionCount())
                 .build();
 
-        return coreCompetencyQuestionRepository.save(question);
+        CoreCompetencyQuestion saved = coreCompetencyQuestionRepository.save(question);
 
+        // 2) 옵션이 들어온 경우: 유효성 검사 → 저장
+        if (dto.getOptions() != null && !dto.getOptions().isEmpty()) {
+            List<ResponseChoiceOption> newOptions = dto.getOptions().stream()
+                    .map(o -> ResponseChoiceOption.builder()
+                            .question(saved)
+                            .optionNo(o.getOptionNo())     // null/중복은 아래에서 보정
+                            .label(o.getLabel())
+                            .score(o.getScore())
+                            .answerType("SINGLE")
+                            .build())
+                    .collect(Collectors.toList());
+
+            responseChoiceOptionRepository.saveAll(newOptions);
+
+            saved.setOptionCount(newOptions.size());        // 실제 개수와 동기화
+        }
+        // 3) 옵션이 없고 optionCount만 있는 경우: 기본 옵션 생성(선택)
+        else if (dto.getOptionCount() != null && dto.getOptionCount() > 0) {
+            generateDefaultOptions(saved, dto.getOptionCount());
+            coreCompetencyQuestionRepository.saveAndFlush(saved);
+        }
+
+        return saved;
     }
+
 
 
     /**
